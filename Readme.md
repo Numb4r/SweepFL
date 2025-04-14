@@ -1,19 +1,19 @@
-# NVNL-FL: Aprendizado Federado Eficiente com Criptografia Homomórfica
+# Slidhe: Efficient Federated Learning with Homomorphic Encryption
 
-Este repositório contém o código do **NVNL-FL**, uma solução eficiente para Aprendizado Federado (FL) em cenários cross-silo utilizando Criptografia Homomórfica (HE). A proposta combina técnicas de empacotamento, esparsificação e janela deslizante para reduzir overheads computacionais e de comunicação, garantindo privacidade dos dados sem comprometer o desempenho do modelo.
+This repository contains the code for **Slidhe**, an efficient solution for cross-silo Federated Learning (FL) using Homomorphic Encryption (HE). The approach combines packing, sparsification, and sliding window techniques to reduce computational and communication overheads, ensuring data privacy without compromising model performance.
 
-## 🚀 Funcionalidades
+## 🚀 Features
 
-- **Aprendizado Federado Seguro**: Utiliza Criptografia Homomórfica (HE) para preservar a privacidade dos dados.
-- **Redução de Overheads**: Implementa técnicas de empacotamento e esparsificação para otimizar a comunicação e o processamento.
-- **Robustez em Dados Não-IID**: Desempenho garantido mesmo em cenários com dados heterogêneos.
+- **Secure Federated Learning**: Uses Homomorphic Encryption (HE) to preserve data privacy.
+- **Overhead Reduction**: Implements packing and sparsification techniques to optimize communication and processing.
+- **Robust to Non-IID Data**: Maintains performance even in heterogeneous data scenarios.
 
 ---
 
-## 📋 Pré-requisitos
+## 📋 Requirements
 
-- **Docker** e **Docker Compose**: Para configurar o ambiente em contêineres.
-- **Python 3.8+** com as bibliotecas:
+- **Docker** and **Docker Compose** for containerized setup.
+- **Python 3.8+** with the following libraries:
   - `tensorflow`
   - `flower`
   - `tenseal`
@@ -23,133 +23,131 @@ Este repositório contém o código do **NVNL-FL**, uma solução eficiente para
 
 ---
 
-## ⚙️ Utilização
+## ⚙️ Usage
 
-### 1. Clone o repositório
+### 1. Clone the repository
 ```bash
-$ git clone https://github.com/SeuUsuario/nvnl-fl.git
-$ cd nvnl-fl
+$ git clone https://github.com/YourUsername/slidhe.git
+$ cd slidhe
 ```
 
-### 2. Gere as imagens Docker
-Use o Docker configurar o ambiente do servidor e dos clientes.
+### 2. Build Docker images
+Use Docker to set up server and client environments.
 ```bash
 $ docker build -t flhe:server server/.
 $ docker build -t flhe:client client/.
-
 ```
 
-### 3. Gere o arquivo Yaml do ambiente 
-Se preferir rodar localmente (fora do Docker), instale as dependências manualmente:
+### 3. Generate Docker Compose file
+Alternatively, install the dependencies manually and run locally:
 ```bash
 $ python3 create_dockercompose.py -c 10 -s FedPHE -d MNIST -r 100 -f 0.5 --niid True --dirichilet 0.1 --percentage 0.3 --technique robin_round
-# -c : Numero de clientes
-# -s : Solução [BFV, CKKS, BatchCrypt, FedPHE, plaintext]
-# -d : Dataset [Mnist,FashionMnist]
-# -r : Numero de rodadas de comunicação
-# -f : Fator de clientes agregados [0,...,1]
-# --niid : Cenario IID ou Não-IID  [True,False]
-# --dirichilet: Fator Dirichilet [0,...,1]
-# --percentage: Porcentagem de pacotes enviados para agregação [0,...,1]
-# --technique: Tecnica para seleção de pacotes [topk,robin_round,slided_window,weight_random]
+# -c : Number of clients
+# -s : Solution [BFV, CKKS, BatchCrypt, FedPHE, plaintext]
+# -d : Dataset [Mnist, FashionMnist]
+# -r : Number of communication rounds
+# -f : Aggregated clients fraction [0,...,1]
+# --niid : IID or Non-IID scenario [True, False]
+# --dirichilet: Dirichlet factor [0,...,1]
+# --percentage: Percentage of selected packets for aggregation [0,...,1]
+# --technique: Packet selection technique [topk, robin_round, slided_window, weight_random]
 ```
 
 ---
-## 4. Gere as chaves dos esquema de criptografia
-```bash 
-$ python3 generate_keys.py
-``` 
-## 5. Execução
+
+## 4. Generate encryption keys
 ```bash
-$ docker compose -f nome_do_arquivo.yaml up
+$ python3 generate_keys.py
 ```
-## Reproduza nossos resultados:
-Nesse repositorio, é possivel encontrar todos os componente necessarios para reproduzir a pesquisa. A instrução abaixo reproduz resultados Não-IID, com alpha Dirichilet 10% e 30% de agregação dos pacotes usando a janela deslizante com passo de mesmo tamanho da janela (Robin Round)
+
+## 5. Run
+```
+$ docker compose -f your_generated_file.yaml up
+```
+
+## Reproduce our results:
+You can reproduce our research using this repository. The command below replicates results for Non-IID data with Dirichlet alpha 0.1 and 30% packet aggregation using a sliding window with same-sized step (Robin Round).
 ```bash
 $ python3.10 create_dockercompose.py -c 10 -s FedPHE -d MNIST -r 100 -f 0.5 --niid True --dirichilet 0.1 --percentage 0.3 --technique robin_round
 ```
-Para reproduzir os outros resultados, modifique:
-1. `--dirichilet` para `1`
-2. `--percentage` para `0.5` e `0.8`
-3. `--technique` pode ser trocada para `slided_window`, que utiliza passo 50% dos pacotes agregados.
+
+To reproduce other scenarios, modify:
+1. `--dirichilet` to `1`
+2. `--percentage` to `0.5` or `0.8`
+3. `--technique` to `slided_window` for a 50%-step sliding window
+
 ---
-## 📂 Estrutura do Repositório
+
+## 📂 Repository Structure
 
 ```
-├── cliente/
-│   ├── client.py        # Código base dos clientes FL
-│   ├── literature.py    # Implementação de técnicas da literatura
-│   ├── models.py        # Implementação dos modelos ML
-│   ├── client_utils.py  # Funções auxiliares do cliente
+├── client/
+│   ├── client.py         # FL client logic
+│   ├── literature.py     # Implementations from literature
+│   ├── models.py         # ML model definitions
+│   ├── client_utils.py   # Client-side utilities
 │   ├── encryption/
-│   │   ├── bfv.py           # Implementação da tecnica BFV
-│   │   ├── ckks.py          # Implementação da tecnica CKKS
-│   │   └── paillier.py      # Implementação da tecnica Paillier
+│   │   ├── bfv.py        # BFV scheme implementation
+│   │   ├── ckks.py       # CKKS scheme implementation
+│   │   └── paillier.py   # Paillier scheme implementation
 ├── server/
-│   ├── server.py        # Código base dos server FL
-│   ├── server_utils.py  # Funções auxiliares do cliente
-├── logs/ # Resultados das execuções
-├── docker-compose.yml   # Configuração Docker
-├── requirements.txt     # Dependências do projeto
-└── README.md            # Documentação do projeto
+│   ├── server.py         # FL server logic
+│   ├── server_utils.py   # Server-side utilities
+├── logs/                 # Execution results
+├── docker-compose.yml    # Docker config
+├── requirements.txt      # Project dependencies
+└── README.md             # Project documentation
 ```
 
 ---
 
+## 📊 Experimental Results
 
-## 📊 Resultados Experimentais
-Os experimentos utilizaram os datasets MNIST e FashionMNIST, treinados com uma DNN de 128, 64 e 32 neurônios para o MNIST e a arquitetura LeNet-5 para o FashionMNIST. O treinamento foi realizado com Stochastic Gradient Descent (SGD) e função de perda Sparse Categorical Crossentropy. Para criptografia homomórfica, foram testados os esquemas CKKS, BFV, Batchcrypt,FedPHE e NVNL. O número total de clientes foi 10, com 50% selecionados por rodada ao longo de 100 rodadas de comunicação. A heterogeneidade dos dados foi controlada pela distribuição de Dirichlet, variando entre IID (α = 1) e não-IID (α = 0,1)
+The experiments used MNIST and FashionMNIST datasets. A DNN with layers of 128, 64, and 32 neurons was used for MNIST, while LeNet-5 was used for FashionMNIST. Training was done using Stochastic Gradient Descent (SGD) and Sparse Categorical Crossentropy loss. HE schemes tested included CKKS, BFV, BatchCrypt, FedPHE, and Slidhe. A total of 10 clients were used, with 50% selected per round across 100 communication rounds. Data heterogeneity was controlled via Dirichlet distribution with α = 1 for IID and α = 0.1 for Non-IID.
 
-| **Dados**  | **Soluções**  | **Acurácia (%)** | **TX Bytes (Mb)** | **Tempo (s)** | **Acurácia (%)** | **TX Bytes (Mb)** | **Tempo (s)** |
-|------------|--------------|------------------|------------------|--------------|------------------|------------------|--------------|
-|            |              | **MNIST**        |                  |              | **FashionMNIST** |                  |              |
-| **IID**    | FedAvg       | 0.97             | 449.49           | 0.59         | 0.90             | 272.25           | 2.06         |
-|            | BFV          | 0.97             | 3009.08          | 1.21         | 0.90             | 1719.48          | 2.46         |
-|            | CKKS         | 0.97             | 4651.85          | 0.89         | 0.90             | 2658.22          | 2.22         |
-|            | BatchCrypt   | 0.97             | 571.77           | 32.14        | 0.88             | 317.68           | 20.35        |
-|            | FedPHE       | 0.94             | 996.94           | 0.72         | 0.81             | 664.63           | 2.26         |
-|            | NVNL-FL      | 0.96             | 996.95           | 0.76         | 0.85             | 664.63           | 2.36         |
-| **Não-IID**| FedAvg       | 0.97             | 449.49           | 0.53         | 0.84             | 272.25           | 1.69         |
-|            | BFV          | 0.95             | 3009.08          | 1.15         | 0.79             | 1719.48          | 2.21         |
-|            | CKKS         | 0.95             | 4651.85          | 0.82         | 0.81             | 2658.22          | 1.94         |
-|            | BatchCrypt   | 0.95             | 571.77           | 31.96        | 0.83             | 317.68           | 19.99        |
-|            | FedPHE       | 0.49             | 996.94           | 0.71         | 0.35             | 664.63           | 2.26         |
-|            | NVNL-FL      | 0.92             | 996.95           | 0.77         | 0.75             | 664.63           | 2.36         |
+| **Data**   | **Solution**  | **Accuracy (%)** | **TX Bytes (Mb)** | **Time (s)** | **Accuracy (%)** | **TX Bytes (Mb)** | **Time (s)** |
+|-----------|---------------|------------------|-------------------|--------------|------------------|-------------------|--------------|
+|           |               | **MNIST**        |                   |              | **FashionMNIST** |                   |              |
+| **IID**   | FedAvg        | 0.97             | 449.49            | 0.59         | 0.90             | 272.25            | 2.06         |
+|           | BFV           | 0.97             | 3009.08           | 1.21         | 0.90             | 1719.48           | 2.46         |
+|           | CKKS          | 0.97             | 4651.85           | 0.89         | 0.90             | 2658.22           | 2.22         |
+|           | BatchCrypt    | 0.97             | 571.77            | 32.14        | 0.88             | 317.68            | 20.35        |
+|           | FedPHE        | 0.94             | 996.94            | 0.72         | 0.81             | 664.63            | 2.26         |
+|           | Slidhe        | 0.96             | 996.95            | 0.76         | 0.85             | 664.63            | 2.36         |
+| **Non-IID**| FedAvg       | 0.97             | 449.49            | 0.53         | 0.84             | 272.25            | 1.69         |
+|           | BFV           | 0.95             | 3009.08           | 1.15         | 0.79             | 1719.48           | 2.21         |
+|           | CKKS          | 0.95             | 4651.85           | 0.82         | 0.81             | 2658.22           | 1.94         |
+|           | BatchCrypt    | 0.95             | 571.77            | 31.96        | 0.83             | 317.68            | 19.99        |
+|           | FedPHE        | 0.49             | 996.94            | 0.71         | 0.35             | 664.63            | 2.26         |
+|           | Slidhe        | 0.92             | 996.95            | 0.77         | 0.75             | 664.63            | 2.36         |
 
-### Dados IID
-![Dados IID](/img/mnist_iid.png)
-### Dados Não IID
-![Dados não IID](/img/mnist_niid.png)
+### IID Data [WIṔ]
+
+### Non-IID Data [WIP]
+
+
 ---
 
+## 📜 References
 
+This work is based on the article:
 
-## 📜 Referências
-
-Este trabalho é baseado no artigo:
-
-**"O Que Não é Visto, Não é Lembrado: Aprendizado Federado Eficiente com Criptografia Homomórfica"**  
+**"Exploring Communication Efficient Methods for Homomorphic Encryption Federated Learning"**  
 Yuri Dimitre D. Faria, Allan M. de Souza  
-Instituto de Computação - Universidade Estadual de Campinas
+Institute of Computing - University of Campinas
 
 ---
 
-## 🤝  Agradecimentos
+## 🤝 Acknowledgements
 
-Expresso minha gratidão aos seguintes projetos e seus contribuintes pelos seus trabalhos e contribuições acadêmicas:
+Special thanks to the following projects and contributors for their foundational research and code:
 
-
-- [FedPHE](https://github.com/lunan0320/FedPHE) - pelo artigo "Efficient and Straggler-Resistant Homomorphic Encryption for Heterogeneous Federated Learning", que foi uma base essencial para esse projeto.
-- [BatchCrypt](https://github.com/marcoszh/BatchCrypt) -  pelo artigo "BatchCrypt: Efficient Homomorphic Encryption for Cross-Silo Federated Learning".
-- [FLASHE](https://github.com/SamuelGong/FLASHE) - pela sua contribuição tecnicas de otimização de esparcificação de pacotes.
-
-
-
-
-
+- [FedPHE](https://github.com/lunan0320/FedPHE) – for the paper "Efficient and Straggler-Resistant Homomorphic Encryption for Heterogeneous Federated Learning".
+- [BatchCrypt](https://github.com/marcoszh/BatchCrypt) – for the paper "BatchCrypt: Efficient Homomorphic Encryption for Cross-Silo Federated Learning".
+- [FLASHE](https://github.com/SamuelGong/FLASHE) – for their packet sparsification optimization techniques.
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
