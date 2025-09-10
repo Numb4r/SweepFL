@@ -1,6 +1,6 @@
 import numpy as np
-from encryption.aciq import ACIQ
-from encryption.complement import true2two, two2true
+from .aciq import ACIQ
+from .complement import true2two, two2true
 
 
 

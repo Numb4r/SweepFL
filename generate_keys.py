@@ -2,8 +2,11 @@ import tenseal as ts
 import os
 import pickle
 import numpy as np
+# from .client.encryption.paillier import PaillierCipher
 
-# from client.encryption.paillier import PaillierCipher
+from client.encryption import PaillierCipher
+# from .client.encryption.paillier import PaillierCipher
+
 
 def context_bfv():
     """
@@ -110,9 +113,12 @@ def Paillier_keys():
         pickle.dump(paillier, file)
 
 def main():
+    path = "context"
+    if not os.path.exists(path):
+        os.makedirs(path)
     combo_keys('ckks')
-    # combo_keys('bfv')
-    # Paillier_keys()
+    combo_keys('bfv')
+    Paillier_keys()
 
 if __name__ == "__main__":
     main()

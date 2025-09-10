@@ -47,62 +47,6 @@ def cypher_packs(self, packs, mask):
 
     return cyphered_packs
 
-def get_topk_mask(packs, percentage):
-    topk = int(np.ceil(len(packs) * percentage))
-    
-    avg_list     = [np.average(np.abs(pack)) for pack in packs]    
-    max_avg_list = np.sort(avg_list)[::-1][:topk]
-    mask_list    = []
-    
-    for i in range(len(max_avg_list)):
-        mask_list.append(avg_list.index(max_avg_list[i]))
-    mask_list.sort()
-    
-    res_mask = [0  for i in range(len(packs)) ]
-    for i in range(len(packs)):
-        if i in mask_list:
-            res_mask[i] = 1
-            
-    return res_mask
-def get_slide_window_mask(round,packs,size_window=0.1,stride=3,percentage=False):
-    if percentage:
-        size_window = math.ceil(len(packs) * size_window)
-        stride = math.ceil(size_window*stride)
-    
-    array_z = np.zeros(len(packs))
-    start = round*stride
-    end = round*stride+size_window
-    for i in range(start, end):
-        array_z[i % len(array_z)] = 1
-    return array_z
-
-def get_robin_round_mask(round,packs,size_window,percentage=False):
-    if percentage:
-        size_window = math.ceil(len(packs) * size_window)
-    return get_slide_window_mask(round,packs,size_window,size_window)
-def get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):
-
-    n = len(packs)
-    if percentage:
-        k = math.ceil(k*n)
-    probabilities = weights_packs / weights_packs.sum()
-    mask = np.zeros(n)
-
-    
-    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)
-    
-    for i in range(n):
-        if i in chosen:
-            weights_packs[i] *= penalty  
-            mask[i] = 1
-        else:
-            weights_packs[i] += reward  # Aumenta o peso dos não escolhidos
-
-    
-    weights_packs = np.maximum(weights_packs, 0.01)
-    return mask
-
-
 
 def remove_padding(self, packed_parameters):
     total_parameters = len(flat_parameters(self.model.get_weights()))

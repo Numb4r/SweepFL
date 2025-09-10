@@ -1,46 +1,21 @@
-import flwr as fl
-import numpy as np
-from flwr_datasets import FederatedDataset
-from flwr_datasets.partitioner import DirichletPartitioner, IidPartitioner
-import tensorflow as tf
+
 import os
-import random
-import tenseal as ts
 import pickle
-from dataset_utils import ManageDatasets, load_data_flowerdataset
-
-import tracemalloc
-import sys
 import time
-
-from models import create_cnn, create_dnn, create_lenet5, reshape_parameters, flat_parameters,ResNet20,CNN_fmnist_tf
-from client_logs import write_train_logs, write_evaluate_logs
-from client_utils import get_size, packing, cypher_packs, get_topk_mask, decypher_packs, flat_packs, remove_padding
-
-from encryption.quantize import quantize, unquantize, batch_padding, unbatching_padding
-from encryption.paillier import PaillierCipher
-
-from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext, he_packs_to_model, he_parameters_to_model
-# import logging
-# logging.basicConfig(level=logging.DEBUG)
-
-# import logging
-
+import flwr as fl
+import tensorflow as tf
+import tenseal as ts
+from dataset_utils import ManageDatasets, load_data_flowerdataset
 from pathlib import Path
 
-LOG_DIR = "logs/"
+from models import create_dnn, create_lenet5,  flat_parameters
+from client_logs import write_evaluate_logs
+from literature.set_parameters import he_parameters_to_model, he_packs_to_model
+from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext
 
 
-def get_latest_created_folder(directory):
-    # Lista todos os diretórios dentro do caminho especificado
-    folders = [f for f in Path(directory).iterdir() if f.is_dir()]
-    
-    # Se houver diretórios, ordene-os pela data de criação (metadata de criação - st_ctime)
-    if folders:
-        latest_folder = max(folders, key=lambda f: f.stat().st_ctime)
-        return latest_folder
-    else:
-        return None
+
+
 
 
 class HEClient(fl.client.NumPyClient):
@@ -60,16 +35,11 @@ class HEClient(fl.client.NumPyClient):
         self.technique        = technique
         self.percentage       = percentage
         self.dirichlet_alpha = dirichlet_alpha
-        # self.homomorphic      = homomorphic
-        # self.packing          = packing
-        # self.only_sum         = onlysum
-        # self.homomorphic_type = homomorphic_type   
 
         if dataset == 'MNIST' or dataset == 'CIFAR10' or dataset == "FASHION_MNIST":
             self.x_train, self.y_train, self.x_test, self.y_test = load_data_flowerdataset(self)
         else:
             self.x_train, self.y_train, self.x_test, self.y_test = self.load_har(dataset) #self.load_data()
-        print("\n\n\n\n\nSHAPE:",self.x_train.shape)
         
         if dataset == 'FASHION_MNIST':
             self.model = create_lenet5(self.x_train.shape,10)
@@ -79,8 +49,6 @@ class HEClient(fl.client.NumPyClient):
             self.model_name = "DNN"
         else:
             return
-        
-        self.len_shared_data  =  len(flat_parameters(self.model.get_weights()))                               
         
         self.config_solution()
         if self.homomorphic:

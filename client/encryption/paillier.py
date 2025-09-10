@@ -1,12 +1,12 @@
 import numpy as np
 import random
 import time
-from encryption import gmpy_math
+from . import gmpy_math
 
 from multiprocessing import cpu_count, Pool
-from encryption.encrypt import Encrypt
+from .encrypt import Encrypt
 
-from encryption.quantize import quantize, unquantize, batch_padding, unbatching_padding
+from .quantize import quantize, unquantize, batch_padding, unbatching_padding
 
 N_JOBS = 1 #cpu_count()
 
