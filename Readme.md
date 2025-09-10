@@ -7,6 +7,16 @@ This repository contains the code for **Slidhe**, an efficient solution for cros
 - **Secure Federated Learning**: Uses Homomorphic Encryption (HE) to preserve data privacy.
 - **Overhead Reduction**: Implements packing and sparsification techniques to optimize communication and processing.
 - **Robust to Non-IID Data**: Maintains performance even in heterogeneous data scenarios.
+  
+## ✨ Key Contributions
+
+- **Privacy-Preserving Learning**: Utilizes CKKS-based Homomorphic Encryption to secure model updates.
+- **Low Overhead**: Reduces ciphertext generation and transmission through packing and selective encryption.
+- **Three Packet Selection Strategies Implemented**:
+  - **Top-k**: Selects the top-k% packets with the largest weight sums.
+  - **Round Robin (RR)**: Sequentially cycles through packets, ensuring all model neurons are trained.
+  - **Sliding Window (SW)**: Selects overlapping packet windows to promote neuron sharing across rounds.
+
 
 ---
 
@@ -65,16 +75,18 @@ $ python3 generate_keys.py
 $ docker compose -f your_generated_file.yaml up
 ```
 
-## Reproduce our results:
-You can reproduce our research using this repository. The command below replicates results for Non-IID data with Dirichlet alpha 0.1 and 30% packet aggregation using a sliding window with same-sized step (Robin Round).
-```bash
-$ python3.10 create_dockercompose.py -c 10 -s FedPHE -d MNIST -r 100 -f 0.5 --niid True --dirichilet 0.1 --percentage 0.3 --technique robin_round
+## 🔁 Reproducing Results
+
+To reproduce the main experiment (Non-IID, α=0.1, 30% packets, Round Robin):
+
+```
+python3 create_dockercompose.py -c 10 -s FedPHE -d MNIST -r 100 -f 0.5 --niid True --dirichilet 0.1 --percentage 0.3 --technique round_robin
 ```
 
-To reproduce other scenarios, modify:
-1. `--dirichilet` to `1`
-2. `--percentage` to `0.5` or `0.8`
-3. `--technique` to `slided_window` for a 50%-step sliding window
+To explore other strategies:
+
+- **Top-k**: `--technique topk`
+- **Sliding Window (50% overlap)**: `--technique slided_window`
 
 ---
 
@@ -121,10 +133,14 @@ The experiments used MNIST and FashionMNIST datasets. A DNN with layers of 128, 
 |           | FedPHE        | 0.49             | 996.94            | 0.71         | 0.35             | 664.63            | 2.26         |
 |           | Slidhe        | 0.92             | 996.95            | 0.77         | 0.75             | 664.63            | 2.36         |
 
-### IID Data [WIṔ]
 
-### Non-IID Data [WIP]
+The graphs below depict the performance on IID (top) and Non-IID (bottom) datasets.
 
+### Mnist Dataset
+![ ](/img/mnist_completo.png)
+
+### Fashion Dataset
+![ ](/img/fashion_completo.png)
 
 ---
 
