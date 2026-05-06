@@ -1,8 +1,8 @@
-import pickle 
+import pickle
 import numpy as np
-import tenseal as ts
 import os
 import pickle as pk
+from encryption.ckks_backend import get_backend
 
 from models import flat_parameters, reshape_parameters
 
@@ -34,16 +34,16 @@ def he_parameters_to_model(self, config):
         
         else:
             if 'CKKS' == self.homomorphic_type:
-                he_parameters        = ts.ckks_vector_from(self.context, config['he'])
-                local_parameters     = self.model.get_weights()
-                decrypted_parameters = he_parameters.decrypt()
+                backend              = get_backend(self.key_config.get("ckks_backend"))
+                he_parameters        = backend.deserialize(self.context, config['he'])
+                decrypted_parameters = backend.decrypt(self.context, he_parameters)
                 if self.only_sum:
-                    decrypted_parameters  = np.array(decrypted_parameters) / float(config['total_examples'])
-                    
+                    decrypted_parameters = np.array(decrypted_parameters) / float(config['total_examples'])
                 reshaped_parameters  = reshape_parameters(self, decrypted_parameters)
                 self.model.set_weights(reshaped_parameters)
-                
+
             else:
+                import tenseal as ts
                 print("TRYING DECRIPTION")
                 he_parameters        = ts.bfv_vector_from(self.context, config['he'])
          
@@ -80,10 +80,11 @@ def he_parameters_to_model(self, config):
    
         
 def he_packs_to_model(self, config):
-    chunk_size = self.key_config["poly_modulus_degree"]//2    
-    packed_parameters  = packing(flat_parameters(self.model.get_weights()),chunk_size = chunk_size)
+    chunk_size = self.key_config["poly_modulus_degree"]//2
+    packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)
     cyphered_packs     = pickle.loads(config['he'])
-    decyphered_pack    = decypher_packs(cyphered_packs, self.context)
+    backend            = get_backend(self.key_config.get("ckks_backend"))
+    decyphered_pack    = decypher_packs(cyphered_packs, self.context, backend=backend)
     aggredated_mask    = pickle.loads(config['mask'])
 
 

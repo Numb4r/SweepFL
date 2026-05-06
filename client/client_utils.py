@@ -1,8 +1,8 @@
 import math
 import sys
-import tenseal as ts
 import numpy as np
 from models import flat_parameters
+from encryption.ckks_backend import get_backend
 def get_size(data):
     total_size = 0
     
@@ -35,15 +35,12 @@ def packing(parameters, chunk_size=4096):
     return packs
 
 def cypher_packs(self, packs, mask):
-    cyphered_packs   = []
-    for idx, pack in enumerate(packs):        
+    backend = get_backend(self.key_config.get("ckks_backend"))
+    cyphered_packs = []
+    for idx, pack in enumerate(packs):
         if mask[idx] == 1:
-            
-            cypher          = ts.ckks_vector(self.context, pack)
-            serialized_pack = cypher.serialize()
-            
-            cyphered_packs.append(serialized_pack)
-
+            ct = backend.encrypt(self.context, pack)
+            cyphered_packs.append(backend.serialize(ct))
     return cyphered_packs
 
 
@@ -59,13 +56,11 @@ def flat_packs(packed_parameters):
         
     return flat_params
 
-def decypher_packs(packed_parameters, context):
-    decrypted_parameters = []
-    
-    for pack in packed_parameters:
-        decrypted_parameters.append(ts.ckks_vector_from(context, pack).decrypt())
-        
-    return decrypted_parameters
+def decypher_packs(packed_parameters, context, backend=None):
+    if backend is None:
+        backend = get_backend()
+    return [backend.decrypt(context, backend.deserialize(context, pack))
+            for pack in packed_parameters]
 def reshape_model(flatted_packs,a,sentinel=0):
     model =[]
     # print(a)

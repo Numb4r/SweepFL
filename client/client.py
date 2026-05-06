@@ -4,7 +4,6 @@ import pickle
 import time
 import flwr as fl
 import tensorflow as tf
-import tenseal as ts
 
 
 from dataset_utils import ManageDatasets, load_data_flowerdataset
@@ -20,22 +19,19 @@ import math
 
 
 from typing import Optional,Dict,Any
-def estimate_ckks_sigma(context,v,n_clients, dim=1000, trials=50):
-    # v = np.random.randn(dim)
+def estimate_ckks_sigma(context, v, n_clients, dim=1000, trials=50):
+    """Estimates CKKS additive noise std-dev. Only meaningful for TenSEAL contexts."""
+    import tenseal as ts
     v = np.array(v)
     errs = []
     for _ in range(trials):
         enc = ts.ckks_vector(context, v)
         for _ in range(n_clients):
-            enc+=v
-        dec = enc.decrypt()
-        dec = np.array(dec)
-        errs.append(dec - (v*n_clients))
+            enc += v
+        dec = np.array(enc.decrypt())
+        errs.append(dec - (v * n_clients))
     sigma_ckks = np.std(np.concatenate(errs))
-
-    # σ total após soma de n clientes
-    sigma_total = math.sqrt(n_clients) * sigma_ckks
-    return sigma_total
+    return math.sqrt(n_clients) * sigma_ckks
 
 class HEClient(fl.client.NumPyClient):
     def __init__(self, cid:int, niid:bool, dataset:str, num_clients:int, 
@@ -128,21 +124,16 @@ class HEClient(fl.client.NumPyClient):
         
     def get_client_context(self):
         if self.homomorphic_type == 'Paillier':
-            with open(f'context/paillier.pkl', 'rb') as file:
-                context = pickle.load(file)    
-        else:
-            if 'CKKS' == self.homomorphic_type:
-                # with open(f'../context/ckks_{self.poly_modulus_degree}_{self.plain_modulus}_{self.coeff_mod_bit_sizes}_{self.global_scale}_{self.key_type}_secret.pkl', 'rb') as file:
-                with open(f'../context/nvnlc2.pkl', 'rb') as file:
-                    print("CARREGANDO NVNLC2")
-                    secret = pickle.load(file) 
-                    context = ts.context_from(secret["context"])
-            else:
-                with open(f'../context/bfv_secret.pkl', 'rb') as file:
-                    secret = pickle.load(file) 
-                    context = ts.context_from(secret["context"])
-                
-        return context
+            with open('context/paillier.pkl', 'rb') as file:
+                return pickle.load(file)
+        elif self.homomorphic_type == 'CKKS':
+            from encryption.ckks_backend import get_backend
+            backend_name = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
+            return get_backend(backend_name).load_client_context("../context")
+        else:  # BFV
+            import tenseal as ts
+            with open('../context/bfv_secret.pkl', 'rb') as file:
+                return ts.context_from(pickle.load(file)["context"])
 
     def get_parameters(self, config):
         parameters           = self.model.get_weights()
@@ -346,12 +337,21 @@ def main():
     tf.keras.backend.clear_session()
     keys_config:Dict[str,Any] = {}
     
-    keys_config['poly_modulus_degree'] = int(os.environ.get('POLY', 0))
-    keys_config['plain_modulus']       = int(os.environ.get('PLAIN_MODULUS', -1))
-    keys_config['coeff_mod_bit_sizes'] = list(map(int, os.environ.get('COEFFS', '').split(',')))
-    keys_config['global_scale']        = int(os.environ.get('SCALE', 0))
-    keys_config['key_type']            = os.environ.get('KEY_TYPE', None)
-    keys_config['n_length']            = int(os.environ.get('N_LENGTH', 0))
+    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))
+    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))
+    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))
+    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))
+    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)
+    keys_config['n_length']             = int(os.environ.get('N_LENGTH', 0))
+    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')
+    keys_config['simplify_N']           = int(os.environ.get('SIMPLIFY_N', 8192))
+    keys_config['simplify_bits']        = int(os.environ.get('SIMPLIFY_BITS', 62))
+    keys_config['simplify_scale_bits']  = int(os.environ.get('SIMPLIFY_SCALE_BITS', 60))
+    keys_config['pycrypt_N']            = int(os.environ.get('PYCRYPT_N', 8192))
+    keys_config['pycrypt_bits']         = int(os.environ.get('PYCRYPT_BITS', 60))
+    keys_config['openfhe_ring_dim']     = int(os.environ.get('OPENFHE_RING_DIM', 8192))
+    keys_config['openfhe_mult_depth']   = int(os.environ.get('OPENFHE_MULT_DEPTH', 1))
+    keys_config['openfhe_scale_bits']   = int(os.environ.get('OPENFHE_SCALE_BITS', 50))
     
     gpus = tf.config.experimental.list_physical_devices('GPU')
     print(f"GPUS: {gpus}")

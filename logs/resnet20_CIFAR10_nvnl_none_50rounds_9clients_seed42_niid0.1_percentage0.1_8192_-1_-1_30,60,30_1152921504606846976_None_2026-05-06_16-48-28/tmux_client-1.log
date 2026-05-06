@@ -1,0 +1,8 @@
+Starting client 1 | solution=nvnl technique=none gpu=5 seed=42
+  dataset=CIFAR10 niid=0.1 percentage=0.1 logfolder=resnet20_CIFAR10_nvnl_none_50rounds_9clients_seed42_niid0.1_percentage0.1_8192_-1_-1_30,60,30_1152921504606846976_None_2026-05-06_16-48-28
+  poly=8192 coeffs=30,60,30 scale=1152921504606846976 key_type=None plain=-1 n_length=-1
+client-1
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
+nvidia-container-cli: device error: 5: unknown device
+
+Run 'docker run --help' for more information

@@ -108,23 +108,16 @@ class HEServer(fl.server.strategy.FedAvg):
             self.packing          = True
     
     def get_server_context(self):
-        file_name = f"./context/{str(self.homomorphic_type).lower()}_{self.poly_modulus_degree}_{self.plain_modulus}_{self.coeff_mod_bit_sizes}_{self.global_scale}_{self.key_type}_server_key.pkl"
-        context = None
         if self.homomorphic_type == 'Paillier':
-            with open(f'context/paillier.pkl', 'rb') as file:
-                context = pickle.load(file)    
-        
-        elif 'CKKS' == self.homomorphic_type:
-            # with open(file_name, 'rb') as file:
-            with open(f"./context/serverc2.pkl",'rb') as file:
-                secret = pickle.load(file)  
-                context = ts.context_from(secret["context"])
-        elif "BFV" == self.homomorphic_type:
-            with open(f"./context/bfv_server_key.pkl", 'rb') as file:
-                secret = pickle.load(file) 
-                context = ts.context_from(secret["context"])
-        
-        return context
+            with open('context/paillier.pkl', 'rb') as file:
+                return pickle.load(file)
+        elif self.homomorphic_type == 'CKKS':
+            from encryption.ckks_backend import get_backend
+            backend_name = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
+            return get_backend(backend_name).load_server_context("./context")
+        else:  # BFV
+            with open('./context/bfv_server_key.pkl', 'rb') as file:
+                return ts.context_from(pickle.load(file)["context"])
     
     def configure_fit(self, server_round, parameters, client_manager):
         """Configure the next round of training."""
@@ -190,8 +183,13 @@ class HEServer(fl.server.strategy.FedAvg):
             
             if self.packing: #packing aggregation
                 aggregated_masks                   = []
+                from encryption.ckks_backend import get_backend as _get_backend
+                _backend = _get_backend(self.key_config.get("ckks_backend"))
                 pack_mask_pair, total_examples     = get_pack_mask_pair(self, results)
-                aggregated_packs, aggregated_masks = aggregate_packs_and_mask(pack_mask_pair, total_examples, self.onlysum)
+                aggregated_packs, aggregated_masks = aggregate_packs_and_mask(
+                    pack_mask_pair, total_examples, self.onlysum,
+                    backend=_backend, ctx=self.context,
+                )
                 
                 aggregated_packs    = serialize_packs(aggregated_packs)
                 self.agg_parameters = pickle.dumps(aggregated_packs)
@@ -311,11 +309,20 @@ from typing import Dict,Any
 def main():
     keys_config:Dict[str,Any] = {}
     
-    keys_config['poly_modulus_degree'] = int(os.environ.get('POLY', 0))
-    keys_config['plain_modulus']       = int(os.environ.get('PLAIN_MODULUS', -1))
-    keys_config['coeff_mod_bit_sizes'] = list(map(int, os.environ.get('COEFFS', '').split(',')))
-    keys_config['global_scale']        = int(os.environ.get('SCALE', 0))
-    keys_config['key_type']            = os.environ.get('KEY_TYPE', None)
+    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))
+    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))
+    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))
+    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))
+    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)
+    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')
+    keys_config['simplify_N']           = int(os.environ.get('SIMPLIFY_N', 8192))
+    keys_config['simplify_bits']        = int(os.environ.get('SIMPLIFY_BITS', 62))
+    keys_config['simplify_scale_bits']  = int(os.environ.get('SIMPLIFY_SCALE_BITS', 60))
+    keys_config['pycrypt_N']            = int(os.environ.get('PYCRYPT_N', 8192))
+    keys_config['pycrypt_bits']         = int(os.environ.get('PYCRYPT_BITS', 60))
+    keys_config['openfhe_ring_dim']     = int(os.environ.get('OPENFHE_RING_DIM', 8192))
+    keys_config['openfhe_mult_depth']   = int(os.environ.get('OPENFHE_MULT_DEPTH', 1))
+    keys_config['openfhe_scale_bits']   = int(os.environ.get('OPENFHE_SCALE_BITS', 50))
     keys_config['n_length']            = int(os.environ.get('N_LENGTH', 0))
 
     server =  HEServer(num_clients     =  int(os.environ['NCLIENTS']), 

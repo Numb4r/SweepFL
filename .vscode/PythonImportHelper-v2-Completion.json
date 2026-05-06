@@ -228,6 +228,248 @@
         "documentation": {}
     },
     {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "times",
+        "importPath": "os",
+        "description": "os",
+        "isExtraImport": true,
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "times",
+        "importPath": "os",
+        "description": "os",
+        "isExtraImport": true,
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "times",
+        "importPath": "os",
+        "description": "os",
+        "isExtraImport": true,
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "pickle",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pickle",
+        "description": "pickle",
+        "detail": "pickle",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "ABC",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "abstractmethod",
+        "importPath": "abc",
+        "description": "abc",
+        "isExtraImport": true,
+        "detail": "abc",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "Pool",
         "importPath": "multiprocessing",
         "description": "multiprocessing",
@@ -333,39 +575,6 @@
         "documentation": {}
     },
     {
-        "label": "os",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "times",
-        "importPath": "os",
-        "description": "os",
-        "isExtraImport": true,
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "times",
-        "importPath": "os",
-        "description": "os",
-        "isExtraImport": true,
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "times",
-        "importPath": "os",
-        "description": "os",
-        "isExtraImport": true,
-        "detail": "os",
-        "documentation": {}
-    },
-    {
         "label": "gmpy2",
         "kind": 6,
         "isExtraImport": true,
@@ -381,15 +590,6 @@
         "importPath": "time",
         "description": "time",
         "detail": "time",
-        "documentation": {}
-    },
-    {
-        "label": "pickle",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "pickle",
-        "description": "pickle",
-        "detail": "pickle",
         "documentation": {}
     },
     {
@@ -923,6 +1123,38 @@
         "documentation": {}
     },
     {
+        "label": "get_backend",
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "isExtraImport": true,
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "get_backend",
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "isExtraImport": true,
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "get_backend",
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "isExtraImport": true,
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "TenSEALBackend",
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "isExtraImport": true,
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
         "label": "flat_parameters",
         "importPath": "models",
         "description": "models",
@@ -1225,110 +1457,6 @@
         "description": "literature",
         "isExtraImport": true,
         "detail": "literature",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Tuple",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Tuple",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
         "documentation": {}
     },
     {
@@ -1707,6 +1835,31 @@
         "documentation": {}
     },
     {
+        "label": "CKKSContext",
+        "importPath": "ckks_python_simplify",
+        "description": "ckks_python_simplify",
+        "isExtraImport": true,
+        "detail": "ckks_python_simplify",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSTensor",
+        "importPath": "ckks_python_simplify",
+        "description": "ckks_python_simplify",
+        "isExtraImport": true,
+        "detail": "ckks_python_simplify",
+        "documentation": {}
+    },
+    {
+        "label": "ckks_python",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "ckks_python",
+        "description": "ckks_python",
+        "detail": "ckks_python",
+        "documentation": {}
+    },
+    {
         "label": "ACIQ",
         "kind": 6,
         "importPath": "client.encryption.aciq",
@@ -1758,6 +1911,60 @@
         "description": "client.encryption.ckks",
         "peekOfCode": "def ckks_dec(cipher_list,ckks_ctx,sk,isBatch,randk_list, sum_masks = [],batch_size = 0):\n    if isBatch:\n        # randk align\n        if randk_list != []:\n            tmp_list = [0] * len(cipher_list)\n            for i,radnk_idx in enumerate(randk_list):\n                tmp_list[radnk_idx] = cipher_list[i]\n            cipher_list = tmp_list\n        plain_list = []\n        for idx, cipher_serial in enumerate(cipher_list):",
         "detail": "client.encryption.ckks",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSBackend",
+        "kind": 6,
+        "importPath": "client.encryption.ckks_backend",
+        "description": "client.encryption.ckks_backend",
+        "peekOfCode": "class CKKSBackend(ABC):\n    @abstractmethod\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        \"\"\"Generate key pair and persist client (secret) + server (public) contexts.\"\"\"\n    @abstractmethod\n    def load_client_context(self, context_dir: str) -> Any:\n        \"\"\"Load context that holds the secret key (encrypt + decrypt).\"\"\"\n    @abstractmethod\n    def load_server_context(self, context_dir: str) -> Any:\n        \"\"\"Load context with public key only (homomorphic ops, no decrypt).\"\"\"",
+        "detail": "client.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "TenSEALBackend",
+        "kind": 6,
+        "importPath": "client.encryption.ckks_backend",
+        "description": "client.encryption.ckks_backend",
+        "peekOfCode": "class TenSEALBackend(CKKSBackend):\n    _CLIENT_FILE = \"nvnlc2.pkl\"\n    _SERVER_FILE = \"serverc2.pkl\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        import tenseal as ts\n        ctx = ts.context(\n            ts.SCHEME_TYPE.CKKS,\n            poly_modulus_degree=params.get(\"poly_modulus_degree\", 8192),\n            coeff_mod_bit_sizes=params.get(\"coeff_mod_bit_sizes\", [30, 60, 30]),\n        )",
+        "detail": "client.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSSimplifyBackend",
+        "kind": 6,
+        "importPath": "client.encryption.ckks_backend",
+        "description": "client.encryption.ckks_backend",
+        "peekOfCode": "class CKKSSimplifyBackend(CKKSBackend):\n    _CTX_FILE = \"ckks_simplify_ctx.pkl\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        from ckks_python_simplify import CKKSContext\n        ctx = CKKSContext(\n            N          = params.get(\"simplify_N\", 8192),\n            bits       = params.get(\"simplify_bits\", 62),\n            scale_bits = params.get(\"simplify_scale_bits\", 60),\n        )\n        os.makedirs(context_dir, exist_ok=True)",
+        "detail": "client.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSPythonBackend",
+        "kind": 6,
+        "importPath": "client.encryption.ckks_backend",
+        "description": "client.encryption.ckks_backend",
+        "peekOfCode": "class CKKSPythonBackend(CKKSBackend):\n    _SK_FILE     = \"ckks_python_sk.bin\"\n    _PK_FILE     = \"ckks_python_pk.bin\"\n    _PARAMS_FILE = \"ckks_python_params.pkl\"\n    @staticmethod\n    def _import():\n        import sys\n        build_path = os.environ.get(\"CKKS_PYTHON_BUILD_PATH\", \"build\")\n        if build_path not in sys.path:\n            sys.path.insert(0, build_path)",
+        "detail": "client.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "OpenFHEBackend",
+        "kind": 6,
+        "importPath": "client.encryption.ckks_backend",
+        "description": "client.encryption.ckks_backend",
+        "peekOfCode": "class OpenFHEBackend(CKKSBackend):\n    _CC_FILE = \"openfhe_cc.bin\"\n    _SK_FILE = \"openfhe_sk.bin\"\n    _PK_FILE = \"openfhe_pk.bin\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        import openfhe\n        p = openfhe.CCParamsCKKSRNS()\n        p.SetMultiplicativeDepth(params.get(\"openfhe_mult_depth\", 1))\n        p.SetScalingModSize(params.get(\"openfhe_scale_bits\", 50))\n        p.SetRingDim(params.get(\"openfhe_ring_dim\", 8192))",
+        "detail": "client.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "get_backend",
+        "kind": 2,
+        "importPath": "client.encryption.ckks_backend",
+        "description": "client.encryption.ckks_backend",
+        "peekOfCode": "def get_backend(name: Optional[str] = None) -> CKKSBackend:\n    \"\"\"Return the backend singleton for the given name (or CKKS_BACKEND env var).\n    Calling get_backend() multiple times with the same name returns the same instance.\n    \"\"\"\n    key = name or os.environ.get(\"CKKS_BACKEND\", \"tenseal\")\n    if key not in _cache:\n        if key not in _BACKENDS:\n            raise ValueError(\n                f\"Unknown CKKS_BACKEND '{key}'. Valid options: {list(_BACKENDS)}\"\n            )",
+        "detail": "client.encryption.ckks_backend",
         "documentation": {}
     },
     {
@@ -2665,7 +2872,7 @@
         "kind": 2,
         "importPath": "client.literature.set_parameters",
         "description": "client.literature.set_parameters",
-        "peekOfCode": "def he_packs_to_model(self, config):\n    chunk_size = self.key_config[\"poly_modulus_degree\"]//2    \n    packed_parameters  = packing(flat_parameters(self.model.get_weights()),chunk_size = chunk_size)\n    cyphered_packs     = pickle.loads(config['he'])\n    decyphered_pack    = decypher_packs(cyphered_packs, self.context)\n    aggredated_mask    = pickle.loads(config['mask'])\n    for idx_mask, m in enumerate(aggredated_mask):\n        if m > 0:\n            if self.only_sum:\n                packed_parameters[idx_mask] = np.array(decyphered_pack.pop(0)) / m",
+        "peekOfCode": "def he_packs_to_model(self, config):\n    chunk_size = self.key_config[\"poly_modulus_degree\"]//2\n    packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)\n    cyphered_packs     = pickle.loads(config['he'])\n    backend            = get_backend(self.key_config.get(\"ckks_backend\"))\n    decyphered_pack    = decypher_packs(cyphered_packs, self.context, backend=backend)\n    aggredated_mask    = pickle.loads(config['mask'])\n    for idx_mask, m in enumerate(aggredated_mask):\n        if m > 0:\n            if self.only_sum:",
         "detail": "client.literature.set_parameters",
         "documentation": {}
     },
@@ -2755,7 +2962,7 @@
         "kind": 2,
         "importPath": "client.client",
         "description": "client.client",
-        "peekOfCode": "def estimate_ckks_sigma(context,v,n_clients, dim=1000, trials=50):\n    # v = np.random.randn(dim)\n    v = np.array(v)\n    errs = []\n    for _ in range(trials):\n        enc = ts.ckks_vector(context, v)\n        for _ in range(n_clients):\n            enc+=v\n        dec = enc.decrypt()\n        dec = np.array(dec)",
+        "peekOfCode": "def estimate_ckks_sigma(context, v, n_clients, dim=1000, trials=50):\n    \"\"\"Estimates CKKS additive noise std-dev. Only meaningful for TenSEAL contexts.\"\"\"\n    import tenseal as ts\n    v = np.array(v)\n    errs = []\n    for _ in range(trials):\n        enc = ts.ckks_vector(context, v)\n        for _ in range(n_clients):\n            enc += v\n        dec = np.array(enc.decrypt())",
         "detail": "client.client",
         "documentation": {}
     },
@@ -2764,7 +2971,7 @@
         "kind": 2,
         "importPath": "client.client",
         "description": "client.client",
-        "peekOfCode": "def main():\n    tf.keras.backend.clear_session()\n    keys_config:Dict[str,Any] = {}\n    keys_config['poly_modulus_degree'] = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']       = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes'] = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']        = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']            = os.environ.get('KEY_TYPE', None)\n    keys_config['n_length']            = int(os.environ.get('N_LENGTH', 0))\n    gpus = tf.config.experimental.list_physical_devices('GPU')",
+        "peekOfCode": "def main():\n    tf.keras.backend.clear_session()\n    keys_config:Dict[str,Any] = {}\n    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)\n    keys_config['n_length']             = int(os.environ.get('N_LENGTH', 0))\n    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')",
         "detail": "client.client",
         "documentation": {}
     },
@@ -2809,7 +3016,7 @@
         "kind": 2,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "def cypher_packs(self, packs, mask):\n    cyphered_packs   = []\n    for idx, pack in enumerate(packs):        \n        if mask[idx] == 1:\n            cypher          = ts.ckks_vector(self.context, pack)\n            serialized_pack = cypher.serialize()\n            cyphered_packs.append(serialized_pack)\n    return cyphered_packs\ndef remove_padding(self, packed_parameters):\n    total_parameters = len(flat_parameters(self.model.get_weights()))",
+        "peekOfCode": "def cypher_packs(self, packs, mask):\n    backend = get_backend(self.key_config.get(\"ckks_backend\"))\n    cyphered_packs = []\n    for idx, pack in enumerate(packs):\n        if mask[idx] == 1:\n            ct = backend.encrypt(self.context, pack)\n            cyphered_packs.append(backend.serialize(ct))\n    return cyphered_packs\ndef remove_padding(self, packed_parameters):\n    total_parameters = len(flat_parameters(self.model.get_weights()))",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -2818,7 +3025,7 @@
         "kind": 2,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "def remove_padding(self, packed_parameters):\n    total_parameters = len(flat_parameters(self.model.get_weights()))\n    return packed_parameters[:total_parameters]\ndef flat_packs(packed_parameters):\n    flat_params = []\n    for pack in packed_parameters:\n        flat_params.extend(pack)\n    return flat_params\ndef decypher_packs(packed_parameters, context):\n    decrypted_parameters = []",
+        "peekOfCode": "def remove_padding(self, packed_parameters):\n    total_parameters = len(flat_parameters(self.model.get_weights()))\n    return packed_parameters[:total_parameters]\ndef flat_packs(packed_parameters):\n    flat_params = []\n    for pack in packed_parameters:\n        flat_params.extend(pack)\n    return flat_params\ndef decypher_packs(packed_parameters, context, backend=None):\n    if backend is None:",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -2827,7 +3034,7 @@
         "kind": 2,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "def flat_packs(packed_parameters):\n    flat_params = []\n    for pack in packed_parameters:\n        flat_params.extend(pack)\n    return flat_params\ndef decypher_packs(packed_parameters, context):\n    decrypted_parameters = []\n    for pack in packed_parameters:\n        decrypted_parameters.append(ts.ckks_vector_from(context, pack).decrypt())\n    return decrypted_parameters",
+        "peekOfCode": "def flat_packs(packed_parameters):\n    flat_params = []\n    for pack in packed_parameters:\n        flat_params.extend(pack)\n    return flat_params\ndef decypher_packs(packed_parameters, context, backend=None):\n    if backend is None:\n        backend = get_backend()\n    return [backend.decrypt(context, backend.deserialize(context, pack))\n            for pack in packed_parameters]",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -2836,7 +3043,7 @@
         "kind": 2,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "def decypher_packs(packed_parameters, context):\n    decrypted_parameters = []\n    for pack in packed_parameters:\n        decrypted_parameters.append(ts.ckks_vector_from(context, pack).decrypt())\n    return decrypted_parameters\ndef reshape_model(flatted_packs,a,sentinel=0):\n    model =[]\n    # print(a)\n    if type(a) != int and type(a)!=float:\n        # print(f'len:{len(a)}')",
+        "peekOfCode": "def decypher_packs(packed_parameters, context, backend=None):\n    if backend is None:\n        backend = get_backend()\n    return [backend.decrypt(context, backend.deserialize(context, pack))\n            for pack in packed_parameters]\ndef reshape_model(flatted_packs,a,sentinel=0):\n    model =[]\n    # print(a)\n    if type(a) != int and type(a)!=float:\n        # print(f'len:{len(a)}')",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -3390,6 +3597,60 @@
         "documentation": {}
     },
     {
+        "label": "CKKSBackend",
+        "kind": 6,
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "peekOfCode": "class CKKSBackend(ABC):\n    @abstractmethod\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        \"\"\"Generate key pair and persist client (secret) + server (public) contexts.\"\"\"\n    @abstractmethod\n    def load_client_context(self, context_dir: str) -> Any:\n        \"\"\"Load context that holds the secret key (encrypt + decrypt).\"\"\"\n    @abstractmethod\n    def load_server_context(self, context_dir: str) -> Any:\n        \"\"\"Load context with public key only (homomorphic ops, no decrypt).\"\"\"",
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "TenSEALBackend",
+        "kind": 6,
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "peekOfCode": "class TenSEALBackend(CKKSBackend):\n    _CLIENT_FILE = \"nvnlc2.pkl\"\n    _SERVER_FILE = \"serverc2.pkl\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        import tenseal as ts\n        ctx = ts.context(\n            ts.SCHEME_TYPE.CKKS,\n            poly_modulus_degree=params.get(\"poly_modulus_degree\", 8192),\n            coeff_mod_bit_sizes=params.get(\"coeff_mod_bit_sizes\", [30, 60, 30]),\n        )",
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSSimplifyBackend",
+        "kind": 6,
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "peekOfCode": "class CKKSSimplifyBackend(CKKSBackend):\n    _CTX_FILE = \"ckks_simplify_ctx.pkl\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        from ckks_python_simplify import CKKSContext\n        ctx = CKKSContext(\n            N          = params.get(\"simplify_N\", 8192),\n            bits       = params.get(\"simplify_bits\", 62),\n            scale_bits = params.get(\"simplify_scale_bits\", 60),\n        )\n        os.makedirs(context_dir, exist_ok=True)",
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSPythonBackend",
+        "kind": 6,
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "peekOfCode": "class CKKSPythonBackend(CKKSBackend):\n    _SK_FILE     = \"ckks_python_sk.bin\"\n    _PK_FILE     = \"ckks_python_pk.bin\"\n    _PARAMS_FILE = \"ckks_python_params.pkl\"\n    @staticmethod\n    def _import():\n        import sys\n        build_path = os.environ.get(\"CKKS_PYTHON_BUILD_PATH\", \"build\")\n        if build_path not in sys.path:\n            sys.path.insert(0, build_path)",
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "OpenFHEBackend",
+        "kind": 6,
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "peekOfCode": "class OpenFHEBackend(CKKSBackend):\n    _CC_FILE = \"openfhe_cc.bin\"\n    _SK_FILE = \"openfhe_sk.bin\"\n    _PK_FILE = \"openfhe_pk.bin\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        import openfhe\n        p = openfhe.CCParamsCKKSRNS()\n        p.SetMultiplicativeDepth(params.get(\"openfhe_mult_depth\", 1))\n        p.SetScalingModSize(params.get(\"openfhe_scale_bits\", 50))\n        p.SetRingDim(params.get(\"openfhe_ring_dim\", 8192))",
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "get_backend",
+        "kind": 2,
+        "importPath": "encryption.ckks_backend",
+        "description": "encryption.ckks_backend",
+        "peekOfCode": "def get_backend(name: Optional[str] = None) -> CKKSBackend:\n    \"\"\"Return the backend singleton for the given name (or CKKS_BACKEND env var).\n    Calling get_backend() multiple times with the same name returns the same instance.\n    \"\"\"\n    key = name or os.environ.get(\"CKKS_BACKEND\", \"tenseal\")\n    if key not in _cache:\n        if key not in _BACKENDS:\n            raise ValueError(\n                f\"Unknown CKKS_BACKEND '{key}'. Valid options: {list(_BACKENDS)}\"\n            )",
+        "detail": "encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
         "label": "true2two",
         "kind": 2,
         "importPath": "encryption.complement",
@@ -3801,6 +4062,60 @@
         "description": "server.encryption.ckks",
         "peekOfCode": "def ckks_dec(cipher_list,ckks_ctx,sk,isBatch,randk_list, sum_masks = [],batch_size = 0):\n    if isBatch:\n        # randk align\n        if randk_list != []:\n            tmp_list = [0] * len(cipher_list)\n            for i,radnk_idx in enumerate(randk_list):\n                tmp_list[radnk_idx] = cipher_list[i]\n            cipher_list = tmp_list\n        plain_list = []\n        for idx, cipher_serial in enumerate(cipher_list):",
         "detail": "server.encryption.ckks",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSBackend",
+        "kind": 6,
+        "importPath": "server.encryption.ckks_backend",
+        "description": "server.encryption.ckks_backend",
+        "peekOfCode": "class CKKSBackend(ABC):\n    @abstractmethod\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        \"\"\"Generate key pair and persist client (secret) + server (public) contexts.\"\"\"\n    @abstractmethod\n    def load_client_context(self, context_dir: str) -> Any:\n        \"\"\"Load context that holds the secret key (encrypt + decrypt).\"\"\"\n    @abstractmethod\n    def load_server_context(self, context_dir: str) -> Any:\n        \"\"\"Load context with public key only (homomorphic ops, no decrypt).\"\"\"",
+        "detail": "server.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "TenSEALBackend",
+        "kind": 6,
+        "importPath": "server.encryption.ckks_backend",
+        "description": "server.encryption.ckks_backend",
+        "peekOfCode": "class TenSEALBackend(CKKSBackend):\n    _CLIENT_FILE = \"nvnlc2.pkl\"\n    _SERVER_FILE = \"serverc2.pkl\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        import tenseal as ts\n        ctx = ts.context(\n            ts.SCHEME_TYPE.CKKS,\n            poly_modulus_degree=params.get(\"poly_modulus_degree\", 8192),\n            coeff_mod_bit_sizes=params.get(\"coeff_mod_bit_sizes\", [30, 60, 30]),\n        )",
+        "detail": "server.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSSimplifyBackend",
+        "kind": 6,
+        "importPath": "server.encryption.ckks_backend",
+        "description": "server.encryption.ckks_backend",
+        "peekOfCode": "class CKKSSimplifyBackend(CKKSBackend):\n    _CTX_FILE = \"ckks_simplify_ctx.pkl\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        from ckks_python_simplify import CKKSContext\n        ctx = CKKSContext(\n            N          = params.get(\"simplify_N\", 8192),\n            bits       = params.get(\"simplify_bits\", 62),\n            scale_bits = params.get(\"simplify_scale_bits\", 60),\n        )\n        os.makedirs(context_dir, exist_ok=True)",
+        "detail": "server.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "CKKSPythonBackend",
+        "kind": 6,
+        "importPath": "server.encryption.ckks_backend",
+        "description": "server.encryption.ckks_backend",
+        "peekOfCode": "class CKKSPythonBackend(CKKSBackend):\n    _SK_FILE     = \"ckks_python_sk.bin\"\n    _PK_FILE     = \"ckks_python_pk.bin\"\n    _PARAMS_FILE = \"ckks_python_params.pkl\"\n    @staticmethod\n    def _import():\n        import sys\n        build_path = os.environ.get(\"CKKS_PYTHON_BUILD_PATH\", \"build\")\n        if build_path not in sys.path:\n            sys.path.insert(0, build_path)",
+        "detail": "server.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "OpenFHEBackend",
+        "kind": 6,
+        "importPath": "server.encryption.ckks_backend",
+        "description": "server.encryption.ckks_backend",
+        "peekOfCode": "class OpenFHEBackend(CKKSBackend):\n    _CC_FILE = \"openfhe_cc.bin\"\n    _SK_FILE = \"openfhe_sk.bin\"\n    _PK_FILE = \"openfhe_pk.bin\"\n    def generate_and_save(self, params: dict, context_dir: str) -> None:\n        import openfhe\n        p = openfhe.CCParamsCKKSRNS()\n        p.SetMultiplicativeDepth(params.get(\"openfhe_mult_depth\", 1))\n        p.SetScalingModSize(params.get(\"openfhe_scale_bits\", 50))\n        p.SetRingDim(params.get(\"openfhe_ring_dim\", 8192))",
+        "detail": "server.encryption.ckks_backend",
+        "documentation": {}
+    },
+    {
+        "label": "get_backend",
+        "kind": 2,
+        "importPath": "server.encryption.ckks_backend",
+        "description": "server.encryption.ckks_backend",
+        "peekOfCode": "def get_backend(name: Optional[str] = None) -> CKKSBackend:\n    \"\"\"Return the backend singleton for the given name (or CKKS_BACKEND env var).\n    Calling get_backend() multiple times with the same name returns the same instance.\n    \"\"\"\n    key = name or os.environ.get(\"CKKS_BACKEND\", \"tenseal\")\n    if key not in _cache:\n        if key not in _BACKENDS:\n            raise ValueError(\n                f\"Unknown CKKS_BACKEND '{key}'. Valid options: {list(_BACKENDS)}\"\n            )",
+        "detail": "server.encryption.ckks_backend",
         "documentation": {}
     },
     {
@@ -4411,7 +4726,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def main():\n    keys_config:Dict[str,Any] = {}\n    keys_config['poly_modulus_degree'] = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']       = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes'] = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']        = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']            = os.environ.get('KEY_TYPE', None)\n    keys_config['n_length']            = int(os.environ.get('N_LENGTH', 0))\n    server =  HEServer(num_clients     =  int(os.environ['NCLIENTS']), \n                       dirichlet_alpha =  1.0, ",
+        "peekOfCode": "def main():\n    keys_config:Dict[str,Any] = {}\n    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)\n    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')\n    keys_config['simplify_N']           = int(os.environ.get('SIMPLIFY_N', 8192))\n    keys_config['simplify_bits']        = int(os.environ.get('SIMPLIFY_BITS', 62))",
         "detail": "server.server",
         "documentation": {}
     },
@@ -4420,7 +4735,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def align_packs(self, packed_parameters, mask):\n    aligned_pack = [0 for i in range(len(mask))]\n    for idx, m in enumerate(mask):\n        if m == 1:\n            if self.homomorphic_type == 'CKKS':\n                aligned_pack[idx] = ts.ckks_vector_from(self.context, packed_parameters.pop(0))\n            elif self.homomorphic_type == 'BFV':\n                aligned_pack[idx] = ts.bfv_vector_from(self.context, packed_parameters.pop(0))\n    return aligned_pack\ndef aggregate_packs_and_masks(aligned_pack, weighted_mask, aggregated_packs, aggregated_mask):",
+        "peekOfCode": "def align_packs(self, packed_parameters, mask):\n    \"\"\"Deserialize packed bytes into ciphertext objects, aligned to the mask.\"\"\"\n    backend     = _backend(self)\n    aligned_pack = [0] * len(mask)\n    for idx, m in enumerate(mask):\n        if m == 1:\n            aligned_pack[idx] = backend.deserialize(self.context, packed_parameters.pop(0))\n    return aligned_pack\ndef aggregate_packs_and_masks(aligned_pack, weighted_mask, aggregated_packs, aggregated_mask,\n                               backend=None, ctx=None):",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4429,7 +4744,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def aggregate_packs_and_masks(aligned_pack, weighted_mask, aggregated_packs, aggregated_mask):\n    is_empty = len(aggregated_packs) == 0\n    for i in range(len(weighted_mask)):\n        if is_empty:\n            print(weighted_mask[i])\n            aggregated_packs.append(aligned_pack[i] * weighted_mask[i])\n            aggregated_mask.append(weighted_mask[i])\n        else:\n            aggregated_packs[i] = aggregated_packs[i] + aligned_pack[i] * weighted_mask[i]\n            aggregated_mask[i]  = aggregated_mask[i] + weighted_mask[i]",
+        "peekOfCode": "def aggregate_packs_and_masks(aligned_pack, weighted_mask, aggregated_packs, aggregated_mask,\n                               backend=None, ctx=None):\n    \"\"\"Accumulate weighted encrypted packs across clients.\n    backend/ctx: optional — if None, falls back to TenSEAL for backward compat\n    with existing test code that passes raw TenSEAL vectors.\n    \"\"\"\n    if backend is None:\n        backend = TenSEALBackend()\n    is_empty = len(aggregated_packs) == 0\n    for i in range(len(weighted_mask)):",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4438,7 +4753,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def serialize_packs(aggregated_packs):\n    serialized_packs = []\n    for pack in aggregated_packs:\n        if pack != 0:\n            serialized_packs.append(pack.serialize())\n    return serialized_packs\ndef get_pack_mask_pair(self, results):\n    pack_mask_pair   = []\n    total_examples   = 0\n    for _, fit_res in results:",
+        "peekOfCode": "def serialize_packs(aggregated_packs, backend=None):\n    if backend is None:\n        backend = TenSEALBackend()\n    return [backend.serialize(pack) for pack in aggregated_packs if pack != 0]\ndef get_pack_mask_pair(self, results):\n    backend      = _backend(self)\n    pack_mask_pair = []\n    total_examples = 0\n    for _, fit_res in results:\n        packed_parameters = pk.loads(fit_res.metrics['he'])",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4447,7 +4762,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def get_pack_mask_pair(self, results):\n    pack_mask_pair   = []\n    total_examples   = 0\n    for _, fit_res in results:\n        client_id         = str(fit_res.metrics['cid'])\n        packed_parameters = pk.loads(fit_res.metrics['he'])\n        mask              = pk.loads(fit_res.metrics['mask'])\n        dataset_size      = int(fit_res.num_examples)\n        aligned_pack    = align_packs(self, packed_parameters, mask)\n        weighted_mask   = np.array(mask) * dataset_size",
+        "peekOfCode": "def get_pack_mask_pair(self, results):\n    backend      = _backend(self)\n    pack_mask_pair = []\n    total_examples = 0\n    for _, fit_res in results:\n        packed_parameters = pk.loads(fit_res.metrics['he'])\n        mask              = pk.loads(fit_res.metrics['mask'])\n        dataset_size      = int(fit_res.num_examples)\n        aligned_pack  = align_packs(self, packed_parameters, mask)\n        weighted_mask = np.array(mask) * dataset_size",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4456,7 +4771,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def aggregate_packs_and_mask(pack_mask_pair, total_examples, onlysum):\n    aggregated_packs = [0 for i in range(len(pack_mask_pair[0][1]))]\n    aggregated_masks = [0 for i in range(len(pack_mask_pair[0][1]))]\n    for packs, mask in pack_mask_pair:\n        mask = mask / total_examples\n        for idx_pack, p in enumerate(packs):\n            if onlysum:\n                aggregated_packs[idx_pack] = aggregated_packs[idx_pack] + p\n                aggregated_masks[idx_pack] = aggregated_masks[idx_pack] + mask[idx_pack] * total_examples\n            else:",
+        "peekOfCode": "def aggregate_packs_and_mask(pack_mask_pair, total_examples, onlysum, backend=None, ctx=None):\n    \"\"\"Weighted homomorphic aggregation across all clients' pack-mask pairs.\"\"\"\n    n                = len(pack_mask_pair[0][1])\n    aggregated_packs = [0] * n\n    aggregated_masks = [0] * n\n    for packs, mask in pack_mask_pair:\n        mask = mask / total_examples\n        for idx_pack, p in enumerate(packs):\n            if p == 0:  # inactive position — skip, stays 0\n                continue",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4465,7 +4780,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def get_cyphered_parameters(self, results):\n    parameters_list = []\n    total_examples  = 0\n    for _, fit_res in results:\n        client_id      = str(fit_res.metrics['cid'])\n        if self.homomorphic_type == 'Paillier':\n            parameters = pk.loads(fit_res.metrics['he'])\n            parameters_list.append((parameters, int(fit_res.num_examples)))\n            total_examples  += int(fit_res.num_examples)\n        else:",
+        "peekOfCode": "def get_cyphered_parameters(self, results):\n    backend         = _backend(self)\n    parameters_list = []\n    total_examples  = 0\n    for _, fit_res in results:\n        if self.homomorphic_type == 'Paillier':\n            parameters = pk.loads(fit_res.metrics['he'])\n        else:\n            parameters = backend.deserialize(self.context, fit_res.metrics['he'])\n        parameters_list.append((parameters, int(fit_res.num_examples)))",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4474,7 +4789,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def aggregated_cyphered_parameters(self, parameters_list, total_examples):\n    agg_parameters = None  # ← None em vez de 0\n    for parameters, num_examples in parameters_list:\n        if self.onlysum:\n            if self.homomorphic_type == 'Paillier':\n                if agg_parameters is None:\n                    agg_parameters = parameters\n                else:     \n                    agg_parameters = (agg_parameters * parameters) % pow(self.context.get_n(), 2)\n            else:",
+        "peekOfCode": "def aggregated_cyphered_parameters(self, parameters_list, total_examples):\n    backend    = _backend(self)\n    agg        = None\n    for parameters, num_examples in parameters_list:\n        if self.onlysum:\n            if self.homomorphic_type == 'Paillier':\n                if agg is None:\n                    agg = parameters\n                else:\n                    agg = (agg * parameters) % pow(self.context.get_n(), 2)",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -4573,16 +4888,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def context_bfv(poly_modulus_degree=8192,plain_modulus=1073872897,key_type='none'):\n    \"\"\"\n    This function is used to create the context of the homomorphic encryption:\n    it is used to create the keys and the parameters of the encryption scheme (BFV).\n    :return: the context of the homomorphic encryption\n    \"\"\"\n    cont = ts.context(\n        ts.SCHEME_TYPE.BFV,\n        poly_modulus_degree=8192,\n        coeff_mod_bit_sizes=[50,50,50,50],",
-        "detail": "generate_keys",
-        "documentation": {}
-    },
-    {
-        "label": "context_ckks",
-        "kind": 2,
-        "importPath": "generate_keys",
-        "description": "generate_keys",
-        "peekOfCode": "def context_ckks(poly_modulus_degree=8192,coeff_mod_bit_sizes=[60, 40, 40, 60],global_scale=2**40,key_type='galois'):\n    \"\"\"\n    This function is used to create the context of the homomorphic encryption:\n    it is used to create the keys and the parameters of the encryption scheme (CKKS).\n    :return: the context of the homomorphic encryption\n    \"\"\"\n    cont = ts.context(\n        ts.SCHEME_TYPE.CKKS,\n        poly_modulus_degree=  8192,\n        coeff_mod_bit_sizes= [30,60,30]",
+        "peekOfCode": "def context_bfv(poly_modulus_degree=8192, plain_modulus=1073872897, key_type='none'):\n    cont = ts.context(\n        ts.SCHEME_TYPE.BFV,\n        poly_modulus_degree=8192,\n        coeff_mod_bit_sizes=[50, 50, 50, 50],\n        plain_modulus=1073872897,\n    )\n    if key_type == 'all':\n        cont.generate_galois_keys()\n        cont.generate_relin_keys()",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -4591,7 +4897,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def read_query(file_path):\n    \"\"\"\n    This function is used to read a pickle file.\n    :param file_path: the path of the file to read\n    :return: the query and the context\n    \"\"\"\n    if os.path.exists(file_path):\n        with open(file_path, 'rb') as file:\n            \"\"\"\n            # pickle.load(f)  # load to read file object",
+        "peekOfCode": "def read_query(file_path):\n    if os.path.exists(file_path):\n        with open(file_path, 'rb') as file:\n            query_str = pickle.load(file)\n        contexte = query_str[\"context\"]\n        del query_str[\"context\"]\n        return query_str, contexte\n    else:\n        print(\"The file doesn't exist\")\ndef write_query(file_path, client_query):",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -4600,7 +4906,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def write_query(file_path, client_query):\n    \"\"\"\n    This function is used to write a pickle file.\n    :param file_path: the path of the file to write\n    :param client_query: the query to write\n    \"\"\"\n    with open(file_path, 'wb') as file:  # 'ab' to add existing file\n        encode_str = pickle.dumps(client_query)\n        file.write(encode_str)\ndef combo_keys(type_key='ckks', client_path=\"secret.pkl\", server_path=\"server_key.pkl\",args={}):",
+        "peekOfCode": "def write_query(file_path, client_query):\n    with open(file_path, 'wb') as file:\n        encode_str = pickle.dumps(client_query)\n        file.write(encode_str)\ndef combo_keys(type_key='ckks', client_path=\"secret.pkl\", server_path=\"server_key.pkl\", args={}):\n    \"\"\"Generate and persist HE keys for the given scheme.\n    For CKKS, delegates to the backend selected by args['ckks_backend']\n    (falls back to the CKKS_BACKEND env var, then to 'tenseal').\n    BFV always uses TenSEAL regardless of the CKKS backend setting.\n    \"\"\"",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -4609,7 +4915,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def combo_keys(type_key='ckks', client_path=\"secret.pkl\", server_path=\"server_key.pkl\",args={}):\n    \"\"\"\n    To create the public/private keys combination\n    args:\n        client_path: path to save the secret key (str)\n        server_path: path to save the server public key (str)\n    \"\"\"\n    poly_modulus_degree=None if args.get(\"poly_modulus_degree\") == None else args[\"poly_modulus_degree\"]\n    plain_modulus=None if args.get(\"plain_modulus\") == None else args[\"plain_modulus\"]\n    key_type = None if args.get(\"key_type\" ) == None else args[\"key_type\"]",
+        "peekOfCode": "def combo_keys(type_key='ckks', client_path=\"secret.pkl\", server_path=\"server_key.pkl\", args={}):\n    \"\"\"Generate and persist HE keys for the given scheme.\n    For CKKS, delegates to the backend selected by args['ckks_backend']\n    (falls back to the CKKS_BACKEND env var, then to 'tenseal').\n    BFV always uses TenSEAL regardless of the CKKS backend setting.\n    \"\"\"\n    from encryption.ckks_backend import get_backend\n    print(f'Generating {type_key} keys with args: {args}')\n    if type_key == 'ckks':\n        backend_name = args.get(\"ckks_backend\") or os.environ.get(\"CKKS_BACKEND\", \"tenseal\")",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -4618,7 +4924,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def Paillier_keys(n_length=2048):\n    paillier = PaillierCipher()\n    paillier.generate_key(n_length=n_length if n_length != None else 2048)\n    print(n_length)\n    with open(\"./context/paillier.pkl\", \"wb\") as file:\n        pickle.dump(paillier, file)\ndef main():\n    path = \"context\"\n    # if not os.path.exists(path):\n    #     os.makedirs(path)",
+        "peekOfCode": "def Paillier_keys(n_length=2048):\n    paillier = PaillierCipher()\n    paillier.generate_key(n_length=n_length if n_length is not None else 2048)\n    with open(\"./context/paillier.pkl\", \"wb\") as file:\n        pickle.dump(paillier, file)\ndef main():\n    combo_keys('ckks')\nif __name__ == \"__main__\":\n    main()",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -4627,7 +4933,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def main():\n    path = \"context\"\n    # if not os.path.exists(path):\n    #     os.makedirs(path)\n    # combo_keys('ckks')\n    combo_keys('ckks')\n    # Paillier_keys()\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def main():\n    combo_keys('ckks')\nif __name__ == \"__main__\":\n    main()",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -4755,6 +5061,114 @@
         "description": "test",
         "peekOfCode": "c = ts.ckks_vector_from(context,cs).decrypt()\nprint(c)",
         "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "ctx",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "ctx = CKKSContext(N=8192, bits=62, scale_bits=60)\n# Um array com 10.000 elementos (MAIOR que o limite de 4096)\n# pesos_locais = np.arange(2, dtype=np.float64)\npesos_locais=[1,2] \ntamanho_exato = len(pesos_locais)\n# 1. Cifragem (A classe vai gerar 3 chunks silenciosamente)\ntensor_cifrado_1 = CKKSTensor(ctx, pesos_locais)\ntensor_cifrado_2 = CKKSTensor(ctx, pesos_locais)\n# 2. Rede (Retorna uma lista contendo os 3 bytes de cada chunk)\npayload_flower_1 = tensor_cifrado_1.serialize() ",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "tamanho_exato",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "tamanho_exato = len(pesos_locais)\n# 1. Cifragem (A classe vai gerar 3 chunks silenciosamente)\ntensor_cifrado_1 = CKKSTensor(ctx, pesos_locais)\ntensor_cifrado_2 = CKKSTensor(ctx, pesos_locais)\n# 2. Rede (Retorna uma lista contendo os 3 bytes de cada chunk)\npayload_flower_1 = tensor_cifrado_1.serialize() \npayload_flower_2 = tensor_cifrado_2.serialize()\n# 3. Servidor Flower soma tudo in-place\ntensor_1_servidor = CKKSTensor(ctx, payload_flower_1)\ntensor_2_servidor = CKKSTensor(ctx, payload_flower_2)",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "tensor_cifrado_1",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "tensor_cifrado_1 = CKKSTensor(ctx, pesos_locais)\ntensor_cifrado_2 = CKKSTensor(ctx, pesos_locais)\n# 2. Rede (Retorna uma lista contendo os 3 bytes de cada chunk)\npayload_flower_1 = tensor_cifrado_1.serialize() \npayload_flower_2 = tensor_cifrado_2.serialize()\n# 3. Servidor Flower soma tudo in-place\ntensor_1_servidor = CKKSTensor(ctx, payload_flower_1)\ntensor_2_servidor = CKKSTensor(ctx, payload_flower_2)\ntensor_1_servidor += tensor_2_servidor \npayload_flower_3 = tensor_1_servidor.serialize()",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "tensor_cifrado_2",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "tensor_cifrado_2 = CKKSTensor(ctx, pesos_locais)\n# 2. Rede (Retorna uma lista contendo os 3 bytes de cada chunk)\npayload_flower_1 = tensor_cifrado_1.serialize() \npayload_flower_2 = tensor_cifrado_2.serialize()\n# 3. Servidor Flower soma tudo in-place\ntensor_1_servidor = CKKSTensor(ctx, payload_flower_1)\ntensor_2_servidor = CKKSTensor(ctx, payload_flower_2)\ntensor_1_servidor += tensor_2_servidor \npayload_flower_3 = tensor_1_servidor.serialize()\n# 4. Cliente decifra, passando o tamanho exato que o modelo TF espera",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "payload_flower_1",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "payload_flower_1 = tensor_cifrado_1.serialize() \npayload_flower_2 = tensor_cifrado_2.serialize()\n# 3. Servidor Flower soma tudo in-place\ntensor_1_servidor = CKKSTensor(ctx, payload_flower_1)\ntensor_2_servidor = CKKSTensor(ctx, payload_flower_2)\ntensor_1_servidor += tensor_2_servidor \npayload_flower_3 = tensor_1_servidor.serialize()\n# 4. Cliente decifra, passando o tamanho exato que o modelo TF espera\ntensor_3_cliente = CKKSTensor(ctx, payload_flower_3)\nresultado = tensor_3_cliente.decrypt()",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "payload_flower_2",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "payload_flower_2 = tensor_cifrado_2.serialize()\n# 3. Servidor Flower soma tudo in-place\ntensor_1_servidor = CKKSTensor(ctx, payload_flower_1)\ntensor_2_servidor = CKKSTensor(ctx, payload_flower_2)\ntensor_1_servidor += tensor_2_servidor \npayload_flower_3 = tensor_1_servidor.serialize()\n# 4. Cliente decifra, passando o tamanho exato que o modelo TF espera\ntensor_3_cliente = CKKSTensor(ctx, payload_flower_3)\nresultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "tensor_1_servidor",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "tensor_1_servidor = CKKSTensor(ctx, payload_flower_1)\ntensor_2_servidor = CKKSTensor(ctx, payload_flower_2)\ntensor_1_servidor += tensor_2_servidor \npayload_flower_3 = tensor_1_servidor.serialize()\n# 4. Cliente decifra, passando o tamanho exato que o modelo TF espera\ntensor_3_cliente = CKKSTensor(ctx, payload_flower_3)\nresultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):\n    print(resultado[i])  # Deve imprimir 0, 6, 12, ..., 19998\nprint(f\"Tamanho processado perfeitamente: {len(resultado)}\")",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "tensor_2_servidor",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "tensor_2_servidor = CKKSTensor(ctx, payload_flower_2)\ntensor_1_servidor += tensor_2_servidor \npayload_flower_3 = tensor_1_servidor.serialize()\n# 4. Cliente decifra, passando o tamanho exato que o modelo TF espera\ntensor_3_cliente = CKKSTensor(ctx, payload_flower_3)\nresultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):\n    print(resultado[i])  # Deve imprimir 0, 6, 12, ..., 19998\nprint(f\"Tamanho processado perfeitamente: {len(resultado)}\")\nfor i in range(len(resultado)):",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "payload_flower_3",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "payload_flower_3 = tensor_1_servidor.serialize()\n# 4. Cliente decifra, passando o tamanho exato que o modelo TF espera\ntensor_3_cliente = CKKSTensor(ctx, payload_flower_3)\nresultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):\n    print(resultado[i])  # Deve imprimir 0, 6, 12, ..., 19998\nprint(f\"Tamanho processado perfeitamente: {len(resultado)}\")\nfor i in range(len(resultado)):\n    assert 2*pesos_locais[i] - resultado[i] <= 1e-13, f\"Erro na posição {i}: esperado {2*pesos_locais[i]}, obtido {resultado[i]} : Erro numérico excede o limite de precisão! {2*pesos_locais[i] - resultado[i]} > 1e-14\"\n    print(f\"Ruido numerico na posição {i}: {2*pesos_locais[i] - resultado[i]}\")  # Imprime o ruído numérico para cada elemento",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "tensor_3_cliente",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "tensor_3_cliente = CKKSTensor(ctx, payload_flower_3)\nresultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):\n    print(resultado[i])  # Deve imprimir 0, 6, 12, ..., 19998\nprint(f\"Tamanho processado perfeitamente: {len(resultado)}\")\nfor i in range(len(resultado)):\n    assert 2*pesos_locais[i] - resultado[i] <= 1e-13, f\"Erro na posição {i}: esperado {2*pesos_locais[i]}, obtido {resultado[i]} : Erro numérico excede o limite de precisão! {2*pesos_locais[i] - resultado[i]} > 1e-14\"\n    print(f\"Ruido numerico na posição {i}: {2*pesos_locais[i] - resultado[i]}\")  # Imprime o ruído numérico para cada elemento\n# Saída: Tamanho processado perfeitamente: 10000",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "resultado",
+        "kind": 5,
+        "importPath": "test_py_ckks_simplifly",
+        "description": "test_py_ckks_simplifly",
+        "peekOfCode": "resultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):\n    print(resultado[i])  # Deve imprimir 0, 6, 12, ..., 19998\nprint(f\"Tamanho processado perfeitamente: {len(resultado)}\")\nfor i in range(len(resultado)):\n    assert 2*pesos_locais[i] - resultado[i] <= 1e-13, f\"Erro na posição {i}: esperado {2*pesos_locais[i]}, obtido {resultado[i]} : Erro numérico excede o limite de precisão! {2*pesos_locais[i] - resultado[i]} > 1e-14\"\n    print(f\"Ruido numerico na posição {i}: {2*pesos_locais[i] - resultado[i]}\")  # Imprime o ruído numérico para cada elemento\n# Saída: Tamanho processado perfeitamente: 10000",
+        "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "test_py_serialization",
+        "description": "test_py_serialization",
+        "peekOfCode": "def main():\n    print(\"=== Suíte de Testes Abrangente: Motor CKKS ===\\n\")\n    # ==========================================\n    # 1. Geração de Parâmetros e Chaves\n    # ==========================================\n    N = 8192\n    bits = 60\n    q = ckks_python.generate_prime(bits, N)\n    slots = N // 2\n    print(\"[1] Geração de Parâmetros\")",
+        "detail": "test_py_serialization",
         "documentation": {}
     }
 ]
