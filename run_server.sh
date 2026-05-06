@@ -1,4 +1,10 @@
 #!/bin/bash
+# Launches the FL aggregation server in a Docker container.
+# Called by start_all.sh — do not run directly unless you know what you're doing.
+#
+# Args: SOLUTION NCLIENTES NUM_ROUNDS POLY COEFFS SCALE KEY_TYPE
+#       DATASET NIID SEED PERCENTAGE LOGFOLDER PLAIN_MODULUS N_LENGTH
+
 SOLUTION=$1
 NCLIENTES=$2
 NUM_ROUNDS=$3
@@ -10,48 +16,53 @@ DATASET=$8
 NIID=$9
 SEED=${10}
 PERCENTAGE=${11}
-LOGFOLDER=${12} 
-PLAIN=${13}
-LENGHT=${14}
-echo "$1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14}"
-echo "Parâmetros do servidor: SOLUTION=$SOLUTION, NCLIENTES=$NCLIENTES, NUM_ROUNDS=$NUM_ROUNDS, POLY=$POLY, COEFFS=$COEFFS, SCALE=$SCALE, KEY_TYPE=$KEY_TYPE, DATASET=$DATASET, NIID=$NIID, SEED=$SEED, PERCENTAGE=$PERCENTAGE, LOGFOLDER=$LOGFOLDER"
-echo "Iniciando Servidor com $NCLIENTES clientes, $NUM_ROUNDS rounds Dataset $DATASET solução $SOLUTION Distribuição Niid $NIID SEED $SEED PERCENTAGE $PERCENTAGE"
-echo "Poly $POLY Coeffs $COEFFS Scale $SCALE Key_Type $KEY_TYPE, PLAIN=$PLAIN, LENGHT=$LENGHT"
+LOGFOLDER=${12}
+PLAIN_MODULUS=${13}
+N_LENGTH=${14}
+
+TELEGRAM_TOKEN="7947375786:AAHmPy5ZlI2dhxXBEOC7cOVMb8fLK5ZbaWo"
+TELEGRAM_CHAT="111824133"
+
+echo "Starting server | solution=$SOLUTION clients=$NCLIENTES rounds=$NUM_ROUNDS dataset=$DATASET"
+echo "  niid=$NIID seed=$SEED percentage=$PERCENTAGE logfolder=$LOGFOLDER"
+echo "  poly=$POLY coeffs=$COEFFS scale=$SCALE key_type=$KEY_TYPE plain=$PLAIN_MODULUS n_length=$N_LENGTH"
+
 NAME="fl_server-gpu"
+docker rm -f "$NAME" 2>/dev/null || true
 
+docker run --rm \
+    --name "$NAME" \
+    -p 9999:9999 \
+    -v "$PWD/server:/server:ro" \
+    -v "$PWD/context:/context:ro" \
+    -v "$PWD/logs:/logs" \
+    -e SERVER_IP=0.0.0.0:9999 \
+    -e NCLIENTS=$NCLIENTES \
+    -e NUM_ROUNDS=$NUM_ROUNDS \
+    -e SOLUTION=$SOLUTION \
+    -e DATASET=$DATASET \
+    -e NIID=$NIID \
+    -e PERCENTAGE=$PERCENTAGE \
+    -e LOGFOLDER=$LOGFOLDER \
+    -e POLY=$POLY \
+    -e COEFFS=$COEFFS \
+    -e SCALE=$SCALE \
+    -e KEY_TYPE=$KEY_TYPE \
+    -e PLAIN_MODULUS=$PLAIN_MODULUS \
+    -e N_LENGTH=$N_LENGTH \
+    -e PYTHONHASHSEED=$SEED \
+    -e CKKS_BACKEND=${CKKS_BACKEND:-tenseal} \
+    -e SIMPLIFY_N=${SIMPLIFY_N:-8192} \
+    -e SIMPLIFY_BITS=${SIMPLIFY_BITS:-62} \
+    -e SIMPLIFY_SCALE_BITS=${SIMPLIFY_SCALE_BITS:-60} \
+    -e PYCRYPT_N=${PYCRYPT_N:-8192} \
+    -e PYCRYPT_BITS=${PYCRYPT_BITS:-60} \
+    -e OPENFHE_RING_DIM=${OPENFHE_RING_DIM:-8192} \
+    -e OPENFHE_MULT_DEPTH=${OPENFHE_MULT_DEPTH:-1} \
+    -e OPENFHE_SCALE_BITS=${OPENFHE_SCALE_BITS:-50} \
+    flhe:server \
+    python /server/server.py
 
-
-docker rm -f $NAME 2>/dev/null
-echo "Iniciando container Docker do Servidor FLHE"
-docker run -it --name $NAME \
-  -p 9999:9999 \
-  -v $PWD/server:/server:ro \
-  -v $PWD/context:/context:ro \
-  -v $PWD/logs:/logs \
-  -e SERVER_IP=0.0.0.0:9999 \
-  -e NCLIENTS=$((NCLIENTES)) \
-  -e NUM_ROUNDS=$NUM_ROUNDS \
-  -e SOLUTION=$SOLUTION \
-  -e POLY=$POLY \
-  -e COEFFS=$COEFFS \
-  -e SCALE=$SCALE \
-  -e KEY_TYPE=$KEY_TYPE \
-  -e DATASET=$DATASET \
-  -e FRAC_FIT=0 \
-  -e PYTHONHASHSEED=$SEED \
-  -e NIID=$NIID \
-  -e PERCENTAGE=$PERCENTAGE \
-  -e LOGFOLDER=$LOGFOLDER \
-  -e PLAIN_MODULUS=$PLAIN \
-  -e N_LENGTH=$LENGHT \
-  flhe:server \
-  python /server/server.py
-
-# docker logs -f $NAME >> logs/$NAME.log
-
-TOKEN="7947375786:AAHmPy5ZlI2dhxXBEOC7cOVMb8fLK5ZbaWo"
-CHAT_ID="111824133"
-curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
-    -d chat_id=$CHAT_ID \
-    -d text="Servidor finalizado 🤖"
-echo "Servidor finalizado!"
+curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+     -d chat_id="$TELEGRAM_CHAT" -d text="Server finished: $SOLUTION $DATASET niid=$NIID" > /dev/null
+echo "Server finished."
