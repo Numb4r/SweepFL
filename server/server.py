@@ -19,7 +19,7 @@ import pickle as pk
 from encryption.paillier import PaillierCipher
 
 class HEServer(fl.server.strategy.FedAvg):
-    def __init__(self, num_clients, dirichlet_alpha, dataset, fraction_fit, solution):
+    def __init__(self, num_clients, dirichlet_alpha, dataset, fraction_fit, solution,key_config):
         self.num_clients     = num_clients
         self.dirichlet_alpha = dirichlet_alpha
         self.dataset         = dataset
@@ -33,11 +33,17 @@ class HEServer(fl.server.strategy.FedAvg):
         # self.packing         = packing
         # self.onlysum         = onlysum
         self.solution        = str(solution).lower()
-        
+        self.key_config = key_config
         self.config_solution()
+        self.poly_modulus_degree = self.key_config.get("poly_modulus_degree")
+        self.plain_modulus = self.key_config.get("plain_modulus")
+        self.coeff_mod_bit_sizes = self.key_config.get("coeff_mod_bit_sizes")
+        self.global_scale = self.key_config.get("global_scale")
+        self.key_type = self.key_config.get("key_type")
+
         self.context         = self.get_server_context()
-        
         super().__init__(fraction_fit=fraction_fit, min_available_clients=num_clients, min_evaluate_clients=num_clients)
+        print("SERVER_READY")
         
     def config_solution(self):
         
@@ -64,28 +70,59 @@ class HEServer(fl.server.strategy.FedAvg):
             self.homomorphic_type = 'CKKS'
             self.onlysum          = False
             self.packing          = True
+        elif str(self.solution).lower() == 'nvnl':
+            self.homomorphic      = True
+            self.homomorphic_type = 'CKKS'
+            self.onlysum          = False
+            self.packing          = True
+        elif str(self.solution).lower() == 'nvnl-scout':
+            self.homomorphic      = True
+            self.homomorphic_type = 'CKKS'
+            self.onlysum          = False
+            self.packing          = True
+        elif str(self.solution).lower() == 'fedphe-scout':
+            self.homomorphic      = True
+            self.homomorphic_type = 'CKKS'
+            self.onlysum          = False
+            self.packing          = True
             
         elif str(self.solution).lower() == 'plaintext':
             self.homomorphic      = False
             self.onlysum          = False
             self.packing          = False
             self.homomorphic_type = 'None'    
+        elif str(self.solution).lower() == "socas":
+            self.homomorphic      = True
+            self.packing          = False
+            self.onlysum         = False
+            self.homomorphic_type = 'CKKS'
+        elif str(self.solution).lower() == 'sw':
+            self.homomorphic      = True
+            self.homomorphic_type = 'CKKS'
+            self.onlysum          = False
+            self.packing          = True
+        elif str(self.solution).lower() == 'rw':
+            self.homomorphic      = True
+            self.homomorphic_type = 'CKKS'
+            self.onlysum          = False
+            self.packing          = True
     
     def get_server_context(self):
-        
+        file_name = f"./context/{str(self.homomorphic_type).lower()}_{self.poly_modulus_degree}_{self.plain_modulus}_{self.coeff_mod_bit_sizes}_{self.global_scale}_{self.key_type}_server_key.pkl"
+        context = None
         if self.homomorphic_type == 'Paillier':
             with open(f'context/paillier.pkl', 'rb') as file:
                 context = pickle.load(file)    
         
-        else:
-            if 'CKKS' == self.homomorphic_type:
-                with open(f'context/ckks_server_key.pkl', 'rb') as file:
-                    secret = pickle.load(file)  
-                    context = ts.context_from(secret["context"])
-            else:
-                with open(f'../context/bfv_secret.pkl', 'rb') as file:
-                    secret = pickle.load(file) 
-                    context = ts.context_from(secret["context"])
+        elif 'CKKS' == self.homomorphic_type:
+            # with open(file_name, 'rb') as file:
+            with open(f"./context/serverc2.pkl",'rb') as file:
+                secret = pickle.load(file)  
+                context = ts.context_from(secret["context"])
+        elif "BFV" == self.homomorphic_type:
+            with open(f"./context/bfv_server_key.pkl", 'rb') as file:
+                secret = pickle.load(file) 
+                context = ts.context_from(secret["context"])
         
         return context
     
@@ -169,7 +206,7 @@ class HEServer(fl.server.strategy.FedAvg):
 
                 if self.homomorphic_type == 'Paillier':
                     self.agg_parameters = pickle.dumps(agg_parameters)
-                    self.total_examples = len(parameters_list) #number of clients
+                    self.total_examples = total_examples #number of clients
                 
                 elif self.homomorphic_type == 'CKKS':
                     self.agg_parameters = agg_parameters.serialize()
@@ -177,7 +214,7 @@ class HEServer(fl.server.strategy.FedAvg):
                     
                 elif self.homomorphic_type == 'BFV':
                     self.agg_parameters = agg_parameters.serialize()
-                    self.total_examples = len(parameters_list)
+                    self.total_examples = total_examples
                 #self.log_metrics_server(server_round, aggregation_time)
                 return [], {}
         
@@ -270,21 +307,30 @@ class HEServer(fl.server.strategy.FedAvg):
         # Return client/config pairs
         # Each pair of (ClientProxy, FitRes) constitutes a successful update from one of the previously selected clients
         return [(client, evaluate_ins) for client in clients]
-
+from typing import Dict,Any
 def main():
-	
-	server =  HEServer(num_clients     =  int(os.environ['NCLIENTS']), 
-                       dirichlet_alpha =  float(os.environ['DIRICHLET_ALPHA']), 
-                       dataset         =  os.environ['DATASET'], 
-                       fraction_fit    =  float(os.environ['FRAC_FIT']),
-                       solution        = str(os.environ['SOLUTION'])
+    keys_config:Dict[str,Any] = {}
+    
+    keys_config['poly_modulus_degree'] = int(os.environ.get('POLY', 0))
+    keys_config['plain_modulus']       = int(os.environ.get('PLAIN_MODULUS', -1))
+    keys_config['coeff_mod_bit_sizes'] = list(map(int, os.environ.get('COEFFS', '').split(',')))
+    keys_config['global_scale']        = int(os.environ.get('SCALE', 0))
+    keys_config['key_type']            = os.environ.get('KEY_TYPE', None)
+    keys_config['n_length']            = int(os.environ.get('N_LENGTH', 0))
+
+    server =  HEServer(num_clients     =  int(os.environ['NCLIENTS']), 
+                       dirichlet_alpha =  1.0, 
+                       dataset         =  'mnist', 
+                       fraction_fit    =  1,
+                       solution        = str(os.environ['SOLUTION']),
+                       key_config      = keys_config
                     #    homomorphic     = os.environ['HOMOMORPHIC'] == 'True',
                     #    packing         = os.environ['PACKING'] == 'True',
                     #    onlysum         = os.environ['ONLYSUM'] == 'True',
                     #    homomorphic_type = str(os.environ['HOMOMORPHIC_TYPE'])
             )
 
-	fl.server.start_server(
+    fl.server.start_server(
         server_address=os.environ['SERVER_IP'],
         config=fl.server.ServerConfig(num_rounds=int(os.environ['NUM_ROUNDS'])),
         strategy=server, 

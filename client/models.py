@@ -1,91 +1,110 @@
 import tensorflow as tf
 import numpy as np
+from keras import layers, models, Sequential
+from typing import Tuple
+import tensorflow as tf
+
+# RESNET
+import tensorflow as tf
 from tensorflow.keras import layers, models
 
-def CNN_fmnist_tf(input_shape, num_classes):
-    model = models.Sequential()
+# ---------------------------------------
+# Bloco Residual Básico (CIFAR version)
+# ---------------------------------------
+def residual_block(x, filters, stride=1):
+    shortcut = x
     
-    # Layer 1
-    model.add(layers.Conv2D(16, kernel_size=(5, 5), padding='same', input_shape=(input_shape[1:])))
-    model.add(layers.BatchNormalization())
-    model.add(layers.ReLU())
-    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-    
-    # Layer 2
-    model.add(layers.Conv2D(32, kernel_size=(3, 3)))
-    model.add(layers.BatchNormalization())
-    model.add(layers.ReLU())
-    
-    # Layer 3
-    model.add(layers.Conv2D(64, kernel_size=(3, 3)))
-    model.add(layers.BatchNormalization())
-    model.add(layers.ReLU())
-    model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-    
-    # Flatten and Fully Connected Layer
-    model.add(layers.Flatten())
-    model.add(layers.Dense(num_classes))
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-
-    return model
-
-def residual_block(inputs, filters, stride=1):
-    x = layers.Conv2D(filters, kernel_size=3, strides=stride, padding="same", use_bias=False)(inputs)
+    # Primeira conv
+    x = layers.Conv2D(filters, 3, strides=stride, padding='same', use_bias=False)(x)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
-    x = layers.Conv2D(filters, kernel_size=3, strides=1, padding="same", use_bias=False)(x)
+    # Segunda conv
+    x = layers.Conv2D(filters, 3, strides=1, padding='same', use_bias=False)(x)
     x = layers.BatchNormalization()(x)
 
-    if stride != 1 or inputs.shape[-1] != filters:
-        shortcut = layers.Conv2D(filters, kernel_size=1, strides=stride, padding="same", use_bias=False)(inputs)
+    # Ajuste do atalho se mudar dimensão
+    if stride != 1 or shortcut.shape[-1] != filters:
+        shortcut = layers.Conv2D(filters, 1, strides=stride, padding='same', use_bias=False)(shortcut)
         shortcut = layers.BatchNormalization()(shortcut)
-    else:
-        shortcut = inputs
 
     x = layers.Add()([x, shortcut])
     x = layers.ReLU()(x)
+
     return x
 
-def ResNet20(input_shape, num_classes):
-    inputs = tf.keras.Input(shape=(input_shape[1:]))
 
-    # Initial Conv Layer
-    x = layers.Conv2D(16, kernel_size=3, strides=1, padding="same", use_bias=False)(inputs)
+# ---------------------------------------
+# ResNet-20 CIFAR
+# ---------------------------------------
+def create_resnet20(input_shape, num_classes):
+    inputs = layers.Input(shape=input_shape)
+
+    # Camada inicial
+    x = layers.Conv2D(16, 3, strides=1, padding='same', use_bias=False)(inputs)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
-    # First stack of residual blocks (16 filters)
+    # Stage 1 (16 filtros)
     for _ in range(3):
-        x = residual_block(x, 16)
+        x = residual_block(x, 16, stride=1)
 
-    # Second stack of residual blocks (32 filters)
+    # Stage 2 (32 filtros)
     x = residual_block(x, 32, stride=2)
     for _ in range(2):
-        x = residual_block(x, 32)
+        x = residual_block(x, 32, stride=1)
 
-    # Third stack of residual blocks (64 filters)
+    # Stage 3 (64 filtros)
     x = residual_block(x, 64, stride=2)
     for _ in range(2):
-        x = residual_block(x, 64)
+        x = residual_block(x, 64, stride=1)
 
-    # Global Average Pooling and Dense Layer
+    # Classificador
     x = layers.GlobalAveragePooling2D()(x)
-    outputs = layers.Dense(num_classes, activation="softmax")(x)
+    outputs = layers.Dense(num_classes, activation='softmax')(x)
 
-    model = tf.keras.Model(inputs, outputs)
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model = models.Model(inputs, outputs)
+
+    model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
 
     return model
 
-def create_dnn(input_shape, num_classes):
-    
+def create_simple_cnn(input_shape, num_classes):
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Input(shape=(input_shape[1:])),
+        tf.keras.layers.Input(shape=input_shape),  # <<< AQUI
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
         tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dense(64,  activation='relu'),
-        tf.keras.layers.Dense(32,  activation='relu'),
+        tf.keras.layers.Dense(num_classes, activation='softmax')
+    ])
+
+    model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    return model
+
+
+def create_dnn(input_shape:Tuple[int,int], num_classes:int,seed:int) :
+    
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.Input(shape=(input_shape)),
+        tf.keras.layers.Flatten(),
+        # tf.keras.layers.Dense(128, activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
+        # tf.keras.layers.Dense(64,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
+        # tf.keras.layers.Dense(32,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
+        tf.keras.layers.Dense(256, activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
+        tf.keras.layers.Dense(256,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
+        tf.keras.layers.Dense(128,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
+        tf.keras.layers.Dense(64,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),
         tf.keras.layers.Dense(num_classes, activation='softmax'),
 
     ])
@@ -94,61 +113,45 @@ def create_dnn(input_shape, num_classes):
     
     return model
 
+
+
 def create_lenet5(input_shape, num_classes):
     model = tf.keras.models.Sequential()
-    
-    model.add(tf.keras.layers.Conv2D(6, kernel_size=(5, 5), strides=(1, 1), activation='tanh', input_shape=(*input_shape[1:],1), padding="same"))
-    model.add(tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2), padding='valid'))
-    model.add(tf.keras.layers.Conv2D(16, kernel_size=(5, 5), strides=(1, 1), activation='tanh', padding='valid'))
-    model.add(tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2), padding='valid'))
+
+    model.add(tf.keras.layers.Conv2D(
+        6,
+        kernel_size=(5, 5),
+        strides=(1, 1),
+        activation='tanh',
+        padding="same",
+        input_shape=input_shape
+    ))
+
+    model.add(tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(tf.keras.layers.Conv2D(
+        16,
+        kernel_size=(5, 5),
+        strides=(1, 1),
+        activation='tanh',
+        padding='valid'
+    ))
+
+    model.add(tf.keras.layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2)))
+
     model.add(tf.keras.layers.Flatten())
     model.add(tf.keras.layers.Dense(120, activation='tanh'))
     model.add(tf.keras.layers.Dense(84, activation='tanh'))
     model.add(tf.keras.layers.Dense(num_classes, activation='softmax'))
 
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    
-    return model
-
-def create_cnn(input_shape, num_classes):
-    model = tf.keras.models.Sequential()
-    
-   # Convolutional Block 1
-    model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu', input_shape=input_shape))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-    model.add(tf.keras.layers.Dropout(0.2))
-    
-    # Convolutional Block 2
-    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-    model.add(tf.keras.layers.Dropout(0.3))
-    
-    # Convolutional Block 3
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.Conv2D(256, (3, 3), padding='same', activation='relu'))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-    model.add(tf.keras.layers.Dropout(0.4))
-    
-    # Fully Connected Layer
-    model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(512, activation='relu'))
-    model.add(tf.keras.layers.BatchNormalization())
-    model.add(tf.keras.layers.Dropout(0.5))
-    model.add(tf.keras.layers.Dense(num_classes, activation='softmax'))
-
-    opt = tf.keras.optimizers.Adam(learning_rate=0.001)
-
-    model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model.compile(
+        optimizer='adam',
+        loss='sparse_categorical_crossentropy',
+        metrics=['accuracy']
+    )
 
     return model
+
 
 def flat_parameters(parameters):
     flat_params = []

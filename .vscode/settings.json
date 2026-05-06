@@ -1,0 +1,32 @@
+{
+    // Python & Pylance
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.diagnosticMode": "workspace",
+
+    // Formatadores
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+
+    // Organizar imports automaticamente
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+    },
+
+    // Ativar linters externos
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+
+    // Se quiser mensagens mais completas
+    "python.linting.mypyCategorySeverity.error": "Error",
+    "python.linting.mypyCategorySeverity.note": "Information",
+
+    // Black settings
+    "black-formatter.args": [
+        "--line-length=88"
+    ]
+}

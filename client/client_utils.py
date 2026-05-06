@@ -3,7 +3,6 @@ import sys
 import tenseal as ts
 import numpy as np
 from models import flat_parameters
-import math
 def get_size(data):
     total_size = 0
     

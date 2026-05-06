@@ -9,3 +9,7 @@ flwr_datasets[vision]
 matplotlib
 seaborn
 gmpy2
+mypy
+flake8
+black
+isort

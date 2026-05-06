@@ -1,4 +1,6 @@
-FROM python:3.10-slim
+# FROM python:3.10-slim
+FROM tensorflow/tensorflow:2.13.0-gpu
+
 #FROM arm64v8/python:3.11.2 
 
 RUN pip install -U pip
@@ -14,6 +16,6 @@ RUN pip install -U pip
 #RUN pip install .
 #RUN pip install "pandas<2.0.0" numpy  tensorflow flwr=="1.4.0"  flwr-datasets flwr_datasets[vision] matplotlib gmpy2
 
-RUN pip install "pandas<2.0.0" numpy  tensorflow flwr=="1.4.0"  tenseal flwr-datasets flwr_datasets[vision] matplotlib gmpy2
+RUN pip install "pandas<2.0.0" numpy  flwr=="1.4.0"  tenseal flwr-datasets flwr_datasets[vision] matplotlib gmpy2
 
 CMD ["python", "-u", "client/client.py"]

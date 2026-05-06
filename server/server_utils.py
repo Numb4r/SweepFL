@@ -100,23 +100,47 @@ def get_cyphered_parameters(self, results):
     return parameters_list, total_examples
   
 
+# def aggregated_cyphered_parameters(self, parameters_list, total_examples):
+#     agg_parameters = 0
+    
+#     for parameters, num_examples in parameters_list:
+        
+#         if self.onlysum:
+#             if self.homomorphic_type == 'Paillier':
+#                 if isinstance(agg_parameters, int):
+#                     agg_parameters = parameters
+#                 else:     
+#                     agg_parameters = (agg_parameters * parameters) % pow(self.context.get_n(),2)
+#             else:
+#                 agg_parameters  = (agg_parameters + parameters)
+#         else:    
+#             weights         = num_examples / total_examples
+#             agg_parameters  = agg_parameters + (parameters * weights)
+        
+#     return agg_parameters
 def aggregated_cyphered_parameters(self, parameters_list, total_examples):
-    agg_parameters = 0
+    agg_parameters = None  # ← None em vez de 0
     
     for parameters, num_examples in parameters_list:
-        
         if self.onlysum:
             if self.homomorphic_type == 'Paillier':
-                if isinstance(agg_parameters, int):
+                if agg_parameters is None:
                     agg_parameters = parameters
                 else:     
-                    agg_parameters = (agg_parameters * parameters) % pow(self.context.get_n(),2)
+                    agg_parameters = (agg_parameters * parameters) % pow(self.context.get_n(), 2)
             else:
-                agg_parameters  = (agg_parameters + parameters)
-        else:    
-            weights         = num_examples / total_examples
-            agg_parameters  = agg_parameters + (parameters * weights)
-        
+                # CKKS e BFV
+                if agg_parameters is None:
+                    agg_parameters = parameters  # ← primeiro elemento vira a base
+                else:
+                    agg_parameters = agg_parameters + parameters
+        else:
+            weights = num_examples / total_examples
+            if agg_parameters is None:
+                agg_parameters = parameters * weights
+            else:
+                agg_parameters = agg_parameters + (parameters * weights)
+    
     return agg_parameters
     
     

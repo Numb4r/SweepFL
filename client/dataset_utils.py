@@ -171,5 +171,23 @@ def load_data_flowerdataset(self):
 
 	if self.dataset == 'CIFAR10':
 		return train['img']/255.0, train['label'], test['img']/255.0, test['label']
+	elif self.dataset == "tanganke/gtsrb":
+
+		x_train = np.array([
+			tf.image.resize(np.array(img), (32, 32)).numpy()
+			for img in train["image"]
+		], dtype="float32") / 255.0
+
+		x_test = np.array([
+			tf.image.resize(np.array(img), (32, 32)).numpy()
+			for img in test["image"]
+		], dtype="float32") / 255.0
+
+		y_train = train["label"]
+		y_test  = test["label"]
+
+		return x_train, y_train, x_test, y_test
 
 	return train['image']/255.0, train['label'], test['image']/255.0, test['label']
+
+
