@@ -1211,6 +1211,22 @@
         "documentation": {}
     },
     {
+        "label": "create_dnn_tiny",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_dnn_base",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
         "label": "create_lenet5",
         "importPath": "models",
         "description": "models",
@@ -1220,6 +1236,30 @@
     },
     {
         "label": "create_resnet20",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_mobilenetv2",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_vit_tiny",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_simple_cnn",
         "importPath": "models",
         "description": "models",
         "isExtraImport": true,
@@ -1539,30 +1579,6 @@
         "importPath": "logging",
         "description": "logging",
         "detail": "logging",
-        "documentation": {}
-    },
-    {
-        "label": "layers",
-        "importPath": "keras",
-        "description": "keras",
-        "isExtraImport": true,
-        "detail": "keras",
-        "documentation": {}
-    },
-    {
-        "label": "models",
-        "importPath": "keras",
-        "description": "keras",
-        "isExtraImport": true,
-        "detail": "keras",
-        "documentation": {}
-    },
-    {
-        "label": "Sequential",
-        "importPath": "keras",
-        "description": "keras",
-        "isExtraImport": true,
-        "detail": "keras",
         "documentation": {}
     },
     {
@@ -3471,11 +3487,11 @@
         "documentation": {}
     },
     {
-        "label": "residual_block",
-        "kind": 2,
+        "label": "_PosEmbedding",
+        "kind": 6,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def residual_block(x, filters, stride=1):\n    shortcut = x\n    # Primeira conv\n    x = layers.Conv2D(filters, 3, strides=stride, padding='same', use_bias=False)(x)\n    x = layers.BatchNormalization()(x)\n    x = layers.ReLU()(x)\n    # Segunda conv\n    x = layers.Conv2D(filters, 3, strides=1, padding='same', use_bias=False)(x)\n    x = layers.BatchNormalization()(x)\n    # Ajuste do atalho se mudar dimensão",
+        "peekOfCode": "class _PosEmbedding(layers.Layer):\n    \"\"\"Adds a learnable (1, num_patches, embed_dim) position encoding.\"\"\"\n    def build(self, input_shape):\n        _, n, d = input_shape\n        self.pos = self.add_weight(\n            name='pos_emb', shape=(1, n, d),\n            initializer='zeros', trainable=True,\n        )\n    def call(self, x):\n        return x + self.pos",
         "detail": "client.models",
         "documentation": {}
     },
@@ -3484,16 +3500,25 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def create_resnet20(input_shape, num_classes):\n    inputs = layers.Input(shape=input_shape)\n    # Camada inicial\n    x = layers.Conv2D(16, 3, strides=1, padding='same', use_bias=False)(inputs)\n    x = layers.BatchNormalization()(x)\n    x = layers.ReLU()(x)\n    # Stage 1 (16 filtros)\n    for _ in range(3):\n        x = residual_block(x, 16, stride=1)\n    # Stage 2 (32 filtros)",
+        "peekOfCode": "def create_resnet20(input_shape, num_classes: int):\n    \"\"\"ResNet-20 for CIFAR — ~270 k parameters.\"\"\"\n    inputs = layers.Input(shape=input_shape)\n    x = layers.Conv2D(16, 3, strides=1, padding='same', use_bias=False)(inputs)\n    x = layers.BatchNormalization()(x)\n    x = layers.ReLU()(x)\n    for _ in range(3):\n        x = _residual_block(x, 16)\n    x = _residual_block(x, 32, stride=2)\n    for _ in range(2):",
         "detail": "client.models",
         "documentation": {}
     },
     {
-        "label": "create_simple_cnn",
+        "label": "create_dnn_tiny",
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def create_simple_cnn(input_shape, num_classes):\n    model = tf.keras.models.Sequential([\n        tf.keras.layers.Input(shape=input_shape),  # <<< AQUI\n        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),\n        tf.keras.layers.MaxPooling2D((2, 2)),\n        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),\n        tf.keras.layers.MaxPooling2D((2, 2)),\n        tf.keras.layers.Flatten(),\n        tf.keras.layers.Dense(128, activation='relu'),\n        tf.keras.layers.Dense(num_classes, activation='softmax')",
+        "peekOfCode": "def create_dnn_tiny(input_shape: Tuple, num_classes: int, seed: int = 42):\n    \"\"\"DNN-Tiny — 3 hidden layers, ~111 k parameters on MNIST.\"\"\"\n    return _compile(tf.keras.Sequential([\n        layers.Input(shape=input_shape),\n        layers.Flatten(),\n        layers.Dense(128, activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(64,  activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(32,  activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(num_classes, activation='softmax'),\n    ]))",
+        "detail": "client.models",
+        "documentation": {}
+    },
+    {
+        "label": "create_dnn_base",
+        "kind": 2,
+        "importPath": "client.models",
+        "description": "client.models",
+        "peekOfCode": "def create_dnn_base(input_shape: Tuple, num_classes: int, seed: int = 42):\n    \"\"\"DNN-Base — 4 hidden layers, ~309 k parameters on MNIST.\"\"\"\n    return _compile(tf.keras.Sequential([\n        layers.Input(shape=input_shape),\n        layers.Flatten(),\n        layers.Dense(256, activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(256, activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(128, activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(64,  activation='relu', kernel_initializer=_glorot(seed)),\n        layers.Dense(num_classes, activation='softmax'),",
         "detail": "client.models",
         "documentation": {}
     },
@@ -3502,7 +3527,7 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def create_dnn(input_shape:Tuple[int,int], num_classes:int,seed:int) :\n    model = tf.keras.models.Sequential([\n        tf.keras.layers.Input(shape=(input_shape)),\n        tf.keras.layers.Flatten(),\n        # tf.keras.layers.Dense(128, activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),\n        # tf.keras.layers.Dense(64,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),\n        # tf.keras.layers.Dense(32,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),\n        tf.keras.layers.Dense(256, activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),\n        tf.keras.layers.Dense(256,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),\n        tf.keras.layers.Dense(128,  activation='relu',kernel_initializer=tf.keras.initializers.GlorotUniform(seed)),",
+        "peekOfCode": "def create_dnn(input_shape: Tuple, num_classes: int, seed: int = 42):\n    \"\"\"Alias for create_dnn_base — kept for backward compatibility.\"\"\"\n    return create_dnn_base(input_shape, num_classes, seed)\n# ══════════════════════════════════════════════════════════════════════════════\n#  LeNet-5   (FashionMNIST)   ~44 k params\n# ══════════════════════════════════════════════════════════════════════════════\ndef create_lenet5(input_shape, num_classes: int):\n    \"\"\"LeNet-5 — ~44 k parameters.\"\"\"\n    return _compile(tf.keras.Sequential([\n        layers.Input(shape=input_shape),",
         "detail": "client.models",
         "documentation": {}
     },
@@ -3511,7 +3536,34 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def create_lenet5(input_shape, num_classes):\n    model = tf.keras.models.Sequential()\n    model.add(tf.keras.layers.Conv2D(\n        6,\n        kernel_size=(5, 5),\n        strides=(1, 1),\n        activation='tanh',\n        padding=\"same\",\n        input_shape=input_shape\n    ))",
+        "peekOfCode": "def create_lenet5(input_shape, num_classes: int):\n    \"\"\"LeNet-5 — ~44 k parameters.\"\"\"\n    return _compile(tf.keras.Sequential([\n        layers.Input(shape=input_shape),\n        layers.Conv2D(6,  (5, 5), activation='tanh', padding='same'),\n        layers.AveragePooling2D((2, 2)),\n        layers.Conv2D(16, (5, 5), activation='tanh', padding='valid'),\n        layers.AveragePooling2D((2, 2)),\n        layers.Flatten(),\n        layers.Dense(120, activation='tanh'),",
+        "detail": "client.models",
+        "documentation": {}
+    },
+    {
+        "label": "create_mobilenetv2",
+        "kind": 2,
+        "importPath": "client.models",
+        "description": "client.models",
+        "peekOfCode": "def create_mobilenetv2(input_shape, num_classes: int, alpha: float = 0.5):\n    \"\"\"MobileNetV2 with width multiplier alpha.\n    Approximate parameter counts (exclude head, no pretrained weights):\n      alpha=0.35 → ~250 k   |   alpha=0.5 → ~460 k   |   alpha=1.0 → ~2.3 M\n    Handles grayscale / 2-D inputs by converting to 3-channel internally.\n    Resizes inputs smaller than 32×32 to 32×32 (MobileNetV2 minimum).\n    \"\"\"\n    h = input_shape[0]\n    w = input_shape[1]\n    c = input_shape[2] if len(input_shape) == 3 else 1",
+        "detail": "client.models",
+        "documentation": {}
+    },
+    {
+        "label": "create_vit_tiny",
+        "kind": 2,
+        "importPath": "client.models",
+        "description": "client.models",
+        "peekOfCode": "def create_vit_tiny(\n    input_shape,\n    num_classes: int,\n    patch_size: int = 4,\n    embed_dim: int = 64,\n    depth: int = 6,\n    num_heads: int = 4,\n    mlp_ratio: int = 2,\n):\n    \"\"\"ViT-Tiny — patch-based Vision Transformer.",
+        "detail": "client.models",
+        "documentation": {}
+    },
+    {
+        "label": "create_simple_cnn",
+        "kind": 2,
+        "importPath": "client.models",
+        "description": "client.models",
+        "peekOfCode": "def create_simple_cnn(input_shape, num_classes: int):\n    return _compile(tf.keras.Sequential([\n        layers.Input(shape=input_shape),\n        layers.Conv2D(32, (3, 3), activation='relu'),\n        layers.MaxPooling2D((2, 2)),\n        layers.Conv2D(64, (3, 3), activation='relu'),\n        layers.MaxPooling2D((2, 2)),\n        layers.Flatten(),\n        layers.Dense(128, activation='relu'),\n        layers.Dense(num_classes, activation='softmax'),",
         "detail": "client.models",
         "documentation": {}
     },
@@ -3520,7 +3572,7 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def flat_parameters(parameters):\n    flat_params = []\n    for param in parameters:\n        flat_params.extend(param.flatten())\n    return flat_params\ndef reshape_parameters(self, decrypted_parameters):\n    reshaped_parameters = []\n    for layer in self.model.get_weights():\n        reshaped_parameters.append(np.reshape(decrypted_parameters[:layer.size], layer.shape))\n        decrypted_parameters = decrypted_parameters[layer.size:]",
+        "peekOfCode": "def flat_parameters(parameters):\n    flat = []\n    for p in parameters:\n        flat.extend(p.flatten())\n    return flat\ndef reshape_parameters(self, decrypted_parameters):\n    reshaped = []\n    for layer in self.model.get_weights():\n        reshaped.append(np.reshape(decrypted_parameters[:layer.size], layer.shape))\n        decrypted_parameters = decrypted_parameters[layer.size:]",
         "detail": "client.models",
         "documentation": {}
     },
@@ -3529,7 +3581,7 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def reshape_parameters(self, decrypted_parameters):\n    reshaped_parameters = []\n    for layer in self.model.get_weights():\n        reshaped_parameters.append(np.reshape(decrypted_parameters[:layer.size], layer.shape))\n        decrypted_parameters = decrypted_parameters[layer.size:]\n    return reshaped_parameters\ndef reshape_model(flatted_packs,a,sentinel=0):\n    model =[]\n    # print(a)\n    if type(a) != int and type(a)!=float:",
+        "peekOfCode": "def reshape_parameters(self, decrypted_parameters):\n    reshaped = []\n    for layer in self.model.get_weights():\n        reshaped.append(np.reshape(decrypted_parameters[:layer.size], layer.shape))\n        decrypted_parameters = decrypted_parameters[layer.size:]\n    return reshaped\ndef reshape_model(flatted_packs, a, sentinel=0):\n    model = []\n    if type(a) not in (int, float):\n        for item in a:",
         "detail": "client.models",
         "documentation": {}
     },
@@ -3538,7 +3590,7 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def reshape_model(flatted_packs,a,sentinel=0):\n    model =[]\n    # print(a)\n    if type(a) != int and type(a)!=float:\n        # print(f'len:{len(a)}')\n        for item in a:\n            # print(f'item {item},  {type(item)},sentinel {sentinel}')\n            m,sentinel=reshape_model(flatted_packs,item,sentinel)\n            # print(sentinel)\n            model.append(m)",
+        "peekOfCode": "def reshape_model(flatted_packs, a, sentinel=0):\n    model = []\n    if type(a) not in (int, float):\n        for item in a:\n            m, sentinel = reshape_model(flatted_packs, item, sentinel)\n            model.append(m)\n    else:\n        sentinel += 1\n        return flatted_packs[sentinel - 1], sentinel\n    return model, sentinel",
         "detail": "client.models",
         "documentation": {}
     },

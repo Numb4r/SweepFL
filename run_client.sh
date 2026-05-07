@@ -61,6 +61,7 @@ docker run --rm \
     -e OPENFHE_RING_DIM=${OPENFHE_RING_DIM:-8192} \
     -e OPENFHE_MULT_DEPTH=${OPENFHE_MULT_DEPTH:-1} \
     -e OPENFHE_SCALE_BITS=${OPENFHE_SCALE_BITS:-50} \
+    -e MODEL_ARCH=${MODEL_ARCH:-} \
     -e HF_DATASETS_CACHE=/client/data \
     -e HF_HOME=/tmp/hf_home \
     -e HF_HUB_READ_TIMEOUT=300 \

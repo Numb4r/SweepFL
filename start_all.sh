@@ -20,7 +20,11 @@ TECHNIQUE="none"       # topk | robin_round | slided_window | none
 declare -A MODEL_DATASET
 MODEL_DATASET["resnet20"]="CIFAR10"
 # MODEL_DATASET["lenet5"]="FASHION_MNIST"
-# MODEL_DATASET["DNN"]="MNIST"
+# MODEL_DATASET["dnn"]="MNIST"
+# MODEL_DATASET["dnn_base"]="MNIST"
+# MODEL_DATASET["dnn_tiny"]="MNIST"
+# MODEL_DATASET["mobilenetv2"]="CIFAR10"
+# MODEL_DATASET["vit_tiny"]="MNIST"
 
 # -- HE key parameters (TenSEAL / shared) ------------------------------------
 CKKS_CONFIGS=(
@@ -149,7 +153,7 @@ JSON
         local CLIENT_SESSION="client-$i"
 
         tmux kill-session -t "$CLIENT_SESSION" 2>/dev/null || true
-        tmux new-session -d -s "$CLIENT_SESSION" \
+        MODEL_ARCH="$MODEL" tmux new-session -d -s "$CLIENT_SESSION" \
             "./run_client.sh $i $SOLUTION $TECHNIQUE $NCLIENTES $GPU_ID \
              $POLY $COEFFS $SCALE $KEY_TYPE $NIID $DATASET $SEED \
              $PERCENTAGE $LOGFOLDER $PLAIN_MODULUS $N_LENGTH \

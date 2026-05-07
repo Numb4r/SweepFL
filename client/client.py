@@ -10,7 +10,11 @@ from dataset_utils import ManageDatasets, load_data_flowerdataset
 from pathlib import Path
 import random
 import numpy as np
-from models import create_dnn, create_lenet5, create_resnet20
+from models import (
+    create_dnn, create_dnn_tiny, create_dnn_base,
+    create_lenet5, create_resnet20,
+    create_mobilenetv2, create_vit_tiny, create_simple_cnn,
+)
 from client_logs import write_evaluate_logs
 from literature.set_parameters import he_parameters_to_model, he_packs_to_model
 from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext, fit_bitnetflip, fit_nvnl,fit_nvnl_scout,fit_fedphe_scout, fit_sw, fit_rw
@@ -81,23 +85,38 @@ class HEClient(fl.client.NumPyClient):
             "tanganke/gtsrb":43
             
         }
-        if dataset == "CIFAR10" or dataset == "tanganke/gtsrb":
-            class_n =  class_n_dict[self.dataset]
-            self.model = create_resnet20(self.x_train.shape[1:],class_n)
-            self.model_name = "resnet20"
-        elif  dataset == "FASHION_MNIST":
-            class_n =  class_n_dict[self.dataset]
-            if self.x_train.ndim == 3:
-                self.x_train = self.x_train[..., np.newaxis]
-                self.x_test  = self.x_test[..., np.newaxis]        
-            shape= self.x_train.shape[1:]
-            self.model = create_lenet5(shape,class_n)
-            print("x_train:", self.x_train.shape)
-            print("model input:", self.model.input_shape)
-            self.model_name = "lenet5"
+        class_n = class_n_dict.get(self.dataset, 10)
+        arch = os.environ.get("MODEL_ARCH", "").lower()
+
+        # Ensure channel dim exists for conv/vit models when dataset is grayscale
+        if self.x_train.ndim == 3:
+            self.x_train = self.x_train[..., np.newaxis]
+            self.x_test  = self.x_test[..., np.newaxis]
+
+        shape = self.x_train.shape[1:]
+
+        _model_factories = {
+            "resnet20":    lambda: (create_resnet20(shape, class_n),    "resnet20"),
+            "lenet5":      lambda: (create_lenet5(shape, class_n),      "lenet5"),
+            "dnn":         lambda: (create_dnn(shape, class_n, seed),   "DNN"),
+            "dnn_base":    lambda: (create_dnn_base(shape, class_n, seed), "DNN_base"),
+            "dnn_tiny":    lambda: (create_dnn_tiny(shape, class_n, seed), "DNN_tiny"),
+            "mobilenetv2": lambda: (create_mobilenetv2(shape, class_n), "mobilenetv2"),
+            "vit_tiny":    lambda: (create_vit_tiny(shape, class_n),    "vit_tiny"),
+            "simple_cnn":  lambda: (create_simple_cnn(shape, class_n),  "simple_cnn"),
+        }
+
+        if arch in _model_factories:
+            self.model, self.model_name = _model_factories[arch]()
+        elif dataset in ("CIFAR10", "tanganke/gtsrb"):
+            self.model, self.model_name = create_resnet20(shape, class_n), "resnet20"
+        elif dataset == "FASHION_MNIST":
+            self.model, self.model_name = create_lenet5(shape, class_n), "lenet5"
         else:
-            self.model = create_dnn(self.x_train.shape[1:],10,seed)
-            self.model_name = "DNN"
+            self.model, self.model_name = create_dnn(shape, class_n, seed), "DNN"
+
+        print("x_train:", self.x_train.shape)
+        print("model:", self.model_name, "| input:", self.model.input_shape)
         self.config_solution()
         if self.homomorphic:
             self.context = self.get_client_context()
