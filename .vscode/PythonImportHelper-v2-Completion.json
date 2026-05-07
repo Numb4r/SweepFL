@@ -938,6 +938,30 @@
         "documentation": {}
     },
     {
+        "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_packs",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "remove_padding",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
         "label": "write_train_logs",
         "importPath": "client_logs",
         "description": "client_logs",
@@ -1268,6 +1292,86 @@
     },
     {
         "label": "flat_parameters",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "reshape_parameters",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_dnn",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_dnn_base",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_dnn_tiny",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_lenet5",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_resnet20",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_mobilenetv2",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_vit_tiny",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_simple_cnn",
         "importPath": "models",
         "description": "models",
         "isExtraImport": true,
@@ -1788,6 +1892,14 @@
         "importPath": "pytest",
         "description": "pytest",
         "detail": "pytest",
+        "documentation": {}
+    },
+    {
+        "label": "SimpleNamespace",
+        "importPath": "types",
+        "description": "types",
+        "isExtraImport": true,
+        "detail": "types",
         "documentation": {}
     },
     {
@@ -4843,6 +4955,69 @@
         "description": "server.server_utils",
         "peekOfCode": "def aggregated_cyphered_parameters(self, parameters_list, total_examples):\n    backend    = _backend(self)\n    agg        = None\n    for parameters, num_examples in parameters_list:\n        if self.onlysum:\n            if self.homomorphic_type == 'Paillier':\n                if agg is None:\n                    agg = parameters\n                else:\n                    agg = (agg * parameters) % pow(self.context.get_n(), 2)",
         "detail": "server.server_utils",
+        "documentation": {}
+    },
+    {
+        "label": "TestPlaintextRoundtrip",
+        "kind": 6,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "class TestPlaintextRoundtrip:\n    \"\"\"flat_parameters → reshape_parameters must recover original weights exactly.\"\"\"\n    @pytest.mark.parametrize(\"input_shape,num_classes\", SHAPES)\n    @pytest.mark.parametrize(\"_name,factory\", MODELS)\n    def test_weights_identical(self, _name, factory, input_shape, num_classes):\n        model = factory(input_shape, num_classes)\n        original = model.get_weights()\n        flat = flat_parameters(original)\n        reconstructed = reshape_parameters(_stub(model), flat)\n        assert len(reconstructed) == len(original)",
+        "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "TestPackingRoundtrip",
+        "kind": 6,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "class TestPackingRoundtrip:\n    \"\"\"flat_parameters → packing → flat_packs → remove_padding → reshape_parameters.\"\"\"\n    @pytest.mark.parametrize(\"chunk_size\", CHUNK_SIZES)\n    @pytest.mark.parametrize(\"input_shape,num_classes\", SHAPES)\n    @pytest.mark.parametrize(\"_name,factory\", MODELS)\n    def test_weights_recovered(self, _name, factory, input_shape, num_classes, chunk_size):\n        model = factory(input_shape, num_classes)\n        original = model.get_weights()\n        stub = _stub(model)\n        flat = flat_parameters(original)",
+        "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "TestEdgeCases",
+        "kind": 6,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "class TestEdgeCases:\n    def test_params_smaller_than_chunk_size(self):\n        \"\"\"All params fit in a single pack — roundtrip must still be exact.\"\"\"\n        model = create_dnn_tiny((28, 28, 1), 2)\n        stub = _stub(model)\n        flat = flat_parameters(model.get_weights())\n        # chunk larger than total params\n        chunk = len(flat) + 1000\n        packs = packing(list(flat), chunk_size=chunk)\n        assert len(packs) == 1",
+        "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "_PROJECT",
+        "kind": 5,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "_PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nsys.path.insert(0, os.path.join(_PROJECT, \"client\"))\nfrom models import (\n    flat_parameters,\n    reshape_parameters,\n    create_dnn,\n    create_dnn_base,\n    create_dnn_tiny,\n    create_lenet5,\n    create_resnet20,",
+        "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "SHAPES",
+        "kind": 5,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "SHAPES = [\n    pytest.param((28, 28, 1), 10, id=\"mnist_28x28x1\"),\n    pytest.param((32, 32, 3), 10, id=\"cifar_32x32x3\"),\n]\n# All model factories; each entry is (name_str, factory_callable)\nMODELS = [\n    pytest.param(\"dnn\",         create_dnn,         id=\"dnn\"),\n    pytest.param(\"dnn_base\",    create_dnn_base,    id=\"dnn_base\"),\n    pytest.param(\"dnn_tiny\",    create_dnn_tiny,    id=\"dnn_tiny\"),\n    pytest.param(\"lenet5\",      create_lenet5,      id=\"lenet5\"),",
+        "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "MODELS",
+        "kind": 5,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "MODELS = [\n    pytest.param(\"dnn\",         create_dnn,         id=\"dnn\"),\n    pytest.param(\"dnn_base\",    create_dnn_base,    id=\"dnn_base\"),\n    pytest.param(\"dnn_tiny\",    create_dnn_tiny,    id=\"dnn_tiny\"),\n    pytest.param(\"lenet5\",      create_lenet5,      id=\"lenet5\"),\n    pytest.param(\"resnet20\",    create_resnet20,    id=\"resnet20\"),\n    pytest.param(\"mobilenetv2\", create_mobilenetv2, id=\"mobilenetv2\"),\n    pytest.param(\"vit_tiny\",    create_vit_tiny,    id=\"vit_tiny\"),\n    pytest.param(\"simple_cnn\",  create_simple_cnn,  id=\"simple_cnn\"),\n]",
+        "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "CHUNK_SIZES",
+        "kind": 5,
+        "importPath": "tests.test_model_reconstruction",
+        "description": "tests.test_model_reconstruction",
+        "peekOfCode": "CHUNK_SIZES = [\n    pytest.param(4096, id=\"chunk4096\"),\n    pytest.param(2048, id=\"chunk2048\"),\n]\ndef _stub(model):\n    \"\"\"Minimal object that satisfies the reshape_parameters / remove_padding interface.\"\"\"\n    return SimpleNamespace(model=model)\n# ── Plaintext roundtrip ────────────────────────────────────────────────────────\nclass TestPlaintextRoundtrip:\n    \"\"\"flat_parameters → reshape_parameters must recover original weights exactly.\"\"\"",
+        "detail": "tests.test_model_reconstruction",
         "documentation": {}
     },
     {
