@@ -108,10 +108,6 @@ class HEClient(fl.client.NumPyClient):
 
         if arch in _model_factories:
             self.model, self.model_name = _model_factories[arch]()
-        elif dataset in ("CIFAR10", "tanganke/gtsrb"):
-            self.model, self.model_name = create_resnet20(shape, class_n), "resnet20"
-        elif dataset == "FASHION_MNIST":
-            self.model, self.model_name = create_lenet5(shape, class_n), "lenet5"
         else:
             self.model, self.model_name = create_dnn(shape, class_n, seed), "DNN"
 
