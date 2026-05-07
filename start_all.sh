@@ -17,14 +17,11 @@ PERCENTAGES=(0.1 0.3)  # Pack fraction  (packing solutions only: fedphe, nvnl, s
 NUM_ROUNDS=50
 TECHNIQUE="none"       # topk | robin_round | slided_window | none
 
-declare -A MODEL_DATASET
-MODEL_DATASET["resnet20"]="CIFAR10"
-# MODEL_DATASET["lenet5"]="FASHION_MNIST"
-# MODEL_DATASET["dnn"]="MNIST"
-# MODEL_DATASET["dnn_base"]="MNIST"
-# MODEL_DATASET["dnn_tiny"]="MNIST"
-# MODEL_DATASET["mobilenetv2"]="CIFAR10"
-# MODEL_DATASET["vit_tiny"]="MNIST"
+MODELS=("resnet20")
+# MODELS=("resnet20" "lenet5" "dnn" "dnn_base" "dnn_tiny" "mobilenetv2" "vit_tiny" "simple_cnn")
+
+DATASETS=("CIFAR10")
+# DATASETS=("CIFAR10" "FASHION_MNIST" "MNIST" "AISNP/PathMNIST" "tanganke/gtsrb")
 
 # -- HE key parameters (TenSEAL / shared) ------------------------------------
 CKKS_CONFIGS=(
@@ -197,8 +194,8 @@ for config in "${CKKS_CONFIGS[@]}"; do
         generate_keys "$SCHEMA" "$POLY" "$COEFFS" "$SCALE" "$KEY_TYPE"
 
         for SOLUTION in "${SOLUTIONS[@]}"; do
-        for MODEL in "${!MODEL_DATASET[@]}"; do
-        for DATASET in ${MODEL_DATASET[$MODEL]}; do
+        for MODEL in "${MODELS[@]}"; do
+        for DATASET in "${DATASETS[@]}"; do
         for NIID in "${NIIDS[@]}"; do
         for SEED in "${SEEDS[@]}"; do
 
