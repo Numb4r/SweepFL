@@ -21,6 +21,7 @@ RSYNC_OPTS=(
     --exclude=".git/"
     --exclude="logs/"
     --exclude="mv_logs/"
+    --exclude='client/data/'
 )
 
 if [[ "$1" == "--dry-run" ]]; then
