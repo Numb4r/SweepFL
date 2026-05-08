@@ -5,7 +5,15 @@ train.csv — one row per (client, round):
   experiment_name, round, cid, solution, schema, model, dataset,
   distribution, dirichlet_alpha,
   train_loss, train_acc,
-  train_time_s, encrypt_time_s, decrypt_time_s,
+  decrypt_time_s, decrypt_time_cpu,
+  train_time_s, train_time_cpu,
+  flatten_time_s, flatten_time_cpu,
+  quantize_time_s, quantize_time_cpu,
+  batch_padding_time_s, batch_padding_time_cpu,
+  pack_time_s, pack_time_cpu,
+  mask_select_time_s, mask_select_time_cpu,
+  encrypt_time_s, encrypt_time_cpu,
+  serialize_time_s, serialize_time_cpu,
   payload_bytes, n_params,
   n_packs, packs_sent, pack_size, sigma_ckks,
   poly_modulus_degree, coeff_mod_bits, scale_bits, plain_modulus
@@ -28,7 +36,15 @@ _TRAIN_HEADER = (
     "experiment_name,round,cid,"
     "solution,schema,model,dataset,distribution,dirichlet_alpha,"
     "train_loss,train_acc,"
-    "train_time_s,encrypt_time_s,decrypt_time_s,"
+    "decrypt_time_s,decrypt_time_cpu,"
+    "train_time_s,train_time_cpu,"
+    "flatten_time_s,flatten_time_cpu,"
+    "quantize_time_s,quantize_time_cpu,"
+    "batch_padding_time_s,batch_padding_time_cpu,"
+    "pack_time_s,pack_time_cpu,"
+    "mask_select_time_s,mask_select_time_cpu,"
+    "encrypt_time_s,encrypt_time_cpu,"
+    "serialize_time_s,serialize_time_cpu,"
     "payload_bytes,n_params,"
     "n_packs,packs_sent,pack_size,sigma_ckks,"
     "poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus"
@@ -66,6 +82,14 @@ def _append(filename: str, header: str, row: str) -> None:
         f.write(row + "\n")
 
 
+def _g(times: dict, *keys, default: float = 0.0) -> float:
+    """Get first matching key from times dict, fallback to default."""
+    for k in keys:
+        if k in times:
+            return times[k]
+    return default
+
+
 # ── Public API ────────────────────────────────────────────────────────────────
 
 def write_train_logs(
@@ -81,13 +105,21 @@ def write_train_logs(
 ) -> None:
     """Write one training-round row to logs/{log_folder}/train.csv.
 
-    Parameters
-    ----------
-    times : dict with keys train_time_clock, encrypt_time_clock (or
-            cypher_time_clock), decrypt_time_clock (or decypher_time_clock).
-    qnt_packing : number of packs actually sent (len(packs) * percentage).
-    size_pack   : pack size in elements (poly_modulus_degree // 2).
-    sigma       : estimated CKKS additive-noise std-dev (None if not CKKS).
+    times keys (all optional, 0 if absent):
+      decrypt_time_clock, decrypt_time_cpu      — set_parameters phase
+      train_time_clock, train_time_process       — model.fit phase
+      flatten_time_clock, flatten_time_cpu       — flat_parameters call
+      quantize_time_clock, quantize_time_cpu     — BFV / BatchCrypt quantization
+      batch_padding_time_clock, batch_padding_time_cpu — BatchCrypt batch-padding
+      pack_time_clock, pack_time_cpu             — packing() call
+      mask_select_time_clock, mask_select_time_cpu — mask selection
+      encrypt_time_clock, encrypt_time_cpu       — HE encryption (cypher_packs / ts.ckks_vector / etc.)
+      serialize_time_clock, serialize_time_cpu   — serialization (pickle.dumps / .serialize())
+
+    Legacy aliases still accepted:
+      cypher_time_clock → encrypt_time_clock
+      decypher_time_clock → decrypt_time_clock
+      train_time_process → train_time_cpu
     """
     distribution = "niid" if self.niid else "iid"
     dataset      = self.dataset.replace("/", "_")
@@ -95,10 +127,24 @@ def write_train_logs(
     scale_b      = _scale_bits(self.global_scale)
     exp_name     = getattr(self, "experiment_name", "")
 
-    # Support both key conventions used across fit_*.py files
-    train_t   = times.get("train_time_clock",   times.get("train_time", 0))
-    encrypt_t = times.get("cypher_time_clock",  times.get("encrypt_time_clock", 0))
-    decrypt_t = times.get("decypher_time_clock", times.get("decrypt_time_clock", 0))
+    decrypt_s    = _g(times, "decrypt_time_clock",  "decypher_time_clock")
+    decrypt_cpu  = _g(times, "decrypt_time_cpu",    "decypher_time_process")
+    train_s      = _g(times, "train_time_clock")
+    train_cpu    = _g(times, "train_time_cpu",      "train_time_process")
+    flatten_s    = _g(times, "flatten_time_clock")
+    flatten_cpu  = _g(times, "flatten_time_cpu")
+    quantize_s   = _g(times, "quantize_time_clock")
+    quantize_cpu = _g(times, "quantize_time_cpu")
+    bpad_s       = _g(times, "batch_padding_time_clock")
+    bpad_cpu     = _g(times, "batch_padding_time_cpu")
+    pack_s       = _g(times, "pack_time_clock")
+    pack_cpu     = _g(times, "pack_time_cpu")
+    mask_s       = _g(times, "mask_select_time_clock")
+    mask_cpu     = _g(times, "mask_select_time_cpu")
+    encrypt_s    = _g(times, "encrypt_time_clock",  "cypher_time_clock")
+    encrypt_cpu  = _g(times, "encrypt_time_cpu",    "cypher_time_process")
+    serial_s     = _g(times, "serialize_time_clock")
+    serial_cpu   = _g(times, "serialize_time_cpu")
 
     packs_sent = int(qnt_packing)
     n_packs    = (self.len_shared_data // size_pack + 1) if size_pack > 0 else 0
@@ -108,7 +154,15 @@ def write_train_logs(
         f"{self.solution},{self.homomorphic_type},{self.model_name},{dataset},"
         f"{distribution},{self.dirichlet_alpha},"
         f"{loss},{acc},"
-        f"{train_t},{encrypt_t},{decrypt_t},"
+        f"{decrypt_s},{decrypt_cpu},"
+        f"{train_s},{train_cpu},"
+        f"{flatten_s},{flatten_cpu},"
+        f"{quantize_s},{quantize_cpu},"
+        f"{bpad_s},{bpad_cpu},"
+        f"{pack_s},{pack_cpu},"
+        f"{mask_s},{mask_cpu},"
+        f"{encrypt_s},{encrypt_cpu},"
+        f"{serial_s},{serial_cpu},"
         f"{model_size},{self.len_shared_data},"
         f"{n_packs},{packs_sent},{size_pack},"
         f"{sigma if sigma is not None else ''},"

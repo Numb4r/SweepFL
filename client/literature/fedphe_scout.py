@@ -236,28 +236,74 @@ def fit_fedphe_scout(self, parameters, config):
     )
     trained_parameters = self.model.get_weights()
     he_parameters      = []
-    cypher_time        = time.time()
-    
-    if self.packing:
-        flatted_parameters = flat_parameters(trained_parameters) 
-        chunk_size = self.key_config["poly_modulus_degree"]//2    
-        packed_parameters  = packing(flatted_parameters,chunk_size = chunk_size)
-        
-        if self.only_sum:
-            packed_parameters = [np.array(pack) * len(self.x_train) for pack in packed_parameters] 
+    model_size         = 0
+    chunk_size         = 0
+    qnt_packing        = 0
 
-        mask          = get_topk_mask(packed_parameters, self.percentage)
-        
-        cyphered_packs     = cypher_packs(self, packed_parameters, mask)
-        he_parameters      = pickle.dumps(cyphered_packs)
-        model_size         = get_size(cyphered_packs)
-    
-    cypher_time = time.time() - cypher_time
-    qnt_packing = len(packed_parameters) * self.percentage
+    flatten_time_clock    = 0.0
+    flatten_time_cpu      = 0.0
+    pack_time_clock       = 0.0
+    pack_time_cpu         = 0.0
+    mask_select_time_clock = 0.0
+    mask_select_time_cpu  = 0.0
+    encrypt_time_clock    = 0.0
+    encrypt_time_cpu      = 0.0
+    serialize_time_clock  = 0.0
+    serialize_time_cpu    = 0.0
+
+    if self.packing:
+        chunk_size = self.key_config["poly_modulus_degree"] // 2
+
+        flatten_time_clock = time.time()
+        flatten_time_cpu   = time.process_time()
+        flatted_parameters = flat_parameters(trained_parameters)
+        if self.only_sum:
+            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
+        flatten_time_cpu   = time.process_time() - flatten_time_cpu
+        flatten_time_clock = time.time() - flatten_time_clock
+
+        pack_time_clock = time.time()
+        pack_time_cpu   = time.process_time()
+        packed_parameters = packing(flatted_parameters, chunk_size=chunk_size)
+        pack_time_cpu   = time.process_time() - pack_time_cpu
+        pack_time_clock = time.time() - pack_time_clock
+
+        mask_select_time_clock = time.time()
+        mask_select_time_cpu   = time.process_time()
+        mask = get_topk_mask(packed_parameters, self.percentage)
+        mask_select_time_cpu   = time.process_time() - mask_select_time_cpu
+        mask_select_time_clock = time.time() - mask_select_time_clock
+
+        encrypt_time_clock = time.time()
+        encrypt_time_cpu   = time.process_time()
+        cyphered_packs = cypher_packs(self, packed_parameters, mask)
+        encrypt_time_cpu   = time.process_time() - encrypt_time_cpu
+        encrypt_time_clock = time.time() - encrypt_time_clock
+
+        serialize_time_clock = time.time()
+        serialize_time_cpu   = time.process_time()
+        he_parameters = pickle.dumps(cyphered_packs)
+        serialize_time_cpu   = time.process_time() - serialize_time_cpu
+        serialize_time_clock = time.time() - serialize_time_clock
+
+        model_size  = get_size(cyphered_packs)
+        qnt_packing = len(packed_parameters) * self.percentage
+
     times = {
-        'train_time_clock':    train_time,
-        'cypher_time_clock':   cypher_time,
-        'decypher_time_clock': decypher_time,
+        'decrypt_time_clock':      decypher_time,
+        'decrypt_time_cpu':        0.0,
+        'train_time_clock':        train_time,
+        'train_time_cpu':          0.0,
+        'flatten_time_clock':      flatten_time_clock,
+        'flatten_time_cpu':        flatten_time_cpu,
+        'pack_time_clock':         pack_time_clock,
+        'pack_time_cpu':           pack_time_cpu,
+        'mask_select_time_clock':  mask_select_time_clock,
+        'mask_select_time_cpu':    mask_select_time_cpu,
+        'encrypt_time_clock':      encrypt_time_clock,
+        'encrypt_time_cpu':        encrypt_time_cpu,
+        'serialize_time_clock':    serialize_time_clock,
+        'serialize_time_cpu':      serialize_time_cpu,
     }
     write_train_logs(
         self,
@@ -270,7 +316,7 @@ def fit_fedphe_scout(self, parameters, config):
         size_pack=chunk_size,
         sigma=self.sigma,
     )
-    
+
     fit_msg = self.create_fit_msg(train_time, acc, loss, model_size, he_parameters, mask)
     
     return fit_msg

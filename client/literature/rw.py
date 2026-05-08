@@ -1,131 +1,169 @@
-from os import times
-import time 
+import time
 import numpy as np
-import pickle 
+import pickle
 import math
 from .set_parameters import he_packs_to_model
-from  client_utils import  cypher_packs, flat_parameters, packing, get_size
-from  client_logs import write_train_logs
+from client_utils import cypher_packs, flat_parameters, packing, get_size
+from client_logs import write_train_logs
+
 
 def fit_rw(self, parameters, config):
-   
-    decypher_time_clock = time.time()
-    decypher_time_process = time.process_time()
+
+    decrypt_time_clock = time.time()
+    decrypt_time_cpu   = time.process_time()
     if len(config['he']) > 0 and self.homomorphic:
         if self.packing:
-            he_packs_to_model(self, config)    
-    
-    decypher_time_process = time.process_time() - decypher_time_process
-    decypher_time_clock = time.time() - decypher_time_clock
-    
-    
+            he_packs_to_model(self, config)
+    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu
+    decrypt_time_clock = time.time() - decrypt_time_clock
+
     train_time_clock = time.time()
-    train_time_process = time.process_time()
-    history    = self.model.fit(self.x_train, self.y_train, epochs=1,batch_size=4)
-    # Sync time
+    train_time_cpu   = time.process_time()
+    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=4)
     for v in self.model.trainable_variables:
         _ = v.numpy()
-    train_time_process = time.process_time() - train_time_process
+    train_time_cpu   = time.process_time() - train_time_cpu
     train_time_clock = time.time() - train_time_clock
 
-    acc     = np.mean(history.history['accuracy'])
-    loss    = np.mean(history.history['loss'])
+    acc  = np.mean(history.history['accuracy'])
+    loss = np.mean(history.history['loss'])
 
     trained_parameters = self.model.get_weights()
     he_parameters      = []
-    cypher_time_clock        = time.time()
-    cypher_time_process       = time.process_time()
-    
+    model_size         = 0
+    chunk_size         = 0
+
+    flatten_time_clock    = 0.0
+    flatten_time_cpu      = 0.0
+    pack_time_clock       = 0.0
+    pack_time_cpu         = 0.0
+    mask_select_time_clock = 0.0
+    mask_select_time_cpu  = 0.0
+    encrypt_time_clock    = 0.0
+    encrypt_time_cpu      = 0.0
+    serialize_time_clock  = 0.0
+    serialize_time_cpu    = 0.0
+    qnt_packing           = 0
+
     if self.packing:
-        flatted_parameters = flat_parameters(trained_parameters) 
-        chunk_size = self.key_config["poly_modulus_degree"]//2    
-        packed_parameters  = packing(flatted_parameters,chunk_size = chunk_size)
-        
+        chunk_size = self.key_config["poly_modulus_degree"] // 2
+
+        flatten_time_clock = time.time()
+        flatten_time_cpu   = time.process_time()
+        flatted_parameters = flat_parameters(trained_parameters)
         if self.only_sum:
-            packed_parameters = [np.array(pack) * len(self.x_train) for pack in packed_parameters] 
+            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
+        flatten_time_cpu   = time.process_time() - flatten_time_cpu
+        flatten_time_clock = time.time() - flatten_time_clock
 
-        if len(self.weights_packs ) == 0 :
-                self.weights_packs = np.ones(len(packed_parameters))
-        mask          = get_pondering_random_mask(packs=packed_parameters,k=self.percentage,weights_packs=self.weights_packs,percentage=True)
+        pack_time_clock = time.time()
+        pack_time_cpu   = time.process_time()
+        packed_parameters = packing(flatted_parameters, chunk_size=chunk_size)
+        pack_time_cpu   = time.process_time() - pack_time_cpu
+        pack_time_clock = time.time() - pack_time_clock
 
-        
-        cyphered_packs     = cypher_packs(self, packed_parameters, mask)
-        he_parameters      = pickle.dumps(cyphered_packs)
-        model_size         = get_size(cyphered_packs)
-    cypher_time_process       = time.process_time() - cypher_time_process
-    cypher_time_clock = time.time() - cypher_time_clock
-    qnt_packing=len(packed_parameters)*self.percentage
-    times={
-        'train_time_clock': train_time_clock,
-        'train_time_process': train_time_process,
-        
-        'cypher_time_clock': cypher_time_clock,
-        'cypher_time_process': cypher_time_process,
-        
-        'decypher_time_clock': decypher_time_clock,
-        'decypher_time_process': decypher_time_process
+        if len(self.weights_packs) == 0:
+            self.weights_packs = np.ones(len(packed_parameters))
+
+        mask_select_time_clock = time.time()
+        mask_select_time_cpu   = time.process_time()
+        mask = get_pondering_random_mask(
+            packs=packed_parameters, k=self.percentage,
+            weights_packs=self.weights_packs, percentage=True,
+        )
+        mask_select_time_cpu   = time.process_time() - mask_select_time_cpu
+        mask_select_time_clock = time.time() - mask_select_time_clock
+
+        encrypt_time_clock = time.time()
+        encrypt_time_cpu   = time.process_time()
+        cyphered_packs = cypher_packs(self, packed_parameters, mask)
+        encrypt_time_cpu   = time.process_time() - encrypt_time_cpu
+        encrypt_time_clock = time.time() - encrypt_time_clock
+
+        serialize_time_clock = time.time()
+        serialize_time_cpu   = time.process_time()
+        he_parameters = pickle.dumps(cyphered_packs)
+        serialize_time_cpu   = time.process_time() - serialize_time_cpu
+        serialize_time_clock = time.time() - serialize_time_clock
+
+        model_size  = get_size(cyphered_packs)
+        qnt_packing = len(packed_parameters) * self.percentage
+
+    times = {
+        'decrypt_time_clock':      decrypt_time_clock,
+        'decrypt_time_cpu':        decrypt_time_cpu,
+        'train_time_clock':        train_time_clock,
+        'train_time_cpu':          train_time_cpu,
+        'flatten_time_clock':      flatten_time_clock,
+        'flatten_time_cpu':        flatten_time_cpu,
+        'pack_time_clock':         pack_time_clock,
+        'pack_time_cpu':           pack_time_cpu,
+        'mask_select_time_clock':  mask_select_time_clock,
+        'mask_select_time_cpu':    mask_select_time_cpu,
+        'encrypt_time_clock':      encrypt_time_clock,
+        'encrypt_time_cpu':        encrypt_time_cpu,
+        'serialize_time_clock':    serialize_time_clock,
+        'serialize_time_cpu':      serialize_time_cpu,
     }
-    write_train_logs(self, config['round'], loss, acc, model_size, times,qnt_packing,chunk_size)
-    
-    fit_msg = self.create_fit_msg(train_time_process, acc, loss, model_size, he_parameters, mask)
-    
+    write_train_logs(self, config['round'], loss, acc, model_size, times, qnt_packing, chunk_size)
+
+    fit_msg = self.create_fit_msg(train_time_cpu, acc, loss, model_size, he_parameters, mask)
     return fit_msg
 
 
 def get_topk_mask(packs, percentage):
-    topk = int(np.ceil(len(packs) * percentage))
-    
-    avg_list     = [np.average(np.abs(pack)) for pack in packs]    
-    max_avg_list = np.sort(avg_list)[::-1][:topk]
-    mask_list    = []
-    
-    for i in range(len(max_avg_list)):
-        mask_list.append(avg_list.index(max_avg_list[i]))
+    topk     = int(np.ceil(len(packs) * percentage))
+    avg_list = [np.average(np.abs(pack)) for pack in packs]
+    max_avg  = np.sort(avg_list)[::-1][:topk]
+    mask_list = [avg_list.index(v) for v in max_avg]
     mask_list.sort()
-    
-    res_mask = [0  for i in range(len(packs)) ]
-    for i in range(len(packs)):
-        if i in mask_list:
-            res_mask[i] = 1
-            
+
+    res_mask = [0] * len(packs)
+    for i in mask_list:
+        res_mask[i] = 1
     return res_mask
-def get_slide_window_mask(round,packs,size_window=0.1,stride=3,percentage=False):
+
+
+def get_slide_window_mask(round, packs, size_window=0.1, stride=3, percentage=False):
     if percentage:
         size_window = math.ceil(len(packs) * size_window)
-        stride = math.ceil(size_window*stride)
-    
+        stride = math.ceil(size_window * stride)
+
     array_z = np.zeros(len(packs))
-    start = round*stride
-    end = round*stride+size_window
+    start = round * stride
+    end   = round * stride + size_window
     for i in range(start, end):
         array_z[i % len(array_z)] = 1
     return array_z
 
-def get_robin_round_mask(round,packs,size_window,percentage=False):
+
+def get_robin_round_mask(round, packs, size_window, percentage=False):
     if percentage:
         size_window = math.ceil(len(packs) * size_window)
-    return get_slide_window_mask(round,packs,size_window,size_window)
-def get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):
+    return get_slide_window_mask(round, packs, size_window, size_window)
+
+
+def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):
     if len(packs) != len(weights_packs):
-        raise ValueError(f"Erro de tamanho: 'packs' tem {len(packs)} itens, mas 'weights_packs' tem {len(weights_packs)}.")
+        raise ValueError(
+            f"Erro de tamanho: 'packs' tem {len(packs)} itens, "
+            f"mas 'weights_packs' tem {len(weights_packs)}."
+        )
     n = len(packs)
     weights_packs = np.array(weights_packs)
     if percentage:
-        k = math.ceil(k*n)
+        k = math.ceil(k * n)
     probabilities = weights_packs / weights_packs.sum()
     mask = np.zeros(n)
 
-    
     chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)
-    
+
     for i in range(n):
         if i in chosen:
-            weights_packs[i] *= penalty  
+            weights_packs[i] *= penalty
             mask[i] = 1
         else:
-            weights_packs[i] += reward  # Aumenta o peso dos não escolhidos
+            weights_packs[i] += reward
 
-    
     weights_packs = np.maximum(weights_packs, 0.01)
     return mask
-

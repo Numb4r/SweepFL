@@ -237,30 +237,6 @@
         "documentation": {}
     },
     {
-        "label": "times",
-        "importPath": "os",
-        "description": "os",
-        "isExtraImport": true,
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "times",
-        "importPath": "os",
-        "description": "os",
-        "isExtraImport": true,
-        "detail": "os",
-        "documentation": {}
-    },
-    {
-        "label": "times",
-        "importPath": "os",
-        "description": "os",
-        "isExtraImport": true,
-        "detail": "os",
-        "documentation": {}
-    },
-    {
         "label": "pickle",
         "kind": 6,
         "isExtraImport": true,
@@ -1058,6 +1034,14 @@
         "documentation": {}
     },
     {
+        "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
         "label": "write_evaluate_logs",
         "importPath": "client_logs",
         "description": "client_logs",
@@ -1112,14 +1096,6 @@
         "description": "encryption.quantize_batchcrypt",
         "isExtraImport": true,
         "detail": "encryption.quantize_batchcrypt",
-        "documentation": {}
-    },
-    {
-        "label": "write_train_logs",
-        "importPath": "client_logs ",
-        "description": "client_logs ",
-        "isExtraImport": true,
-        "detail": "client_logs ",
         "documentation": {}
     },
     {
@@ -2460,7 +2436,7 @@
         "kind": 2,
         "importPath": "client.literature.NVNL",
         "description": "client.literature.NVNL",
-        "peekOfCode": "def fit_nvnl(self, parameters, config):\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)    \n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    train_time_clock = time.time()\n    train_time_process = time.process_time()",
+        "peekOfCode": "def fit_nvnl(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
         "detail": "client.literature.NVNL",
         "documentation": {}
     },
@@ -2469,7 +2445,7 @@
         "kind": 2,
         "importPath": "client.literature.NVNL",
         "description": "client.literature.NVNL",
-        "peekOfCode": "def get_topk_mask(packs, percentage):\n    topk = int(np.ceil(len(packs) * percentage))\n    avg_list     = [np.average(np.abs(pack)) for pack in packs]    \n    max_avg_list = np.sort(avg_list)[::-1][:topk]\n    mask_list    = []\n    for i in range(len(max_avg_list)):\n        mask_list.append(avg_list.index(max_avg_list[i]))\n    mask_list.sort()\n    res_mask = [0  for i in range(len(packs)) ]\n    for i in range(len(packs)):",
+        "peekOfCode": "def get_topk_mask(packs, percentage):\n    topk     = int(np.ceil(len(packs) * percentage))\n    avg_list = [np.average(np.abs(pack)) for pack in packs]\n    max_avg  = np.sort(avg_list)[::-1][:topk]\n    mask_list = [avg_list.index(v) for v in max_avg]\n    mask_list.sort()\n    res_mask = [0] * len(packs)\n    for i in mask_list:\n        res_mask[i] = 1\n    return res_mask",
         "detail": "client.literature.NVNL",
         "documentation": {}
     },
@@ -2478,7 +2454,7 @@
         "kind": 2,
         "importPath": "client.literature.NVNL",
         "description": "client.literature.NVNL",
-        "peekOfCode": "def get_slide_window_mask(round,packs,size_window=0.1,stride=3,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window*stride)\n    array_z = np.zeros(len(packs))\n    start = round*stride\n    end = round*stride+size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
+        "peekOfCode": "def get_slide_window_mask(round, packs, size_window=0.1, stride=3, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window * stride)\n    array_z = np.zeros(len(packs))\n    start = round * stride\n    end   = round * stride + size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
         "detail": "client.literature.NVNL",
         "documentation": {}
     },
@@ -2487,7 +2463,7 @@
         "kind": 2,
         "importPath": "client.literature.NVNL",
         "description": "client.literature.NVNL",
-        "peekOfCode": "def get_robin_round_mask(round,packs,size_window,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round,packs,size_window,size_window)\ndef get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)",
+        "peekOfCode": "def get_robin_round_mask(round, packs, size_window, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round, packs, size_window, size_window)\ndef get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)",
         "detail": "client.literature.NVNL",
         "documentation": {}
     },
@@ -2496,7 +2472,7 @@
         "kind": 2,
         "importPath": "client.literature.NVNL",
         "description": "client.literature.NVNL",
-        "peekOfCode": "def get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty  ",
+        "peekOfCode": "def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty",
         "detail": "client.literature.NVNL",
         "documentation": {}
     },
@@ -2586,7 +2562,7 @@
         "kind": 2,
         "importPath": "client.literature.batchcrypt",
         "description": "client.literature.batchcrypt",
-        "peekOfCode": "def fit_batchcrypt(self, parameters, config):\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    train_time_clock = time.time()\n    train_time_process = time.process_time()\n    history    = self.model.fit(self.x_train, self.y_train, epochs=1)",
+        "peekOfCode": "def fit_batchcrypt(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1)",
         "detail": "client.literature.batchcrypt",
         "documentation": {}
     },
@@ -2595,7 +2571,7 @@
         "kind": 2,
         "importPath": "client.literature.bfv",
         "description": "client.literature.bfv",
-        "peekOfCode": "def fit_bfv(self, parameters, config):\n    print(q.__file__)\n    print(f'tenseal: {self.context}')\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    train_time_clock = time.time()",
+        "peekOfCode": "def fit_bfv(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1)",
         "detail": "client.literature.bfv",
         "documentation": {}
     },
@@ -2784,7 +2760,7 @@
         "kind": 2,
         "importPath": "client.literature.ckks",
         "description": "client.literature.ckks",
-        "peekOfCode": "def estimate_ckks_sigma(context,v,n_clients, dim=1000, trials=50):\n    # v = np.random.randn(dim)\n    v = np.array(v)\n    errs = []\n    for _ in range(trials):\n        enc = ts.ckks_vector(context, v)\n        dec = enc.decrypt()\n        dec = np.array(dec)\n        errs.append(dec - v)\n    sigma_ckks = np.std(np.concatenate(errs))",
+        "peekOfCode": "def estimate_ckks_sigma(context, v, n_clients, dim=1000, trials=50):\n    v = np.array(v)\n    errs = []\n    for _ in range(trials):\n        enc = ts.ckks_vector(context, v)\n        dec = np.array(enc.decrypt())\n        errs.append(dec - v)\n    sigma_ckks = np.std(np.concatenate(errs))\n    return math.sqrt(n_clients) * sigma_ckks\ndef fit_ckks(self, parameters, config):",
         "detail": "client.literature.ckks",
         "documentation": {}
     },
@@ -2793,7 +2769,7 @@
         "kind": 2,
         "importPath": "client.literature.ckks",
         "description": "client.literature.ckks",
-        "peekOfCode": "def fit_ckks(self, parameters, config):\n    total_time = time.time()\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    if config[\"round\"]%5==0:\n        v = flat_parameters(self.model.get_weights())",
+        "peekOfCode": "def fit_ckks(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    if config[\"round\"] % 5 == 0:\n        v = flat_parameters(self.model.get_weights())\n        self.sigma = estimate_ckks_sigma(self.context, v, self.num_clients)",
         "detail": "client.literature.ckks",
         "documentation": {}
     },
@@ -2811,7 +2787,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def fit_fedphe(self, parameters, config):\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)    \n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    train_time_clock = time.time()\n    train_time_process = time.process_time()",
+        "peekOfCode": "def fit_fedphe(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -2820,7 +2796,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def get_topk_mask(packs, percentage):\n    n = len(packs)\n    if n == 0:\n        return []\n    # Garante faixa válida\n    percentage = float(percentage)\n    percentage = max(0.0, min(1.0, percentage))\n    topk = int(math.ceil(n * percentage))\n    if topk <= 0:\n        return [0] * n",
+        "peekOfCode": "def get_topk_mask(packs, percentage):\n    n = len(packs)\n    if n == 0:\n        return []\n    percentage = float(percentage)\n    percentage = max(0.0, min(1.0, percentage))\n    topk = int(math.ceil(n * percentage))\n    if topk <= 0:\n        return [0] * n\n    avg = np.array([np.mean(np.abs(pack)) for pack in packs], dtype=np.float64)",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -2829,7 +2805,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def get_slide_window_mask(round,packs,size_window=0.1,stride=3,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window*stride)\n    array_z = np.zeros(len(packs))\n    start = round*stride\n    end = round*stride+size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
+        "peekOfCode": "def get_slide_window_mask(round, packs, size_window=0.1, stride=3, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window * stride)\n    array_z = np.zeros(len(packs))\n    start = round * stride\n    end   = round * stride + size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -2838,7 +2814,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def get_robin_round_mask(round,packs,size_window,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round,packs,size_window,size_window)\ndef get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)",
+        "peekOfCode": "def get_robin_round_mask(round, packs, size_window, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round, packs, size_window, size_window)\ndef get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -2847,7 +2823,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty  ",
+        "peekOfCode": "def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -2937,7 +2913,7 @@
         "kind": 2,
         "importPath": "client.literature.plaintext",
         "description": "client.literature.plaintext",
-        "peekOfCode": "def fit_plaintext(self, parameters, config):\n    decypher_time = 0\n    self.model.set_weights(parameters)\n    if self.cid == 0:\n        folder = f'logs/{self.log_folder}/model'\n        os.makedirs(folder, exist_ok=True)\n        np.savez_compressed(\n            f\"{folder}/round_{config['round']}\",\n            *[w.astype(np.float16) for w in parameters],\n        )",
+        "peekOfCode": "def fit_plaintext(self, parameters, config):\n    self.model.set_weights(parameters)\n    if self.cid == 0:\n        folder = f'logs/{self.log_folder}/model'\n        os.makedirs(folder, exist_ok=True)\n        np.savez_compressed(\n            f\"{folder}/round_{config['round']}\",\n            *[w.astype(np.float16) for w in parameters],\n        )\n    train_time_clock = time.time()",
         "detail": "client.literature.plaintext",
         "documentation": {}
     },
@@ -2946,7 +2922,7 @@
         "kind": 2,
         "importPath": "client.literature.rw",
         "description": "client.literature.rw",
-        "peekOfCode": "def fit_rw(self, parameters, config):\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)    \n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    train_time_clock = time.time()\n    train_time_process = time.process_time()",
+        "peekOfCode": "def fit_rw(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
         "detail": "client.literature.rw",
         "documentation": {}
     },
@@ -2955,7 +2931,7 @@
         "kind": 2,
         "importPath": "client.literature.rw",
         "description": "client.literature.rw",
-        "peekOfCode": "def get_topk_mask(packs, percentage):\n    topk = int(np.ceil(len(packs) * percentage))\n    avg_list     = [np.average(np.abs(pack)) for pack in packs]    \n    max_avg_list = np.sort(avg_list)[::-1][:topk]\n    mask_list    = []\n    for i in range(len(max_avg_list)):\n        mask_list.append(avg_list.index(max_avg_list[i]))\n    mask_list.sort()\n    res_mask = [0  for i in range(len(packs)) ]\n    for i in range(len(packs)):",
+        "peekOfCode": "def get_topk_mask(packs, percentage):\n    topk     = int(np.ceil(len(packs) * percentage))\n    avg_list = [np.average(np.abs(pack)) for pack in packs]\n    max_avg  = np.sort(avg_list)[::-1][:topk]\n    mask_list = [avg_list.index(v) for v in max_avg]\n    mask_list.sort()\n    res_mask = [0] * len(packs)\n    for i in mask_list:\n        res_mask[i] = 1\n    return res_mask",
         "detail": "client.literature.rw",
         "documentation": {}
     },
@@ -2964,7 +2940,7 @@
         "kind": 2,
         "importPath": "client.literature.rw",
         "description": "client.literature.rw",
-        "peekOfCode": "def get_slide_window_mask(round,packs,size_window=0.1,stride=3,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window*stride)\n    array_z = np.zeros(len(packs))\n    start = round*stride\n    end = round*stride+size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
+        "peekOfCode": "def get_slide_window_mask(round, packs, size_window=0.1, stride=3, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window * stride)\n    array_z = np.zeros(len(packs))\n    start = round * stride\n    end   = round * stride + size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
         "detail": "client.literature.rw",
         "documentation": {}
     },
@@ -2973,7 +2949,7 @@
         "kind": 2,
         "importPath": "client.literature.rw",
         "description": "client.literature.rw",
-        "peekOfCode": "def get_robin_round_mask(round,packs,size_window,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round,packs,size_window,size_window)\ndef get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    if len(packs) != len(weights_packs):\n        raise ValueError(f\"Erro de tamanho: 'packs' tem {len(packs)} itens, mas 'weights_packs' tem {len(weights_packs)}.\")\n    n = len(packs)\n    weights_packs = np.array(weights_packs)\n    if percentage:",
+        "peekOfCode": "def get_robin_round_mask(round, packs, size_window, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round, packs, size_window, size_window)\ndef get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    if len(packs) != len(weights_packs):\n        raise ValueError(\n            f\"Erro de tamanho: 'packs' tem {len(packs)} itens, \"\n            f\"mas 'weights_packs' tem {len(weights_packs)}.\"\n        )",
         "detail": "client.literature.rw",
         "documentation": {}
     },
@@ -2982,7 +2958,7 @@
         "kind": 2,
         "importPath": "client.literature.rw",
         "description": "client.literature.rw",
-        "peekOfCode": "def get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    if len(packs) != len(weights_packs):\n        raise ValueError(f\"Erro de tamanho: 'packs' tem {len(packs)} itens, mas 'weights_packs' tem {len(weights_packs)}.\")\n    n = len(packs)\n    weights_packs = np.array(weights_packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)",
+        "peekOfCode": "def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    if len(packs) != len(weights_packs):\n        raise ValueError(\n            f\"Erro de tamanho: 'packs' tem {len(packs)} itens, \"\n            f\"mas 'weights_packs' tem {len(weights_packs)}.\"\n        )\n    n = len(packs)\n    weights_packs = np.array(weights_packs)\n    if percentage:\n        k = math.ceil(k * n)",
         "detail": "client.literature.rw",
         "documentation": {}
     },
@@ -3009,16 +2985,7 @@
         "kind": 2,
         "importPath": "client.literature.sw",
         "description": "client.literature.sw",
-        "peekOfCode": "def fit_sw(self, parameters, config):\n    decypher_time_clock = time.time()\n    decypher_time_process = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)    \n    decypher_time_process = time.process_time() - decypher_time_process\n    decypher_time_clock = time.time() - decypher_time_clock\n    train_time_clock = time.time()\n    train_time_process = time.process_time()",
-        "detail": "client.literature.sw",
-        "documentation": {}
-    },
-    {
-        "label": "get_topk_mask",
-        "kind": 2,
-        "importPath": "client.literature.sw",
-        "description": "client.literature.sw",
-        "peekOfCode": "def get_topk_mask(packs, percentage):\n    topk = int(np.ceil(len(packs) * percentage))\n    avg_list     = [np.average(np.abs(pack)) for pack in packs]    \n    max_avg_list = np.sort(avg_list)[::-1][:topk]\n    mask_list    = []\n    for i in range(len(max_avg_list)):\n        mask_list.append(avg_list.index(max_avg_list[i]))\n    mask_list.sort()\n    res_mask = [0  for i in range(len(packs)) ]\n    for i in range(len(packs)):",
+        "peekOfCode": "def fit_sw(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
         "detail": "client.literature.sw",
         "documentation": {}
     },
@@ -3027,7 +2994,7 @@
         "kind": 2,
         "importPath": "client.literature.sw",
         "description": "client.literature.sw",
-        "peekOfCode": "def get_slide_window_mask(round,packs,size_window=0.1,stride=3,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window*stride)\n    array_z = np.zeros(len(packs))\n    start = round*stride\n    end = round*stride+size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
+        "peekOfCode": "def get_slide_window_mask(round, packs, size_window=0.1, stride=3, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n        stride = math.ceil(size_window * stride)\n    array_z = np.zeros(len(packs))\n    start = round * stride\n    end   = round * stride + size_window\n    for i in range(start, end):\n        array_z[i % len(array_z)] = 1\n    return array_z",
         "detail": "client.literature.sw",
         "documentation": {}
     },
@@ -3036,7 +3003,7 @@
         "kind": 2,
         "importPath": "client.literature.sw",
         "description": "client.literature.sw",
-        "peekOfCode": "def get_robin_round_mask(round,packs,size_window,percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round,packs,size_window,size_window)\ndef get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)",
+        "peekOfCode": "def get_robin_round_mask(round, packs, size_window, percentage=False):\n    if percentage:\n        size_window = math.ceil(len(packs) * size_window)\n    return get_slide_window_mask(round, packs, size_window, size_window)\ndef get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)",
         "detail": "client.literature.sw",
         "documentation": {}
     },
@@ -3045,7 +3012,7 @@
         "kind": 2,
         "importPath": "client.literature.sw",
         "description": "client.literature.sw",
-        "peekOfCode": "def get_pondering_random_mask(packs,k,weights_packs,penalty=0.5,reward=0.1,percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k*n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty  ",
+        "peekOfCode": "def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty",
         "detail": "client.literature.sw",
         "documentation": {}
     },
@@ -3126,7 +3093,7 @@
         "kind": 5,
         "importPath": "client.client_logs",
         "description": "client.client_logs",
-        "peekOfCode": "_TRAIN_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"train_loss,train_acc,\"\n    \"train_time_s,encrypt_time_s,decrypt_time_s,\"\n    \"payload_bytes,n_params,\"\n    \"n_packs,packs_sent,pack_size,sigma_ckks,\"\n    \"poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus\"\n)\n_EVAL_HEADER = (",
+        "peekOfCode": "_TRAIN_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"train_loss,train_acc,\"\n    \"decrypt_time_s,decrypt_time_cpu,\"\n    \"train_time_s,train_time_cpu,\"\n    \"flatten_time_s,flatten_time_cpu,\"\n    \"quantize_time_s,quantize_time_cpu,\"\n    \"batch_padding_time_s,batch_padding_time_cpu,\"\n    \"pack_time_s,pack_time_cpu,\"",
         "detail": "client.client_logs",
         "documentation": {}
     },
