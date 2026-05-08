@@ -382,30 +382,6 @@
         "documentation": {}
     },
     {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
         "label": "Tuple",
         "importPath": "typing",
         "description": "typing",
@@ -1612,6 +1588,14 @@
         "documentation": {}
     },
     {
+        "label": "annotations",
+        "importPath": "__future__",
+        "description": "__future__",
+        "isExtraImport": true,
+        "detail": "__future__",
+        "documentation": {}
+    },
+    {
         "label": "pandas",
         "kind": 6,
         "isExtraImport": true,
@@ -1867,6 +1851,22 @@
         "description": "server_utils",
         "isExtraImport": true,
         "detail": "server_utils",
+        "documentation": {}
+    },
+    {
+        "label": "write_agg_logs",
+        "importPath": "server_logs",
+        "description": "server_logs",
+        "isExtraImport": true,
+        "detail": "server_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_eval_logs",
+        "importPath": "server_logs",
+        "description": "server_logs",
+        "isExtraImport": true,
+        "detail": "server_logs",
         "documentation": {}
     },
     {
@@ -2937,7 +2937,7 @@
         "kind": 2,
         "importPath": "client.literature.plaintext",
         "description": "client.literature.plaintext",
-        "peekOfCode": "def fit_plaintext(self, parameters, config):\n    decypher_time = 0\n    self.model.set_weights(parameters)\n    folder = f'logs/{self.log_folder}/model'\n    with open(f\"{folder}/round_{config['round']}.pkl\", 'wb') as f:\n        pk.dump(parameters, f)\n    train_time_clock = time.time()\n    train_time_process = time.process_time()\n    history    = self.model.fit(self.x_train, self.y_train, epochs=1,batch_size=4)\n    # Sincronizando relogio",
+        "peekOfCode": "def fit_plaintext(self, parameters, config):\n    decypher_time = 0\n    self.model.set_weights(parameters)\n    if self.cid == 0:\n        folder = f'logs/{self.log_folder}/model'\n        os.makedirs(folder, exist_ok=True)\n        np.savez_compressed(\n            f\"{folder}/round_{config['round']}\",\n            *[w.astype(np.float16) for w in parameters],\n        )",
         "detail": "client.literature.plaintext",
         "documentation": {}
     },
@@ -3108,7 +3108,7 @@
         "kind": 2,
         "importPath": "client.client_logs",
         "description": "client.client_logs",
-        "peekOfCode": "def write_train_logs(self, rnd, loss, acc, model_size, times, qnt_packing=0,size_pack=0,sigma=None):\n    k = \", \".join(self.key_config.keys())\n    v = \"-\".join(map(str,self.key_config.values()))\n    v_f = \",\".join(map(str,self.key_config.values()))\n    times_k = \", \".join(times.keys())\n    times_v = \", \".join(map(str,times.values()))\n    iid = \"niid\" if self.niid else 'iid'\n    itens = self.key_config.values()\n    # Convert dict_values to a list first\n    itens = list(itens) ",
+        "peekOfCode": "def write_train_logs(\n    self,\n    rnd: int,\n    loss: float,\n    acc: float,\n    model_size: int,\n    times: dict,\n    qnt_packing: float = 0,\n    size_pack: int = 0,\n    sigma: float | None = None,",
         "detail": "client.client_logs",
         "documentation": {}
     },
@@ -3117,7 +3117,25 @@
         "kind": 2,
         "importPath": "client.client_logs",
         "description": "client.client_logs",
-        "peekOfCode": "def write_evaluate_logs(\n    self: Self,\n    rnd: int,\n    loss: float,\n    acc: float,\n    decyfer_time_clock: float,\n    decyfet_time_process: float\n) -> None:\n    k = \", \".join(self.key_config.keys())\n    v = \"-\".join(map(str,self.key_config.values()))",
+        "peekOfCode": "def write_evaluate_logs(\n    self,\n    rnd: int,\n    loss: float,\n    acc: float,\n    decrypt_time_clock: float,\n    decrypt_time_process: float,\n) -> None:\n    \"\"\"Write one evaluation-round row to logs/{log_folder}/evaluate.csv.\"\"\"\n    distribution = \"niid\" if self.niid else \"iid\"",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "_TRAIN_HEADER",
+        "kind": 5,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "_TRAIN_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"train_loss,train_acc,\"\n    \"train_time_s,encrypt_time_s,decrypt_time_s,\"\n    \"payload_bytes,n_params,\"\n    \"n_packs,packs_sent,pack_size,sigma_ckks,\"\n    \"poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus\"\n)\n_EVAL_HEADER = (",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "_EVAL_HEADER",
+        "kind": 5,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "_EVAL_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"eval_loss,eval_acc,decrypt_time_s,\"\n    \"poly_modulus_degree,coeff_mod_bits,scale_bits\"\n)\n# ── Helpers ───────────────────────────────────────────────────────────────────\ndef _coeff_str(coeff_mod_bit_sizes) -> str:\n    if not coeff_mod_bit_sizes:\n        return \"\"",
         "detail": "client.client_logs",
         "documentation": {}
     },
@@ -4881,7 +4899,7 @@
         "kind": 6,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "class HEServer(fl.server.strategy.FedAvg):\n    def __init__(self, num_clients, dirichlet_alpha, dataset, fraction_fit, solution,key_config):\n        self.num_clients     = num_clients\n        self.dirichlet_alpha = dirichlet_alpha\n        self.dataset         = dataset\n        self.agg_parameters  = ''\n        self.agg_mask        = ''\n        self.selection_time  = 0\n        self.total_examples  = 0\n        self.homomorphic_type = ''",
+        "peekOfCode": "class HEServer(fl.server.strategy.FedAvg):\n    def __init__(\n        self,\n        num_clients: int,\n        dirichlet_alpha: float,\n        dataset: str,\n        fraction_fit: float,\n        solution: str,\n        key_config: Dict[str, Any],\n        log_folder: str = \"\",",
         "detail": "server.server",
         "documentation": {}
     },
@@ -4890,8 +4908,35 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def main():\n    keys_config:Dict[str,Any] = {}\n    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)\n    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')\n    keys_config['simplify_N']           = int(os.environ.get('SIMPLIFY_N', 8192))\n    keys_config['simplify_bits']        = int(os.environ.get('SIMPLIFY_BITS', 62))",
+        "peekOfCode": "def main():\n    keys_config: Dict[str, Any] = {}\n    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)\n    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')\n    keys_config['simplify_N']           = int(os.environ.get('SIMPLIFY_N', 8192))\n    keys_config['simplify_bits']        = int(os.environ.get('SIMPLIFY_BITS', 62))",
         "detail": "server.server",
+        "documentation": {}
+    },
+    {
+        "label": "write_agg_logs",
+        "kind": 2,
+        "importPath": "server.server_logs",
+        "description": "server.server_logs",
+        "peekOfCode": "def write_agg_logs(\n    log_folder: str,\n    experiment_name: str,\n    server_round: int,\n    n_clients: int,\n    total_examples: int,\n    selection_time_s: float,\n    aggregation_time_s: float,\n) -> None:\n    row = (",
+        "detail": "server.server_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_eval_logs",
+        "kind": 2,
+        "importPath": "server.server_logs",
+        "description": "server.server_logs",
+        "peekOfCode": "def write_eval_logs(\n    log_folder: str,\n    experiment_name: str,\n    server_round: int,\n    n_clients: int,\n    mean_loss: float,\n    mean_acc: float,\n) -> None:\n    row = (\n        f\"{experiment_name},{server_round},{n_clients},\"",
+        "detail": "server.server_logs",
+        "documentation": {}
+    },
+    {
+        "label": "_EVAL_HEADER",
+        "kind": 5,
+        "importPath": "server.server_logs",
+        "description": "server.server_logs",
+        "peekOfCode": "_EVAL_HEADER = \"experiment_name,round,n_clients,mean_loss,mean_acc\"\ndef _append(filename: str, header: str, row: str) -> None:\n    os.makedirs(os.path.dirname(filename), exist_ok=True)\n    with open(filename, \"a\") as f:\n        if os.path.getsize(filename) == 0:\n            f.write(header + \"\\n\")\n        f.write(row + \"\\n\")\ndef write_agg_logs(\n    log_folder: str,\n    experiment_name: str,",
+        "detail": "server.server_logs",
         "documentation": {}
     },
     {

@@ -253,20 +253,23 @@ def fit_fedphe_scout(self, parameters, config):
         model_size         = get_size(cyphered_packs)
     
     cypher_time = time.time() - cypher_time
-    qnt_packing=len(packed_parameters)*self.percentage
+    qnt_packing = len(packed_parameters) * self.percentage
+    times = {
+        'train_time_clock':    train_time,
+        'cypher_time_clock':   cypher_time,
+        'decypher_time_clock': decypher_time,
+    }
     write_train_logs(
         self,
-        config['round'], 
+        config['round'],
         loss,
         acc,
         model_size,
-        train_time,
-        cypher_time,
-        decypher_time,
-        
+        times,
         qnt_packing=qnt_packing,
         size_pack=chunk_size,
-        sigma=self.sigma)
+        sigma=self.sigma,
+    )
     
     fit_msg = self.create_fit_msg(train_time, acc, loss, model_size, he_parameters, mask)
     

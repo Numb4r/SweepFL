@@ -1,0 +1,2 @@
+experiment_name,round,cid,solution,schema,model,dataset,distribution,dirichlet_alpha,eval_loss,eval_acc,decrypt_time_s,poly_modulus_degree,coeff_mod_bits,scale_bits
+resnet20_CIFAR10_nvnl,1,0,nvnl,CKKS,resnet20,CIFAR10,niid,0.1,0.44,0.831,0.11,8192,60;40;40;60,40

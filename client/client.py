@@ -60,7 +60,8 @@ class HEClient(fl.client.NumPyClient):
         
         
         
-        self.seed = seed 
+        self.seed            = seed
+        self.experiment_name = os.environ.get("EXPERIMENT_NAME", "")
 
         random.seed(seed)
         np.random.seed(seed)

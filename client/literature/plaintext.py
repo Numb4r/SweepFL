@@ -13,9 +13,13 @@ def fit_plaintext(self, parameters, config):
     
     decypher_time = 0
     self.model.set_weights(parameters)
-    folder = f'logs/{self.log_folder}/model'
-    with open(f"{folder}/round_{config['round']}.pkl", 'wb') as f:
-        pk.dump(parameters, f)
+    if self.cid == 0:
+        folder = f'logs/{self.log_folder}/model'
+        os.makedirs(folder, exist_ok=True)
+        np.savez_compressed(
+            f"{folder}/round_{config['round']}",
+            *[w.astype(np.float16) for w in parameters],
+        )
         
         
     train_time_clock = time.time()

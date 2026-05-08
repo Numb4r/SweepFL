@@ -69,11 +69,12 @@ def he_parameters_to_model(self, config):
                 print("ATT COMPLETA")
         # # debug   
         if self.cid == 0:
-            # iid = "niid" if self.niid else 'iid'
             folder = f'{self.log_folder}/model'
-            os.makedirs(f'{folder}', exist_ok=True)  
-            with open(f"{folder}/round_{config['round']}.pkl", 'wb') as f:
-                pk.dump(reshaped_parameters, f)
+            os.makedirs(folder, exist_ok=True)
+            np.savez_compressed(
+                f"{folder}/round_{config['round']}",
+                *[w.astype(np.float16) for w in reshaped_parameters],
+            )
                 
                 
                 
@@ -102,6 +103,8 @@ def he_packs_to_model(self, config):
 
     if self.cid == 0:
         folder = f'{self.log_folder}/model'
-        os.makedirs(f'{folder}', exist_ok=True)  
-        with open(f"{folder}/round_{config['round']}.pkl", 'wb') as f:
-            pk.dump(reshaped_parameters, f)
+        os.makedirs(folder, exist_ok=True)
+        np.savez_compressed(
+            f"{folder}/round_{config['round']}",
+            *[w.astype(np.float16) for w in reshaped_parameters],
+        )

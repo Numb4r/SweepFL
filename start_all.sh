@@ -23,6 +23,15 @@ MODELS=("resnet20")
 DATASETS=("CIFAR10")
 # DATASETS=("CIFAR10" "FASHION_MNIST" "MNIST" "AISNP/PathMNIST" "tanganke/gtsrb")
 
+# Human-readable experiment label added to every log row.
+# Leave empty to auto-generate as "{model}_{dataset}_{solution}".
+EXPERIMENT_NAME=""
+
+# Optional subfolder inside logs/ to group related experiments.
+# e.g. FOLDER="sliding_window_ablation"  →  logs/sliding_window_ablation/{exp}/
+# Leave empty to place experiments directly inside logs/.
+FOLDER=""
+
 # -- HE key parameters (TenSEAL / shared) ------------------------------------
 CKKS_CONFIGS=(
     "ckks 8192 30,60,30"
@@ -118,6 +127,7 @@ run_experiment() {
 
     cat > "logs/${LOGFOLDER}/experiment_details.json" <<JSON
 {
+  "EXPERIMENT_NAME": "$EXP_NAME",
   "SOLUTION":        "$SOLUTION",
   "MODEL":           "$MODEL",
   "DATASET":         "$DATASET",
@@ -139,7 +149,7 @@ JSON
 
     # Launch server
     tmux kill-session -t "$SERVER_SESSION" 2>/dev/null || true
-    tmux new-session -d -s "$SERVER_SESSION" \
+    EXPERIMENT_NAME="$EXP_NAME" tmux new-session -d -s "$SERVER_SESSION" \
         "./run_server.sh $SOLUTION $NCLIENTES $NUM_ROUNDS $POLY $COEFFS $SCALE $KEY_TYPE \
          $DATASET $NIID $SEED $PERCENTAGE $LOGFOLDER $PLAIN_MODULUS $N_LENGTH \
          >> logs/${LOGFOLDER}/tmux_SERVER.log 2>&1"
@@ -150,7 +160,7 @@ JSON
         local CLIENT_SESSION="client-$i"
 
         tmux kill-session -t "$CLIENT_SESSION" 2>/dev/null || true
-        MODEL_ARCH="$MODEL" tmux new-session -d -s "$CLIENT_SESSION" \
+        MODEL_ARCH="$MODEL" EXPERIMENT_NAME="$EXP_NAME" tmux new-session -d -s "$CLIENT_SESSION" \
             "./run_client.sh $i $SOLUTION $TECHNIQUE $NCLIENTES $GPU_ID \
              $POLY $COEFFS $SCALE $KEY_TYPE $NIID $DATASET $SEED \
              $PERCENTAGE $LOGFOLDER $PLAIN_MODULUS $N_LENGTH \
@@ -200,6 +210,7 @@ for config in "${CKKS_CONFIGS[@]}"; do
         for SEED in "${SEEDS[@]}"; do
 
             DATASET_FOLDER="${DATASET//\//_}"
+            EXP_NAME="${EXPERIMENT_NAME:-${MODEL}_${DATASET_FOLDER}_${SOLUTION}}"
 
             if is_packing_solution "$SOLUTION"; then
                 ITER_PERCENTAGES=("${PERCENTAGES[@]}")
@@ -209,15 +220,9 @@ for config in "${CKKS_CONFIGS[@]}"; do
 
             for PERCENTAGE in "${ITER_PERCENTAGES[@]}"; do
                 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-                LOGFOLDER="${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${TIMESTAMP}"
+                LOGFOLDER="${FOLDER:+${FOLDER}/}${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${TIMESTAMP}"
 
                 run_experiment "$LOGFOLDER"
-
-                tmux kill-session -t "clearlogs" 2>/dev/null || true
-                tmux new-session -d -s "clearlogs" "./clean_logs.sh" 2>/dev/null
-                sleep 1
-                mkdir -p mv_logs
-                mv "logs/${LOGFOLDER}" mv_logs/
             done
 
         done; done; done; done; done
