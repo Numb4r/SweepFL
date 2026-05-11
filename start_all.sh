@@ -160,7 +160,8 @@ JSON
         local CLIENT_SESSION="client-$i"
 
         tmux kill-session -t "$CLIENT_SESSION" 2>/dev/null || true
-        MODEL_ARCH="$MODEL" EXPERIMENT_NAME="$EXP_NAME" tmux new-session -d -s "$CLIENT_SESSION" \
+        MODEL_ARCH="$MODEL" EXPERIMENT_NAME="$EXP_NAME" PRETRAINED_WEIGHTS="${PRETRAINED_WEIGHTS:-}" \
+        tmux new-session -d -s "$CLIENT_SESSION" \
             "./run_client.sh $i $SOLUTION $TECHNIQUE $NCLIENTES $GPU_ID \
              $POLY $COEFFS $SCALE $KEY_TYPE $NIID $DATASET $SEED \
              $PERCENTAGE $LOGFOLDER $PLAIN_MODULUS $N_LENGTH \
@@ -205,6 +206,14 @@ for config in "${CKKS_CONFIGS[@]}"; do
 
         for SOLUTION in "${SOLUTIONS[@]}"; do
         for MODEL in "${MODELS[@]}"; do
+
+            # Auto-detect pre-trained weights for this model.
+            PRETRAINED_WEIGHTS=$(
+                find "logs/models/pretrained/${MODEL}" -name "pretrained.weights.h5" \
+                     2>/dev/null -printf "%T@ %p\n" | sort -rn | head -1 | awk '{print $2}'
+            )
+            [[ -n "$PRETRAINED_WEIGHTS" ]] && echo "  [pretrain] $MODEL → $PRETRAINED_WEIGHTS"
+
         for DATASET in "${DATASETS[@]}"; do
         for NIID in "${NIIDS[@]}"; do
         for SEED in "${SEEDS[@]}"; do

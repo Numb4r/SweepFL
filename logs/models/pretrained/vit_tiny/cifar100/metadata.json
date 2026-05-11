@@ -1,0 +1,18 @@
+{
+  "model": "vit_tiny",
+  "pretrain_dataset": "cifar100",
+  "num_classes": 100,
+  "input_shape": [
+    32,
+    32,
+    3
+  ],
+  "epochs": 100,
+  "batch_size": 128,
+  "lr": 0.0003,
+  "train_acc": 0.5612,
+  "val_acc": 0.4224,
+  "training_time_s": 55884.2,
+  "weights_file": "pretrained.weights.h5",
+  "transfer_note": "Load with model.load_weights(path, by_name=True, skip_mismatch=True). The 'classifier' head layer will be skipped when num_classes differs."
+}

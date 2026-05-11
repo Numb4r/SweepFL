@@ -5,7 +5,7 @@
 # Techniques compared: nvnl, sw, rw, fedphe
 # Percentage sweep:    10 % → 30 % → 50 % → 70 %
 
-GPU_IDS=(5 6 7)
+GPU_IDS=(7)
 CLIENTS_PER_GPU=3
 
 FOLDER="sparsification_percentage"
@@ -23,15 +23,15 @@ MODEL_DATASET_PAIRS=(
     "dnn_tiny:FASHION_MNIST"
     "lenet5:FASHION_MNIST"
     "mobilenetv2:CIFAR10"
-    "vit_tiny:tanganke/gtsrb"
+    # "vit_tiny:tanganke/gtsrb"
 )
 
-CKKS_CONFIGS=("ckks 8192 60,40,40,60")
+CKKS_CONFIGS=("ckks 8192 60")
 KEY_TYPES=('None')
 SCALE_POWER=40
 PLAIN_MODULUS=-1
 N_LENGTH=-1
-CKKS_BACKEND="tenseal"
-
+# CKKS_BACKEND="tenseal"
+CKKS_BACKEND="ckks_python_simplify"
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 run_theme

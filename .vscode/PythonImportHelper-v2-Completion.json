@@ -1067,6 +1067,14 @@
         "documentation": {}
     },
     {
+        "label": "keras",
+        "importPath": "tensorflow",
+        "description": "tensorflow",
+        "isExtraImport": true,
+        "detail": "tensorflow",
+        "documentation": {}
+    },
+    {
         "label": "quantize_batchcrypt",
         "importPath": "encryption.quantize_batchcrypt",
         "description": "encryption.quantize_batchcrypt",
@@ -1331,6 +1339,46 @@
         "documentation": {}
     },
     {
+        "label": "create_vit_tiny",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_resnet20",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_mobilenetv2",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_lenet5",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
+        "label": "create_dnn_tiny",
+        "importPath": "models",
+        "description": "models",
+        "isExtraImport": true,
+        "detail": "models",
+        "documentation": {}
+    },
+    {
         "label": "flwr",
         "kind": 6,
         "isExtraImport": true,
@@ -1369,6 +1417,14 @@
         "description": "dataset_utils",
         "isExtraImport": true,
         "detail": "dataset_utils",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
         "documentation": {}
     },
     {
@@ -1686,6 +1742,22 @@
         "documentation": {}
     },
     {
+        "label": "layers",
+        "importPath": "tensorflow.keras",
+        "description": "tensorflow.keras",
+        "isExtraImport": true,
+        "detail": "tensorflow.keras",
+        "documentation": {}
+    },
+    {
+        "label": "regularizers",
+        "importPath": "tensorflow.keras",
+        "description": "tensorflow.keras",
+        "isExtraImport": true,
+        "detail": "tensorflow.keras",
+        "documentation": {}
+    },
+    {
         "label": "gmpy_math",
         "importPath": "encryption",
         "description": "encryption",
@@ -1936,6 +2008,24 @@
         "description": "urllib.parse",
         "isExtraImport": true,
         "detail": "urllib.parse",
+        "documentation": {}
+    },
+    {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
         "documentation": {}
     },
     {
@@ -5222,6 +5312,78 @@
         "documentation": {}
     },
     {
+        "label": "WarmupCosineDecay",
+        "kind": 6,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "class WarmupCosineDecay(tf.keras.optimizers.schedules.LearningRateSchedule):\n    \"\"\"Linear warmup for `warmup_steps`, then cosine decay to near-zero.\"\"\"\n    def __init__(self, peak_lr: float, warmup_steps: int, total_steps: int):\n        super().__init__()\n        self.peak_lr      = float(peak_lr)\n        self.warmup_steps = float(warmup_steps)\n        self.total_steps  = float(total_steps)\n    def __call__(self, step):\n        step    = tf.cast(step, tf.float32)\n        warmup  = step / self.warmup_steps * self.peak_lr",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "load_dataset",
+        "kind": 2,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "def load_dataset(name: str):\n    loaders = {\n        \"cifar100\":      tf.keras.datasets.cifar100.load_data,\n        \"cifar10\":       tf.keras.datasets.cifar10.load_data,\n        \"fashion_mnist\": tf.keras.datasets.fashion_mnist.load_data,\n        \"mnist\":         tf.keras.datasets.mnist.load_data,\n    }\n    if name not in loaders:\n        raise ValueError(f\"Unknown dataset '{name}'. Choose from: {list(loaders)}\")\n    (x_train, y_train), (x_test, y_test) = loaders[name]()",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "build_augmentation",
+        "kind": 2,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "def build_augmentation(input_shape):\n    h, w = input_shape[:2]\n    # Random horizontal flip + random translation (simulates random crop with padding).\n    # No brightness/contrast: those can push pixel values outside [0,1] and cause\n    # NaN in the attention softmax when training ViTs from scratch.\n    pad = max(2, h // 8)\n    return tf.keras.Sequential([\n        tf.keras.layers.RandomFlip(\"horizontal\"),\n        tf.keras.layers.RandomTranslation(pad / h, pad / w, fill_mode=\"reflect\"),\n    ], name=\"augmentation\")",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "make_dataset",
+        "kind": 2,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "def make_dataset(x, y, batch_size: int, augment: bool, augmentation_fn=None):\n    ds = tf.data.Dataset.from_tensor_slices((x, y))\n    if augment and augmentation_fn is not None:\n        ds = ds.shuffle(len(x), reshuffle_each_iteration=True)\n        ds = ds.batch(batch_size)\n        ds = ds.map(\n            lambda imgs, labels: (augmentation_fn(imgs, training=True), labels),\n            num_parallel_calls=tf.data.AUTOTUNE,\n        )\n    else:",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "pretrain",
+        "kind": 2,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "def pretrain(\n    model_name: str,\n    dataset_name: str,\n    epochs: int,\n    batch_size: int,\n    lr: float,\n    out_dir: Path,\n):\n    info = DATASET_INFO[dataset_name]\n    num_classes  = info[\"num_classes\"]",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "parse_args",
+        "kind": 2,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "def parse_args():\n    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)\n    p.add_argument(\"--model\",      default=\"vit_tiny\",  choices=list(MODEL_FACTORIES), help=\"Model architecture\")\n    p.add_argument(\"--dataset\",    default=\"cifar100\",  choices=list(DATASET_INFO),    help=\"Pre-training dataset\")\n    p.add_argument(\"--epochs\",     default=100, type=int,   help=\"Number of training epochs\")\n    p.add_argument(\"--batch-size\", default=128, type=int,   help=\"Batch size\")\n    p.add_argument(\"--lr\",         default=3e-4, type=float, help=\"Initial learning rate (cosine decay)\")\n    p.add_argument(\"--output\",     default=None,             help=\"Custom output directory (default: logs/models/pretrained/<model>/<dataset>)\")\n    p.add_argument(\"--gpu\",        default=\"0\",              help=\"GPU index(es) to use, e.g. '0' or '0,1'\")\n    return p.parse_args()",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "DATASET_INFO",
+        "kind": 5,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "DATASET_INFO = {\n    \"cifar100\":      {\"num_classes\": 100, \"input_shape\": (32, 32, 3)},\n    \"cifar10\":       {\"num_classes\": 10,  \"input_shape\": (32, 32, 3)},\n    \"fashion_mnist\": {\"num_classes\": 10,  \"input_shape\": (28, 28, 1)},\n    \"mnist\":         {\"num_classes\": 10,  \"input_shape\": (28, 28, 1)},\n}\nMODEL_FACTORIES = {\n    \"vit_tiny\":    create_vit_tiny,\n    \"resnet20\":    create_resnet20,\n    \"mobilenetv2\": create_mobilenetv2,",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_FACTORIES",
+        "kind": 5,
+        "importPath": "pretrain",
+        "description": "pretrain",
+        "peekOfCode": "MODEL_FACTORIES = {\n    \"vit_tiny\":    create_vit_tiny,\n    \"resnet20\":    create_resnet20,\n    \"mobilenetv2\": create_mobilenetv2,\n    \"lenet5\":      create_lenet5,\n    \"dnn_tiny\":    create_dnn_tiny,\n}\n# ── Data loading ──────────────────────────────────────────────────\ndef load_dataset(name: str):\n    loaders = {",
+        "detail": "pretrain",
+        "documentation": {}
+    },
+    {
         "label": "a",
         "kind": 5,
         "importPath": "test",
@@ -5399,6 +5561,87 @@
         "description": "test_py_ckks_simplifly",
         "peekOfCode": "resultado = tensor_3_cliente.decrypt()\nfor i in range(len(resultado)):\n    print(resultado[i])  # Deve imprimir 0, 6, 12, ..., 19998\nprint(f\"Tamanho processado perfeitamente: {len(resultado)}\")\nfor i in range(len(resultado)):\n    assert 2*pesos_locais[i] - resultado[i] <= 1e-13, f\"Erro na posição {i}: esperado {2*pesos_locais[i]}, obtido {resultado[i]} : Erro numérico excede o limite de precisão! {2*pesos_locais[i] - resultado[i]} > 1e-14\"\n    print(f\"Ruido numerico na posição {i}: {2*pesos_locais[i] - resultado[i]}\")  # Imprime o ruído numérico para cada elemento\n# Saída: Tamanho processado perfeitamente: 10000",
         "detail": "test_py_ckks_simplifly",
+        "documentation": {}
+    },
+    {
+        "label": "CifarClient",
+        "kind": 6,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "class CifarClient(fl.client.NumPyClient):\n    def __init__(self, x_train, y_train, x_test, y_test):\n        self.model = build_resnet20()\n        self.x_train = x_train\n        self.y_train = y_train\n        self.x_test = x_test\n        self.y_test = y_test\n    def get_parameters(self, config):\n        return self.model.get_weights()\n    def fit(self, parameters, config):",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "resnet_layer",
+        "kind": 2,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "def resnet_layer(inputs, num_filters=16, kernel_size=3, strides=1, activation='relu', batch_normalization=True, conv_first=True):\n    \"\"\"Construtor padrão de camadas 2D para a ResNet\"\"\"\n    conv = layers.Conv2D(num_filters, kernel_size=kernel_size, strides=strides, padding='same',\n                         kernel_initializer='he_normal', kernel_regularizer=regularizers.l2(1e-4))\n    x = inputs\n    if conv_first:\n        x = conv(x)\n        if batch_normalization: x = layers.BatchNormalization()(x)\n        if activation is not None: x = layers.Activation(activation)(x)\n    else:",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "build_resnet20",
+        "kind": 2,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "def build_resnet20(input_shape=(32, 32, 3), num_classes=10):\n    \"\"\"Constrói a ResNet-20 canônica para CIFAR-10\"\"\"\n    inputs = keras.Input(shape=input_shape)\n    x = resnet_layer(inputs=inputs)\n    # 3 estágios de blocos residuais\n    num_filters_in = 16\n    for stage in range(3):\n        for res_block in range(3):\n            activation = 'relu'\n            batch_normalization = True",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "load_datasets",
+        "kind": 2,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "def load_datasets(num_clients):\n    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()\n    # Normalização\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    # Divide os dados de treino de forma igual entre os clientes\n    partition_size = len(x_train) // num_clients\n    train_partitions = []\n    for i in range(num_clients):\n        start_idx = i * partition_size",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "client_fn",
+        "kind": 2,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "def client_fn(cid: str) -> fl.client.Client:\n    \"\"\"Função fábrica chamada pelo Ray para instanciar clientes sob demanda\"\"\"\n    partition_idx = int(cid)\n    (x_train_cid, y_train_cid) = train_partitions[partition_idx]\n    return CifarClient(x_train_cid, y_train_cid, x_test, y_test)\n# ==========================================\n# 4. ORQUESTRAÇÃO E EXECUÇÃO\n# ==========================================\nif __name__ == \"__main__\":\n    print(f\"[*] Carregando e particionando CIFAR-10 para {NUM_CLIENTS} clientes...\")",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "os.environ[\"TF_CPP_MIN_LOG_LEVEL\"]",
+        "kind": 5,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "os.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\nNUM_CLIENTS = 9\nNUM_ROUNDS = 5\nEPOCHS_PER_ROUND = 1\n# ==========================================\n# 1. ARQUITETURA DO MODELO: ResNet-20\n# ==========================================\ndef resnet_layer(inputs, num_filters=16, kernel_size=3, strides=1, activation='relu', batch_normalization=True, conv_first=True):\n    \"\"\"Construtor padrão de camadas 2D para a ResNet\"\"\"\n    conv = layers.Conv2D(num_filters, kernel_size=kernel_size, strides=strides, padding='same',",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "NUM_CLIENTS",
+        "kind": 5,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "NUM_CLIENTS = 9\nNUM_ROUNDS = 5\nEPOCHS_PER_ROUND = 1\n# ==========================================\n# 1. ARQUITETURA DO MODELO: ResNet-20\n# ==========================================\ndef resnet_layer(inputs, num_filters=16, kernel_size=3, strides=1, activation='relu', batch_normalization=True, conv_first=True):\n    \"\"\"Construtor padrão de camadas 2D para a ResNet\"\"\"\n    conv = layers.Conv2D(num_filters, kernel_size=kernel_size, strides=strides, padding='same',\n                         kernel_initializer='he_normal', kernel_regularizer=regularizers.l2(1e-4))",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "NUM_ROUNDS",
+        "kind": 5,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "NUM_ROUNDS = 5\nEPOCHS_PER_ROUND = 1\n# ==========================================\n# 1. ARQUITETURA DO MODELO: ResNet-20\n# ==========================================\ndef resnet_layer(inputs, num_filters=16, kernel_size=3, strides=1, activation='relu', batch_normalization=True, conv_first=True):\n    \"\"\"Construtor padrão de camadas 2D para a ResNet\"\"\"\n    conv = layers.Conv2D(num_filters, kernel_size=kernel_size, strides=strides, padding='same',\n                         kernel_initializer='he_normal', kernel_regularizer=regularizers.l2(1e-4))\n    x = inputs",
+        "detail": "test_py_fl_circuit",
+        "documentation": {}
+    },
+    {
+        "label": "EPOCHS_PER_ROUND",
+        "kind": 5,
+        "importPath": "test_py_fl_circuit",
+        "description": "test_py_fl_circuit",
+        "peekOfCode": "EPOCHS_PER_ROUND = 1\n# ==========================================\n# 1. ARQUITETURA DO MODELO: ResNet-20\n# ==========================================\ndef resnet_layer(inputs, num_filters=16, kernel_size=3, strides=1, activation='relu', batch_normalization=True, conv_first=True):\n    \"\"\"Construtor padrão de camadas 2D para a ResNet\"\"\"\n    conv = layers.Conv2D(num_filters, kernel_size=kernel_size, strides=strides, padding='same',\n                         kernel_initializer='he_normal', kernel_regularizer=regularizers.l2(1e-4))\n    x = inputs\n    if conv_first:",
+        "detail": "test_py_fl_circuit",
         "documentation": {}
     },
     {

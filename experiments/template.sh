@@ -55,6 +55,10 @@ CKKS_BACKEND="tenseal" # tenseal | ckks_python_simplify | ckks_python | openfhe
 # PYCRYPT_N=8192; PYCRYPT_BITS=60
 # OPENFHE_RING_DIM=8192; OPENFHE_MULT_DEPTH=1; OPENFHE_SCALE_BITS=50
 
+# Pre-trained weights are detected automatically from
+# logs/models/pretrained/<model>/*/pretrained.weights.h5
+# No configuration needed here.
+
 # ── Run ───────────────────────────────────────────────────────────
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 run_theme

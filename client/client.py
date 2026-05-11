@@ -117,14 +117,26 @@ class HEClient(fl.client.NumPyClient):
         self.config_solution()
         if self.homomorphic:
             self.context = self.get_client_context()
+
+        pretrained_path = os.environ.get("PRETRAINED_WEIGHTS", "")
+        use_pretrained  = bool(pretrained_path and os.path.exists(pretrained_path))
+
         dataset_folder = self.dataset.replace("/","_")
-        init_weights = f"logs/models/init_weights/{self.model_name}/{dataset_folder}/init_weights_{cid}.weights.h5"
-        os.makedirs(f"logs/models/init_weights/{self.model_name}/{dataset_folder}",exist_ok=True)
-        if os.path.exists(init_weights):
+        init_weights   = f"logs/models/init_weights/{self.model_name}/{dataset_folder}/init_weights_{cid}.weights.h5"
+        os.makedirs(f"logs/models/init_weights/{self.model_name}/{dataset_folder}", exist_ok=True)
+
+        if use_pretrained and self.solution == "plaintext":
+            # Plaintext + PRETRAINED_WEIGHTS: seed init_weights from backbone.
+            # This regenerates init_weights so that all subsequent HE experiments
+            # automatically start from the pre-trained state.
+            print(f"Seeding init_weights from pre-trained backbone: {pretrained_path}")
+            self.model.load_weights(pretrained_path, by_name=True, skip_mismatch=True)
+            self.model.save_weights(init_weights)
+        elif os.path.exists(init_weights):
             self.model.load_weights(init_weights)
-            print("Load weights")
+            print(f"Loaded init_weights: {init_weights}")
         elif self.solution == "plaintext":
-            print("Init weights")
+            print("Saving random init_weights")
             self.model.save_weights(init_weights)
         else:
             raise Exception("Cannot start, generate plaintext first")

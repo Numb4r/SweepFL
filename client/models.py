@@ -248,7 +248,7 @@ def create_vit_tiny(
     # Global average pooling over the sequence dimension
     x = layers.GlobalAveragePooling1D()(x)
 
-    outputs = layers.Dense(num_classes, activation='softmax')(x)
+    outputs = layers.Dense(num_classes, activation='softmax', name='classifier')(x)
 
     return _compile(models.Model(inputs, outputs), lr=3e-4)
 
