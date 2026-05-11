@@ -68,8 +68,8 @@ class CKKSBackend(ABC):
 
 class TenSEALBackend(CKKSBackend):
 
-    _CLIENT_FILE = "nvnlc2.pkl"
-    _SERVER_FILE = "serverc2.pkl"
+    _CLIENT_FILE = "tenseal_client.pkl"
+    _SERVER_FILE = "tenseal_server.pkl"
 
     def generate_and_save(self, params: dict, context_dir: str) -> None:
         import tenseal as ts
@@ -121,31 +121,69 @@ class TenSEALBackend(CKKSBackend):
 # ══════════════════════════════════════════════════════════════════════════════
 
 class CKKSSimplifyBackend(CKKSBackend):
-
-    _CTX_FILE = "ckks_simplify_ctx.pkl"
+    # CKKSContext holds C++ pybind11 objects that cannot be pickled directly.
+    # We persist the raw key bytes + scalar params and reconstruct the context on load.
+    _PARAMS_FILE = "ckks_simplify_params.pkl"
+    _SK_FILE     = "ckks_simplify_sk.bin"
+    _PK_FILE     = "ckks_simplify_pk.bin"
 
     def generate_and_save(self, params: dict, context_dir: str) -> None:
-        from ckks_python_simplify import CKKSContext
-        ctx = CKKSContext(
-            N          = params.get("simplify_N", 8192),
-            bits       = params.get("simplify_bits", 62),
-            scale_bits = params.get("simplify_scale_bits", 60),
-        )
-        os.makedirs(context_dir, exist_ok=True)
-        with open(f"{context_dir}/{self._CTX_FILE}", "wb") as f:
-            pickle.dump(ctx, f)
+        import ckks_python
+        N          = params.get("simplify_N", 8192)
+        bits       = params.get("simplify_bits", 62)
+        scale_bits = params.get("simplify_scale_bits", 60)
+        q          = ckks_python.generate_prime(bits, N)
+        scale      = 2 ** scale_bits
 
-    def _load(self, context_dir: str) -> Any:
-        with open(f"{context_dir}/{self._CTX_FILE}", "rb") as f:
-            return pickle.load(f)
+        keygen = ckks_python.KeyGenerator(N, q)
+        sk     = keygen.gen_secret_key()
+        pk     = keygen.gen_public_key(sk)
+
+        os.makedirs(context_dir, exist_ok=True)
+        with open(f"{context_dir}/{self._PARAMS_FILE}", "wb") as f:
+            pickle.dump({"N": N, "q": q, "scale": scale}, f)
+        with open(f"{context_dir}/{self._SK_FILE}", "wb") as f:
+            f.write(sk.to_bytes())
+        with open(f"{context_dir}/{self._PK_FILE}", "wb") as f:
+            f.write(pk.to_bytes())
+
+    def _reconstruct(self, context_dir: str, with_sk: bool) -> Any:
+        import ckks_python
+        from ckks_python_simplify import CKKSContext
+        with open(f"{context_dir}/{self._PARAMS_FILE}", "rb") as f:
+            p = pickle.load(f)
+        N, q, scale = p["N"], p["q"], p["scale"]
+
+        # Bypass CKKSContext.__init__ (which would regenerate keys) and
+        # manually wire in the persisted keys.
+        ctx = CKKSContext.__new__(CKKSContext)
+        ctx.N     = N
+        ctx.q     = q
+        ctx.scale = scale
+        ctx.pk    = ckks_python.PublicKey.from_bytes(
+            open(f"{context_dir}/{self._PK_FILE}", "rb").read()
+        )
+        ctx.encryptor = ckks_python.Encryptor(N, q, ctx.pk)
+        ctx.encoder   = ckks_python.Encoder(N, q, scale)
+        ctx.evaluator = ckks_python.Evaluator(N, q)
+
+        if with_sk:
+            ctx.sk        = ckks_python.SecretKey.from_bytes(
+                open(f"{context_dir}/{self._SK_FILE}", "rb").read()
+            )
+            ctx.decryptor = ckks_python.Decryptor(N, q, ctx.sk)
+        else:
+            ctx.sk        = None
+            ctx.decryptor = None
+
+        return ctx
 
     def load_client_context(self, context_dir: str) -> Any:
-        return self._load(context_dir)
+        return self._reconstruct(context_dir, with_sk=True)
 
     def load_server_context(self, context_dir: str) -> Any:
-        # ckks_python_simplify keeps both keys in a single context object.
-        # The server receives it but must never call decrypt().
-        return self._load(context_dir)
+        # Server must never decrypt — load without secret key.
+        return self._reconstruct(context_dir, with_sk=False)
 
     def encrypt(self, ctx: Any, vector) -> Any:
         from ckks_python_simplify import CKKSTensor
@@ -165,10 +203,35 @@ class CKKSSimplifyBackend(CKKSBackend):
         return result
 
     def mul(self, ctx: Any, ct: Any, scalar: float) -> Any:
+        import ckks_python
         from ckks_python_simplify import CKKSTensor
-        result = CKKSTensor(ctx, ct.serialize())
-        result *= scalar
-        return result
+
+        # Single-level CKKS has no rescaling.  Only exact operation is
+        # integer-coefficient multiplication: k * c mod q → decoded k*m.
+        # Fractional scalars must be handled via the pre-division protocol:
+        # clients divide weights by num_clients before encryption; the server
+        # then uses pure homomorphic addition only (sum(w_i/K) = average).
+        k = round(scalar)
+        if k <= 0:
+            raise NotImplementedError(
+                f"CKKSSimplifyBackend.mul: scalar={scalar} rounds to k={k}. "
+                "Fractional scalars are not supported by single-level CKKS. "
+                "Use the pre-division protocol: divide weights by num_clients "
+                "on the client before encryption and aggregate with pure sums."
+            )
+        if k == 1:
+            return ct
+
+        N, q = ctx.N, ctx.q
+        new_cts = []
+        for raw_ct in ct.ciphertexts:
+            c0 = (raw_ct.c0.astype(int) * k % q).astype(np.uint64)
+            c1 = (raw_ct.c1.astype(int) * k % q).astype(np.uint64)
+            new_cts.append(ckks_python.Ciphertext(
+                ckks_python.Poly(N, q, c0),
+                ckks_python.Poly(N, q, c1),
+            ))
+        return CKKSTensor(ctx, new_cts, original_size=ct.original_size)
 
     def decrypt(self, ctx: Any, ct: Any) -> list:
         return list(ct.decrypt())

@@ -157,10 +157,10 @@ class HEClient(fl.client.NumPyClient):
         elif self.homomorphic_type == 'CKKS':
             from encryption.ckks_backend import get_backend
             backend_name = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
-            return get_backend(backend_name).load_client_context("../context")
+            return get_backend(backend_name).load_client_context("/context")
         else:  # BFV
             import tenseal as ts
-            with open('../context/bfv_secret.pkl', 'rb') as file:
+            with open('/context/bfv_secret.pkl', 'rb') as file:
                 return ts.context_from(pickle.load(file)["context"])
 
     def get_parameters(self, config):

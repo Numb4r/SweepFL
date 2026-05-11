@@ -1,0 +1,39 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:2.13.0-gpu
+
+# Build from repo root so %files can reach ckks_project/:
+#   singularity build flhe_client.sif client/singularity.def
+
+%files
+    ckks_project/ckks_project.zip /tmp/ckks_project.zip
+
+%post
+    pip install -U pip
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+    pip install pybind11
+
+    cd /tmp \
+    && unzip -q ckks_project.zip -d ckks_project \
+    && cd ckks_project \
+    && pip install . \
+    && cd / && rm -rf /tmp/ckks_project /tmp/ckks_project.zip
+
+    python3 -c "\
+import site, os; \
+sp = site.getsitepackages()[0]; \
+os.symlink(f'{sp}/ckks_federated', f'{sp}/ckks_python_simplify')"
+
+    pip install "pandas<2.0.0" numpy flwr=="1.4.0" tenseal \
+        flwr-datasets "flwr_datasets[vision]" matplotlib gmpy2
+
+%environment
+    export LANG=C.UTF-8
+    export TF_CPP_MIN_LOG_LEVEL=0
+
+%runscript
+    python -u /client/client.py

@@ -5,3 +5,12 @@ client/rasp_cli.tar
 .csv
 __pycache__
 *.pyc
+*.log
+logs/
+mv_logs/
+client/data/
+*.pkl
+*.bin
+*.sif
+ckks_change_logs/
+*.npz

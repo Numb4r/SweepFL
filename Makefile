@@ -1,8 +1,36 @@
 PYTHON := python3.10
 
+SIF_DIR ?= .
+
+# ── Docker ────────────────────────────────────────────────────────────────────
 configure:
-	docker build -t flhe:server server/.
-	docker build -t flhe:client client/.
+	docker build -t flhe:server -f server/Dockerfile .
+	docker build -t flhe:client -f client/Dockerfile .
+
+test-ckks:
+	@echo "=== Testing ckks_project installation: client ==="
+	docker run --rm -v "$$PWD/tests:/tests:ro" flhe:client python /tests/test_ckks_install.py
+	@echo "=== Testing ckks_project installation: server ==="
+	docker run --rm -v "$$PWD/tests:/tests:ro" flhe:server python /tests/test_ckks_install.py
+
+# ── Singularity ───────────────────────────────────────────────────────────────
+# Option A — build directly from .def files (no Docker required, pulls base from Hub):
+singularity-configure:
+	singularity build $(SIF_DIR)/flhe_client.sif client/singularity.def
+	singularity build $(SIF_DIR)/flhe_server.sif server/singularity.def
+
+# Option B — convert already-built Docker images (faster, requires local Docker images):
+singularity-from-docker:
+	singularity build $(SIF_DIR)/flhe_client.sif docker-daemon://flhe:client
+	singularity build $(SIF_DIR)/flhe_server.sif docker-daemon://flhe:server
+
+test-ckks-singularity:
+	@echo "=== Testing ckks_project installation: client (singularity) ==="
+	singularity exec --bind "$$PWD/tests:/tests:ro" $(SIF_DIR)/flhe_client.sif \
+	    python /tests/test_ckks_install.py
+	@echo "=== Testing ckks_project installation: server (singularity) ==="
+	singularity exec --bind "$$PWD/tests:/tests:ro" $(SIF_DIR)/flhe_server.sif \
+	    python /tests/test_ckks_install.py
 
 run:
 	docker compose -f FedPHE-FASHIONMNIST-10.yaml up

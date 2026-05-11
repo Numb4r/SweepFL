@@ -1,6 +1,6 @@
 import numpy as np
 import pickle as pk
-from encryption.ckks_backend import get_backend, TenSEALBackend
+from encryption.ckks_backend import get_backend, TenSEALBackend, CKKSSimplifyBackend
 
 
 def _backend(server_self=None):
@@ -89,6 +89,10 @@ def aggregate_packs_and_mask(pack_mask_pair, total_examples, onlysum, backend=No
     aggregated_packs = [0] * n
     aggregated_masks = [0] * n
 
+    # CKKSSimplifyBackend cannot do fractional scalar mul (single-level CKKS,
+    # no rescaling).  Clients pre-divide by num_clients, so pure sum = FedAvg.
+    _pure_sum = onlysum or isinstance(backend, CKKSSimplifyBackend)
+
     for packs, mask in pack_mask_pair:
         mask = mask / total_examples
 
@@ -96,7 +100,7 @@ def aggregate_packs_and_mask(pack_mask_pair, total_examples, onlysum, backend=No
             if p == 0:  # inactive position — skip, stays 0
                 continue
 
-            if onlysum:
+            if _pure_sum:
                 new_term = p
                 aggregated_masks[idx_pack] += mask[idx_pack] * total_examples
             else:
@@ -137,8 +141,12 @@ def aggregated_cyphered_parameters(self, parameters_list, total_examples):
     backend    = _backend(self)
     agg        = None
 
+    # CKKSSimplifyBackend cannot do fractional scalar mul (single-level CKKS,
+    # no rescaling).  Clients pre-divide by num_clients, so pure sum = FedAvg.
+    _pure_sum = self.onlysum or isinstance(backend, CKKSSimplifyBackend)
+
     for parameters, num_examples in parameters_list:
-        if self.onlysum:
+        if _pure_sum:
             if self.homomorphic_type == 'Paillier':
                 if agg is None:
                     agg = parameters

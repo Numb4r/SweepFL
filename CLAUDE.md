@@ -16,6 +16,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Build Docker images (server and client) — required once before any experiment
 make configure
 
+# Build Singularity images from .def files (pulls base from Docker Hub)
+make singularity-configure
+
+# Build Singularity images from already-built Docker images (faster)
+make singularity-from-docker
+
 # Generate HE keys (required before running experiments)
 make keys
 # or directly:
@@ -24,12 +30,25 @@ python3 generate_keys.py
 # Run the full experiment suite (the normal way to run experiments)
 ./start_all.sh
 
+# Run a themed experiment batch (preferred for grouped experiments)
+bash experiments/my_theme.sh
+
+# Smoke-test ckks_python_simplify backend: Docker + Singularity, nvnl + fedphe,
+# 2 clients, 3 rounds, FashionMNIST, LeNet-5 (run from repo root)
+bash experiments/test_ckks_backend.sh
+
 # Run tests
 pytest tests/
 
 # Run a single test file
 pytest tests/test_server_utils.py
 pytest tests/test_model_reconstruction.py
+
+# Test ckks_project installation inside Docker containers
+make test-ckks
+
+# Test ckks_project installation inside Singularity containers
+make test-ckks-singularity
 
 # Clean logs
 make cleanlogs
@@ -83,11 +102,19 @@ The `LOGFOLDER` name encodes all experiment parameters: `<model>_<dataset>_<solu
 
 **CKKS backend abstraction**: `encryption/ckks_backend.py` (mirrored to `client/encryption/` and `server/encryption/`) defines a `CKKSBackend` ABC with methods `generate_and_save`, `load_client_context`, `load_server_context`, `encrypt`, `serialize`, `deserialize`, `add(ctx, ct1, ct2)`, `mul(ctx, ct, scalar)`, `decrypt`. Concrete backends:
 - `TenSEALBackend` (default) — context files `nvnlc2.pkl` / `serverc2.pkl`
-- `CKKSSimplifyBackend` — user's `ckks_python_simplify` lib; context file `ckks_simplify_ctx.pkl`
+- `CKKSSimplifyBackend` — `ckks_python_simplify` lib; saves raw key bytes instead of pickling the C++ context: `ckks_simplify_params.pkl` (N/q/scale), `ckks_simplify_sk.bin`, `ckks_simplify_pk.bin`. Reconstructs `CKKSContext` via `__new__` on load to avoid pickling pybind11 objects.
 - `CKKSPythonBackend` — user's verbose `ckks_python` lib; files `ckks_python_sk.bin`, `ckks_python_pk.bin`, `ckks_python_params.pkl`
 - `OpenFHEBackend` — files `openfhe_cc.bin`, `openfhe_sk.bin`, `openfhe_pk.bin`
 
 Select backend via `CKKS_BACKEND` env var (set in `start_all.sh`). `get_backend(name)` is the factory, cached per process.
+
+**Host setup for `ckks_python_simplify`**: `generate_keys.py` runs on the host (not inside a container), so the library must also be installed locally. After `pip install ckks_project/` (which installs `ckks_federated` and `ckks_python`), create the alias symlink:
+```bash
+python3 -c "import site, os; sp=site.getsitepackages()[0]; os.symlink(f'{sp}/ckks_federated', f'{sp}/ckks_python_simplify')"
+# or for user installs (~/.local):
+ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
+      ~/.local/lib/python3.10/site-packages/ckks_python_simplify
+```
 
 **Context files** live in `context/`. CKKS keys managed by the backend (see above). BFV keys: `bfv_secret.pkl` and `bfv_server_key.pkl`. Paillier: `paillier.pkl`.
 
@@ -110,6 +137,9 @@ Select backend via `CKKS_BACKEND` env var (set in `start_all.sh`). `get_backend(
 - `encryption/ckks_backend.py` — CKKS backend abstraction (mirrored to `client/encryption/` and `server/encryption/`)
 - `encryption/` and `server/encryption/` and `client/encryption/` — largely mirrored; `encrypt.py` defines base `Encrypt` class; `ckks.py`, `bfv.py`, `paillier.py` implement scheme-specific logic; `quantize.py` / `quantize_batchcrypt.py` handle quantization
 - `sync_remote.sh` — rsync to `yuri.faria@ssh.recod.ic.unicamp.br:~/keys` (excludes `.venv/`, `logs/`, `__pycache__`, `*.csv`, `.git/`)
+- `experiments/lib.sh` — shared infrastructure for themed experiment batches: `run_experiment()`, `run_theme()`, `generate_keys()`, `is_packing_solution()`; propagates `USE_GPU` to client tmux sessions
+- `experiments/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
+- `experiments/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
 
 ### CSV Log Schema
 
@@ -177,8 +207,12 @@ To select a model at runtime set `MODEL_ARCH` to the factory name without the `c
 - **ckks_backend.py must be kept in sync** across `encryption/`, `client/encryption/`, and `server/encryption/` — each Docker container only mounts its own directory.
 - **`np.load` ordering**: use `[data[f'arr_{i}'] for i in range(len(data.files))]`, never `sorted(data.files)` — lexicographic sort breaks shape order for 10+ layers.
 - Python version is **3.10** (see `pyproject.toml` and `Makefile`).
+- **GPU access in Docker**: `run_client.sh` uses `--gpus="device=$GPU_ID"`, which requires the `nvidia-persistenced` daemon to be running (`sudo systemctl start nvidia-persistenced`). Set `USE_GPU=false` to skip the GPU flag and run clients in CPU mode — useful for local smoke-tests or machines without a working nvidia-persistenced socket. `lib.sh` and `start_all.sh` propagate this variable to all client tmux sessions.
+- **Singularity images** (`flhe_client.sif`, `flhe_server.sif`) are built from Docker images via `make singularity-from-docker` or from scratch via `make singularity-configure`. Both `.sif` files must exist at `SIF_DIR` (default: repo root) before running `RUNTIME=singularity` experiments. Singularity clients connect to `localhost:9999` by default (no Docker bridge needed).
 
 ### Environment Variables (Docker / runtime)
 Clients and server are configured entirely via environment variables: `CID`, `NCLIENTS`, `SOLUTION`, `DATASET`, `NIID`, `PERCENTAGE`, `TECHNIQUE`, `SERVER_IP`, `NUM_ROUNDS`, `LOGFOLDER`, `POLY`, `PLAIN_MODULUS`, `COEFFS`, `SCALE`, `KEY_TYPE`, `N_LENGTH`, `MODEL_ARCH`, `EXPERIMENT_NAME`, `CKKS_BACKEND`.
 
 CKKS backend-specific vars (only read when the relevant backend is active): `SIMPLIFY_N`, `SIMPLIFY_BITS`, `SIMPLIFY_SCALE_BITS` (ckks_python_simplify); `PYCRYPT_N`, `PYCRYPT_BITS` (ckks_python); `OPENFHE_RING_DIM`, `OPENFHE_MULT_DEPTH`, `OPENFHE_SCALE_BITS` (openfhe).
+
+`USE_GPU` (optional, default `true`): set to `false` in `run_client.sh` to omit the `--gpus` flag — clients run in CPU mode. Automatically set by `experiments/test_ckks_backend.sh` when `/run/nvidia-persistenced/socket` is absent.

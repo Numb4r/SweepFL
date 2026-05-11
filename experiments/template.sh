@@ -6,6 +6,11 @@
 #
 # The only required change is MODEL_DATASET_PAIRS — everything else has sane defaults.
 
+# ── Container runtime ─────────────────────────────────────────────
+RUNTIME="docker"       # docker | singularity
+SIF_DIR="."            # path to .sif files (singularity only)
+SERVER_HOST=""         # override server hostname (empty = auto-detect per runtime)
+
 # ── GPU layout ────────────────────────────────────────────────────
 GPU_IDS=(5 6 7)        # Physical GPU indices to use
 CLIENTS_PER_GPU=3      # Clients per GPU

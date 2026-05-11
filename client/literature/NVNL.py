@@ -1,3 +1,4 @@
+import os
 import time
 import numpy as np
 import pickle
@@ -51,8 +52,12 @@ def fit_nvnl(self, parameters, config):
         flatten_time_clock = time.time()
         flatten_time_cpu   = time.process_time()
         flatted_parameters = flat_parameters(trained_parameters)
+        _ckks_backend = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
         if self.only_sum:
-            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
+            flatted_parameters = list(np.array(flatted_parameters) * len(self.x_train))
+        elif _ckks_backend == "ckks_python_simplify":
+            # Pre-division protocol: server sums ciphertexts only; sum(w_i/K) = average(w_i)
+            flatted_parameters = list(np.array(flatted_parameters) / self.num_clients)
         flatten_time_cpu   = time.process_time() - flatten_time_cpu
         flatten_time_clock = time.time() - flatten_time_clock
 

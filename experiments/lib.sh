@@ -14,6 +14,11 @@ if [[ "$PWD" != "$_repo_root" ]]; then
     cd "$_repo_root" || { echo "[lib.sh] ERROR: cannot cd to $_repo_root"; exit 1; }
 fi
 
+# ── Runtime ───────────────────────────────────────────────────────
+RUNTIME="${RUNTIME:-docker}"   # docker | singularity
+SIF_DIR="${SIF_DIR:-.}"        # directory containing .sif files (singularity only)
+SERVER_HOST="${SERVER_HOST:-}" # override server hostname; empty = auto per runtime
+
 # ── Defaults for optional backend params ──────────────────────────
 SIMPLIFY_N="${SIMPLIFY_N:-8192}"
 SIMPLIFY_BITS="${SIMPLIFY_BITS:-62}"
@@ -74,6 +79,9 @@ run_experiment() {
     cat > "logs/${LOGFOLDER}/experiment_details.json" <<JSON
 {
   "EXPERIMENT_NAME": "$EXP_NAME",
+  "FOLDER":          "${FOLDER:-}",
+  "TIMESTAMP":       "$TIMESTAMP",
+
   "SOLUTION":        "$SOLUTION",
   "MODEL":           "$MODEL",
   "DATASET":         "$DATASET",
@@ -82,20 +90,40 @@ run_experiment() {
   "PERCENTAGE":      $PERCENTAGE,
   "TECHNIQUE":       "$TECHNIQUE",
   "NUM_ROUNDS":      $NUM_ROUNDS,
+
   "NCLIENTES":       $NCLIENTES,
   "CLIENTS_PER_GPU": $CLIENTS_PER_GPU,
+  "GPU_IDS":         [$(IFS=,; echo "${GPU_IDS[*]}")],
+  "RUNTIME":         "${RUNTIME:-docker}",
+  "USE_GPU":         "${USE_GPU:-true}",
+
   "POLY":            $POLY,
   "COEFFS":          [$COEFFS],
   "SCALE":           $SCALE,
   "KEY_TYPE":        "$KEY_TYPE",
   "PLAIN_MODULUS":   $PLAIN_MODULUS,
-  "N_LENGTH":        $N_LENGTH
+  "N_LENGTH":        $N_LENGTH,
+
+  "CKKS_BACKEND":          "${CKKS_BACKEND:-tenseal}",
+  "SIMPLIFY_N":            ${SIMPLIFY_N:-8192},
+  "SIMPLIFY_BITS":         ${SIMPLIFY_BITS:-62},
+  "SIMPLIFY_SCALE_BITS":   ${SIMPLIFY_SCALE_BITS:-60},
+  "PYCRYPT_N":             ${PYCRYPT_N:-8192},
+  "PYCRYPT_BITS":          ${PYCRYPT_BITS:-60},
+  "OPENFHE_RING_DIM":      ${OPENFHE_RING_DIM:-8192},
+  "OPENFHE_MULT_DEPTH":    ${OPENFHE_MULT_DEPTH:-1},
+  "OPENFHE_SCALE_BITS":    ${OPENFHE_SCALE_BITS:-50}
 }
 JSON
 
     tmux kill-session -t "$SERVER_SESSION" 2>/dev/null || true
-    EXPERIMENT_NAME="$EXP_NAME" tmux new-session -d -s "$SERVER_SESSION" \
-        "./run_server.sh $SOLUTION $NCLIENTES $NUM_ROUNDS $POLY $COEFFS $SCALE $KEY_TYPE \
+    tmux new-session -d -s "$SERVER_SESSION" \
+        "RUNTIME='$RUNTIME' SIF_DIR='$SIF_DIR' EXPERIMENT_NAME='$EXP_NAME' \
+         CKKS_BACKEND='${CKKS_BACKEND:-tenseal}' \
+         SIMPLIFY_N='${SIMPLIFY_N:-8192}' SIMPLIFY_BITS='${SIMPLIFY_BITS:-62}' SIMPLIFY_SCALE_BITS='${SIMPLIFY_SCALE_BITS:-60}' \
+         PYCRYPT_N='${PYCRYPT_N:-8192}' PYCRYPT_BITS='${PYCRYPT_BITS:-60}' \
+         OPENFHE_RING_DIM='${OPENFHE_RING_DIM:-8192}' OPENFHE_MULT_DEPTH='${OPENFHE_MULT_DEPTH:-1}' OPENFHE_SCALE_BITS='${OPENFHE_SCALE_BITS:-50}' \
+         ./run_server.sh $SOLUTION $NCLIENTES $NUM_ROUNDS $POLY $COEFFS $SCALE $KEY_TYPE \
          $DATASET $NIID $SEED $PERCENTAGE $LOGFOLDER $PLAIN_MODULUS $N_LENGTH \
          >> logs/${LOGFOLDER}/tmux_SERVER.log 2>&1"
 
@@ -104,9 +132,15 @@ JSON
         local CLIENT_SESSION="client-$i"
 
         tmux kill-session -t "$CLIENT_SESSION" 2>/dev/null || true
-        MODEL_ARCH="$MODEL" EXPERIMENT_NAME="$EXP_NAME" PRETRAINED_WEIGHTS="${PRETRAINED_WEIGHTS:-}" \
         tmux new-session -d -s "$CLIENT_SESSION" \
-            "./run_client.sh $i $SOLUTION $TECHNIQUE $NCLIENTES $GPU_ID \
+            "RUNTIME='$RUNTIME' SIF_DIR='$SIF_DIR' SERVER_HOST='${SERVER_HOST:-}' \
+             MODEL_ARCH='$MODEL' EXPERIMENT_NAME='$EXP_NAME' \
+             PRETRAINED_WEIGHTS='${PRETRAINED_WEIGHTS:-}' USE_GPU='${USE_GPU:-true}' \
+             CKKS_BACKEND='${CKKS_BACKEND:-tenseal}' \
+             SIMPLIFY_N='${SIMPLIFY_N:-8192}' SIMPLIFY_BITS='${SIMPLIFY_BITS:-62}' SIMPLIFY_SCALE_BITS='${SIMPLIFY_SCALE_BITS:-60}' \
+             PYCRYPT_N='${PYCRYPT_N:-8192}' PYCRYPT_BITS='${PYCRYPT_BITS:-60}' \
+             OPENFHE_RING_DIM='${OPENFHE_RING_DIM:-8192}' OPENFHE_MULT_DEPTH='${OPENFHE_MULT_DEPTH:-1}' OPENFHE_SCALE_BITS='${OPENFHE_SCALE_BITS:-50}' \
+             ./run_client.sh $i $SOLUTION $TECHNIQUE $NCLIENTES $GPU_ID \
              $POLY $COEFFS $SCALE $KEY_TYPE $NIID $DATASET $SEED \
              $PERCENTAGE $LOGFOLDER $PLAIN_MODULUS $N_LENGTH \
              >> logs/${LOGFOLDER}/tmux_${CLIENT_SESSION}.log 2>&1"
@@ -122,6 +156,23 @@ JSON
         tmux kill-session -t "client-$i" 2>/dev/null || true
     done
 
+    # Force-remove Docker containers: tmux SIGHUP kills the 'docker run' client
+    # process but leaves the container running — the next experiment would then
+    # see "docker rm -f" kill the previous server and "Address already in use"
+    # for Singularity runs.  Clean up unconditionally so port 9999 is free.
+    if [[ "${RUNTIME:-docker}" == "docker" ]]; then
+        docker rm -f fl_server-gpu 2>/dev/null || true
+        for i in $(seq 0 $(( NCLIENTES - 1 ))); do
+            docker rm -f "client-$i" 2>/dev/null || true
+        done
+    fi
+
+    # Wait for port 9999 to be fully released before returning
+    local _port_wait=0
+    while ss -tlnp 2>/dev/null | grep -q ':9999[^0-9]' && (( _port_wait < 15 )); do
+        sleep 1; (( _port_wait++ ))
+    done
+
     echo "[OK] $LOGFOLDER"
 }
 
@@ -131,6 +182,9 @@ run_theme() {
     NCLIENTES=$(( ${#GPU_IDS[@]} * CLIENTS_PER_GPU ))
 
     mkdir -p context logs logs/models
+    # Pre-create the FOLDER subtree with host-user ownership so Docker containers
+    # (which run as root) never get a chance to create it first as root.
+    [[ -n "${FOLDER:-}" ]] && mkdir -p "logs/${FOLDER}"
 
     echo "══════════════════════════════════════════════"
     echo " Theme : ${FOLDER:-<no folder>}"
