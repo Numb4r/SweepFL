@@ -122,12 +122,14 @@ def create_mobilenetv2(input_shape, num_classes: int, alpha: float = 0.5):
       alpha=0.35 → ~250 k   |   alpha=0.5 → ~460 k   |   alpha=1.0 → ~2.3 M
 
     Handles grayscale / 2-D inputs by converting to 3-channel internally.
-    Resizes inputs smaller than 32×32 to 32×32 (MobileNetV2 minimum).
+    Resizes inputs smaller than 96×96 to 96×96: at 32×32 (e.g. CIFAR10) the
+    stride-2 layers collapse feature maps to 1×1 before GAP, making the model
+    unable to learn spatial features. 96×96 yields a 3×3 final feature map.
     """
     h = input_shape[0]
     w = input_shape[1]
     c = input_shape[2] if len(input_shape) == 3 else 1
-    eff_h, eff_w = max(h, 32), max(w, 32)
+    eff_h, eff_w = max(h, 96), max(w, 96)
 
     inputs = layers.Input(shape=input_shape)
     x = inputs
@@ -140,8 +142,8 @@ def create_mobilenetv2(input_shape, num_classes: int, alpha: float = 0.5):
     if c == 1:
         x = layers.Concatenate(axis=-1)([x, x, x])
 
-    # Upsample if below MobileNetV2's minimum
-    if h < 32 or w < 32:
+    # Upsample if below practical minimum (96×96); 32×32 collapses to 1×1 after GAP
+    if h < 96 or w < 96:
         x = layers.Resizing(eff_h, eff_w)(x)
 
     backbone = tf.keras.applications.MobileNetV2(

@@ -1,4 +1,3 @@
-import tenseal as ts
 import os
 import pickle
 import numpy as np
@@ -6,6 +5,7 @@ from encryption.paillier import PaillierCipher
 
 
 def context_bfv(poly_modulus_degree=8192, plain_modulus=1073872897, key_type='none'):
+    import tenseal as ts
     cont = ts.context(
         ts.SCHEME_TYPE.BFV,
         poly_modulus_degree=8192,

@@ -37,6 +37,22 @@ bash experiments/my_theme.sh
 # 2 clients, 3 rounds, FashionMNIST, LeNet-5 (run from repo root)
 bash experiments/test_ckks_backend.sh
 
+# Estimate wall-clock time for an experiment script (local machine)
+python3 experiments/estimate_time.py experiments/my_theme.sh
+# Estimate for a specific cluster partition
+python3 experiments/estimate_time.py experiments/my_theme.sh --machine h100
+# Show estimates for all partitions
+python3 experiments/estimate_time.py experiments/my_theme.sh --all
+
+# Submit an experiment to the SLURM cluster
+# 1. Copy and edit the template:
+cp sbatch/template.sh sbatch/my_experiment.sh
+# 2. Submit:
+sbatch sbatch/my_experiment.sh
+# Monitor:
+squeue -u $USER
+tail -f logs/slurm_<jobid>.out
+
 # Run tests
 pytest tests/
 
@@ -137,13 +153,20 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `encryption/ckks_backend.py` — CKKS backend abstraction (mirrored to `client/encryption/` and `server/encryption/`)
 - `encryption/` and `server/encryption/` and `client/encryption/` — largely mirrored; `encrypt.py` defines base `Encrypt` class; `ckks.py`, `bfv.py`, `paillier.py` implement scheme-specific logic; `quantize.py` / `quantize_batchcrypt.py` handle quantization
 - `sync_remote.sh` — rsync to `yuri.faria@ssh.recod.ic.unicamp.br:~/keys` (excludes `.venv/`, `logs/`, `__pycache__`, `*.csv`, `.git/`)
-- `experiments/lib.sh` — shared infrastructure for themed experiment batches: `run_experiment()`, `run_theme()`, `generate_keys()`, `is_packing_solution()`; propagates `USE_GPU` to client tmux sessions
+- `experiments/lib.sh` — auto-dispatcher: sources `lib_slurm.sh` when `SLURM_JOB_ID` is set, otherwise sources `lib_tmux.sh`; experiment scripts always `source lib.sh` and call `run_theme` — no changes needed per environment
+- `experiments/lib_tmux.sh` — tmux backend (local/Docker/Singularity): launches server as tmux session `SERVER` and one session per client; waits for server session to exit, then kills client sessions
+- `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free
 - `experiments/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
 - `experiments/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
+- `experiments/estimate_time.py` — estimates wall-clock time for an experiment script by parsing its config variables and applying per-machine speed factors; supports `--machine <partition>`, `--all`, and `--margin <factor>`; machine table sourced from `SLURM.md`
+- `experiments/ESTIMATION_METHODOLOGY.md` — documents the time estimation model (GPU-bound train time, CPU-bound HE time, scaling formulas)
+- `sbatch/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
+- `sbatch/` — directory for SLURM job scripts; one file per experiment batch
+- `SLURM.md` — cluster partition reference table: partition name, nodes, GPU model, max wall time, GPU Speed factor, CPU Speed factor (used by `estimate_time.py`)
 
 ### CSV Log Schema
 
-**`train.csv`** (39 columns, one row per client per round):
+**`train.csv`** (41 columns, one row per client per round):
 
 | Group | Columns |
 |---|---|
@@ -162,6 +185,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 | Payload | `payload_bytes`, `n_params` |
 | Pack info | `n_packs`, `packs_sent`, `pack_size`, `sigma_ckks` |
 | HE params | `poly_modulus_degree`, `coeff_mod_bits`, `scale_bits`, `plain_modulus` |
+| Memory | `ram_rss_mb`, `ram_peak_mb` |
 
 Columns unused by a technique are emitted as `0`. `coeff_mod_bits` uses semicolons as separator (e.g. `60;40;40;60`) to avoid CSV breakage. `scale_bits` stores the exponent (e.g. `40` for `2^40`).
 
@@ -195,9 +219,13 @@ All factories follow `create_<name>(input_shape, num_classes, ...)` and return a
 | `create_vit_tiny` | ViT patch=4 embed=64 depth=6 | 206 k |
 | `create_simple_cnn` | Simple CNN | — |
 
-`create_mobilenetv2` handles grayscale inputs (auto-repeats channel to RGB) and inputs smaller than 32×32 (auto-resizes). `create_vit_tiny` requires `h % patch_size == 0`.
+`create_mobilenetv2` handles grayscale inputs (auto-repeats channel to RGB) and inputs smaller than 96×96 (auto-resizes to 96×96). At 32×32 (e.g. CIFAR10) the stride-2 layers collapse feature maps to 1×1 before GAP, preventing learning — the 96×96 threshold ensures a 3×3 final feature map. `create_vit_tiny` requires `h % patch_size == 0`.
 
 To select a model at runtime set `MODEL_ARCH` to the factory name without the `create_` prefix (e.g. `MODEL_ARCH=vit_tiny`). If unset, defaults to `dnn`.
+
+### Convenção: experiment_details.json
+
+Toda env var de experimento nova adicionada ao `run_client.sh` **deve** ser incluída também no bloco `experiment_details.json` em `experiments/lib_tmux.sh` e `experiments/lib_slurm.sh`. Variáveis de infraestrutura (`HF_*`, `TF_*`, `TORCH_*`, `CUDA_*`, `CID`, `LOGFOLDER`) são exceção — não pertencem ao JSON.
 
 ### Important Constraints
 
@@ -216,3 +244,5 @@ Clients and server are configured entirely via environment variables: `CID`, `NC
 CKKS backend-specific vars (only read when the relevant backend is active): `SIMPLIFY_N`, `SIMPLIFY_BITS`, `SIMPLIFY_SCALE_BITS` (ckks_python_simplify); `PYCRYPT_N`, `PYCRYPT_BITS` (ckks_python); `OPENFHE_RING_DIM`, `OPENFHE_MULT_DEPTH`, `OPENFHE_SCALE_BITS` (openfhe).
 
 `USE_GPU` (optional, default `true`): set to `false` in `run_client.sh` to omit the `--gpus` flag — clients run in CPU mode. Automatically set by `experiments/test_ckks_backend.sh` when `/run/nvidia-persistenced/socket` is absent.
+
+`BATCH_SIZE` (optional, default `4`): training batch size passed to `model.fit()` in all `fit_*.py` files. Set to `32` or higher when using MobileNetV2 — BatchNorm is unstable with batch_size=4.

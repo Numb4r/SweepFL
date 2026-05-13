@@ -13,6 +13,7 @@ def get_size(data):
     
     
 def packing(parameters, chunk_size=4096):
+    parameters = list(parameters)
     total_parameters = len(parameters)
     number_packs     = total_parameters // chunk_size
 

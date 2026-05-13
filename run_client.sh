@@ -84,6 +84,7 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e MODEL_ARCH=${MODEL_ARCH:-} \
         -e EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
         -e PRETRAINED_WEIGHTS=${PRETRAINED_WEIGHTS:-} \
+        -e BATCH_SIZE=${BATCH_SIZE:-4} \
         -e HF_DATASETS_CACHE=/client/data \
         -e HF_HOME=/tmp/hf_home \
         -e HF_HUB_READ_TIMEOUT=300 \
@@ -91,7 +92,8 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e TOKENIZERS_PARALLELISM=false \
         -e TORCH_HOME=/tmp/torch_cache \
         -e NVIDIA_DRIVER_CAPABILITIES=compute,utility \
-        -e TF_CPP_MIN_LOG_LEVEL=0 \
+        -e TF_CPP_MIN_LOG_LEVEL=2 \
+        -e TF_ENABLE_ONEDNN_OPTS=0 \
         flhe:client \
         python /client/client.py
 
@@ -130,6 +132,7 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env MODEL_ARCH=${MODEL_ARCH:-} \
         --env EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
         --env PRETRAINED_WEIGHTS=${PRETRAINED_WEIGHTS:-} \
+        --env BATCH_SIZE=${BATCH_SIZE:-4} \
         --env HF_DATASETS_CACHE=/client/data \
         --env HF_HOME=/tmp/hf_home \
         --env HF_HUB_READ_TIMEOUT=300 \
@@ -137,7 +140,8 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env TOKENIZERS_PARALLELISM=false \
         --env TORCH_HOME=/tmp/torch_cache \
         --env CUDA_VISIBLE_DEVICES=$GPU_ID \
-        --env TF_CPP_MIN_LOG_LEVEL=0 \
+        --env TF_CPP_MIN_LOG_LEVEL=2 \
+        --env TF_ENABLE_ONEDNN_OPTS=0 \
         "${SIF_DIR}/flhe_client.sif" \
         python /client/client.py
 

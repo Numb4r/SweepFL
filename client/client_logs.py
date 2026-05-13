@@ -30,6 +30,21 @@ from __future__ import annotations
 import math
 import os
 
+
+def _read_mem_mb() -> tuple[float, float]:
+    """Return (rss_mb, peak_mb) from /proc/self/status. Returns (0, 0) on failure."""
+    rss = peak = 0
+    try:
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    rss = int(line.split()[1])
+                elif line.startswith("VmPeak:"):
+                    peak = int(line.split()[1])
+    except Exception:
+        pass
+    return rss / 1024, peak / 1024
+
 # ── Column headers ────────────────────────────────────────────────────────────
 
 _TRAIN_HEADER = (
@@ -47,7 +62,8 @@ _TRAIN_HEADER = (
     "serialize_time_s,serialize_time_cpu,"
     "payload_bytes,n_params,"
     "n_packs,packs_sent,pack_size,sigma_ckks,"
-    "poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus"
+    "poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus,"
+    "ram_rss_mb,ram_peak_mb"
 )
 
 _EVAL_HEADER = (
@@ -148,6 +164,7 @@ def write_train_logs(
 
     packs_sent = int(qnt_packing)
     n_packs    = (self.len_shared_data // size_pack + 1) if size_pack > 0 else 0
+    rss_mb, peak_mb = _read_mem_mb()
 
     row = (
         f"{exp_name},{rnd},{self.cid},"
@@ -166,7 +183,8 @@ def write_train_logs(
         f"{model_size},{self.len_shared_data},"
         f"{n_packs},{packs_sent},{size_pack},"
         f"{sigma if sigma is not None else ''},"
-        f"{self.poly_modulus_degree},{coeff_bits},{scale_b},{self.plain_modulus}"
+        f"{self.poly_modulus_degree},{coeff_bits},{scale_b},{self.plain_modulus},"
+        f"{rss_mb:.1f},{peak_mb:.1f}"
     )
     _append(f"logs/{self.log_folder}/train.csv", _TRAIN_HEADER, row)
 

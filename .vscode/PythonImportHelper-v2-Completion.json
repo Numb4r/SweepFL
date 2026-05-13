@@ -42,6 +42,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -1767,6 +1775,24 @@
         "documentation": {}
     },
     {
+        "label": "gc",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "gc",
+        "description": "gc",
+        "detail": "gc",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
         "label": "annotations",
         "importPath": "__future__",
         "description": "__future__",
@@ -1848,15 +1874,6 @@
         "documentation": {}
     },
     {
-        "label": "logging",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "logging",
-        "description": "logging",
-        "detail": "logging",
-        "documentation": {}
-    },
-    {
         "label": "layers",
         "importPath": "keras",
         "description": "keras",
@@ -1878,6 +1895,24 @@
         "description": "keras",
         "isExtraImport": true,
         "detail": "keras",
+        "documentation": {}
+    },
+    {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
         "documentation": {}
     },
     {
@@ -2131,15 +2166,6 @@
         "description": "urllib.parse",
         "isExtraImport": true,
         "detail": "urllib.parse",
-        "documentation": {}
-    },
-    {
-        "label": "argparse",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "argparse",
-        "description": "argparse",
-        "detail": "argparse",
         "documentation": {}
     },
     {
@@ -3101,7 +3127,7 @@
         "kind": 2,
         "importPath": "client.literature.batchcrypt",
         "description": "client.literature.batchcrypt",
-        "peekOfCode": "def fit_batchcrypt(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1)",
+        "peekOfCode": "def fit_batchcrypt(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=int(os.environ.get(\"BATCH_SIZE\", \"4\")), verbose=0)",
         "detail": "client.literature.batchcrypt",
         "documentation": {}
     },
@@ -3110,7 +3136,7 @@
         "kind": 2,
         "importPath": "client.literature.bfv",
         "description": "client.literature.bfv",
-        "peekOfCode": "def fit_bfv(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1)",
+        "peekOfCode": "def fit_bfv(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=int(os.environ.get(\"BATCH_SIZE\", \"4\")), verbose=0)",
         "detail": "client.literature.bfv",
         "documentation": {}
     },
@@ -3650,7 +3676,7 @@
         "kind": 2,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "def get_size(data):\n    total_size = 0\n    for item in data:\n        total_size += sys.getsizeof(item)\n    return total_size\ndef packing(parameters, chunk_size=4096):\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size\n    last_chunk      = (number_packs) * chunk_size\n    last_chunk_size = parameters[last_chunk:]",
+        "peekOfCode": "def get_size(data):\n    total_size = 0\n    for item in data:\n        total_size += sys.getsizeof(item)\n    return total_size\ndef packing(parameters, chunk_size=4096):\n    parameters = list(parameters)\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size\n    last_chunk      = (number_packs) * chunk_size",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -3659,7 +3685,7 @@
         "kind": 2,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "def packing(parameters, chunk_size=4096):\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size\n    last_chunk      = (number_packs) * chunk_size\n    last_chunk_size = parameters[last_chunk:]\n    need_to_fill    = chunk_size - last_chunk\n    parameters.extend([0] * need_to_fill)\n    packs            = []\n    for pack in range(number_packs + 1):\n        start  = pack * chunk_size",
+        "peekOfCode": "def packing(parameters, chunk_size=4096):\n    parameters = list(parameters)\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size\n    last_chunk      = (number_packs) * chunk_size\n    last_chunk_size = parameters[last_chunk:]\n    need_to_fill    = chunk_size - last_chunk\n    parameters.extend([0] * need_to_fill)\n    packs            = []\n    for pack in range(number_packs + 1):",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -4181,7 +4207,7 @@
         "kind": 2,
         "importPath": "client.models",
         "description": "client.models",
-        "peekOfCode": "def create_mobilenetv2(input_shape, num_classes: int, alpha: float = 0.5):\n    \"\"\"MobileNetV2 with width multiplier alpha.\n    Approximate parameter counts (exclude head, no pretrained weights):\n      alpha=0.35 → ~250 k   |   alpha=0.5 → ~460 k   |   alpha=1.0 → ~2.3 M\n    Handles grayscale / 2-D inputs by converting to 3-channel internally.\n    Resizes inputs smaller than 32×32 to 32×32 (MobileNetV2 minimum).\n    \"\"\"\n    h = input_shape[0]\n    w = input_shape[1]\n    c = input_shape[2] if len(input_shape) == 3 else 1",
+        "peekOfCode": "def create_mobilenetv2(input_shape, num_classes: int, alpha: float = 0.5):\n    \"\"\"MobileNetV2 with width multiplier alpha.\n    Approximate parameter counts (exclude head, no pretrained weights):\n      alpha=0.35 → ~250 k   |   alpha=0.5 → ~460 k   |   alpha=1.0 → ~2.3 M\n    Handles grayscale / 2-D inputs by converting to 3-channel internally.\n    Resizes inputs smaller than 96×96 to 96×96: at 32×32 (e.g. CIFAR10) the\n    stride-2 layers collapse feature maps to 1×1 before GAP, making the model\n    unable to learn spatial features. 96×96 yields a 3×3 final feature map.\n    \"\"\"\n    h = input_shape[0]",
         "detail": "client.models",
         "documentation": {}
     },
@@ -4696,6 +4722,114 @@
         "description": "encryption.quantize_batchcrypt",
         "peekOfCode": "precision = 5\n# ==========================================\n# FUNÇÕES CORE DO PAILLIER (Complemento de 2)\n# ==========================================\ndef quantize_padding_batchcrypt(value, alpha, quan_bits, num_clients):\n    # clipping\n    value = np.clip(value, -alpha, alpha)\n    # quantizing\n    sign = np.sign(value)\n    unsigned_value = value * sign",
         "detail": "encryption.quantize_batchcrypt",
+        "documentation": {}
+    },
+    {
+        "label": "parse_slurm_md",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição:\n        { 'l40s': {'gpu': 'L40S 46GB', 'max_days': 4, 'speed': 12.0, 'note': '...'}, ... }\n    Formato esperado do header:\n        | Partição | Nós | GPUs | Tempo máx | Speed | Nota |\n    A coluna 'Speed' é obrigatória; se ausente, o script avisa e usa 1.0.\n    \"\"\"\n    machines = {}\n    if not slurm_path.exists():",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "parse_experiment_script",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def parse_experiment_script(script_path: Path) -> dict:\n    \"\"\"\n    Extrai variáveis relevantes de um script bash de experimento via regex.\n    Retorna dict com os valores encontrados (listas para arrays, string para escalares).\n    Não executa o bash — apenas analisa o texto.\n    \"\"\"\n    content = script_path.read_text(encoding=\"utf-8\")\n    # Remove comentários\n    content_nc = re.sub(r\"#.*\", \"\", content)\n    def get_scalar(name: str, default: str = \"\") -> str:",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "count_experiments",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def count_experiments(params: dict) -> list:\n    \"\"\"\n    Retorna lista de dicts, cada um descrevendo um experimento:\n      { solution, model, dataset, percentage, niid, seed, ckks_config, key_type }\n    \"\"\"\n    experiments = []\n    for ckks_config in params[\"CKKS_CONFIGS\"]:\n        for key_type in params[\"KEY_TYPES\"]:\n            for solution in params[\"SOLUTIONS\"]:\n                sol_lower = solution.lower()",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "estimate_round_time_local",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def estimate_round_time_local(model: str, dataset: str, n_clients: int,\n                              clients_per_gpu: int) -> dict:\n    \"\"\"\n    Estima o tempo de wall-clock de UM round (1 época por cliente) nesta máquina de referência.\n    Retorna dict com t_train_s (GPU-bound) e t_he_s (CPU-bound) separados.\n    Treino (GPU-bound):\n        T_train = clients_per_gpu × T_ref × (n_params / P_ref) × (steps / steps_ref)\n    HE (CPU-bound): encrypt + pack + serialize + decrypt escala com nº de chunks.\n        n_chunks = ceil(n_params / chunk_size)   chunk_size = poly_degree/2\n        T_he = clients_per_gpu × REF_HE_TIME_S × (n_chunks / REF_N_CHUNKS)",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "estimate_total_time",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def estimate_total_time(experiments: list, params: dict, gpu_speed: float,\n                        cpu_speed: float, margin: float) -> dict:\n    \"\"\"\n    Estima o tempo total do conjunto de experimentos.\n    T_round_machine = T_train_local/gpu_speed + T_he_local/cpu_speed\n    Retorna dict com total_s, total_s_with_margin, n_experiments, n_rounds_total,\n    breakdown (lista por experimento).\n    \"\"\"\n    n_clients       = params[\"NCLIENTES\"]\n    clients_per_gpu = params[\"CLIENTS_PER_GPU\"]",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "fmt_time",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def fmt_time(seconds: float) -> str:\n    \"\"\"Converte segundos em string legível: Xd Yh Zm Ws.\"\"\"\n    seconds = int(seconds)\n    d = seconds // 86400\n    h = (seconds % 86400) // 3600\n    m = (seconds % 3600) // 60\n    s = seconds % 60\n    parts = []\n    if d: parts.append(f\"{d}d\")\n    if h: parts.append(f\"{h}h\")",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "fmt_days",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def fmt_days(seconds: float) -> str:\n    return f\"{seconds / 86400:.2f} dias\"\n# ─── Main ─────────────────────────────────────────────────────────────────────\ndef main():\n    parser = argparse.ArgumentParser(\n        description=\"Estima o tempo de execução de um script de experimento FL.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\"script\", help=\"Caminho para o script .sh do experimento\")",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Estima o tempo de execução de um script de experimento FL.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\"script\", help=\"Caminho para o script .sh do experimento\")\n    parser.add_argument(\n        \"--machine\", \"-m\",\n        default=None,",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_PARAMS",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "MODEL_PARAMS = {\n    \"resnet20\":    274_042,\n    \"lenet5\":       44_000,\n    \"dnn\":         309_000,\n    \"dnn_base\":    309_000,\n    \"dnn_tiny\":    111_000,\n    \"mobilenetv2\": 460_000,\n    \"vit_tiny\":    206_000,\n    \"simple_cnn\":   80_000,\n}",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "DATASET_SIZE",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "DATASET_SIZE = {\n    \"FASHION_MNIST\":          60_000,\n    \"CIFAR10\":                50_000,\n    \"CIFAR100\":               50_000,\n    \"tanganke/gtsrb\":         39_209,\n    \"AISNP/PathMNIST\":        89_996,\n    \"randall-lab/medmnist\":   10_000,\n}\n# Soluções que iteram sobre PERCENTAGES\nPACKING_SOLUTIONS = {\"fedphe\", \"nvnl\", \"sw\", \"rw\", \"fedphe-scout\", \"nvnl-scout\"}",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLUTIONS",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "PACKING_SOLUTIONS = {\"fedphe\", \"nvnl\", \"sw\", \"rw\", \"fedphe-scout\", \"nvnl-scout\"}\n# Overhead de setup por experimento (geração de chaves, startup de containers)\nSETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição:\n        { 'l40s': {'gpu': 'L40S 46GB', 'max_days': 4, 'speed': 12.0, 'note': '...'}, ... }\n    Formato esperado do header:\n        | Partição | Nós | GPUs | Tempo máx | Speed | Nota |",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "SETUP_OVERHEAD_S",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "SETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição:\n        { 'l40s': {'gpu': 'L40S 46GB', 'max_days': 4, 'speed': 12.0, 'note': '...'}, ... }\n    Formato esperado do header:\n        | Partição | Nós | GPUs | Tempo máx | Speed | Nota |\n    A coluna 'Speed' é obrigatória; se ausente, o script avisa e usa 1.0.\n    \"\"\"",
+        "detail": "experiments.estimate_time",
         "documentation": {}
     },
     {
@@ -5729,7 +5863,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def context_bfv(poly_modulus_degree=8192, plain_modulus=1073872897, key_type='none'):\n    cont = ts.context(\n        ts.SCHEME_TYPE.BFV,\n        poly_modulus_degree=8192,\n        coeff_mod_bit_sizes=[50, 50, 50, 50],\n        plain_modulus=1073872897,\n    )\n    if key_type == 'all':\n        cont.generate_galois_keys()\n        cont.generate_relin_keys()",
+        "peekOfCode": "def context_bfv(poly_modulus_degree=8192, plain_modulus=1073872897, key_type='none'):\n    import tenseal as ts\n    cont = ts.context(\n        ts.SCHEME_TYPE.BFV,\n        poly_modulus_degree=8192,\n        coeff_mod_bit_sizes=[50, 50, 50, 50],\n        plain_modulus=1073872897,\n    )\n    if key_type == 'all':\n        cont.generate_galois_keys()",
         "detail": "generate_keys",
         "documentation": {}
     },

@@ -37,8 +37,10 @@ NIIDS=(0.1)
 SEEDS=(42)
 TECHNIQUE="none"
 NUM_ROUNDS=3
-PERCENTAGES=(0.8)
-MODEL_DATASET_PAIRS=("lenet5:FASHION_MNIST")
+PERCENTAGES=(0.1)
+# MODEL_DATASET_PAIRS=("lenet5:FASHION_MNIST")
+MODEL_DATASET_PAIRS=("resnet20:CIFAR10")
+
 EXPERIMENT_NAME=""      # auto-generates as {model}_{dataset}_{solution}
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -85,8 +87,8 @@ FOLDER="test_ckks_backend/phase0_plaintext"
 SOLUTIONS=("plaintext")
 RUNTIME="docker"
 SIF_DIR="."
-# run_theme
-# _cleanup_between_phases
+run_theme
+_cleanup_between_phases
 
 # ── Phase 1: nvnl + fedphe (Docker) ──────────────────────────────────────────
 echo ""

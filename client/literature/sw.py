@@ -20,7 +20,7 @@ def fit_sw(self, parameters, config):
 
     train_time_clock = time.time()
     train_time_cpu   = time.process_time()
-    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=4)
+    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=int(os.environ.get("BATCH_SIZE", "4")), verbose=0)
     for v in self.model.trainable_variables:
         _ = v.numpy()
     train_time_cpu   = time.process_time() - train_time_cpu
@@ -54,10 +54,10 @@ def fit_sw(self, parameters, config):
         flatted_parameters = flat_parameters(trained_parameters)
         _ckks_backend = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
         if self.only_sum:
-            flatted_parameters = list(np.array(flatted_parameters) * len(self.x_train))
+            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
         elif _ckks_backend == "ckks_python_simplify":
             # Pre-division protocol: server sums ciphertexts only; sum(w_i/K) = average(w_i)
-            flatted_parameters = list(np.array(flatted_parameters) / self.num_clients)
+            flatted_parameters = np.array(flatted_parameters) / self.num_clients
         flatten_time_cpu   = time.process_time() - flatten_time_cpu
         flatten_time_clock = time.time() - flatten_time_clock
 

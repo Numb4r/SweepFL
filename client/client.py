@@ -1,9 +1,33 @@
 
+import gc
+import logging
 import os
 import pickle
 import time
 import flwr as fl
 import tensorflow as tf
+
+logging.getLogger("flwr").setLevel(logging.WARNING)
+
+
+def _log_mem(label: str) -> None:
+    """Print RSS and VmPeak from /proc/self/status — no extra deps needed."""
+    try:
+        rss = vmswap = vmpeak = 0
+        with open("/proc/self/status") as f:
+            for line in f:
+                if line.startswith("VmRSS:"):
+                    rss = int(line.split()[1])
+                elif line.startswith("VmPeak:"):
+                    vmpeak = int(line.split()[1])
+                elif line.startswith("VmSwap:"):
+                    vmswap = int(line.split()[1])
+        print(
+            f"[MEM] {label}: RSS={rss/1024:.0f}MB  peak={vmpeak/1024:.0f}MB  swap={vmswap/1024:.0f}MB",
+            flush=True,
+        )
+    except Exception:
+        pass
 
 
 from dataset_utils import ManageDatasets, load_data_flowerdataset
@@ -240,7 +264,8 @@ class HEClient(fl.client.NumPyClient):
             
 
     def fit(self, parameters, config):
-        
+        _log_mem(f"cid={self.cid} round={config.get('round','?')} start")
+
         if str(self.solution).lower() == 'ckks':
             fit_msg = fit_ckks(self, parameters, config)
         elif str(self.solution).lower() == 'bfv':
@@ -265,6 +290,8 @@ class HEClient(fl.client.NumPyClient):
             fit_msg = fit_rw(self,parameters,config)
             
             
+        gc.collect()
+        _log_mem(f"cid={self.cid} round={config.get('round','?')} end")
         print("TRYING SEND FIT MESSAGE")
         return self.model.get_weights(), len(self.x_train), fit_msg
 

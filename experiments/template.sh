@@ -64,6 +64,21 @@ CKKS_BACKEND="tenseal" # tenseal | ckks_python_simplify | ckks_python | openfhe
 # logs/models/pretrained/<model>/*/pretrained.weights.h5
 # No configuration needed here.
 
+# ── Per-model configuration (optional) ───────────────────────────
+# Define model_config() to set per-model env vars before each experiment.
+# Called automatically by run_theme with (model, dataset) arguments.
+# Variables set here are reset to their defaults before each model.
+# Currently supported: BATCH_SIZE (default 4)
+#
+# model_config() {
+#     local model="$1" dataset="$2"
+#     case "$model" in
+#         mobilenetv2) BATCH_SIZE=32 ;;
+#         vit_tiny)    BATCH_SIZE=16 ;;
+#         *)           BATCH_SIZE=4  ;;
+#     esac
+# }
+
 # ── Run ───────────────────────────────────────────────────────────
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 run_theme

@@ -13,4 +13,6 @@ client/data/
 *.bin
 *.sif
 ckks_change_logs/
+sbatch/*.sh
+!sbatch/template.sh
 *.npz

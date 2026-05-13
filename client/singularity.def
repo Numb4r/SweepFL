@@ -33,7 +33,8 @@ os.symlink(f'{sp}/ckks_federated', f'{sp}/ckks_python_simplify')"
 
 %environment
     export LANG=C.UTF-8
-    export TF_CPP_MIN_LOG_LEVEL=0
+    export TF_CPP_MIN_LOG_LEVEL=2
+    export TF_ENABLE_ONEDNN_OPTS=0
 
 %runscript
     python -u /client/client.py

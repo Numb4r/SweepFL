@@ -35,7 +35,7 @@ def fit_ckks(self, parameters, config):
 
     train_time_clock = time.time()
     train_time_cpu   = time.process_time()
-    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=4)
+    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=int(os.environ.get("BATCH_SIZE", "4")), verbose=0)
     for v in self.model.trainable_variables:
         _ = v.numpy()
     train_time_cpu   = time.process_time() - train_time_cpu
