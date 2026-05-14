@@ -57,13 +57,35 @@ chunk_ref    = poly_ref / 2  = 4 096   # floats por pack CKKS
 n_chunks_ref = ceil(P_ref / chunk_ref) = ceil(274 042 / 4 096) ≈ 67
 ```
 
+### 3.4 Dados empíricos — benchmark_resources (2026-05-14)
+
+Medição local, plaintext, CPU (USE_GPU=false), 2 clientes, 5 rounds:
+
+| Modelo      | Dataset       | Batch | Train/round (avg) | Train/round (max) | RAM peak/cliente | n_params real |
+|-------------|--------------|-------|-------------------|-------------------|------------------|---------------|
+| dnn_tiny    | FASHION_MNIST | 4     | 11,1 s            | 13,1 s            | 6 720 MB         | 111 146       |
+| lenet5      | FASHION_MNIST | 4     | 19,4 s            | 22,5 s            | 6 720 MB         | 61 706        |
+| mobilenetv2 | CIFAR10       | 32    | 242,7 s           | 311,5 s           | 8 520 MB         | 719 034       |
+
+**Observações:**
+- IID vs non-IID: sem diferença significativa no tempo por round (mesma quantidade de dados; só muda distribuição). Tempo afetado apenas em cenários não-IID extremo com lotes muito desbalanceados (stddev mobilenetv2 = 27s).
+- RAM dominada pelo overhead TF/Keras+dataset (~6,5 GB fixo). HE (CKKS ciphertexts) adiciona ~100–300 MB/cliente — insignificante relativo à base.
+- Payload serializado: dnn_tiny=903 KB · lenet5=547 KB · mobilenetv2=6,3 MB por cliente por round.
+- n_params corretos diferem do código anterior: lenet5 (44 k→61,7 k), mobilenetv2 (460 k→719 k).
+
 ---
 
 ## 4. Modelo de Escalonamento
 
 ### 4.1 Treino de um único cliente (GPU-bound)
 
-O tempo de treino escala com dois fatores independentes:
+O script usa dois caminhos em ordem de prioridade:
+
+**Prioridade 1 — Lookup empírico** (`EMPIRICAL_TRAIN_TIME_S`):
+Se o triplo `(model, dataset, batch_size)` estiver na tabela empírica (seção 3.4),
+o tempo medido é usado diretamente, sem escalonamento. Sinalizado com ★ no output.
+
+**Prioridade 2 — Modelo linear** (fallback para modelos/datasets não calibrados):
 
 **a) Número de parâmetros** — custo de forward+backward por amostra:
 ```
@@ -76,6 +98,10 @@ steps     = ceil((D_dataset / N_clientes) / B)
 α_steps   = steps / steps_ref
 T_train_1 = T_train_ref × α_params × α_steps
 ```
+
+Nota: o modelo linear é impreciso para arquiteturas muito diferentes do resnet20
+(ex: modelos com overhead fixo TF dominante, ou com pré-processamento pesado como MobileNetV2).
+Prefira calibrar com runs reais e adicionar à tabela empírica.
 
 ### 4.2 HE de um único cliente (CPU-bound)
 
@@ -232,8 +258,9 @@ python3 experiments/estimate_time.py --calibrate logs/meu_experimento/
 
 | Limitação | Impacto | Mitigação |
 |-----------|---------|-----------|
-| Somente resnet20/CIFAR10 medido empiricamente | Escalonamento por n_params é aproximado | Calibrar com 1 run real de cada modelo-alvo |
-| Scaling linear por n_params | ViT tem atenção quadrática por sequência | Subestime ViT em ≈20–40%; use `--margin 2.0` |
+| Empírico disponível: dnn_tiny, lenet5, mobilenetv2 (CPU, plaintext) | Boa precisão para esses 3; demais usam modelo linear | Calibrar e adicionar à tabela `EMPIRICAL_TRAIN_TIME_S` |
+| Scaling linear por n_params (fallback) | Erro grande para modelos com overhead fixo ou conv pesada | Usar `--margin 2.0`; calibrar com run real |
+| ViT tem atenção quadrática por sequência | Linear sub-estima em ≈20–40% | Usar `--margin 2.0` |
 | Clientes por GPU: hipótese sequencial | Pode superestimar se há paralelismo CUDA real | Conservador — preferível a subestimar |
 | `GPU_Speed` estimado por FLOPs, não medido | Erro de ±30–50% no tempo absoluto | Calibrar após 1 run real no cluster |
 | `CPU_Speed` estimado por clock/IPC | Erro de ±20–30%; Xeon vs Threadripper varia muito | Calibrar medindo `encrypt_time_s` nos logs |

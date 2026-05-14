@@ -4729,7 +4729,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição:\n        { 'l40s': {'gpu': 'L40S 46GB', 'max_days': 4, 'speed': 12.0, 'note': '...'}, ... }\n    Formato esperado do header:\n        | Partição | Nós | GPUs | Tempo máx | Speed | Nota |\n    A coluna 'Speed' é obrigatória; se ausente, o script avisa e usa 1.0.\n    \"\"\"\n    machines = {}\n    if not slurm_path.exists():",
+        "peekOfCode": "def parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição.\n    \"\"\"\n    machines = {}\n    if not slurm_path.exists():\n        print(f\"[AVISO] SLURM.md não encontrado em {slurm_path}. Usando apenas 'local'.\",\n              file=sys.stderr)\n        return {\"local\": {\"gpu\": \"CPU\", \"max_days\": None, \"speed\": 1.0,\n                          \"gpu_speed\": 1.0, \"cpu_speed\": 1.0, \"note\": \"Referência\"}}",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4738,7 +4738,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def parse_experiment_script(script_path: Path) -> dict:\n    \"\"\"\n    Extrai variáveis relevantes de um script bash de experimento via regex.\n    Retorna dict com os valores encontrados (listas para arrays, string para escalares).\n    Não executa o bash — apenas analisa o texto.\n    \"\"\"\n    content = script_path.read_text(encoding=\"utf-8\")\n    # Remove comentários\n    content_nc = re.sub(r\"#.*\", \"\", content)\n    def get_scalar(name: str, default: str = \"\") -> str:",
+        "peekOfCode": "def parse_experiment_script(script_path: Path) -> dict:\n    \"\"\"\n    Extrai variáveis relevantes de um script bash de experimento via regex.\n    \"\"\"\n    content = script_path.read_text(encoding=\"utf-8\")\n    # Remove comentários de linha\n    content_nc = re.sub(r\"#.*\", \"\", content)\n    def get_scalar(name: str, default: str = \"\") -> str:\n        m = re.search(rf'^\\s*{name}=\"([^\"]*)\"', content_nc, re.M)\n        if not m:",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4747,7 +4747,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def count_experiments(params: dict) -> list:\n    \"\"\"\n    Retorna lista de dicts, cada um descrevendo um experimento:\n      { solution, model, dataset, percentage, niid, seed, ckks_config, key_type }\n    \"\"\"\n    experiments = []\n    for ckks_config in params[\"CKKS_CONFIGS\"]:\n        for key_type in params[\"KEY_TYPES\"]:\n            for solution in params[\"SOLUTIONS\"]:\n                sol_lower = solution.lower()",
+        "peekOfCode": "def count_experiments(params: dict) -> list:\n    experiments = []\n    for ckks_config in params[\"CKKS_CONFIGS\"]:\n        for key_type in params[\"KEY_TYPES\"]:\n            for solution in params[\"SOLUTIONS\"]:\n                sol_lower = solution.lower()\n                for pair in params[\"MODEL_DATASET_PAIRS\"]:\n                    if \":\" in pair:\n                        model, dataset = pair.split(\":\", 1)\n                    else:",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4756,7 +4756,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def estimate_round_time_local(model: str, dataset: str, n_clients: int,\n                              clients_per_gpu: int) -> dict:\n    \"\"\"\n    Estima o tempo de wall-clock de UM round (1 época por cliente) nesta máquina de referência.\n    Retorna dict com t_train_s (GPU-bound) e t_he_s (CPU-bound) separados.\n    Treino (GPU-bound):\n        T_train = clients_per_gpu × T_ref × (n_params / P_ref) × (steps / steps_ref)\n    HE (CPU-bound): encrypt + pack + serialize + decrypt escala com nº de chunks.\n        n_chunks = ceil(n_params / chunk_size)   chunk_size = poly_degree/2\n        T_he = clients_per_gpu × REF_HE_TIME_S × (n_chunks / REF_N_CHUNKS)",
+        "peekOfCode": "def estimate_round_time_local(model: str, dataset: str, n_clients: int,\n                               clients_per_gpu: int, batch_size: int = None) -> dict:\n    \"\"\"\n    Estima o tempo de wall-clock de UM round nesta máquina de referência.\n    Prioridade para treino:\n      1. EMPIRICAL_TRAIN_TIME_S[(model, dataset, batch_size)] — medição direta\n      2. Modelo linear: T_ref × (n_params/P_ref) × (steps/steps_ref)\n    Retorna: {t_train_s, t_he_s, ram_peak_mb, batch_size_used, empirical}\n    \"\"\"\n    m_lower   = model.lower()",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4765,7 +4765,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def estimate_total_time(experiments: list, params: dict, gpu_speed: float,\n                        cpu_speed: float, margin: float) -> dict:\n    \"\"\"\n    Estima o tempo total do conjunto de experimentos.\n    T_round_machine = T_train_local/gpu_speed + T_he_local/cpu_speed\n    Retorna dict com total_s, total_s_with_margin, n_experiments, n_rounds_total,\n    breakdown (lista por experimento).\n    \"\"\"\n    n_clients       = params[\"NCLIENTES\"]\n    clients_per_gpu = params[\"CLIENTS_PER_GPU\"]",
+        "peekOfCode": "def estimate_total_time(experiments: list, params: dict, gpu_speed: float,\n                        cpu_speed: float, margin: float) -> dict:\n    \"\"\"\n    Estima o tempo total do conjunto de experimentos.\n    \"\"\"\n    n_clients       = params[\"NCLIENTES\"]\n    clients_per_gpu = params[\"CLIENTS_PER_GPU\"]\n    num_rounds      = params[\"NUM_ROUNDS\"]\n    total_s         = 0.0\n    breakdown       = []",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4774,7 +4774,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def fmt_time(seconds: float) -> str:\n    \"\"\"Converte segundos em string legível: Xd Yh Zm Ws.\"\"\"\n    seconds = int(seconds)\n    d = seconds // 86400\n    h = (seconds % 86400) // 3600\n    m = (seconds % 3600) // 60\n    s = seconds % 60\n    parts = []\n    if d: parts.append(f\"{d}d\")\n    if h: parts.append(f\"{h}h\")",
+        "peekOfCode": "def fmt_time(seconds: float) -> str:\n    seconds = int(seconds)\n    d = seconds // 86400\n    h = (seconds % 86400) // 3600\n    m = (seconds % 3600) // 60\n    s = seconds % 60\n    parts = []\n    if d: parts.append(f\"{d}d\")\n    if h: parts.append(f\"{h}h\")\n    if m: parts.append(f\"{m}m\")",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4783,7 +4783,43 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def fmt_days(seconds: float) -> str:\n    return f\"{seconds / 86400:.2f} dias\"\n# ─── Main ─────────────────────────────────────────────────────────────────────\ndef main():\n    parser = argparse.ArgumentParser(\n        description=\"Estima o tempo de execução de um script de experimento FL.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\"script\", help=\"Caminho para o script .sh do experimento\")",
+        "peekOfCode": "def fmt_days(seconds: float) -> str:\n    return f\"{seconds / 86400:.2f} dias\"\ndef fmt_bytes(b: int) -> str:\n    if b >= 1_073_741_824:\n        return f\"{b/1_073_741_824:.1f} GB\"\n    if b >= 1_048_576:\n        return f\"{b/1_048_576:.1f} MB\"\n    return f\"{b/1_024:.1f} KB\"\ndef fmt_mb(mb: float) -> str:\n    if mb >= 1024:",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "fmt_bytes",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def fmt_bytes(b: int) -> str:\n    if b >= 1_073_741_824:\n        return f\"{b/1_073_741_824:.1f} GB\"\n    if b >= 1_048_576:\n        return f\"{b/1_048_576:.1f} MB\"\n    return f\"{b/1_024:.1f} KB\"\ndef fmt_mb(mb: float) -> str:\n    if mb >= 1024:\n        return f\"{mb/1024:.1f} GB\"\n    return f\"{mb:.0f} MB\"",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "fmt_mb",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def fmt_mb(mb: float) -> str:\n    if mb >= 1024:\n        return f\"{mb/1024:.1f} GB\"\n    return f\"{mb:.0f} MB\"\n# ─── Seção de RAM ─────────────────────────────────────────────────────────────\ndef print_ram_section(experiments: list, params: dict, margin: float) -> None:\n    clients_per_gpu = params[\"CLIENTS_PER_GPU\"]\n    # Coleta modelos únicos e seu ram_peak\n    seen = {}\n    for exp in experiments:",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "print_ram_section",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def print_ram_section(experiments: list, params: dict, margin: float) -> None:\n    clients_per_gpu = params[\"CLIENTS_PER_GPU\"]\n    # Coleta modelos únicos e seu ram_peak\n    seen = {}\n    for exp in experiments:\n        m = exp[\"model\"].lower()\n        if m not in seen:\n            n_params = MODEL_PARAMS.get(m, REF_N_PARAMS)\n            ram = MODEL_RAM_PEAK_MB.get(\n                m, RAM_BASE_MB + int(RAM_PER_REF_PARAMS_MB * (n_params / REF_N_PARAMS))",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "print_disk_section",
+        "kind": 2,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "def print_disk_section(experiments: list, params: dict) -> None:\n    n_clients  = params[\"NCLIENTES\"]\n    num_rounds = params[\"NUM_ROUNDS\"]\n    print()\n    print(\"─\" * 72)\n    print(\"  Estimativa de espaço em disco (logs/)\")\n    print(\"─\" * 72)\n    print(f\"  {'Modelo':14} {'Payload/round/cl':>17}  {'CSVs+logs/exp':>14}  {'model/ npz/exp':>15}\")\n    print(\"  \" + \"-\" * 66)\n    total_bytes = 0",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4792,7 +4828,7 @@
         "kind": 2,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Estima o tempo de execução de um script de experimento FL.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\"script\", help=\"Caminho para o script .sh do experimento\")\n    parser.add_argument(\n        \"--machine\", \"-m\",\n        default=None,",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Estima o tempo de execução de um script de experimento FL.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\"script\", help=\"Caminho para o script .sh do experimento\")\n    parser.add_argument(\n        \"--machine\", \"-m\", default=None,\n        help=\"Partição SLURM alvo (ex: l40s, h100). Default: todas do SLURM.md\",",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4801,7 +4837,52 @@
         "kind": 5,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "MODEL_PARAMS = {\n    \"resnet20\":    274_042,\n    \"lenet5\":       44_000,\n    \"dnn\":         309_000,\n    \"dnn_base\":    309_000,\n    \"dnn_tiny\":    111_000,\n    \"mobilenetv2\": 460_000,\n    \"vit_tiny\":    206_000,\n    \"simple_cnn\":   80_000,\n}",
+        "peekOfCode": "MODEL_PARAMS = {\n    \"resnet20\":    274_042,\n    \"lenet5\":       61_706,   # medido: 61706 (era 44000)\n    \"dnn\":         309_000,\n    \"dnn_base\":    309_000,\n    \"dnn_tiny\":    111_146,   # medido: 111146 (era 111000)\n    \"mobilenetv2\": 719_034,   # medido: 719034 (era 460000)\n    \"vit_tiny\":    206_000,\n    \"simple_cnn\":   80_000,\n}",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_BATCH_SIZE",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "MODEL_BATCH_SIZE = {\n    \"mobilenetv2\": 32,\n    \"vit_tiny\":    16,\n    # todos os outros: REF_BATCH_SIZE=4\n}\n# Referências empíricas medidas em benchmark_resources (2026-05-14)\n# Chave: (model_lower, dataset, batch_size) → s/round/cliente (CPU, plaintext, 2 clientes)\nEMPIRICAL_TRAIN_TIME_S = {\n    (\"dnn_tiny\",    \"FASHION_MNIST\", 4):  11.1,\n    (\"lenet5\",      \"FASHION_MNIST\", 4):  19.4,",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "EMPIRICAL_TRAIN_TIME_S",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "EMPIRICAL_TRAIN_TIME_S = {\n    (\"dnn_tiny\",    \"FASHION_MNIST\", 4):  11.1,\n    (\"lenet5\",      \"FASHION_MNIST\", 4):  19.4,\n    (\"mobilenetv2\", \"CIFAR10\",       32): 242.7,\n}\n# RAM medida em benchmark_resources (peak_mb por cliente, plaintext CPU, 2 clientes)\nRAM_BASE_MB          = 6_500   # overhead fixo TF/Keras+dataset (dominante em modelos pequenos)\nRAM_PER_REF_PARAMS_MB =  700   # MB adicionais por \"unidade REF_N_PARAMS\" de parâmetros\nMODEL_RAM_PEAK_MB = {   # medido empiricamente; fonte: benchmark_resources/*/train.csv\n    \"dnn_tiny\":    6_720,",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "RAM_PER_REF_PARAMS_MB",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "RAM_PER_REF_PARAMS_MB =  700   # MB adicionais por \"unidade REF_N_PARAMS\" de parâmetros\nMODEL_RAM_PEAK_MB = {   # medido empiricamente; fonte: benchmark_resources/*/train.csv\n    \"dnn_tiny\":    6_720,\n    \"lenet5\":      6_720,\n    \"mobilenetv2\": 8_520,\n}\n# Payload serializado por cliente por round (bytes, plaintext, fonte: benchmark_resources)\nMODEL_PAYLOAD_BYTES = {\n    \"dnn_tiny\":    903_272,\n    \"lenet5\":      547_048,",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_RAM_PEAK_MB",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "MODEL_RAM_PEAK_MB = {   # medido empiricamente; fonte: benchmark_resources/*/train.csv\n    \"dnn_tiny\":    6_720,\n    \"lenet5\":      6_720,\n    \"mobilenetv2\": 8_520,\n}\n# Payload serializado por cliente por round (bytes, plaintext, fonte: benchmark_resources)\nMODEL_PAYLOAD_BYTES = {\n    \"dnn_tiny\":    903_272,\n    \"lenet5\":      547_048,\n    \"mobilenetv2\": 6_310_040,",
+        "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_PAYLOAD_BYTES",
+        "kind": 5,
+        "importPath": "experiments.estimate_time",
+        "description": "experiments.estimate_time",
+        "peekOfCode": "MODEL_PAYLOAD_BYTES = {\n    \"dnn_tiny\":    903_272,\n    \"lenet5\":      547_048,\n    \"mobilenetv2\": 6_310_040,\n}\n# Tamanho dos datasets (amostras de treino)\nDATASET_SIZE = {\n    \"FASHION_MNIST\":          60_000,\n    \"CIFAR10\":                50_000,\n    \"CIFAR100\":               50_000,",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4819,7 +4900,7 @@
         "kind": 5,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "PACKING_SOLUTIONS = {\"fedphe\", \"nvnl\", \"sw\", \"rw\", \"fedphe-scout\", \"nvnl-scout\"}\n# Overhead de setup por experimento (geração de chaves, startup de containers)\nSETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição:\n        { 'l40s': {'gpu': 'L40S 46GB', 'max_days': 4, 'speed': 12.0, 'note': '...'}, ... }\n    Formato esperado do header:\n        | Partição | Nós | GPUs | Tempo máx | Speed | Nota |",
+        "peekOfCode": "PACKING_SOLUTIONS = {\"fedphe\", \"nvnl\", \"sw\", \"rw\", \"fedphe-scout\", \"nvnl-scout\"}\n# Overhead de setup por experimento (geração de chaves, startup de containers)\nSETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição.\n    \"\"\"\n    machines = {}\n    if not slurm_path.exists():",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
@@ -4828,7 +4909,7 @@
         "kind": 5,
         "importPath": "experiments.estimate_time",
         "description": "experiments.estimate_time",
-        "peekOfCode": "SETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição:\n        { 'l40s': {'gpu': 'L40S 46GB', 'max_days': 4, 'speed': 12.0, 'note': '...'}, ... }\n    Formato esperado do header:\n        | Partição | Nós | GPUs | Tempo máx | Speed | Nota |\n    A coluna 'Speed' é obrigatória; se ausente, o script avisa e usa 1.0.\n    \"\"\"",
+        "peekOfCode": "SETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição.\n    \"\"\"\n    machines = {}\n    if not slurm_path.exists():\n        print(f\"[AVISO] SLURM.md não encontrado em {slurm_path}. Usando apenas 'local'.\",\n              file=sys.stderr)",
         "detail": "experiments.estimate_time",
         "documentation": {}
     },
