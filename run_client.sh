@@ -101,7 +101,7 @@ if [[ "$RUNTIME" == "docker" ]]; then
 elif [[ "$RUNTIME" == "singularity" ]]; then
 
     singularity exec --nv \
-        --bind "$PWD/context:/context:ro" \
+        --bind "${CONTEXT_DIR:-$PWD/context}:/context:ro" \
         --bind "$PWD/logs:/logs" \
         --bind "$PWD/client:/client" \
         --env SERVER_IP="${SERVER_HOST:-localhost}:9999" \

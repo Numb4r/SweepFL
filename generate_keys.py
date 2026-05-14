@@ -48,12 +48,15 @@ def combo_keys(type_key='ckks', client_path="secret.pkl", server_path="server_ke
     """
     from encryption.ckks_backend import get_backend
 
+    context_dir = os.environ.get("CONTEXT_DIR", "context")
+    os.makedirs(context_dir, exist_ok=True)
+
     print(f'Generating {type_key} keys with args: {args}')
 
     if type_key == 'ckks':
         backend_name = args.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
         backend = get_backend(backend_name)
-        backend.generate_and_save(args, "context")
+        backend.generate_and_save(args, context_dir)
         print(f"CKKS keys generated via backend '{backend_name}'.")
 
     else:  # BFV — always TenSEAL
@@ -64,15 +67,17 @@ def combo_keys(type_key='ckks', client_path="secret.pkl", server_path="server_ke
         )
         client_key_name = f"bfv_{client_path}"
         server_key_name = f"bfv_{server_path}"
-        write_query(f'context/{client_key_name}', {"context": context_client.serialize(save_secret_key=True)})
-        write_query(f'context/{server_key_name}', {"context": context_client.serialize()})
+        write_query(f'{context_dir}/{client_key_name}', {"context": context_client.serialize(save_secret_key=True)})
+        write_query(f'{context_dir}/{server_key_name}', {"context": context_client.serialize()})
         print(f"BFV keys written: {client_key_name}, {server_key_name}")
 
 
 def Paillier_keys(n_length=2048):
+    context_dir = os.environ.get("CONTEXT_DIR", "context")
+    os.makedirs(context_dir, exist_ok=True)
     paillier = PaillierCipher()
     paillier.generate_key(n_length=n_length if n_length is not None else 2048)
-    with open("./context/paillier.pkl", "wb") as file:
+    with open(f"{context_dir}/paillier.pkl", "wb") as file:
         pickle.dump(paillier, file)
 
 

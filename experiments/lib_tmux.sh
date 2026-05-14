@@ -184,7 +184,7 @@ JSON
 run_theme() {
     NCLIENTES=$(( ${#GPU_IDS[@]} * CLIENTS_PER_GPU ))
 
-    mkdir -p context logs logs/models
+    mkdir -p "${CONTEXT_DIR:-context}" logs logs/models
     # Pre-create the FOLDER subtree with host-user ownership so Docker containers
     # (which run as root) never get a chance to create it first as root.
     [[ -n "${FOLDER:-}" ]] && mkdir -p "logs/${FOLDER}"

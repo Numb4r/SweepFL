@@ -79,7 +79,7 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
 
     singularity exec --nv \
         --bind "$PWD/server:/server:ro" \
-        --bind "$PWD/context:/context:ro" \
+        --bind "${CONTEXT_DIR:-$PWD/context}:/context:ro" \
         --bind "$PWD/logs:/logs" \
         --env SERVER_IP=0.0.0.0:9999 \
         --env NCLIENTS=$NCLIENTES \

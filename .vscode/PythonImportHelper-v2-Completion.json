@@ -5971,7 +5971,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def combo_keys(type_key='ckks', client_path=\"secret.pkl\", server_path=\"server_key.pkl\", args={}):\n    \"\"\"Generate and persist HE keys for the given scheme.\n    For CKKS, delegates to the backend selected by args['ckks_backend']\n    (falls back to the CKKS_BACKEND env var, then to 'tenseal').\n    BFV always uses TenSEAL regardless of the CKKS backend setting.\n    \"\"\"\n    from encryption.ckks_backend import get_backend\n    print(f'Generating {type_key} keys with args: {args}')\n    if type_key == 'ckks':\n        backend_name = args.get(\"ckks_backend\") or os.environ.get(\"CKKS_BACKEND\", \"tenseal\")",
+        "peekOfCode": "def combo_keys(type_key='ckks', client_path=\"secret.pkl\", server_path=\"server_key.pkl\", args={}):\n    \"\"\"Generate and persist HE keys for the given scheme.\n    For CKKS, delegates to the backend selected by args['ckks_backend']\n    (falls back to the CKKS_BACKEND env var, then to 'tenseal').\n    BFV always uses TenSEAL regardless of the CKKS backend setting.\n    \"\"\"\n    from encryption.ckks_backend import get_backend\n    context_dir = os.environ.get(\"CONTEXT_DIR\", \"context\")\n    os.makedirs(context_dir, exist_ok=True)\n    print(f'Generating {type_key} keys with args: {args}')",
         "detail": "generate_keys",
         "documentation": {}
     },
@@ -5980,7 +5980,7 @@
         "kind": 2,
         "importPath": "generate_keys",
         "description": "generate_keys",
-        "peekOfCode": "def Paillier_keys(n_length=2048):\n    paillier = PaillierCipher()\n    paillier.generate_key(n_length=n_length if n_length is not None else 2048)\n    with open(\"./context/paillier.pkl\", \"wb\") as file:\n        pickle.dump(paillier, file)\ndef main():\n    combo_keys('ckks')\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def Paillier_keys(n_length=2048):\n    context_dir = os.environ.get(\"CONTEXT_DIR\", \"context\")\n    os.makedirs(context_dir, exist_ok=True)\n    paillier = PaillierCipher()\n    paillier.generate_key(n_length=n_length if n_length is not None else 2048)\n    with open(f\"{context_dir}/paillier.pkl\", \"wb\") as file:\n        pickle.dump(paillier, file)\ndef main():\n    combo_keys('ckks')\nif __name__ == \"__main__\":",
         "detail": "generate_keys",
         "documentation": {}
     },

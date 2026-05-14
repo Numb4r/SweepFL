@@ -21,6 +21,8 @@ fi
 RUNTIME="${RUNTIME:-singularity}"
 SIF_DIR="${SIF_DIR:-.}"
 SERVER_HOST="${SERVER_HOST:-localhost}"   # on SLURM, server and clients share the node
+# Per-job context dir — isolates keys when two jobs run simultaneously on shared NFS
+CONTEXT_DIR="${CONTEXT_DIR:-$PWD/context_${SLURM_JOB_ID}}"
 
 # ── Defaults for optional backend params ──────────────────────────
 SIMPLIFY_N="${SIMPLIFY_N:-8192}"
@@ -79,6 +81,7 @@ generate_keys() {
     singularity exec \
         --bind "$PWD:$PWD" \
         --env CKKS_BACKEND="${CKKS_BACKEND:-tenseal}" \
+        --env CONTEXT_DIR="$CONTEXT_DIR" \
         --env SIMPLIFY_N="${SIMPLIFY_N:-8192}" \
         --env SIMPLIFY_BITS="${SIMPLIFY_BITS:-62}" \
         --env SIMPLIFY_SCALE_BITS="${SIMPLIFY_SCALE_BITS:-60}" \
@@ -175,7 +178,7 @@ JSON
 
     # ── Server ──────────────────────────────────────────────────────
     echo "[SLURM] Starting server (background)..."
-    RUNTIME="$RUNTIME" SIF_DIR="$SIF_DIR" \
+    RUNTIME="$RUNTIME" SIF_DIR="$SIF_DIR" CONTEXT_DIR="$CONTEXT_DIR" \
     EXPERIMENT_NAME="$EXP_NAME" \
     CKKS_BACKEND="${CKKS_BACKEND:-tenseal}" \
     SIMPLIFY_N="${SIMPLIFY_N:-8192}" SIMPLIFY_BITS="${SIMPLIFY_BITS:-62}" SIMPLIFY_SCALE_BITS="${SIMPLIFY_SCALE_BITS:-60}" \
@@ -193,7 +196,7 @@ JSON
     for i in $(seq 0 $(( NCLIENTES - 1 ))); do
         local GPU_ID=${GPU_IDS[$(( i / CLIENTS_PER_GPU ))]}
         echo "[SLURM] Starting client-$i on GPU $GPU_ID..."
-        RUNTIME="$RUNTIME" SIF_DIR="$SIF_DIR" SERVER_HOST="$SERVER_HOST" \
+        RUNTIME="$RUNTIME" SIF_DIR="$SIF_DIR" SERVER_HOST="$SERVER_HOST" CONTEXT_DIR="$CONTEXT_DIR" \
         MODEL_ARCH="$MODEL" EXPERIMENT_NAME="$EXP_NAME" \
         PRETRAINED_WEIGHTS="${PRETRAINED_WEIGHTS:-}" USE_GPU="${USE_GPU:-true}" \
         BATCH_SIZE="${BATCH_SIZE:-4}" \
@@ -253,7 +256,7 @@ run_theme() {
 
     NCLIENTES=$(( ${#GPU_IDS[@]} * CLIENTS_PER_GPU ))
 
-    mkdir -p context logs logs/models
+    mkdir -p "$CONTEXT_DIR" logs logs/models
     [[ -n "${FOLDER:-}" ]] && mkdir -p "logs/${FOLDER}"
 
     echo "══════════════════════════════════════════════"
