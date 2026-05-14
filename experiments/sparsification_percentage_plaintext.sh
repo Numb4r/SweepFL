@@ -25,6 +25,20 @@ MODEL_DATASET_PAIRS=(
     "mobilenetv2:CIFAR10"
     # "vit_tiny:tanganke/gtsrb"
 )
+# ── Per-model configuration (optional) ───────────────────────────
+# Define model_config() to set per-model env vars before each experiment.
+# Called automatically by run_theme with (model, dataset) arguments.
+# Variables set here are reset to their defaults before each model.
+# Currently supported: BATCH_SIZE (default 4)
+#
+model_config() {
+    local model="$1" dataset="$2"
+    case "$model" in
+        mobilenetv2) BATCH_SIZE=32 ;;
+        vit_tiny)    BATCH_SIZE=16 ;;
+        *)           BATCH_SIZE=4  ;;
+    esac
+}
 
 CKKS_CONFIGS=("ckks 8192 60")
 KEY_TYPES=('None')
