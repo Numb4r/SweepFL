@@ -18,12 +18,39 @@
         "documentation": {}
     },
     {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "pickle",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pickle",
+        "description": "pickle",
+        "detail": "pickle",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "sys",
         "description": "sys",
         "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "tarfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tarfile",
+        "description": "tarfile",
+        "detail": "tarfile",
         "documentation": {}
     },
     {
@@ -93,12 +120,12 @@
         "documentation": {}
     },
     {
-        "label": "os",
+        "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
         "documentation": {}
     },
     {
@@ -140,15 +167,6 @@
         "description": "client.models",
         "isExtraImport": true,
         "detail": "client.models",
-        "documentation": {}
-    },
-    {
-        "label": "numpy",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "numpy",
-        "description": "numpy",
-        "detail": "numpy",
         "documentation": {}
     },
     {
@@ -516,15 +534,6 @@
         "description": "utils.util",
         "isExtraImport": true,
         "detail": "utils.util",
-        "documentation": {}
-    },
-    {
-        "label": "pickle",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "pickle",
-        "description": "pickle",
-        "detail": "pickle",
         "documentation": {}
     },
     {
@@ -2223,7 +2232,7 @@
         "kind": 2,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "def load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)",
+        "peekOfCode": "def load_cifar10():\n    if _LOCAL_TAR.exists():\n        print(f\"  Using local tar.gz: {_LOCAL_TAR}\")\n        return _load_from_tar(_LOCAL_TAR)\n    print(\"  Local tar.gz not found — downloading via tf.keras ...\")\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test  = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2250,7 +2259,7 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport tensorflow as tf\nfrom client.models import create_mobilenetv2\nBATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():",
+        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport numpy as np\nimport tensorflow as tf\nfrom client.models import create_mobilenetv2\nBATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2259,7 +2268,7 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "BATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)",
+        "peekOfCode": "BATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2268,7 +2277,7 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "EPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:",
+        "peekOfCode": "EPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2277,7 +2286,7 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "NUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")",
+        "peekOfCode": "NUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2286,7 +2295,7 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "INPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")",
+        "peekOfCode": "INPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")\n            batch = pickle.load(f, encoding=\"bytes\")",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2295,7 +2304,16 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")",
+        "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")\n            batch = pickle.load(f, encoding=\"bytes\")\n            x_train_parts.append(batch[b\"data\"])",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "_LOCAL_TAR",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")\n            batch = pickle.load(f, encoding=\"bytes\")\n            x_train_parts.append(batch[b\"data\"])\n            y_train_parts.extend(batch[b\"labels\"])",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
