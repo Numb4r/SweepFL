@@ -2232,7 +2232,7 @@
         "kind": 2,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "def load_cifar10():\n    if _LOCAL_TAR.exists():\n        print(f\"  Using local tar.gz: {_LOCAL_TAR}\")\n        return _load_from_tar(_LOCAL_TAR)\n    print(\"  Local tar.gz not found — downloading via tf.keras ...\")\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test  = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:",
+        "peekOfCode": "def load_cifar10():\n    if _LOCAL_TAR.exists():\n        print(f\"  Using local tar.gz: {_LOCAL_TAR}\")\n        return _load_from_tar(_LOCAL_TAR)\n    print(\"  Local tar.gz not found — downloading via tf.keras ...\")\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test  = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef _fmt_time(seconds: float) -> str:",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2241,7 +2241,7 @@
         "kind": 2,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0\n    final_val_acc = 0.0\n    t_total = 0.0",
+        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\", flush=True)\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\", flush=True)\n    print(f\"  log → {RESULTS_DIR / f'batch_{batch_size}.csv'}\", flush=True)\n    print(f\"{'='*60}\", flush=True)\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)\n    print(f\"  model params: {model.count_params():,}\", flush=True)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2331,7 +2331,7 @@
         "kind": 2,
         "importPath": "benchmark.train_vit_gtsrb",
         "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")\n    model = create_vit_tiny(INPUT_SHAPE, NUM_CLASSES)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0\n    final_val_acc = 0.0\n    t_total = 0.0",
+        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\", flush=True)\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\", flush=True)\n    print(f\"  log → {RESULTS_DIR / f'batch_{batch_size}.csv'}\", flush=True)\n    print(f\"{'='*60}\", flush=True)\n    model = create_vit_tiny(INPUT_SHAPE, NUM_CLASSES)\n    print(f\"  model params: {model.count_params():,}\", flush=True)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0",
         "detail": "benchmark.train_vit_gtsrb",
         "documentation": {}
     },
