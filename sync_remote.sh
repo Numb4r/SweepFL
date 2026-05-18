@@ -20,6 +20,7 @@ RSYNC_OPTS=(
     --exclude="*.csv"
     --exclude=".git/"
     --exclude="logs/"
+    --exclude="logs/**"
     --exclude="mv_logs/"
     --exclude='client/data/'
 )
