@@ -1,11 +1,38 @@
 [
     {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "sys",
         "description": "sys",
         "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
         "documentation": {}
     },
     {
@@ -47,6 +74,47 @@
         "description": "pathlib",
         "isExtraImport": true,
         "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "tensorflow",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tensorflow",
+        "description": "tensorflow",
+        "detail": "tensorflow",
+        "documentation": {}
+    },
+    {
+        "label": "keras",
+        "importPath": "tensorflow",
+        "description": "tensorflow",
+        "isExtraImport": true,
+        "detail": "tensorflow",
+        "documentation": {}
+    },
+    {
+        "label": "keras",
+        "importPath": "tensorflow",
+        "description": "tensorflow",
+        "isExtraImport": true,
+        "detail": "tensorflow",
+        "documentation": {}
+    },
+    {
+        "label": "create_mobilenetv2",
+        "importPath": "client.models",
+        "description": "client.models",
+        "isExtraImport": true,
+        "detail": "client.models",
         "documentation": {}
     },
     {
@@ -156,31 +224,6 @@
         "importPath": "math",
         "description": "math",
         "detail": "math",
-        "documentation": {}
-    },
-    {
-        "label": "tensorflow",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "tensorflow",
-        "description": "tensorflow",
-        "detail": "tensorflow",
-        "documentation": {}
-    },
-    {
-        "label": "keras",
-        "importPath": "tensorflow",
-        "description": "tensorflow",
-        "isExtraImport": true,
-        "detail": "tensorflow",
-        "documentation": {}
-    },
-    {
-        "label": "keras",
-        "importPath": "tensorflow",
-        "description": "tensorflow",
-        "isExtraImport": true,
-        "detail": "tensorflow",
         "documentation": {}
     },
     {
@@ -747,15 +790,6 @@
         "importPath": "gmpy2",
         "description": "gmpy2",
         "detail": "gmpy2",
-        "documentation": {}
-    },
-    {
-        "label": "time",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "time",
-        "description": "time",
-        "detail": "time",
         "documentation": {}
     },
     {
@@ -1898,15 +1932,6 @@
         "documentation": {}
     },
     {
-        "label": "argparse",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "argparse",
-        "description": "argparse",
-        "detail": "argparse",
-        "documentation": {}
-    },
-    {
         "label": "re",
         "kind": 6,
         "isExtraImport": true,
@@ -2175,6 +2200,87 @@
         "importPath": "json",
         "description": "json",
         "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "load_cifar10",
+        "kind": 2,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "def load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "train_one",
+        "kind": 2,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0\n    final_val_acc = 0.0\n    t_total = 0.0",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"MobileNetV2 CIFAR-10 benchmark — train for 200 epochs\"\n    )\n    parser.add_argument(\n        \"--batch-size\",\n        type=int,\n        default=None,\n        metavar=\"N\",\n        help=f\"Run only this batch size. Default: all {BATCH_SIZES}\",",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "REPO_ROOT",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport tensorflow as tf\nfrom client.models import create_mobilenetv2\nBATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "BATCH_SIZES",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "BATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "EPOCHS",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "EPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "NUM_CLASSES",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "NUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "INPUT_SHAPE",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "INPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "RESULTS_DIR",
+        "kind": 5,
+        "importPath": "benchmark.train_mobilenetv2_cifar10",
+        "description": "benchmark.train_mobilenetv2_cifar10",
+        "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")",
+        "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
     {

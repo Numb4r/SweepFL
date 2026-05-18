@@ -6,15 +6,15 @@
 # Percentage sweep:    10 % → 30 % → 50 % → 70 %
 
 GPU_IDS=(7)
-CLIENTS_PER_GPU=3
+CLIENTS_PER_GPU=2
 
 FOLDER="sparsification_percentage"
 EXPERIMENT_NAME=""
 NUM_ROUNDS=200
-NIIDS=(0.1 1)
+NIIDS=(1)
 SEEDS=(42)
 TECHNIQUE="none"
-
+USE_GPU=false
 SOLUTIONS=('plaintext')
 PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
 
