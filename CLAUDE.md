@@ -74,6 +74,22 @@ make graph
 
 # Sync to remote cluster
 ./sync_remote.sh
+
+# ── Standalone benchmarks (no Flower, no HE) ─────────────────────────────────
+
+# MobileNetV2 + CIFAR-10: run in Docker (all batch sizes [16,32,64,128], 200 epochs each)
+bash benchmark/run_docker.sh
+bash benchmark/run_docker.sh --batch-size 32   # single batch size
+bash benchmark/run_docker.sh --gpu 1           # select GPU
+bash benchmark/run_docker.sh --no-gpu          # CPU mode
+
+# ViT-Tiny + GTSRB: run in Docker
+bash benchmark/run_docker_vit.sh
+bash benchmark/run_docker_vit.sh --batch-size 64
+bash benchmark/run_docker_vit.sh --gpu 1
+
+# Submit MobileNetV2 benchmark to SLURM (job array: one task per batch size)
+sbatch benchmark/sbatch_mobilenetv2.sh
 ```
 
 ### Linting and Formatting
@@ -152,7 +168,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `server/server_utils.py` — HE aggregation helpers: `align_packs`, `aggregate_packs_and_masks`, `aggregate_packs_and_mask`, `get_pack_mask_pair`, `get_cyphered_parameters`, `aggregated_cyphered_parameters`
 - `encryption/ckks_backend.py` — CKKS backend abstraction (mirrored to `client/encryption/` and `server/encryption/`)
 - `encryption/` and `server/encryption/` and `client/encryption/` — largely mirrored; `encrypt.py` defines base `Encrypt` class; `ckks.py`, `bfv.py`, `paillier.py` implement scheme-specific logic; `quantize.py` / `quantize_batchcrypt.py` handle quantization
-- `sync_remote.sh` — rsync to `yuri.faria@ssh.recod.ic.unicamp.br:~/keys` (excludes `.venv/`, `logs/`, `__pycache__`, `*.csv`, `.git/`)
+- `sync_remote.sh` — rsync to `yuri.faria@ssh.recod.ic.unicamp.br:~/keys` (excludes `.venv/`, `logs/`, `logs/**`, `__pycache__`, `*.csv`, `.git/`); `logs/**` is excluded in addition to `logs/` to prevent `--delete` from removing experiment results inside `logs/` on the cluster
 - `experiments/lib.sh` — auto-dispatcher: sources `lib_slurm.sh` when `SLURM_JOB_ID` is set, otherwise sources `lib_tmux.sh`; experiment scripts always `source lib.sh` and call `run_theme` — no changes needed per environment
 - `experiments/lib_tmux.sh` — tmux backend (local/Docker/Singularity): launches server as tmux session `SERVER` and one session per client; waits for server session to exit, then kills client sessions
 - `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free
@@ -163,6 +179,12 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `sbatch/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
 - `sbatch/` — directory for SLURM job scripts; one file per experiment batch
 - `SLURM.md` — cluster partition reference table: partition name, nodes, GPU model, max wall time, GPU Speed factor, CPU Speed factor (used by `estimate_time.py`)
+- `benchmark/train_mobilenetv2_cifar10.py` — standalone MobileNetV2 + CIFAR-10 benchmark; loads CIFAR-10 from `benchmark/cifar-10-python.tar.gz` (local) or falls back to `tf.keras` download; trains 200 epochs; accepts `--batch-size N`; results in `benchmark/results/`
+- `benchmark/train_vit_gtsrb.py` — standalone ViT-Tiny + GTSRB benchmark; loads `tanganke/gtsrb` via HuggingFace `datasets`, cached in `benchmark/data/`; resizes images to 32×32; 43 classes; results in `benchmark/results_vit_gtsrb/`
+- `benchmark/run_docker.sh` — runs MobileNetV2 benchmark in `flhe:client` container; mounts `benchmark/` and `client/`; flags: `--batch-size N`, `--gpu ID`, `--no-gpu`, `--dry-run`; pre-creates `results/` with `chmod 777` to avoid root-ownership issues
+- `benchmark/run_docker_vit.sh` — same as above for ViT-Tiny + GTSRB; also mounts `benchmark/data/` as HuggingFace cache (`HF_DATASETS_CACHE`)
+- `benchmark/sbatch_mobilenetv2.sh` — SLURM job array (`--array=0-3`) on `l40s`; maps task ID → batch size `[16,32,64,128]`; one GPU per task; results in `benchmark/results/`
+- `benchmark/cifar-10-python.tar.gz` — local copy of the official CIFAR-10 Python dataset; loaded directly without extraction via `tarfile`+`pickle`
 
 ### CSV Log Schema
 
