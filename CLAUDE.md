@@ -245,6 +245,72 @@ All factories follow `create_<name>(input_shape, num_classes, ...)` and return a
 
 To select a model at runtime set `MODEL_ARCH` to the factory name without the `create_` prefix (e.g. `MODEL_ARCH=vit_tiny`). If unset, defaults to `dnn`.
 
+### Payload bytes caveat (packing solutions)
+
+`payload_bytes` in `train.csv` for packing solutions (`nvnl`, `sw`, `rw`, `fedphe`) records only pack-index / mask metadata (a few hundred bytes), **not** the actual CKKS ciphertext size. For plaintext it correctly records the full model byte count. Analyses that compare byte costs between HE and plaintext must account for this — use rounds as the primary communication metric when comparing packing strategies.
+
+---
+
+## Analysis Studies
+
+Results analysis lives in `studies/sparsification_percentage/`. All scripts are fully generic (auto-discover models, datasets, solutions from logs) and write to `output/figures/`, `output/tables/`, `output/notebooks/`.
+
+```bash
+# Run all analysis scripts in sequence
+bash studies/sparsification_percentage/run_all.sh
+
+# Run individual scripts
+cd studies/sparsification_percentage
+python3 01_accuracy_curves.py       # convergence grid + final-accuracy bar
+python3 02_solution_comparison.py   # heatmap + grouped bar across solutions
+python3 03_overhead_breakdown.py    # timing breakdown (encrypt/decrypt/train)
+python3 04_communication.py         # payload per round
+python3 05_niid_impact.py           # paired bar + delta heatmap per niid
+python3 06_memory_profile.py        # RAM usage over rounds
+python3 07_convergence_speed.py     # rounds to threshold + AUC bar
+python3 08_efficiency_frontier.py   # Pareto scatter: accuracy vs payload/round
+python3 09_summary_table.py         # CSV + LaTeX summary table
+python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
+
+# Pass a custom logs dir:
+python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
+# or:
+LOGS_DIR=/path python3 01_accuracy_curves.py
+```
+
+### Shared utility — `load_data.py`
+
+```python
+from load_data import load_all, last_round, rounds_to_threshold, auc_accuracy, discover_dims
+dfs = load_all()          # reads logs/sparsification_percentage/
+dfs = load_all("/custom/path")
+# Keys: 'train', 'evaluate', 'server_eval', 'server_agg'
+# percentage=None means plaintext/no-packing baseline (was -1 in folder name)
+```
+
+Key details:
+- Folder regex strips timestamp; `_NVNL_` uppercase is normalized to `nvnl`; erroneous `nvnl + percentage=-1` folders are skipped.
+- `groupby` calls use `dropna=False` throughout to preserve plaintext rows (where `percentage=None/NaN`).
+- Plaintext appears as a "baseline" column in all comparison plots, separated by a dashed vertical line.
+
+### Script 10 — Full model coverage rounds
+
+Answers: how many rounds until the server has received every model pack at least once?
+
+| Solution | Formula | ~Rounds at p=0.1 | ~Rounds at p=0.9 |
+|----------|---------|-----------------|-----------------|
+| nvnl | `ceil(n_packs / packs_sent)` | 14 | 2 |
+| sw | `ceil(n_packs / ceil(packs_sent × 0.5))` | 28 | 3 |
+| rw | `(n_packs/packs_sent) × ln(n_packs)` | ~47 | ~4 |
+| fedphe | top-k fixed → same packs every round | NaN | NaN |
+| plaintext | 1 | 1 | 1 |
+
+SW costs roughly 2× more rounds than NVNL due to 50% stride overlap.
+
+### Duplicate detection
+
+`studies/sparsification_percentage/move_duplicates.sh` strips timestamps from folder names and moves older runs (same config) to `logs/sparsification_percentage/duplicates/`.
+
 ### Convenção: experiment_details.json
 
 Toda env var de experimento nova adicionada ao `run_client.sh` **deve** ser incluída também no bloco `experiment_details.json` em `experiments/lib_tmux.sh` e `experiments/lib_slurm.sh`. Variáveis de infraestrutura (`HF_*`, `TF_*`, `TORCH_*`, `CUDA_*`, `CID`, `LOGFOLDER`) são exceção — não pertencem ao JSON.
