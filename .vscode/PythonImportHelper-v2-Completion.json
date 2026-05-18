@@ -85,6 +85,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
@@ -120,6 +128,14 @@
     },
     {
         "label": "create_mobilenetv2",
+        "importPath": "client.models",
+        "description": "client.models",
+        "isExtraImport": true,
+        "detail": "client.models",
+        "documentation": {}
+    },
+    {
+        "label": "create_vit_tiny",
         "importPath": "client.models",
         "description": "client.models",
         "isExtraImport": true,
@@ -2281,6 +2297,96 @@
         "description": "benchmark.train_mobilenetv2_cifar10",
         "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results\"\ndef load_cifar10():\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")",
         "detail": "benchmark.train_mobilenetv2_cifar10",
+        "documentation": {}
+    },
+    {
+        "label": "load_gtsrb",
+        "kind": 2,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "def load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(\n            [\n                tf.image.resize(np.array(img), (32, 32)).numpy()\n                for img in split[\"image\"]\n            ],",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "train_one",
+        "kind": 2,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\")\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\")\n    print(f\"{'='*60}\")\n    model = create_vit_tiny(INPUT_SHAPE, NUM_CLASSES)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0\n    final_val_acc = 0.0\n    t_total = 0.0",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"ViT-Tiny GTSRB benchmark — train for 200 epochs\"\n    )\n    parser.add_argument(\n        \"--batch-size\",\n        type=int,\n        default=None,\n        metavar=\"N\",\n        help=f\"Run only this batch size. Default: all {BATCH_SIZES}\",",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "REPO_ROOT",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport numpy as np\nimport tensorflow as tf\nfrom client.models import create_vit_tiny\nBATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "BATCH_SIZES",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "BATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "EPOCHS",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "EPOCHS = 200\nNUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "NUM_CLASSES",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "NUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "INPUT_SHAPE",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "INPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(\n            [",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "RESULTS_DIR",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(\n            [\n                tf.image.resize(np.array(img), (32, 32)).numpy()",
+        "detail": "benchmark.train_vit_gtsrb",
+        "documentation": {}
+    },
+    {
+        "label": "HF_CACHE",
+        "kind": 5,
+        "importPath": "benchmark.train_vit_gtsrb",
+        "description": "benchmark.train_vit_gtsrb",
+        "peekOfCode": "HF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(\n            [\n                tf.image.resize(np.array(img), (32, 32)).numpy()\n                for img in split[\"image\"]",
+        "detail": "benchmark.train_vit_gtsrb",
         "documentation": {}
     },
     {
