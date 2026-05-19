@@ -120,6 +120,110 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2142,6 +2246,51 @@
         "documentation": {}
     },
     {
+        "label": "importlib.util",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "importlib.util",
+        "description": "importlib.util",
+        "detail": "importlib.util",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib",
+        "description": "matplotlib",
+        "detail": "matplotlib",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.pyplot",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.pyplot",
+        "description": "matplotlib.pyplot",
+        "detail": "matplotlib.pyplot",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.cm",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.cm",
+        "description": "matplotlib.cm",
+        "detail": "matplotlib.cm",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.ticker",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.ticker",
+        "description": "matplotlib.ticker",
+        "detail": "matplotlib.ticker",
+        "documentation": {}
+    },
+    {
         "label": "pytest",
         "kind": 6,
         "isExtraImport": true,
@@ -2232,7 +2381,7 @@
         "kind": 2,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "def load_cifar10():\n    if _LOCAL_TAR.exists():\n        print(f\"  Using local tar.gz: {_LOCAL_TAR}\")\n        return _load_from_tar(_LOCAL_TAR)\n    print(\"  Local tar.gz not found — downloading via tf.keras ...\")\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test  = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef _fmt_time(seconds: float) -> str:",
+        "peekOfCode": "def load_cifar10():\n    if _LOCAL_TAR.exists():\n        print(f\"  Using local tar.gz: {_LOCAL_TAR}\")\n        return _load_from_tar(_LOCAL_TAR)\n    print(\"  Local tar.gz not found — downloading via tf.keras ...\")\n    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()\n    x_train = x_train.astype(\"float32\") / 255.0\n    x_test  = x_test.astype(\"float32\") / 255.0\n    return (x_train, y_train), (x_test, y_test)\ndef _partition_iid(x, y, n_clients: int, seed: int = 42):",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2241,7 +2390,7 @@
         "kind": 2,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\", flush=True)\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\", flush=True)\n    print(f\"  log → {RESULTS_DIR / f'batch_{batch_size}.csv'}\", flush=True)\n    print(f\"{'='*60}\", flush=True)\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)\n    print(f\"  model params: {model.count_params():,}\", flush=True)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0",
+        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test,\n              rounds: int = ROUNDS) -> dict:\n    print(f\"\\n{'='*60}\", flush=True)\n    print(f\"  batch_size={batch_size}  |  rounds={rounds}\"\n          f\"  |  clients={N_CLIENTS}  |  local_epochs={LOCAL_EPOCHS}\", flush=True)\n    print(f\"  log → {RESULTS_DIR / f'batch_{batch_size}.csv'}\", flush=True)\n    print(f\"{'='*60}\", flush=True)\n    model = create_mobilenetv2(INPUT_SHAPE, NUM_CLASSES)\n    print(f\"  model params: {model.count_params():,}\", flush=True)\n    # IID partition — fixed seed for reproducibility",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2250,7 +2399,7 @@
         "kind": 2,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"MobileNetV2 CIFAR-10 benchmark — train for 200 epochs\"\n    )\n    parser.add_argument(\n        \"--batch-size\",\n        type=int,\n        default=None,\n        metavar=\"N\",\n        help=f\"Run only this batch size. Default: all {BATCH_SIZES}\",",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=f\"MobileNetV2 CIFAR-10 FL benchmark — FedAvg, {ROUNDS} rounds\"\n    )\n    parser.add_argument(\n        \"--batch-size\", type=int, default=None, metavar=\"N\",\n        help=f\"Run only this batch size. Default: all {BATCH_SIZES}\",\n    )\n    parser.add_argument(\n        \"--rounds\", type=int, default=ROUNDS, metavar=\"N\",",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2259,61 +2408,16 @@
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport numpy as np\nimport tensorflow as tf\nfrom client.models import create_mobilenetv2\nBATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"",
+        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport numpy as np\nimport tensorflow as tf\nfrom client.models import create_mobilenetv2\nBATCH_SIZES  = [16, 32, 64, 128]\nROUNDS       = 400   # FL rounds\nN_CLIENTS    = 9     # simulated clients (matches FL experiments)\nLOCAL_EPOCHS = 1     # local epochs per client per round (matches fit_*.py)\nNUM_CLASSES  = 10",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
     {
-        "label": "BATCH_SIZES",
+        "label": "LOCAL_EPOCHS",
         "kind": 5,
         "importPath": "benchmark.train_mobilenetv2_cifar10",
         "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "BATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:",
-        "detail": "benchmark.train_mobilenetv2_cifar10",
-        "documentation": {}
-    },
-    {
-        "label": "EPOCHS",
-        "kind": 5,
-        "importPath": "benchmark.train_mobilenetv2_cifar10",
-        "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "EPOCHS = 200\nNUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):",
-        "detail": "benchmark.train_mobilenetv2_cifar10",
-        "documentation": {}
-    },
-    {
-        "label": "NUM_CLASSES",
-        "kind": 5,
-        "importPath": "benchmark.train_mobilenetv2_cifar10",
-        "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "NUM_CLASSES = 10\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")",
-        "detail": "benchmark.train_mobilenetv2_cifar10",
-        "documentation": {}
-    },
-    {
-        "label": "INPUT_SHAPE",
-        "kind": 5,
-        "importPath": "benchmark.train_mobilenetv2_cifar10",
-        "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "INPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")\n            batch = pickle.load(f, encoding=\"bytes\")",
-        "detail": "benchmark.train_mobilenetv2_cifar10",
-        "documentation": {}
-    },
-    {
-        "label": "RESULTS_DIR",
-        "kind": 5,
-        "importPath": "benchmark.train_mobilenetv2_cifar10",
-        "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")\n            batch = pickle.load(f, encoding=\"bytes\")\n            x_train_parts.append(batch[b\"data\"])",
-        "detail": "benchmark.train_mobilenetv2_cifar10",
-        "documentation": {}
-    },
-    {
-        "label": "_LOCAL_TAR",
-        "kind": 5,
-        "importPath": "benchmark.train_mobilenetv2_cifar10",
-        "description": "benchmark.train_mobilenetv2_cifar10",
-        "peekOfCode": "_LOCAL_TAR = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):\n            f = tar.extractfile(f\"cifar-10-batches-py/data_batch_{i}\")\n            batch = pickle.load(f, encoding=\"bytes\")\n            x_train_parts.append(batch[b\"data\"])\n            y_train_parts.extend(batch[b\"labels\"])",
+        "peekOfCode": "LOCAL_EPOCHS = 1     # local epochs per client per round (matches fit_*.py)\nNUM_CLASSES  = 10\nINPUT_SHAPE  = (32, 32, 3)\nRESULTS_DIR  = Path(__file__).resolve().parent / \"results\"\n_LOCAL_TAR   = Path(__file__).resolve().parent / \"cifar-10-python.tar.gz\"\ndef _load_from_tar(tar_path: Path):\n    \"\"\"Load CIFAR-10 directly from the official tar.gz without extracting to disk.\"\"\"\n    x_train_parts, y_train_parts = [], []\n    with tarfile.open(tar_path, \"r:gz\") as tar:\n        for i in range(1, 6):",
         "detail": "benchmark.train_mobilenetv2_cifar10",
         "documentation": {}
     },
@@ -2331,7 +2435,7 @@
         "kind": 2,
         "importPath": "benchmark.train_vit_gtsrb",
         "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test) -> dict:\n    print(f\"\\n{'='*60}\", flush=True)\n    print(f\"  batch_size={batch_size}  |  epochs={EPOCHS}\", flush=True)\n    print(f\"  log → {RESULTS_DIR / f'batch_{batch_size}.csv'}\", flush=True)\n    print(f\"{'='*60}\", flush=True)\n    model = create_vit_tiny(INPUT_SHAPE, NUM_CLASSES)\n    print(f\"  model params: {model.count_params():,}\", flush=True)\n    log_path = RESULTS_DIR / f\"batch_{batch_size}.csv\"\n    best_val_acc = 0.0\n    best_epoch = 0",
+        "peekOfCode": "def train_one(batch_size: int, x_train, y_train, x_test, y_test,\n              rounds: int = ROUNDS) -> dict:\n    print(f\"\\n{'='*60}\", flush=True)\n    print(f\"  batch_size={batch_size}  |  rounds={rounds}\"\n          f\"  |  clients={N_CLIENTS}  |  local_epochs={LOCAL_EPOCHS}\", flush=True)\n    print(f\"  log → {RESULTS_DIR / f'batch_{batch_size}.csv'}\", flush=True)\n    print(f\"{'='*60}\", flush=True)\n    model = create_vit_tiny(INPUT_SHAPE, NUM_CLASSES)\n    print(f\"  model params: {model.count_params():,}\", flush=True)\n    # IID partition — fixed seed for reproducibility",
         "detail": "benchmark.train_vit_gtsrb",
         "documentation": {}
     },
@@ -2340,7 +2444,7 @@
         "kind": 2,
         "importPath": "benchmark.train_vit_gtsrb",
         "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"ViT-Tiny GTSRB benchmark — train for 200 epochs\"\n    )\n    parser.add_argument(\n        \"--batch-size\",\n        type=int,\n        default=None,\n        metavar=\"N\",\n        help=f\"Run only this batch size. Default: all {BATCH_SIZES}\",",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=f\"ViT-Tiny GTSRB FL benchmark — FedAvg, {ROUNDS} rounds\"\n    )\n    parser.add_argument(\n        \"--batch-size\", type=int, default=None, metavar=\"N\",\n        help=f\"Run only this batch size. Default: all {BATCH_SIZES}\",\n    )\n    parser.add_argument(\n        \"--rounds\", type=int, default=ROUNDS, metavar=\"N\",",
         "detail": "benchmark.train_vit_gtsrb",
         "documentation": {}
     },
@@ -2349,52 +2453,16 @@
         "kind": 5,
         "importPath": "benchmark.train_vit_gtsrb",
         "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport numpy as np\nimport tensorflow as tf\nfrom client.models import create_vit_tiny\nBATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"",
+        "peekOfCode": "REPO_ROOT = Path(__file__).resolve().parent.parent\nsys.path.insert(0, str(REPO_ROOT))\nimport numpy as np\nimport tensorflow as tf\nfrom client.models import create_vit_tiny\nBATCH_SIZES  = [16, 32, 64, 128]\nROUNDS       = 400   # FL rounds\nN_CLIENTS    = 9     # simulated clients (matches FL experiments)\nLOCAL_EPOCHS = 1     # local epochs per client per round (matches fit_*.py)\nNUM_CLASSES  = 43",
         "detail": "benchmark.train_vit_gtsrb",
         "documentation": {}
     },
     {
-        "label": "BATCH_SIZES",
+        "label": "LOCAL_EPOCHS",
         "kind": 5,
         "importPath": "benchmark.train_vit_gtsrb",
         "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "BATCH_SIZES = [16, 32, 64, 128]\nEPOCHS = 200\nNUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)",
-        "detail": "benchmark.train_vit_gtsrb",
-        "documentation": {}
-    },
-    {
-        "label": "EPOCHS",
-        "kind": 5,
-        "importPath": "benchmark.train_vit_gtsrb",
-        "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "EPOCHS = 200\nNUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):",
-        "detail": "benchmark.train_vit_gtsrb",
-        "documentation": {}
-    },
-    {
-        "label": "NUM_CLASSES",
-        "kind": 5,
-        "importPath": "benchmark.train_vit_gtsrb",
-        "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "NUM_CLASSES = 43\nINPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(",
-        "detail": "benchmark.train_vit_gtsrb",
-        "documentation": {}
-    },
-    {
-        "label": "INPUT_SHAPE",
-        "kind": 5,
-        "importPath": "benchmark.train_vit_gtsrb",
-        "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "INPUT_SHAPE = (32, 32, 3)\nRESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(\n            [",
-        "detail": "benchmark.train_vit_gtsrb",
-        "documentation": {}
-    },
-    {
-        "label": "RESULTS_DIR",
-        "kind": 5,
-        "importPath": "benchmark.train_vit_gtsrb",
-        "description": "benchmark.train_vit_gtsrb",
-        "peekOfCode": "RESULTS_DIR = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):\n        x = np.array(\n            [\n                tf.image.resize(np.array(img), (32, 32)).numpy()",
+        "peekOfCode": "LOCAL_EPOCHS = 1     # local epochs per client per round (matches fit_*.py)\nNUM_CLASSES  = 43\nINPUT_SHAPE  = (32, 32, 3)\nRESULTS_DIR  = Path(__file__).resolve().parent / \"results_vit_gtsrb\"\nHF_CACHE = os.environ.get(\"HF_DATASETS_CACHE\", str(Path(__file__).resolve().parent / \"data\"))\ndef load_gtsrb():\n    from datasets import load_dataset\n    print(\"  Downloading / loading from cache ...\")\n    ds = load_dataset(\"tanganke/gtsrb\", cache_dir=HF_CACHE)\n    def _to_array(split):",
         "detail": "benchmark.train_vit_gtsrb",
         "documentation": {}
     },
@@ -5951,6 +6019,1167 @@
         "description": "server.server_utils",
         "peekOfCode": "def aggregated_cyphered_parameters(self, parameters_list, total_examples):\n    backend    = _backend(self)\n    agg        = None\n    # CKKSSimplifyBackend cannot do fractional scalar mul (single-level CKKS,\n    # no rescaling).  Clients pre-divide by num_clients, so pure sum = FedAvg.\n    _pure_sum = self.onlysum or isinstance(backend, CKKSSimplifyBackend)\n    for parameters, num_examples in parameters_list:\n        if _pure_sum:\n            if self.homomorphic_type == 'Paillier':\n                if agg is None:",
         "detail": "server.server_utils",
+        "documentation": {}
+    },
+    {
+        "label": "plot_convergence_grid",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "def plot_convergence_grid(server_eval, models, niids, sol_colors, pct_styles):\n    n_rows, n_cols = len(models), len(niids)\n    fig, axes = plt.subplots(\n        n_rows, n_cols,\n        figsize=(5 * n_cols, 4 * n_rows),\n        squeeze=False,\n        sharey=False,\n    )\n    packing_solutions = server_eval[server_eval[\"percentage\"].notna()][\"solution\"].unique()\n    plaintext_df = server_eval[server_eval[\"percentage\"].isna()]",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "plot_final_acc_bar",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "def plot_final_acc_bar(server_eval, models, sol_colors):\n    lr = load_data.last_round(server_eval, group_cols=[\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"])\n    if lr.empty:\n        return None\n    summary = lr.groupby([\"model\", \"solution\", \"percentage\"], dropna=False)[\"mean_acc\"].mean().reset_index()\n    packing = summary[summary[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    packing_solutions = sorted(packing[\"solution\"].unique())\n    percentages = sorted(packing[\"percentage\"].dropna().unique())",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    se = dfs[\"server_eval\"]\n    if se.empty:\n        print(\"No server_eval data found.\")\n        return\n    dims = load_data.discover_dims(se)\n    models = dims.get(\"model\", [])\n    niids = dims.get(\"niid\", [])\n    solutions = [s for s in dims.get(\"solution\", []) if s != \"plaintext\"]",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _solution_color_map(solutions):\n    cmap = cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    return {s: cmap(i) for i, s in enumerate(sorted(solutions))}",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _solution_color_map(solutions):\n    cmap = cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    return {s: cmap(i) for i, s in enumerate(sorted(solutions))}\ndef _percentage_linestyle(percentages):\n    styles = [\"-\", \"--\", \"-.\", \":\", (0, (3, 1, 1, 1)), (0, (5, 2))]",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _solution_color_map(solutions):\n    cmap = cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    return {s: cmap(i) for i, s in enumerate(sorted(solutions))}\ndef _percentage_linestyle(percentages):\n    styles = [\"-\", \"--\", \"-.\", \":\", (0, (3, 1, 1, 1)), (0, (5, 2))]\n    pcts = sorted([p for p in percentages if p is not None])",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.01_accuracy_curves",
+        "description": "studies.sparsification_percentage.01_accuracy_curves",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _solution_color_map(solutions):\n    cmap = cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    return {s: cmap(i) for i, s in enumerate(sorted(solutions))}\ndef _percentage_linestyle(percentages):\n    styles = [\"-\", \"--\", \"-.\", \":\", (0, (3, 1, 1, 1)), (0, (5, 2))]\n    pcts = sorted([p for p in percentages if p is not None])\n    return {p: styles[i % len(styles)] for i, p in enumerate(pcts)}\ndef plot_convergence_grid(server_eval, models, niids, sol_colors, pct_styles):",
+        "detail": "studies.sparsification_percentage.01_accuracy_curves",
+        "documentation": {}
+    },
+    {
+        "label": "plot_heatmaps",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "def plot_heatmaps(summary, models, niids):\n    all_solutions = sorted(summary[\"solution\"].unique())\n    percentages = sorted(summary[\"percentage\"].dropna().unique())\n    # columns: one per percentage + \"baseline\" at the end\n    col_labels = [str(p) for p in percentages] + [\"baseline\"]\n    n_cols_mat = len(col_labels)\n    if not percentages:\n        return None\n    n_rows = len(models) * len(niids)\n    fig, axes = plt.subplots(",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "plot_grouped_bar",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "def plot_grouped_bar(summary, models, server_eval):\n    packing = summary[summary[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    all_solutions = sorted(summary[\"solution\"].unique())\n    packing_solutions = sorted(packing[\"solution\"].unique())\n    percentages = sorted(packing[\"percentage\"].dropna().unique())\n    # x groups: one per solution (packing) + \"plaintext\" at end\n    x_labels = packing_solutions + ([\"plaintext\"] if \"plaintext\" in all_solutions else [])\n    x = np.arange(len(x_labels))",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    se = dfs[\"server_eval\"]\n    if se.empty:\n        print(\"No server_eval data found.\")\n        return\n    dims = load_data.discover_dims(se)\n    models = dims.get(\"model\", [])\n    niids = dims.get(\"niid\", [])\n    summary = _final_acc(se)",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc(server_eval):\n    lr = load_data.last_round(\n        server_eval, group_cols=[\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc(server_eval):\n    lr = load_data.last_round(\n        server_eval, group_cols=[\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n    )\n    return (",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc(server_eval):\n    lr = load_data.last_round(\n        server_eval, group_cols=[\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n    )\n    return (\n        lr.groupby([\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False)[\"mean_acc\"]",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.02_solution_comparison",
+        "description": "studies.sparsification_percentage.02_solution_comparison",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc(server_eval):\n    lr = load_data.last_round(\n        server_eval, group_cols=[\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n    )\n    return (\n        lr.groupby([\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False)[\"mean_acc\"]\n        .mean()\n        .reset_index()",
+        "detail": "studies.sparsification_percentage.02_solution_comparison",
+        "documentation": {}
+    },
+    {
+        "label": "plot_stacked_bar",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "def plot_stacked_bar(medians, models):\n    packing = medians[medians[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    percentages = sorted(packing[\"percentage\"].dropna().unique())\n    present_ops = [(c, lbl) for c, lbl in TIME_OPS if c in packing.columns]\n    colors = plt.cm.get_cmap(\"Set2\", len(present_ops))\n    n_rows = len(models)\n    fig, axes = plt.subplots(n_rows, 1, figsize=(max(10, len(solutions) * len(percentages) * 0.6), 4 * n_rows), squeeze=False)",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "plot_he_overhead_line",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "def plot_he_overhead_line(train_df, models):\n    packing = train_df[train_df[\"percentage\"].notna()].copy()\n    if packing.empty:\n        return None\n    present_he = [c for c in HE_OPS if c in packing.columns]\n    if not present_he:\n        return None\n    packing[\"he_overhead\"] = packing[present_he].sum(axis=1)\n    gc = [\"model\", \"solution\", \"percentage\"]\n    gc = [c for c in gc if c in packing.columns]",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "plot_server_agg_time",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "def plot_server_agg_time(server_agg):\n    if server_agg.empty or \"aggregation_time_s\" not in server_agg.columns:\n        return None\n    solutions = sorted(server_agg[\"solution\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    models = sorted(server_agg[\"model\"].unique()) if \"model\" in server_agg.columns else [\"all\"]\n    fig, axes = plt.subplots(len(models), 1, figsize=(8, 3 * len(models)), squeeze=False)\n    for row, model in enumerate(models):\n        ax = axes[row][0]\n        sub = server_agg[server_agg[\"model\"] == model] if \"model\" in server_agg.columns else server_agg",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train = dfs[\"train\"]\n    sagg = dfs[\"server_agg\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    dims = load_data.discover_dims(train)\n    models = dims.get(\"model\", [])\n    medians = _median_per_config(train)",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTIME_OPS = [\n    (\"train_time_s\", \"Train\"),\n    (\"flatten_time_s\", \"Flatten\"),",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTIME_OPS = [\n    (\"train_time_s\", \"Train\"),\n    (\"flatten_time_s\", \"Flatten\"),\n    (\"pack_time_s\", \"Pack\"),\n    (\"mask_select_time_s\", \"Mask\"),",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTIME_OPS = [\n    (\"train_time_s\", \"Train\"),\n    (\"flatten_time_s\", \"Flatten\"),\n    (\"pack_time_s\", \"Pack\"),\n    (\"mask_select_time_s\", \"Mask\"),\n    (\"encrypt_time_s\", \"Encrypt\"),",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTIME_OPS = [\n    (\"train_time_s\", \"Train\"),\n    (\"flatten_time_s\", \"Flatten\"),\n    (\"pack_time_s\", \"Pack\"),\n    (\"mask_select_time_s\", \"Mask\"),\n    (\"encrypt_time_s\", \"Encrypt\"),\n    (\"serialize_time_s\", \"Serialize\"),\n    (\"decrypt_time_s\", \"Decrypt\"),",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_OPS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "TIME_OPS = [\n    (\"train_time_s\", \"Train\"),\n    (\"flatten_time_s\", \"Flatten\"),\n    (\"pack_time_s\", \"Pack\"),\n    (\"mask_select_time_s\", \"Mask\"),\n    (\"encrypt_time_s\", \"Encrypt\"),\n    (\"serialize_time_s\", \"Serialize\"),\n    (\"decrypt_time_s\", \"Decrypt\"),\n]\nHE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "HE_OPS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.03_overhead_breakdown",
+        "description": "studies.sparsification_percentage.03_overhead_breakdown",
+        "peekOfCode": "HE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]\ndef _median_per_config(train_df):\n    present_ops = [c for c, _ in TIME_OPS if c in train_df.columns]\n    gc = [\"model\", \"solution\", \"niid\", \"percentage\"]\n    gc = [c for c in gc if c in train_df.columns]\n    return train_df.groupby(gc, dropna=False)[present_ops].median().reset_index()\ndef plot_stacked_bar(medians, models):\n    packing = medians[medians[\"percentage\"].notna()]\n    if packing.empty:\n        return None",
+        "detail": "studies.sparsification_percentage.03_overhead_breakdown",
+        "documentation": {}
+    },
+    {
+        "label": "plot_payload_line",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "def plot_payload_line(train, models):\n    packing = train[train[\"percentage\"].notna()].copy()\n    if \"payload_bytes\" not in packing.columns or packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    fig, axes = plt.subplots(len(models), 1, figsize=(6, 4 * len(models)), squeeze=False)\n    for row, model in enumerate(models):\n        ax = axes[row][0]\n        sub = packing[packing[\"model\"] == model] if \"model\" in packing.columns else packing",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "plot_pack_ratio_line",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "def plot_pack_ratio_line(train, models):\n    packing = train[train[\"percentage\"].notna()].copy()\n    if \"n_packs\" not in packing.columns or \"packs_sent\" not in packing.columns:\n        return None\n    packing = packing[(packing[\"n_packs\"] > 0)].copy()\n    if packing.empty:\n        return None\n    packing[\"pack_ratio\"] = packing[\"packs_sent\"] / packing[\"n_packs\"]\n    solutions = sorted(packing[\"solution\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "plot_acc_vs_payload_scatter",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "def plot_acc_vs_payload_scatter(train, server_eval, models):\n    packing_train = train[train[\"percentage\"].notna() & (\"payload_bytes\" in train.columns if \"payload_bytes\" in train.columns else False)].copy()\n    if \"payload_bytes\" not in train.columns:\n        return None\n    packing_train = train[train[\"percentage\"].notna()].copy()\n    if packing_train.empty:\n        return None\n    payload_agg = packing_train.groupby(\n        [\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False\n    )[\"payload_bytes\"].mean().reset_index()",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train = dfs[\"train\"]\n    se = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    dims = load_data.discover_dims(train)\n    models = dims.get(\"model\", [])\n    fig_a = plot_payload_line(train, models)",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_payload_line(train, models):\n    packing = train[train[\"percentage\"].notna()].copy()\n    if \"payload_bytes\" not in packing.columns or packing.empty:",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_payload_line(train, models):\n    packing = train[train[\"percentage\"].notna()].copy()\n    if \"payload_bytes\" not in packing.columns or packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_payload_line(train, models):\n    packing = train[train[\"percentage\"].notna()].copy()\n    if \"payload_bytes\" not in packing.columns or packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.04_communication",
+        "description": "studies.sparsification_percentage.04_communication",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_payload_line(train, models):\n    packing = train[train[\"percentage\"].notna()].copy()\n    if \"payload_bytes\" not in packing.columns or packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    fig, axes = plt.subplots(len(models), 1, figsize=(6, 4 * len(models)), squeeze=False)\n    for row, model in enumerate(models):",
+        "detail": "studies.sparsification_percentage.04_communication",
+        "documentation": {}
+    },
+    {
+        "label": "plot_paired_bar",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "def plot_paired_bar(summary, models):\n    if summary is None or summary.empty:\n        return None\n    niids = sorted(summary[\"niid\"].unique())\n    if len(niids) < 2:\n        print(\"Only one niid value found — skipping paired bar.\")\n        return None\n    all_solutions = sorted(summary[\"solution\"].unique())\n    percentages = sorted(summary[\"percentage\"].dropna().unique())\n    # x-axis: percentages + \"baseline\"",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "plot_delta_heatmap",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "def plot_delta_heatmap(summary, models):\n    if summary is None or summary.empty:\n        return None\n    niids = sorted(summary[\"niid\"].unique())\n    if len(niids) < 2:\n        return None\n    niid_low, niid_high = niids[0], niids[-1]\n    all_solutions = sorted(summary[\"solution\"].unique())\n    percentages = sorted(summary[\"percentage\"].dropna().unique())\n    col_labels = [str(p) for p in percentages] + [\"baseline\"]",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    se = dfs[\"server_eval\"]\n    if se.empty:\n        print(\"No server_eval data found.\")\n        return\n    dims = load_data.discover_dims(se)\n    models = dims.get(\"model\", [])\n    summary = _final_acc_by_niid(se)\n    fig_a = plot_paired_bar(summary, models)",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc_by_niid(server_eval):\n    # Include both packing and plaintext (percentage=None)\n    lr = load_data.last_round(server_eval, group_cols=[\"model\", \"solution\", \"niid\", \"percentage\", \"seed\"])",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc_by_niid(server_eval):\n    # Include both packing and plaintext (percentage=None)\n    lr = load_data.last_round(server_eval, group_cols=[\"model\", \"solution\", \"niid\", \"percentage\", \"seed\"])\n    return lr.groupby([\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False)[\"mean_acc\"].mean().reset_index()\ndef plot_paired_bar(summary, models):",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc_by_niid(server_eval):\n    # Include both packing and plaintext (percentage=None)\n    lr = load_data.last_round(server_eval, group_cols=[\"model\", \"solution\", \"niid\", \"percentage\", \"seed\"])\n    return lr.groupby([\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False)[\"mean_acc\"].mean().reset_index()\ndef plot_paired_bar(summary, models):\n    if summary is None or summary.empty:",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.05_niid_impact",
+        "description": "studies.sparsification_percentage.05_niid_impact",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _final_acc_by_niid(server_eval):\n    # Include both packing and plaintext (percentage=None)\n    lr = load_data.last_round(server_eval, group_cols=[\"model\", \"solution\", \"niid\", \"percentage\", \"seed\"])\n    return lr.groupby([\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False)[\"mean_acc\"].mean().reset_index()\ndef plot_paired_bar(summary, models):\n    if summary is None or summary.empty:\n        return None\n    niids = sorted(summary[\"niid\"].unique())",
+        "detail": "studies.sparsification_percentage.05_niid_impact",
+        "documentation": {}
+    },
+    {
+        "label": "plot_box",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "def plot_box(train, models):\n    if \"ram_peak_mb\" not in train.columns or train.empty:\n        return None\n    solutions = sorted(train[\"solution\"].unique())\n    fig, axes = plt.subplots(1, len(models), figsize=(5 * len(models), 5), squeeze=False)\n    for col, model in enumerate(models):\n        ax = axes[0][col]\n        sub = train[train[\"model\"] == model] if \"model\" in train.columns else train\n        data = [sub[sub[\"solution\"] == sol][\"ram_peak_mb\"].dropna().values for sol in solutions]\n        bp = ax.boxplot(data, patch_artist=True, notch=False)",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "plot_memory_vs_percentage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "def plot_memory_vs_percentage(train, models):\n    packing = train[train[\"percentage\"].notna()].copy() if \"percentage\" in train.columns else train\n    if \"ram_peak_mb\" not in packing.columns or packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    fig, axes = plt.subplots(len(models), 1, figsize=(6, 4 * len(models)), squeeze=False)\n    for row, model in enumerate(models):\n        ax = axes[row][0]\n        sub = packing[packing[\"model\"] == model] if \"model\" in packing.columns else packing",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train = dfs[\"train\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    dims = load_data.discover_dims(train)\n    models = dims.get(\"model\", [])\n    fig_a = plot_box(train, models)\n    if fig_a:",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_box(train, models):\n    if \"ram_peak_mb\" not in train.columns or train.empty:\n        return None",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_box(train, models):\n    if \"ram_peak_mb\" not in train.columns or train.empty:\n        return None\n    solutions = sorted(train[\"solution\"].unique())\n    fig, axes = plt.subplots(1, len(models), figsize=(5 * len(models), 5), squeeze=False)",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_box(train, models):\n    if \"ram_peak_mb\" not in train.columns or train.empty:\n        return None\n    solutions = sorted(train[\"solution\"].unique())\n    fig, axes = plt.subplots(1, len(models), figsize=(5 * len(models), 5), squeeze=False)\n    for col, model in enumerate(models):",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.06_memory_profile",
+        "description": "studies.sparsification_percentage.06_memory_profile",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef plot_box(train, models):\n    if \"ram_peak_mb\" not in train.columns or train.empty:\n        return None\n    solutions = sorted(train[\"solution\"].unique())\n    fig, axes = plt.subplots(1, len(models), figsize=(5 * len(models), 5), squeeze=False)\n    for col, model in enumerate(models):\n        ax = axes[0][col]\n        sub = train[train[\"model\"] == model] if \"model\" in train.columns else train",
+        "detail": "studies.sparsification_percentage.06_memory_profile",
+        "documentation": {}
+    },
+    {
+        "label": "plot_convergence_rounds",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "def plot_convergence_rounds(server_eval, models):\n    packing = server_eval[server_eval[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    percentages = sorted(packing[\"percentage\"].dropna().unique())\n    niids = sorted(packing[\"niid\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    n_rows = len(models) * len(niids)\n    n_cols = len(THRESHOLDS)",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "plot_auc_bar",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "def plot_auc_bar(server_eval, models):\n    # Compute AUC for all solutions including plaintext\n    auc_df = load_data.auc_accuracy(server_eval)\n    if auc_df.empty or \"auc_norm\" not in auc_df.columns:\n        return None\n    all_solutions = sorted(auc_df[\"solution\"].unique())\n    percentages = sorted(auc_df[\"percentage\"].dropna().unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(all_solutions), 1))\n    # x-axis: percentages + \"baseline\"\n    x_labels = [str(p) for p in percentages] + [\"baseline\"]",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    se = dfs[\"server_eval\"]\n    if se.empty:\n        print(\"No server_eval data found.\")\n        return\n    dims = load_data.discover_dims(se)\n    models = dims.get(\"model\", [])\n    fig_a = plot_convergence_rounds(se, models)\n    if fig_a:",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTHRESHOLDS = [0.70, 0.80, 0.85]\ndef plot_convergence_rounds(server_eval, models):\n    packing = server_eval[server_eval[\"percentage\"].notna()]",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTHRESHOLDS = [0.70, 0.80, 0.85]\ndef plot_convergence_rounds(server_eval, models):\n    packing = server_eval[server_eval[\"percentage\"].notna()]\n    if packing.empty:\n        return None",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTHRESHOLDS = [0.70, 0.80, 0.85]\ndef plot_convergence_rounds(server_eval, models):\n    packing = server_eval[server_eval[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\nTHRESHOLDS = [0.70, 0.80, 0.85]\ndef plot_convergence_rounds(server_eval, models):\n    packing = server_eval[server_eval[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    percentages = sorted(packing[\"percentage\"].dropna().unique())\n    niids = sorted(packing[\"niid\"].unique())",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "THRESHOLDS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.07_convergence_speed",
+        "description": "studies.sparsification_percentage.07_convergence_speed",
+        "peekOfCode": "THRESHOLDS = [0.70, 0.80, 0.85]\ndef plot_convergence_rounds(server_eval, models):\n    packing = server_eval[server_eval[\"percentage\"].notna()]\n    if packing.empty:\n        return None\n    solutions = sorted(packing[\"solution\"].unique())\n    percentages = sorted(packing[\"percentage\"].dropna().unique())\n    niids = sorted(packing[\"niid\"].unique())\n    cmap = plt.cm.get_cmap(\"tab10\", max(len(solutions), 1))\n    n_rows = len(models) * len(niids)",
+        "detail": "studies.sparsification_percentage.07_convergence_speed",
+        "documentation": {}
+    },
+    {
+        "label": "plot_frontier",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.08_efficiency_frontier",
+        "description": "studies.sparsification_percentage.08_efficiency_frontier",
+        "peekOfCode": "def plot_frontier(train, server_eval, models):\n    if \"payload_bytes\" not in train.columns:\n        return None\n    # Build payload aggregation for ALL solutions (packing + plaintext)\n    payload_agg = (\n        train.groupby([\"model\", \"solution\", \"niid\", \"percentage\"], dropna=False)\n        [\"payload_bytes\"].mean().reset_index()\n    )\n    payload_agg[\"payload_mb\"] = payload_agg[\"payload_bytes\"] / 1e6\n    lr = load_data.last_round(server_eval)",
+        "detail": "studies.sparsification_percentage.08_efficiency_frontier",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.08_efficiency_frontier",
+        "description": "studies.sparsification_percentage.08_efficiency_frontier",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train = dfs[\"train\"]\n    se = dfs[\"server_eval\"]\n    if train.empty or se.empty:\n        print(\"No data found.\")\n        return\n    dims = load_data.discover_dims(train)\n    models = dims.get(\"model\", [])\n    fig = plot_frontier(train, se, models)",
+        "detail": "studies.sparsification_percentage.08_efficiency_frontier",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.08_efficiency_frontier",
+        "description": "studies.sparsification_percentage.08_efficiency_frontier",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _pareto_front(costs, accuracies):\n    \"\"\"Return boolean mask of Pareto-optimal points (min cost, max acc).\"\"\"\n    n = len(costs)",
+        "detail": "studies.sparsification_percentage.08_efficiency_frontier",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.08_efficiency_frontier",
+        "description": "studies.sparsification_percentage.08_efficiency_frontier",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _pareto_front(costs, accuracies):\n    \"\"\"Return boolean mask of Pareto-optimal points (min cost, max acc).\"\"\"\n    n = len(costs)\n    dominated = np.zeros(n, dtype=bool)\n    for i in range(n):",
+        "detail": "studies.sparsification_percentage.08_efficiency_frontier",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.08_efficiency_frontier",
+        "description": "studies.sparsification_percentage.08_efficiency_frontier",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _pareto_front(costs, accuracies):\n    \"\"\"Return boolean mask of Pareto-optimal points (min cost, max acc).\"\"\"\n    n = len(costs)\n    dominated = np.zeros(n, dtype=bool)\n    for i in range(n):\n        for j in range(n):",
+        "detail": "studies.sparsification_percentage.08_efficiency_frontier",
+        "documentation": {}
+    },
+    {
+        "label": "OUT",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.08_efficiency_frontier",
+        "description": "studies.sparsification_percentage.08_efficiency_frontier",
+        "peekOfCode": "OUT = HERE / \"output\" / \"figures\"\nOUT.mkdir(parents=True, exist_ok=True)\ndef _pareto_front(costs, accuracies):\n    \"\"\"Return boolean mask of Pareto-optimal points (min cost, max acc).\"\"\"\n    n = len(costs)\n    dominated = np.zeros(n, dtype=bool)\n    for i in range(n):\n        for j in range(n):\n            if i == j:\n                continue",
+        "detail": "studies.sparsification_percentage.08_efficiency_frontier",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "def build_summary(dfs) -> pd.DataFrame:\n    se = dfs[\"server_eval\"]\n    train = dfs[\"train\"]\n    group = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n    group = [c for c in group if c in se.columns]\n    # final accuracy & loss\n    lr = load_data.last_round(se, group_cols=group + [\"seed\"])\n    acc = lr.groupby(group, dropna=False)[[\"mean_acc\", \"mean_loss\"]].mean().reset_index()\n    acc.rename(columns={\"mean_acc\": \"final_acc\", \"mean_loss\": \"final_loss\"}, inplace=True)\n    # convergence round",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "to_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "def to_latex(df: pd.DataFrame) -> str:\n    numeric_cols = df.select_dtypes(include=[float, int]).columns.tolist()\n    # higher is better for acc/auc; lower is better for times/payload/convergence\n    higher_better = [\"final_acc\", \"auc_acc\"]\n    lower_better = [\"final_loss\", \"convergence_round_80pct\", \"mean_payload_mb\",\n                    \"mean_encrypt_time_s\", \"mean_he_overhead_s\"]\n    best_vals = {}\n    for col in numeric_cols:\n        vals = df[col].dropna()\n        if vals.empty:",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    if dfs[\"server_eval\"].empty:\n        print(\"No server_eval data found.\")\n        return\n    summary = build_summary(dfs)\n    print(f\"Summary: {len(summary)} rows, {list(summary.columns)}\")\n    csv_path = OUT_TABLES / \"summary.csv\"\n    summary.to_csv(csv_path, index=False)\n    print(f\"Saved {csv_path}\")",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_TABLES = HERE / \"output\" / \"tables\"\nOUT_TABLES.mkdir(parents=True, exist_ok=True)\nHE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]\ndef build_summary(dfs) -> pd.DataFrame:\n    se = dfs[\"server_eval\"]",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_TABLES = HERE / \"output\" / \"tables\"\nOUT_TABLES.mkdir(parents=True, exist_ok=True)\nHE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]\ndef build_summary(dfs) -> pd.DataFrame:\n    se = dfs[\"server_eval\"]\n    train = dfs[\"train\"]\n    group = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_TABLES = HERE / \"output\" / \"tables\"\nOUT_TABLES.mkdir(parents=True, exist_ok=True)\nHE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]\ndef build_summary(dfs) -> pd.DataFrame:\n    se = dfs[\"server_eval\"]\n    train = dfs[\"train\"]\n    group = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n    group = [c for c in group if c in se.columns]",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TABLES",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "OUT_TABLES = HERE / \"output\" / \"tables\"\nOUT_TABLES.mkdir(parents=True, exist_ok=True)\nHE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]\ndef build_summary(dfs) -> pd.DataFrame:\n    se = dfs[\"server_eval\"]\n    train = dfs[\"train\"]\n    group = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n    group = [c for c in group if c in se.columns]\n    # final accuracy & loss\n    lr = load_data.last_round(se, group_cols=group + [\"seed\"])",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "HE_OPS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.09_summary_table",
+        "description": "studies.sparsification_percentage.09_summary_table",
+        "peekOfCode": "HE_OPS = [\"encrypt_time_s\", \"serialize_time_s\", \"pack_time_s\", \"mask_select_time_s\"]\ndef build_summary(dfs) -> pd.DataFrame:\n    se = dfs[\"server_eval\"]\n    train = dfs[\"train\"]\n    group = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n    group = [c for c in group if c in se.columns]\n    # final accuracy & loss\n    lr = load_data.last_round(se, group_cols=group + [\"seed\"])\n    acc = lr.groupby(group, dropna=False)[[\"mean_acc\", \"mean_loss\"]].mean().reset_index()\n    acc.rename(columns={\"mean_acc\": \"final_acc\", \"mean_loss\": \"final_loss\"}, inplace=True)",
+        "detail": "studies.sparsification_percentage.09_summary_table",
+        "documentation": {}
+    },
+    {
+        "label": "build_coverage_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def build_coverage_summary(train: pd.DataFrame) -> pd.DataFrame:\n    g = _group(train)\n    required = {\"n_packs\", \"packs_sent\"}\n    missing = required - set(train.columns)\n    if missing:\n        print(f\"[warn] train.csv missing columns: {missing}\")\n        return pd.DataFrame()\n    agg_dict = {\n        \"n_packs\": (\"n_packs\", \"mean\"),\n        \"packs_sent\": (\"packs_sent\", \"mean\"),",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "plot_rounds_bar",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def plot_rounds_bar(summary: pd.DataFrame, models: list) -> plt.Figure | None:\n    plotable = summary[summary[\"rounds_coverage\"].notna() &\n                       (summary[\"solution\"] != \"plaintext\")]\n    if plotable.empty:\n        return None\n    all_solutions = sorted(plotable[\"solution\"].unique())\n    percentages = sorted(plotable[\"percentage\"].dropna().unique())\n    x = np.arange(len(percentages))\n    width = 0.8 / max(len(all_solutions), 1)\n    sol_colors = _cmap(all_solutions)",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "plot_rounds_line",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def plot_rounds_line(summary: pd.DataFrame, models: list) -> plt.Figure | None:\n    plotable = summary[summary[\"rounds_coverage\"].notna() &\n                       (summary[\"solution\"] != \"plaintext\")]\n    if plotable.empty:\n        return None\n    all_solutions = sorted(plotable[\"solution\"].unique())\n    sol_colors = _cmap(all_solutions)\n    niids = sorted(plotable[\"niid\"].dropna().unique()) if \"niid\" in plotable.columns else [None]\n    n_rows = len(models)\n    n_cols = len(niids)",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "plot_nvnl_vs_sw",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def plot_nvnl_vs_sw(summary: pd.DataFrame, models: list) -> plt.Figure | None:\n    focus = summary[summary[\"solution\"].isin({\"nvnl\", \"sw\"}) &\n                    summary[\"rounds_coverage\"].notna()].copy()\n    if focus.empty:\n        return None\n    percentages = sorted(focus[\"percentage\"].dropna().unique())\n    niids = sorted(focus[\"niid\"].dropna().unique()) if \"niid\" in focus.columns else [None]\n    x = np.arange(len(percentages))\n    width = 0.35\n    colors = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "plot_logged_mb",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def plot_logged_mb(summary: pd.DataFrame, models: list) -> plt.Figure | None:\n    if \"total_mb_logged\" not in summary.columns:\n        return None\n    plotable = summary[summary[\"total_mb_logged\"].notna()].copy()\n    if plotable.empty:\n        return None\n    all_solutions = sorted(plotable[\"solution\"].unique())\n    percentages = sorted(plotable[\"percentage\"].dropna().unique())\n    sol_colors = _cmap(all_solutions)\n    niids = sorted(plotable[\"niid\"].dropna().unique()) if \"niid\" in plotable.columns else [None]",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame):\n    cols = [c for c in [\n        \"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n        \"n_packs\", \"packs_sent\",\n        \"rounds_coverage\",\n        \"mean_payload_mb\", \"total_mb_logged\",\n    ] if c in summary.columns]\n    out = summary[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(4)",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame):\n    display_cols = {\n        \"solution\": \"Solution\",\n        \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\",\n        \"n_packs\": \"Total packs\",\n        \"packs_sent\": \"Sent/rnd\",\n        \"rounds_coverage\": \"Rounds (cycle)\",\n    }\n    cols = [c for c in display_cols if c in summary.columns]",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train = dfs[\"train\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    dims = load_data.discover_dims(train)\n    models = dims.get(\"model\", [])\n    print(f\"Models     : {models}\")\n    print(f\"Solutions  : {dims.get('solution', [])}\")",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nPACKING_SOLUTIONS = {\"nvnl\", \"sw\", \"rw\"}   # solutions with meaningful coverage formula\nCOVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nPACKING_SOLUTIONS = {\"nvnl\", \"sw\", \"rw\"}   # solutions with meaningful coverage formula\nCOVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"\ndef _group(df):",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nPACKING_SOLUTIONS = {\"nvnl\", \"sw\", \"rw\"}   # solutions with meaningful coverage formula\nCOVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"\ndef _group(df):\n    return [c for c in GROUP if c in df.columns]\ndef _cmap(solutions):",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nPACKING_SOLUTIONS = {\"nvnl\", \"sw\", \"rw\"}   # solutions with meaningful coverage formula\nCOVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"\ndef _group(df):\n    return [c for c in GROUP if c in df.columns]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nPACKING_SOLUTIONS = {\"nvnl\", \"sw\", \"rw\"}   # solutions with meaningful coverage formula\nCOVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"\ndef _group(df):\n    return [c for c in GROUP if c in df.columns]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Coverage formula ──────────────────────────────────────────────────────────",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLUTIONS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "PACKING_SOLUTIONS = {\"nvnl\", \"sw\", \"rw\"}   # solutions with meaningful coverage formula\nCOVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"\ndef _group(df):\n    return [c for c in GROUP if c in df.columns]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Coverage formula ──────────────────────────────────────────────────────────\ndef _rounds_for_coverage(solution: str, n_packs: float, packs_sent: float) -> float:",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "COVERAGE_NA_NOTE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.10_total_data_convergence",
+        "description": "studies.sparsification_percentage.10_total_data_convergence",
+        "peekOfCode": "COVERAGE_NA_NOTE = \"fedphe: top-k fixed — same packs every round, full coverage not guaranteed\"\ndef _group(df):\n    return [c for c in GROUP if c in df.columns]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Coverage formula ──────────────────────────────────────────────────────────\ndef _rounds_for_coverage(solution: str, n_packs: float, packs_sent: float) -> float:\n    if packs_sent <= 0:",
+        "detail": "studies.sparsification_percentage.10_total_data_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "build_params",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def build_params(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Aggregate observed n_packs, packs_sent, pack_size per group.\"\"\"\n    required = {\"n_packs\", \"packs_sent\"}\n    missing = required - set(train.columns)\n    if missing:\n        print(f\"[warn] train.csv missing columns: {missing}\")\n        return pd.DataFrame()\n    g = [c for c in GROUP if c in train.columns]\n    agg_spec = {\n        \"n_packs\": (\"n_packs\", \"mean\"),",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "build_trajectory",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def build_trajectory(params: pd.DataFrame, max_rounds: int = 60) -> pd.DataFrame:\n    \"\"\"Expand params into per-round trajectory rows.\"\"\"\n    rows = []\n    for _, p in params.iterrows():\n        for r in range(1, max_rounds + 1):\n            cov = _coverage_at_round(p[\"solution\"], r, p[\"n_packs\"], p[\"packs_sent\"])\n            cum_mb = r * p[\"mb_per_round\"]\n            rows.append({\n                **{k: p[k] for k in GROUP if k in p.index},\n                \"round\": r,",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "plot_coverage_vs_round",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def plot_coverage_vs_round(traj: pd.DataFrame, models: list, niids: list) -> plt.Figure | None:\n    focus = traj[traj[\"solution\"].isin(FOCUS_SOLUTIONS)].copy()\n    if focus.empty:\n        return None\n    percentages = sorted(focus[\"percentage\"].dropna().unique())\n    ls_map = {p: ls for p, ls in zip(percentages, [\"-\", \"--\", \"-.\", \":\", (0, (3, 1, 1, 1))])}\n    n_rows = len(models)\n    n_cols = len(niids)\n    fig, axes = plt.subplots(n_rows, n_cols,\n                             figsize=(7 * n_cols, 5 * n_rows), squeeze=False)",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "plot_coverage_vs_bytes",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def plot_coverage_vs_bytes(traj: pd.DataFrame, models: list, niids: list) -> plt.Figure | None:\n    focus = traj[traj[\"solution\"].isin(FOCUS_SOLUTIONS)].copy()\n    if focus.empty or focus[\"cumulative_mb\"].isna().all():\n        return None\n    percentages = sorted(focus[\"percentage\"].dropna().unique())\n    ls_map = {p: ls for p, ls in zip(percentages, [\"-\", \"--\", \"-.\", \":\", (0, (3, 1, 1, 1))])}\n    n_rows = len(models)\n    n_cols = len(niids)\n    fig, axes = plt.subplots(n_rows, n_cols,\n                             figsize=(7 * n_cols, 5 * n_rows), squeeze=False)",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "plot_fixed_budget_coverage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def plot_fixed_budget_coverage(traj: pd.DataFrame, models: list, niids: list,\n                                budgets: list = FIXED_BUDGETS) -> plt.Figure | None:\n    focus = traj[traj[\"solution\"].isin(FOCUS_SOLUTIONS) & traj[\"round\"].isin(budgets)].copy()\n    if focus.empty:\n        return None\n    percentages = sorted(focus[\"percentage\"].dropna().unique())\n    x = np.arange(len(percentages))\n    width = 0.35\n    n_rows = len(models)\n    n_cols = len(niids)",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "plot_marginal_cost",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def plot_marginal_cost(params: pd.DataFrame, models: list, niids: list) -> plt.Figure | None:\n    focus = params[params[\"solution\"].isin(FOCUS_SOLUTIONS) &\n                   params[\"marginal_cost_mb_per_pct\"].notna()].copy()\n    if focus.empty:\n        return None\n    percentages = sorted(focus[\"percentage\"].dropna().unique())\n    x = np.arange(len(percentages))\n    width = 0.35\n    n_rows = len(models)\n    n_cols = len(niids)",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "save_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def save_summary(params: pd.DataFrame):\n    cols = [c for c in [\n        \"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n        \"n_packs\", \"packs_sent\", \"pack_size\",\n        \"stride\", \"new_coverage_pct_per_round\",\n        \"mb_per_round\", \"marginal_cost_mb_per_pct\",\n    ] if c in params.columns]\n    out = params[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(4)",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def save_latex(params: pd.DataFrame):\n    display = {\n        \"solution\": \"Solution\",\n        \"percentage\": \"Pct.\",\n        \"new_coverage_pct_per_round\": \"New cov./round (%)\",\n        \"mb_per_round\": \"MB/round\",\n        \"marginal_cost_mb_per_pct\": \"MB per 1% cov.\",\n    }\n    if \"model\" in params.columns:\n        display = {\"model\": \"Model\", **display}",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train = dfs[\"train\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    dims = load_data.discover_dims(train)\n    models = dims.get(\"model\", [])\n    niids = dims.get(\"niid\", [None])\n    print(f\"Models     : {models}\")",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nFOCUS_SOLUTIONS = {\"nvnl\", \"sw\"}",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nFOCUS_SOLUTIONS = {\"nvnl\", \"sw\"}\nCOLORS = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}\nFIXED_BUDGETS = [5, 10, 20, 50]",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nFOCUS_SOLUTIONS = {\"nvnl\", \"sw\"}\nCOLORS = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}\nFIXED_BUDGETS = [5, 10, 20, 50]\n# ── Coverage & bytes formulas ─────────────────────────────────────────────────",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nFOCUS_SOLUTIONS = {\"nvnl\", \"sw\"}\nCOLORS = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}\nFIXED_BUDGETS = [5, 10, 20, 50]\n# ── Coverage & bytes formulas ─────────────────────────────────────────────────\ndef _stride(solution: str, packs_sent: float) -> float:\n    if solution == \"nvnl\":",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nFOCUS_SOLUTIONS = {\"nvnl\", \"sw\"}\nCOLORS = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}\nFIXED_BUDGETS = [5, 10, 20, 50]\n# ── Coverage & bytes formulas ─────────────────────────────────────────────────\ndef _stride(solution: str, packs_sent: float) -> float:\n    if solution == \"nvnl\":\n        return packs_sent",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "FOCUS_SOLUTIONS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "FOCUS_SOLUTIONS = {\"nvnl\", \"sw\"}\nCOLORS = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}\nFIXED_BUDGETS = [5, 10, 20, 50]\n# ── Coverage & bytes formulas ─────────────────────────────────────────────────\ndef _stride(solution: str, packs_sent: float) -> float:\n    if solution == \"nvnl\":\n        return packs_sent\n    if solution == \"sw\":\n        return max(math.ceil(packs_sent * 0.5), 1)\n    return packs_sent",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "COLORS = {\"nvnl\": \"#2196F3\", \"sw\": \"#FF5722\"}\nFIXED_BUDGETS = [5, 10, 20, 50]\n# ── Coverage & bytes formulas ─────────────────────────────────────────────────\ndef _stride(solution: str, packs_sent: float) -> float:\n    if solution == \"nvnl\":\n        return packs_sent\n    if solution == \"sw\":\n        return max(math.ceil(packs_sent * 0.5), 1)\n    return packs_sent\ndef _coverage_at_round(solution: str, r: int, n_packs: float, packs_sent: float) -> float:",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "FIXED_BUDGETS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "FIXED_BUDGETS = [5, 10, 20, 50]\n# ── Coverage & bytes formulas ─────────────────────────────────────────────────\ndef _stride(solution: str, packs_sent: float) -> float:\n    if solution == \"nvnl\":\n        return packs_sent\n    if solution == \"sw\":\n        return max(math.ceil(packs_sent * 0.5), 1)\n    return packs_sent\ndef _coverage_at_round(solution: str, r: int, n_packs: float, packs_sent: float) -> float:\n    if n_packs <= 0:",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.11_data_vs_coverage",
+        "description": "studies.sparsification_percentage.11_data_vs_coverage",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\ndef build_params(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Aggregate observed n_packs, packs_sent, pack_size per group.\"\"\"\n    required = {\"n_packs\", \"packs_sent\"}\n    missing = required - set(train.columns)\n    if missing:\n        print(f\"[warn] train.csv missing columns: {missing}\")\n        return pd.DataFrame()\n    g = [c for c in GROUP if c in train.columns]\n    agg_spec = {",
+        "detail": "studies.sparsification_percentage.11_data_vs_coverage",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_bytes",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def compute_cumulative_bytes(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum bytes over clients per round, then cumsum over rounds per experiment.\"\"\"\n    df = train.copy()\n    df[\"bytes_client\"] = df.apply(_est_bytes_per_client, axis=1)\n    # Sum over clients within a round\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"bytes_client\"]\n        .sum()\n        .reset_index()",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Merge cumulative bytes with server evaluation accuracy, average over seeds.\"\"\"\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[[*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (\n        merged.groupby(avg_group, dropna=False)\n        .agg(cumulative_mb=(\"cumulative_mb\", \"mean\"),",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "plot_for_percentage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def plot_for_percentage(data: pd.DataFrame, pct: float | None,\n                        models: list, niids: list) -> plt.Figure | None:\n    # Select: packing solutions at this percentage + plaintext baseline\n    if pct is None:\n        sub = data[data[\"percentage\"].isna()].copy()\n    else:\n        pct_mask = data[\"percentage\"].notna() & (data[\"percentage\"] == pct)\n        pt_mask  = data[\"percentage\"].isna() & (data[\"solution\"] == \"plaintext\")\n        sub = data[pct_mask | pt_mask].copy()\n    if sub.empty:",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def build_summary(data: pd.DataFrame) -> pd.DataFrame:\n    dims = [c for c in DIMS if c in data.columns]\n    rows = []\n    for keys, group in data.groupby(dims, dropna=False):\n        kd = dict(zip(dims, keys if isinstance(keys, tuple) else [keys]))\n        rows.append({\n            **kd,\n            \"rounds_to_80pct\": _rounds_to_target(group),\n            \"mb_to_80pct\":     _mb_to_target(group),\n            \"final_acc\":       group.sort_values(\"round\")[\"mean_acc\"].iloc[-1],",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame):\n    path = OUT_TAB / \"12_bytes_to_80pct.csv\"\n    summary.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"rounds_to_80pct\": \"Rounds to 80\\\\%\",\n        \"mb_to_80pct\": \"MB to 80\\\\%\", \"final_acc\": \"Final acc.\",\n    }",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"rounds_to_80pct\": \"Rounds to 80\\\\%\",\n        \"mb_to_80pct\": \"MB to 80\\\\%\", \"final_acc\": \"Final acc.\",\n    }\n    cols = [c for c in display if c in summary.columns]\n    best_rounds = summary[\"rounds_to_80pct\"].dropna().min()\n    best_mb     = summary[\"mb_to_80pct\"].dropna().min()\n    def _fmt(row, col):",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train      = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\"}\nSOL_COLORS = {",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_ACC",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "TARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",\n    \"batchcrypt\": \"#795548\",",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",\n    \"batchcrypt\": \"#795548\",\n}",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"h\",\n}\nDIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "DIMS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Raw float32 model data per client per round (pre-encryption).\"\"\"\n    sol = str(row.get(\"solution\", \"\"))",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Raw float32 model data per client per round (pre-encryption).\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in PACKING_SOLS:",
+        "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "load_all",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:\n    \"\"\"Load all experiment CSVs from logs_dir into four DataFrames.\n    Returns dict with keys: 'train', 'evaluate', 'server_eval', 'server_agg'.\n    Each DataFrame has extra columns: model, dataset, solution, niid, percentage, seed.\n    percentage=None means plaintext/no-packing baseline (was -1 in folder name).\n    \"\"\"\n    root = _resolve_logs_dir(logs_dir)\n    if not root.exists():\n        raise FileNotFoundError(f\"Logs directory not found: {root.resolve()}\")\n    train_parts, eval_parts, seval_parts, sagg_parts = [], [], [], []",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "last_round",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "def last_round(df: pd.DataFrame, group_cols=None) -> pd.DataFrame:\n    \"\"\"Return only the rows from the last (max) round per group.\"\"\"\n    if df.empty:\n        return df\n    gc = group_cols or [c for c in _GROUP_COLS if c in df.columns]\n    max_rounds = df.groupby(gc, dropna=False)[\"round\"].transform(\"max\")\n    return df[df[\"round\"] == max_rounds].copy()\ndef rounds_to_threshold(\n    df: pd.DataFrame, metric: str = \"mean_acc\", threshold: float = 0.80\n) -> pd.DataFrame:",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "rounds_to_threshold",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "def rounds_to_threshold(\n    df: pd.DataFrame, metric: str = \"mean_acc\", threshold: float = 0.80\n) -> pd.DataFrame:\n    \"\"\"Return the first round where metric >= threshold for each group.\n    Returns DataFrame with group columns + 'convergence_round' (NaN if never reached).\n    \"\"\"\n    if df.empty or metric not in df.columns:\n        return pd.DataFrame()\n    gc = [c for c in _GROUP_COLS if c in df.columns]\n    def _first(g):",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "auc_accuracy",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "def auc_accuracy(df: pd.DataFrame, metric: str = \"mean_acc\") -> pd.DataFrame:\n    \"\"\"Compute trapezoidal AUC of metric vs round for each group.\n    Returns DataFrame with group columns + 'auc'.\n    \"\"\"\n    if df.empty or metric not in df.columns:\n        return pd.DataFrame()\n    gc = [c for c in _GROUP_COLS if c in df.columns]\n    def _auc(g):\n        g = g.sort_values(\"round\")\n        area = np.trapz(g[metric].values, g[\"round\"].values)",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "discover_dims",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "def discover_dims(df: pd.DataFrame) -> dict[str, list]:\n    \"\"\"Return unique values for each experiment dimension found in df.\"\"\"\n    dims = {}\n    for col in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]:\n        if col in df.columns:\n            vals = sorted(df[col].dropna().unique().tolist())\n            dims[col] = vals\n    return dims\n# ── CLI: quick sanity check ──────────────────────────────────────────────────\nif __name__ == \"__main__\":",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "_DEFAULT_LOGS_RELATIVE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "_DEFAULT_LOGS_RELATIVE = \"../../logs/sparsification_percentage\"\n_FOLDER_RE = re.compile(\n    r\"^(?P<model>.+?)_(?P<dataset>(?:tanganke/)?[^_]+(?:_[^_]+)?)_\"\n    r\"(?P<solution>[^_]+)_(?:none|[^_]+)_\"\n    r\"(?P<rounds>\\d+)rounds_(?P<clients>\\d+)clients_\"\n    r\"seed(?P<seed>\\d+)_niid(?P<niid>[0-9.]+)_\"\n    r\"percentage(?P<percentage>-?[0-9.]+)_\"\n    r\"(?P<poly>\\d+)_\"\n)\n_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "_FOLDER_RE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "_FOLDER_RE = re.compile(\n    r\"^(?P<model>.+?)_(?P<dataset>(?:tanganke/)?[^_]+(?:_[^_]+)?)_\"\n    r\"(?P<solution>[^_]+)_(?:none|[^_]+)_\"\n    r\"(?P<rounds>\\d+)rounds_(?P<clients>\\d+)clients_\"\n    r\"seed(?P<seed>\\d+)_niid(?P<niid>[0-9.]+)_\"\n    r\"percentage(?P<percentage>-?[0-9.]+)_\"\n    r\"(?P<poly>\\d+)_\"\n)\n_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]\n_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "_META_COLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]\n_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    return Path(__file__).parent / _DEFAULT_LOGS_RELATIVE\ndef _parse_folder(name: str) -> dict | None:",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "_GROUP_COLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    return Path(__file__).parent / _DEFAULT_LOGS_RELATIVE\ndef _parse_folder(name: str) -> dict | None:\n    m = _FOLDER_RE.match(name)",
+        "detail": "studies.sparsification_percentage.load_data",
         "documentation": {}
     },
     {
