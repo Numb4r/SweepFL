@@ -2372,6 +2372,22 @@
         "documentation": {}
     },
     {
+        "label": "get_robin_round_mask",
+        "importPath": "literature.fedphe",
+        "description": "literature.fedphe",
+        "isExtraImport": true,
+        "detail": "literature.fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "get_topk_mask",
+        "importPath": "literature.fedphe",
+        "description": "literature.fedphe",
+        "isExtraImport": true,
+        "detail": "literature.fedphe",
+        "documentation": {}
+    },
+    {
         "label": "http.server",
         "kind": 6,
         "isExtraImport": true,
@@ -7453,6 +7469,60 @@
         "description": "tests.test_server_utils",
         "peekOfCode": "CKKSBundle = namedtuple(\"CKKSBundle\", [\"context\", \"atol\", \"id\"])\n@pytest.fixture(scope=\"module\", params=CKKS_CONFIGS, ids=lambda c: c[\"id\"])\ndef ctx(request):\n    \"\"\"\n    Fixture parametrizado: todos os testes rodam uma vez para cada config CKKS.\n    O id aparece no nome do teste: test_...[[60,40,40,60]_scale2^40], etc.\n    \"\"\"\n    cfg = request.param\n    context = ts.context(\n        ts.SCHEME_TYPE.CKKS,",
         "detail": "tests.test_server_utils",
+        "documentation": {}
+    },
+    {
+        "label": "TestTopKPhase",
+        "kind": 6,
+        "importPath": "tests.test_topkrr",
+        "description": "tests.test_topkrr",
+        "peekOfCode": "class TestTopKPhase:\n    @pytest.mark.parametrize(\"n,pct\", [(10, 0.3), (20, 0.5), (7, 0.1)])\n    def test_selected_count_matches_ceil(self, n, pct):\n        packs = _make_packs(n)\n        mask = get_topk_mask(packs, pct)\n        assert _n_selected(mask) == math.ceil(n * pct)\n    def test_selects_highest_magnitude_packs(self):\n        \"\"\"Packs are ordered by magnitude 0..n-1; top-k must pick the last k.\"\"\"\n        n, pct = 10, 0.3\n        packs = _make_packs(n)  # pack i has magnitude ≈ i",
+        "detail": "tests.test_topkrr",
+        "documentation": {}
+    },
+    {
+        "label": "TestRoundRobinPhase",
+        "kind": 6,
+        "importPath": "tests.test_topkrr",
+        "description": "tests.test_topkrr",
+        "peekOfCode": "class TestRoundRobinPhase:\n    @pytest.mark.parametrize(\"n,pct\", [(10, 0.3), (20, 0.1), (7, 0.5)])\n    def test_selected_count_matches_ceil(self, n, pct):\n        packs = _make_packs(n)\n        mask = get_robin_round_mask(round=0, packs=packs, size_window=pct, percentage=True)\n        assert _n_selected(mask) == math.ceil(n * pct)\n    def test_mask_is_binary(self):\n        packs = _make_packs(10)\n        mask = get_robin_round_mask(round=0, packs=packs, size_window=0.3, percentage=True)\n        for v in mask:",
+        "detail": "tests.test_topkrr",
+        "documentation": {}
+    },
+    {
+        "label": "TestPhaseTransition",
+        "kind": 6,
+        "importPath": "tests.test_topkrr",
+        "description": "tests.test_topkrr",
+        "peekOfCode": "class TestPhaseTransition:\n    RR_START = 50\n    N_PACKS  = 10\n    PCT      = 0.3\n    def _packs(self):\n        return _make_packs(self.N_PACKS)\n    def test_last_topk_round_uses_topk(self):\n        \"\"\"Round rr_start - 1 must use the top-k strategy (magnitude-based).\"\"\"\n        packs = self._packs()\n        rnd = self.RR_START - 1",
+        "detail": "tests.test_topkrr",
+        "documentation": {}
+    },
+    {
+        "label": "TestCoverageGuarantee",
+        "kind": 6,
+        "importPath": "tests.test_topkrr",
+        "description": "tests.test_topkrr",
+        "peekOfCode": "class TestCoverageGuarantee:\n    def test_topk_covers_same_packs_every_round(self):\n        \"\"\"Top-k is stateless: same packs are selected every round (no coverage guarantee).\"\"\"\n        packs = _make_packs(10)\n        pct = 0.3\n        masks = [get_topk_mask(packs, pct) for _ in range(20)]\n        first = masks[0]\n        for m in masks[1:]:\n            assert list(m) == list(first)\n    @pytest.mark.parametrize(\"n,pct\", [",
+        "detail": "tests.test_topkrr",
+        "documentation": {}
+    },
+    {
+        "label": "TestEdgeCases",
+        "kind": 6,
+        "importPath": "tests.test_topkrr",
+        "description": "tests.test_topkrr",
+        "peekOfCode": "class TestEdgeCases:\n    def test_single_pack_topk(self):\n        packs = _make_packs(1)\n        mask = get_topk_mask(packs, 1.0)\n        assert _n_selected(mask) == 1\n    def test_single_pack_rr(self):\n        packs = _make_packs(1)\n        mask = get_robin_round_mask(round=0, packs=packs, size_window=1.0, percentage=True)\n        assert _n_selected(mask) == 1\n    def test_rr_start_round_zero(self):",
+        "detail": "tests.test_topkrr",
+        "documentation": {}
+    },
+    {
+        "label": "_PROJECT",
+        "kind": 5,
+        "importPath": "tests.test_topkrr",
+        "description": "tests.test_topkrr",
+        "peekOfCode": "_PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\nsys.path.insert(0, os.path.join(_PROJECT, \"client\"))\nfrom literature.fedphe import get_robin_round_mask, get_topk_mask\n# ── Helpers ────────────────────────────────────────────────────────────────────\ndef _n_selected(mask) -> int:\n    return int(sum(mask))\ndef _selected_indices(mask):\n    return [i for i, v in enumerate(mask) if v == 1]\ndef _make_packs(n: int, chunk: int = 10) -> list:\n    \"\"\"Return n packs with values 0,1,...,n-1 so pack i has magnitude ~ i.\"\"\"",
+        "detail": "tests.test_topkrr",
         "documentation": {}
     },
     {
