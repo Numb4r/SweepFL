@@ -231,7 +231,7 @@ def _parse_model_config_batch(content: str) -> dict:
     Extrai mapeamentos modelo→BATCH_SIZE do corpo de model_config() no script bash.
 
     Procura padrões como:
-        mobilenetv2) BATCH_SIZE=32 ;;
+        mobilenetv2) BATCH_SIZE=16 ;;
         vit_tiny)    BATCH_SIZE=16 ;;
     Retorna {model_lower: batch_size}.
     """

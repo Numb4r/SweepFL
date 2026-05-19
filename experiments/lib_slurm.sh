@@ -68,7 +68,7 @@ _notify_all() {
 
 # ── Helpers ───────────────────────────────────────────────────────
 is_packing_solution() {
-    case "$1" in fedphe|nvnl|fedphe-scout|nvnl-scout|sw|rw) return 0 ;; esac
+    case "$1" in fedphe|nvnl|fedphe-scout|nvnl-scout|sw|rw|topkrr) return 0 ;; esac
     return 1
 }
 
@@ -155,6 +155,7 @@ run_experiment() {
   "RUNTIME":         "singularity",
   "USE_GPU":         "${USE_GPU:-true}",
   "BATCH_SIZE":      ${BATCH_SIZE:-4},
+  "RR_START_ROUND":  ${RR_START_ROUND:-200},
   "PRETRAINED_WEIGHTS": "${PRETRAINED_WEIGHTS:-}",
 
   "POLY":            $POLY,
@@ -200,6 +201,7 @@ JSON
         MODEL_ARCH="$MODEL" EXPERIMENT_NAME="$EXP_NAME" \
         PRETRAINED_WEIGHTS="${PRETRAINED_WEIGHTS:-}" USE_GPU="${USE_GPU:-true}" \
         BATCH_SIZE="${BATCH_SIZE:-4}" \
+        RR_START_ROUND="${RR_START_ROUND:-200}" \
         CKKS_BACKEND="${CKKS_BACKEND:-tenseal}" \
         SIMPLIFY_N="${SIMPLIFY_N:-8192}" SIMPLIFY_BITS="${SIMPLIFY_BITS:-62}" SIMPLIFY_SCALE_BITS="${SIMPLIFY_SCALE_BITS:-60}" \
         PYCRYPT_N="${PYCRYPT_N:-8192}" PYCRYPT_BITS="${PYCRYPT_BITS:-60}" \

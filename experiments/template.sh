@@ -73,7 +73,7 @@ CKKS_BACKEND="tenseal" # tenseal | ckks_python_simplify | ckks_python | openfhe
 # model_config() {
 #     local model="$1" dataset="$2"
 #     case "$model" in
-#         mobilenetv2) BATCH_SIZE=32 ;;
+#         mobilenetv2) BATCH_SIZE=16 ;;
 #         vit_tiny)    BATCH_SIZE=16 ;;
 #         *)           BATCH_SIZE=4  ;;
 #     esac

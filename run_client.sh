@@ -85,6 +85,7 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
         -e PRETRAINED_WEIGHTS=${PRETRAINED_WEIGHTS:-} \
         -e BATCH_SIZE=${BATCH_SIZE:-4} \
+        -e RR_START_ROUND=${RR_START_ROUND:-200} \
         -e HF_DATASETS_CACHE=/client/data \
         -e HF_HOME=/tmp/hf_home \
         -e HF_HUB_READ_TIMEOUT=300 \
@@ -133,6 +134,7 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
         --env PRETRAINED_WEIGHTS=${PRETRAINED_WEIGHTS:-} \
         --env BATCH_SIZE=${BATCH_SIZE:-4} \
+        --env RR_START_ROUND=${RR_START_ROUND:-200} \
         --env HF_DATASETS_CACHE=/client/data \
         --env HF_HOME=/tmp/hf_home \
         --env HF_HUB_READ_TIMEOUT=300 \

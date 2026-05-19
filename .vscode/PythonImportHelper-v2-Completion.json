@@ -1251,6 +1251,38 @@
         "documentation": {}
     },
     {
+        "label": "cypher_packs",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_size",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
         "label": "flat_parameters",
         "importPath": "client_utils",
         "description": "client_utils",
@@ -1288,6 +1320,14 @@
         "description": "client_utils",
         "isExtraImport": true,
         "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
         "documentation": {}
     },
     {
@@ -1940,6 +1980,14 @@
     },
     {
         "label": "fit_rw",
+        "importPath": "literature",
+        "description": "literature",
+        "isExtraImport": true,
+        "detail": "literature",
+        "documentation": {}
+    },
+    {
+        "label": "fit_topkrr",
         "importPath": "literature",
         "description": "literature",
         "isExtraImport": true,
@@ -3877,6 +3925,15 @@
         "description": "client.literature.sw",
         "peekOfCode": "def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):\n    n = len(packs)\n    if percentage:\n        k = math.ceil(k * n)\n    probabilities = weights_packs / weights_packs.sum()\n    mask = np.zeros(n)\n    chosen = np.random.choice(range(n), size=k, replace=False, p=probabilities)\n    for i in range(n):\n        if i in chosen:\n            weights_packs[i] *= penalty",
         "detail": "client.literature.sw",
+        "documentation": {}
+    },
+    {
+        "label": "fit_topkrr",
+        "kind": 2,
+        "importPath": "client.literature.topkrr",
+        "description": "client.literature.topkrr",
+        "peekOfCode": "def fit_topkrr(self, parameters, config):\n    \"\"\"FedAvg fit with top-k selection for the first rr_start_round rounds,\n    then round-robin for all subsequent rounds.\"\"\"\n    rr_start = self.rr_start_round\n    current_round = config['round']\n    # ── Decrypt ───────────────────────────────────────────────────────────────\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:",
+        "detail": "client.literature.topkrr",
         "documentation": {}
     },
     {

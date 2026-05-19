@@ -22,7 +22,8 @@ PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
 MODEL_DATASET_PAIRS=(
     # "dnn_tiny:FASHION_MNIST"
     # "lenet5:FASHION_MNIST"
-    "mobilenetv2:CIFAR10"
+    "resnet20:CIFAR10"
+    # "mobilenetv2:CIFAR10"
     # "vit_tiny:tanganke/gtsrb"
 )
 # ── Per-model configuration (optional) ───────────────────────────
@@ -34,7 +35,7 @@ MODEL_DATASET_PAIRS=(
 model_config() {
     local model="$1" dataset="$2"
     case "$model" in
-        mobilenetv2) BATCH_SIZE=32 ;;
+        mobilenetv2) BATCH_SIZE=16 ;;
         vit_tiny)    BATCH_SIZE=16 ;;
         *)           BATCH_SIZE=4  ;;
     esac
@@ -69,7 +70,7 @@ CKKS_BACKEND="ckks_python_simplify"
 model_config() {
     local model="$1" dataset="$2"
     case "$model" in
-        mobilenetv2) BATCH_SIZE=32 ;;
+        mobilenetv2) BATCH_SIZE=16 ;;
         vit_tiny)    BATCH_SIZE=16 ;;
         *)           BATCH_SIZE=4  ;;
     esac
