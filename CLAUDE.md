@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Slidhe** is a research project implementing privacy-preserving Federated Learning (FL) using Homomorphic Encryption (HE). Clients train local ML models and send encrypted gradients to an aggregation server. The system supports multiple HE schemes (CKKS, BFV, Paillier/BatchCrypt) and packet selection strategies (top-k, round-robin, sliding window, pondering-random, hybrid top-k→round-robin).
+**Slidhe** is a research project implementing privacy-preserving Federated Learning (FL) using Homomorphic Encryption (HE). Clients train local ML models and send encrypted gradients to an aggregation server. The system supports multiple HE schemes (CKKS, BFV, Paillier/BatchCrypt) and packet selection strategies (top-k, round-robin, sliding window, pondering-random, hybrid top-k→round-robin, spread round-robin).
 
 ## Commands
 
@@ -60,6 +60,7 @@ pytest tests/
 pytest tests/test_server_utils.py
 pytest tests/test_model_reconstruction.py
 pytest tests/test_topkrr.py
+pytest tests/test_srr.py
 
 # Test ckks_project installation inside Docker containers
 make test-ckks
@@ -129,7 +130,7 @@ The `LOGFOLDER` name encodes all experiment parameters: `<model>_<dataset>_<solu
 
 ### Key Design Decisions
 
-**Solution parameter** controls the entire encryption/aggregation path. Valid values: `ckks`, `bfv`, `batchcrypt`, `fedphe`, `nvnl`, `fedphe-scout`, `nvnl-scout`, `plaintext`, `sw`, `rw`, `topkrr`. Both client and server call `config_solution()` to set `homomorphic`, `packing`, `onlysum`/`only_sum`, and `homomorphic_type` from this string.
+**Solution parameter** controls the entire encryption/aggregation path. Valid values: `ckks`, `bfv`, `batchcrypt`, `fedphe`, `nvnl`, `fedphe-scout`, `nvnl-scout`, `plaintext`, `sw`, `rw`, `topkrr`, `srr`. Both client and server call `config_solution()` to set `homomorphic`, `packing`, `onlysum`/`only_sum`, and `homomorphic_type` from this string.
 
 **Packing vs. no packing**: When `packing=True`, model weights are flattened and chunked into CKKS vectors (packs) of size `poly_modulus_degree // 2`. Only a subset of packs is encrypted and transmitted, selected by a mask (top-k, round-robin, sliding window, or pondering-random). The server aggregates packs homomorphically and sends the aggregated packs+mask back to clients. When `packing=False`, all weights are concatenated into a single ciphertext.
 
@@ -156,11 +157,12 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `client/client.py` — `HEClient`: reads `MODEL_ARCH` env var to select model; falls back to `dnn` if unset; dispatches per-round training to `fit_*` functions in `client/literature/`
 - `client/literature/` — one `fit_<solution>.py` per HE scheme; each implements local train → encrypt → return fit message with granular per-operation timing
 - `client/literature/set_parameters.py` — decryption and model weight reconstruction on the client side; saves per-round compressed model snapshots (`np.savez_compressed` + float16, cid==0 only)
-- `client/literature/fedphe.py` — top-k packing; also contains mask helpers: `get_topk_mask`, `get_robin_round_mask`, `get_slide_window_mask`, `get_pondering_random_mask`
+- `client/literature/fedphe.py` — top-k packing; also contains mask helpers: `get_topk_mask`, `get_robin_round_mask`, `get_slide_window_mask`, `get_pondering_random_mask`, `get_spread_rr_mask`
 - `client/literature/NVNL.py` — round-robin packing
 - `client/literature/sw.py` — sliding-window packing (stride=0.5)
 - `client/literature/rw.py` — pondering-random packing
 - `client/literature/topkrr.py` — hybrid packing: top-k for rounds `< RR_START_ROUND`, then round-robin for remaining rounds; imports `get_topk_mask` and `get_robin_round_mask` from `fedphe.py`; RR offset starts at 0 on the first RR round so window begins at pack index 0
+- `client/literature/srr.py` — spread round-robin packing: k=ceil(n*pct) packs selected per round, evenly spaced with stride=n//k; offset advances by 1 each round; uses `get_spread_rr_mask` from `fedphe.py`; no extra env vars (uses `PERCENTAGE` like NVNL)
 - `client/literature/fedphe_scout.py`, `NVNL_scout.py` — scout variants with custom TF training loop (trust-region + gating vs sigma + EMA blending)
 - `client/client_logs.py` — fixed-schema CSV logging (39-column `train.csv`, 15-column `evaluate.csv`)
 - `client/client_utils.py` — `packing`, `cypher_packs`, `decypher_packs`, `flat_packs`, `reshape_model`
@@ -176,6 +178,8 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free
 - `experiments/sparsification_percentage_topkrr.sh` — topkrr experiment; same sweep as other sparsification scripts; sets `RR_START_ROUND=100` (switches at round 100 out of 200)
 - `sbatch/sbatch_sparsification_percentage_topkrr.sh` — SLURM job for the topkrr sweep (l40s, 3 GPUs, 9 clients)
+- `experiments/sparsification_percentage_srr.sh` — srr experiment; same sweep as other sparsification scripts
+- `sbatch/sbatch_sparsification_percentage_srr.sh` — SLURM job for the srr sweep (l40s, 3 GPUs, 9 clients)
 - `experiments/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
 - `experiments/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
 - `experiments/estimate_time.py` — estimates wall-clock time for an experiment script by parsing its config variables and applying per-machine speed factors; supports `--machine <partition>`, `--all`, and `--margin <factor>`; machine table sourced from `SLURM.md`
@@ -190,6 +194,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `benchmark/sbatch_mobilenetv2.sh` — SLURM job array (`--array=0-3`) on `l40s`; maps task ID → batch size `[16,32,64,128]`; one GPU per task; results in `benchmark/results/`
 - `benchmark/cifar-10-python.tar.gz` — local copy of the official CIFAR-10 Python dataset; loaded directly without extraction via `tarfile`+`pickle`
 - `tests/test_topkrr.py` — unit tests for the `topkrr` mask logic (46 tests, no GPU required): top-k phase, round-robin phase, phase transition at `RR_START_ROUND`, coverage guarantee, edge cases
+- `tests/test_srr.py` — unit tests for the `srr` mask logic (34 tests, no GPU required): count, binary mask, uniform spacing, offset advance, coverage (when n%k==0), wrap-around, disjoint windows, edge cases
 
 ### CSV Log Schema
 
@@ -252,7 +257,7 @@ To select a model at runtime set `MODEL_ARCH` to the factory name without the `c
 
 ### Payload bytes caveat (packing solutions)
 
-`payload_bytes` in `train.csv` for packing solutions (`nvnl`, `sw`, `rw`, `fedphe`, `topkrr`) records only pack-index / mask metadata (a few hundred bytes), **not** the actual CKKS ciphertext size. For plaintext it correctly records the full model byte count. Analyses that compare byte costs between HE and plaintext must account for this — use rounds as the primary communication metric when comparing packing strategies.
+`payload_bytes` in `train.csv` for packing solutions (`nvnl`, `sw`, `rw`, `fedphe`, `topkrr`, `srr`) records only pack-index / mask metadata (a few hundred bytes), **not** the actual CKKS ciphertext size. For plaintext it correctly records the full model byte count. Analyses that compare byte costs between HE and plaintext must account for this — use rounds as the primary communication metric when comparing packing strategies.
 
 ---
 
@@ -309,6 +314,7 @@ Answers: how many rounds until the server has received every model pack at least
 | rw | `(n_packs/packs_sent) × ln(n_packs)` | ~47 | ~4 |
 | fedphe | top-k fixed → same packs every round | NaN | NaN |
 | topkrr | phase 1 (top-k): NaN; phase 2 (RR): `ceil(n_packs / packs_sent)` after `RR_START_ROUND` | NaN / 14 | NaN / 2 |
+| srr | `n // k` rounds when `n % k == 0`; partial coverage otherwise | ~10 | ~2 |
 | plaintext | 1 | 1 | 1 |
 
 SW costs roughly 2× more rounds than NVNL due to 50% stride overlap.

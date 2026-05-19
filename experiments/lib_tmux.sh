@@ -40,7 +40,7 @@ notify() {
 
 # ── Helpers ───────────────────────────────────────────────────────
 is_packing_solution() {
-    case "$1" in fedphe|nvnl|fedphe-scout|nvnl-scout|sw|rw|topkrr) return 0 ;; esac
+    case "$1" in fedphe|nvnl|fedphe-scout|nvnl-scout|sw|rw|topkrr|srr) return 0 ;; esac
     return 1
 }
 

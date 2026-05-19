@@ -10,6 +10,7 @@ from .fedphe_scout import fit_fedphe_scout
 from .rw import fit_rw
 from .sw import fit_sw
 from .topkrr import fit_topkrr
+from .srr import fit_srr
 __all__ = [
 "fit_batchcrypt",
 "fit_bfv",
@@ -23,4 +24,5 @@ __all__ = [
 "fit_rw",
 "fit_sw",
 "fit_topkrr",
+"fit_srr",
 ]

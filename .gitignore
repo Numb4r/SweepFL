@@ -2,7 +2,6 @@
 client/TenSEAL/
 client/tenseal.tar
 client/rasp_cli.tar
-.csv
 __pycache__
 *.pyc
 *.log
@@ -16,7 +15,8 @@ ckks_change_logs/
 sbatch/*.sh
 !sbatch/template.sh
 *.npz
+*.csv
 *.pdf
 *.png
-*.csv
 *.tex
+*.tar.gz

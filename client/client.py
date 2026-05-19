@@ -41,7 +41,7 @@ from models import (
 )
 from client_logs import write_evaluate_logs
 from literature.set_parameters import he_parameters_to_model, he_packs_to_model
-from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext, fit_bitnetflip, fit_nvnl, fit_nvnl_scout, fit_fedphe_scout, fit_sw, fit_rw, fit_topkrr
+from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext, fit_bitnetflip, fit_nvnl, fit_nvnl_scout, fit_fedphe_scout, fit_sw, fit_rw, fit_topkrr, fit_srr
 from  client_utils import flat_parameters
 import math
 
@@ -265,6 +265,11 @@ class HEClient(fl.client.NumPyClient):
             self.only_sum         = False
             self.packing          = True
             self.rr_start_round   = int(os.environ.get("RR_START_ROUND", "200"))
+        elif str(self.solution).lower() == 'srr':
+            self.homomorphic      = True
+            self.homomorphic_type = 'CKKS'
+            self.only_sum         = False
+            self.packing          = True
 
 
 
@@ -296,6 +301,8 @@ class HEClient(fl.client.NumPyClient):
             fit_msg = fit_rw(self, parameters, config)
         elif str(self.solution).lower() == "topkrr":
             fit_msg = fit_topkrr(self, parameters, config)
+        elif str(self.solution).lower() == "srr":
+            fit_msg = fit_srr(self, parameters, config)
 
         gc.collect()
         _log_mem(f"cid={self.cid} round={config.get('round','?')} end")

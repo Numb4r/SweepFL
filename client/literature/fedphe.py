@@ -152,6 +152,25 @@ def get_robin_round_mask(round, packs, size_window, percentage=False):
     return get_slide_window_mask(round, packs, size_window, size_window)
 
 
+def get_spread_rr_mask(round, packs, size_window, percentage=False):
+    n = len(packs)
+    if percentage:
+        k = math.ceil(n * size_window)
+    else:
+        k = int(size_window)
+    if n == 0 or k == 0:
+        return [0] * n
+    if k >= n:
+        return [1] * n
+    stride = max(1, n // k)
+    offset = round % stride
+    mask = np.zeros(n, dtype=np.int8)
+    for i in range(k):
+        idx = (offset + i * stride) % n
+        mask[idx] = 1
+    return mask.tolist()
+
+
 def get_pondering_random_mask(packs, k, weights_packs, penalty=0.5, reward=0.1, percentage=False):
     n = len(packs)
     if percentage:
