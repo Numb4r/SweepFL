@@ -18,6 +18,15 @@
         "documentation": {}
     },
     {
+        "label": "gc",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "gc",
+        "description": "gc",
+        "detail": "gc",
+        "documentation": {}
+    },
+    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
@@ -1935,15 +1944,6 @@
         "description": "literature",
         "isExtraImport": true,
         "detail": "literature",
-        "documentation": {}
-    },
-    {
-        "label": "gc",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "gc",
-        "description": "gc",
-        "detail": "gc",
         "documentation": {}
     },
     {
