@@ -16,3 +16,7 @@ ckks_change_logs/
 sbatch/*.sh
 !sbatch/template.sh
 *.npz
+*.pdf
+*.png
+*.csv
+*.tex
