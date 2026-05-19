@@ -307,6 +307,10 @@ Answers: how many rounds until the server has received every model pack at least
 
 SW costs roughly 2× more rounds than NVNL due to 50% stride overlap.
 
+### Comparison rule for studies
+
+**Always compare techniques at the same sparsification percentage**, unless explicitly comparing variants of the same technique (e.g., nvnl at p=0.1 vs nvnl at p=0.3). Plaintext baseline is always included as a reference in every percentage-specific figure. Never mix percentages when comparing across techniques in the same plot.
+
 ### Script 11 — Data transferred vs model coverage (NVNL vs SW)
 
 Answers: given a fixed byte or round budget, how much of the model has each strategy exposed?
@@ -322,6 +326,22 @@ Key insight: NVNL and SW send the same bytes per round, but SW overlaps 50% with
 Plots: (A) coverage % vs round, (B) coverage % vs cumulative MB — the key efficiency plot, (C) coverage at fixed budgets (5,10,20,50 rounds), (D) marginal cost bar chart.
 
 Bytes estimate uses raw float32 pre-encryption (`pack_size × packs_sent × 4`) since `payload_bytes` in packing solutions only records mask metadata.
+
+### Script 12 — Cumulative bytes vs accuracy (all techniques, per percentage)
+
+Answers: how much data does each technique need to transmit to reach 80% accuracy?
+
+**Layout**: one figure per percentage. Each figure row = (model, niid).
+- **Left panel**: X = cumulative upload MB, Y-left = accuracy %, Y-right = round (approx.).
+  Curves stop at 80% (★ marker). Round annotations along each curve.
+- **Right panel**: horizontal bar chart — rounds and MB cost to reach 80% per technique.
+
+**Bytes metric**: raw float32 model data (pre-encryption).
+- Packing: `packs_sent × pack_size × 4 bytes` per client per round
+- Plaintext/other: `n_params × 4 bytes` per client per round
+
+**Output**: `12_bytes_acc_p{pct}.{png,pdf}` (one per percentage), `12_bytes_acc_plaintext.{png,pdf}`.
+**Table**: `12_bytes_to_80pct.{csv,tex}`.
 
 ### Duplicate detection
 
