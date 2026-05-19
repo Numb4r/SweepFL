@@ -307,6 +307,22 @@ Answers: how many rounds until the server has received every model pack at least
 
 SW costs roughly 2× more rounds than NVNL due to 50% stride overlap.
 
+### Script 11 — Data transferred vs model coverage (NVNL vs SW)
+
+Answers: given a fixed byte or round budget, how much of the model has each strategy exposed?
+
+Key insight: NVNL and SW send the same bytes per round, but SW overlaps 50% with the previous window → SW covers only half as much new territory per MB.
+
+| Metric | NVNL | SW |
+|--------|------|----|
+| New coverage/round | `packs_sent / n_packs` | `ceil(packs_sent×0.5) / n_packs` |
+| MB/round (raw float32) | `packs_sent × pack_size × 4 / 1e6` | same |
+| Marginal cost (MB per 1% cov.) | `n_params × 4 / (1e6 × 100)` | 2× NVNL |
+
+Plots: (A) coverage % vs round, (B) coverage % vs cumulative MB — the key efficiency plot, (C) coverage at fixed budgets (5,10,20,50 rounds), (D) marginal cost bar chart.
+
+Bytes estimate uses raw float32 pre-encryption (`pack_size × packs_sent × 4`) since `payload_bytes` in packing solutions only records mask metadata.
+
 ### Duplicate detection
 
 `studies/sparsification_percentage/move_duplicates.sh` strips timestamps from folder names and moves older runs (same config) to `logs/sparsification_percentage/duplicates/`.
