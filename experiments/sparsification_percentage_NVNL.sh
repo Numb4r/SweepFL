@@ -22,8 +22,8 @@ PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
 MODEL_DATASET_PAIRS=(
     # "dnn_tiny:FASHION_MNIST"
     # "lenet5:FASHION_MNIST"
-    "resnet20:CIFAR10"
-    # "mobilenetv2:CIFAR10"
+    # "resnet20:CIFAR10"
+    "mobilenetv2:CIFAR10"
     # "vit_tiny:tanganke/gtsrb"
 )
 # ── Per-model configuration (optional) ───────────────────────────
