@@ -30,7 +30,7 @@ N_LENGTH=-1
 CKKS_BACKEND="ckks_python_simplify"
 SIMPLIFY_N=8192
 SIMPLIFY_BITS=62
-SIMPLIFY_SCALE_BITS=60
+SIMPLIFY_SCALE_BITS=40
 
 # ── Experiment parameters ─────────────────────────────────────────────────────
 NIIDS=(0.1)
