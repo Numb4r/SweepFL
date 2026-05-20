@@ -164,7 +164,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `client/literature/topkrr.py` — hybrid packing: top-k for rounds `< RR_START_ROUND`, then round-robin for remaining rounds; imports `get_topk_mask` and `get_robin_round_mask` from `fedphe.py`; RR offset starts at 0 on the first RR round so window begins at pack index 0
 - `client/literature/srr.py` — spread round-robin packing: k=ceil(n*pct) packs selected per round, evenly spaced with stride=n//k; offset advances by 1 each round; uses `get_spread_rr_mask` from `fedphe.py`; no extra env vars (uses `PERCENTAGE` like NVNL)
 - `client/literature/fedphe_scout.py`, `NVNL_scout.py` — scout variants with custom TF training loop (trust-region + gating vs sigma + EMA blending)
-- `client/client_logs.py` — fixed-schema CSV logging (39-column `train.csv`, 15-column `evaluate.csv`)
+- `client/client_logs.py` — fixed-schema CSV logging (41-column `train.csv`, 15-column `evaluate.csv`)
 - `client/client_utils.py` — `packing`, `cypher_packs`, `decypher_packs`, `flat_packs`, `reshape_model`
 - `client/models.py` — model factories (see Models section below)
 - `server/server.py` — `HEServer`: `aggregate_fit` dispatches to packing vs. non-packing path; calls `write_agg_logs`

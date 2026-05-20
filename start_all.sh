@@ -16,7 +16,7 @@ GPU_IDS=(5 6 7)        # Physical GPU indices to use
 CLIENTS_PER_GPU=3      # Clients per GPU
 
 # -- Experiment grid --------------------------------------------------
-SOLUTIONS=('nvnl')     # ckks | bfv | batchcrypt | fedphe | nvnl | plaintext | sw | rw
+SOLUTIONS=('nvnl')     # ckks | bfv | batchcrypt | fedphe | nvnl | plaintext | sw | rw | topkrr | srr
 NIIDS=(0.1)            # Dirichlet α  (0.1 = non-IID, 1.0 ≈ IID)
 SEEDS=(42)
 PERCENTAGES=(0.1 0.3)  # Pack fraction  (packing solutions only: fedphe, nvnl, sw, rw)
