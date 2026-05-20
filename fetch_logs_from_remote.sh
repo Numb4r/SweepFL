@@ -7,6 +7,8 @@ REMOTE_HOST="ssh.recod.ic.unicamp.br"
 REMOTE_DIR="~/keys"
 LOCAL_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+LOG_FILE="/tmp/fetch_logs_rsync_$$.log"
+
 RSYNC_OPTS=(
     -avz
     --progress
@@ -14,6 +16,7 @@ RSYNC_OPTS=(
     --exclude="__pycache__/"
     --exclude="*.pyc"
     --exclude=".git/"
+    --log-file="$LOG_FILE"
 )
 
 if [[ "$1" == "--dry-run" ]]; then
@@ -34,8 +37,13 @@ STATUS=$?
 if [[ $STATUS -eq 0 ]]; then
     echo
     echo "Fetch complete."
+    rm -f "$LOG_FILE"
 else
     echo
     echo "Fetch failed (rsync exit code $STATUS)." >&2
+    echo "Files/errors that caused the failure:" >&2
+    grep -E "(error|failed|cannot|permission|No such)" "$LOG_FILE" | sed 's/^[0-9 /:]* //' >&2 || \
+        grep -v "^$" "$LOG_FILE" | tail -30 >&2
+    echo "(full log: $LOG_FILE)" >&2
     exit $STATUS
 fi
