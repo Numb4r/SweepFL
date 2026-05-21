@@ -53,6 +53,26 @@ sbatch sbatch/my_experiment.sh
 squeue -u $USER
 tail -f logs/slurm_<jobid>.out
 
+# ── Checkpoint / Resume ───────────────────────────────────────────────────────
+
+# Find all interrupted experiments, generate resume scripts, and submit via sbatch
+./resume_all.sh
+./resume_all.sh --dry-run            # list what would be submitted (no files created)
+./resume_all.sh --generate-only      # generate resume.sh + resume_sbatch.sh without submitting
+./resume_all.sh --partition p100     # override SLURM partition (default: l40s)
+./resume_all.sh --time 1-00:00:00    # override wall-time limit (default: 2-00:00:00)
+./resume_all.sh --logs-dir /path     # use a non-default logs directory
+
+# Generate resume scripts only (lower-level; resume_all.sh calls this internally)
+python3 experiments/generate_resume_jobs.py
+python3 experiments/generate_resume_jobs.py --dry-run
+
+# End-to-end resume smoke test (Docker, ~5 min: plaintext seed → nvnl 1 round → nvnl 2 rounds)
+bash experiments/test_resume_e2e.sh
+
+# Checkpoint/resume unit tests (no Docker required; uses existing logs)
+bash tests/test_checkpoint_resume.sh
+
 # Run tests
 pytest tests/
 
@@ -173,15 +193,19 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `encryption/ckks_backend.py` — CKKS backend abstraction (mirrored to `client/encryption/` and `server/encryption/`)
 - `encryption/` and `server/encryption/` and `client/encryption/` — largely mirrored; `encrypt.py` defines base `Encrypt` class; `ckks.py`, `bfv.py`, `paillier.py` implement scheme-specific logic; `quantize.py` / `quantize_batchcrypt.py` handle quantization
 - `sync_remote.sh` — rsync to `yuri.faria@ssh.recod.ic.unicamp.br:~/keys` (excludes `.venv/`, `logs/`, `logs/**`, `__pycache__`, `*.csv`, `.git/`); `logs/**` is excluded in addition to `logs/` to prevent `--delete` from removing experiment results inside `logs/` on the cluster
+- `resume_all.sh` — top-level resume launcher: runs `generate_resume_jobs.py`, submits all generated `resume_sbatch.sh` files via `sbatch`; flags: `--dry-run`, `--generate-only`, `--partition`, `--time`, `--logs-dir`
 - `experiments/lib.sh` — auto-dispatcher: sources `lib_slurm.sh` when `SLURM_JOB_ID` is set, otherwise sources `lib_tmux.sh`; experiment scripts always `source lib.sh` and call `run_theme` — no changes needed per environment
-- `experiments/lib_tmux.sh` — tmux backend (local/Docker/Singularity): launches server as tmux session `SERVER` and one session per client; waits for server session to exit, then kills client sessions
-- `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free
+- `experiments/lib_tmux.sh` — tmux backend (local/Docker/Singularity): launches server as tmux session `SERVER` and one session per client; waits for server session to exit, then kills client sessions; contains `_find_resume_checkpoint` and `_write_incomplete_log` helpers
+- `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free; contains same `_find_resume_checkpoint`, `_write_incomplete_log` helpers as lib_tmux.sh plus `JOB_DEADLINE_EPOCH` computation
+- `experiments/generate_resume_jobs.py` — scans `logs/` for `INCOMPLETE.log` files, checks if already completed (skips), deduplicates by config fingerprint (picks best checkpoint), generates `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder; outputs sbatch paths to stdout, info to stderr
+- `experiments/test_resume_e2e.sh` — end-to-end Docker resume smoke test: plaintext seed → nvnl 1-round (creates checkpoint) → nvnl 2-round (detects checkpoint, resumes); verifies experiment_details.json, server_eval.csv round numbering, `[RESUME]` in logs, checkpoint updated
 - `experiments/sparsification_percentage_topkrr.sh` — topkrr experiment; same sweep as other sparsification scripts; sets `RR_START_ROUND=100` (switches at round 100 out of 200)
 - `sbatch/sbatch_sparsification_percentage_topkrr.sh` — SLURM job for the topkrr sweep (l40s, 3 GPUs, 9 clients)
 - `experiments/sparsification_percentage_srr.sh` — srr experiment; same sweep as other sparsification scripts
 - `sbatch/sbatch_sparsification_percentage_srr.sh` — SLURM job for the srr sweep (l40s, 3 GPUs, 9 clients)
 - `experiments/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
 - `experiments/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
+- `tests/test_checkpoint_resume.sh` — unit tests for checkpoint/resume logic (6 tests): verifies checkpoint files present, `_find_resume_checkpoint` for completed/incomplete runs, Python round offset math, `lib_slurm.sh` path, artificial partial checkpoint selection
 - `experiments/estimate_time.py` — estimates wall-clock time for an experiment script by parsing its config variables and applying per-machine speed factors; supports `--machine <partition>`, `--all`, and `--margin <factor>`; machine table sourced from `SLURM.md`
 - `experiments/ESTIMATION_METHODOLOGY.md` — documents the time estimation model (GPU-bound train time, CPU-bound HE time, scaling formulas)
 - `sbatch/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
@@ -397,9 +421,37 @@ Key insight: complements study 12 (bytes axis) and 13 (time axis) with a paramet
 
 `studies/sparsification_percentage/move_duplicates.sh` strips timestamps from folder names and moves older runs (same config) to `logs/sparsification_percentage/duplicates/`.
 
+### Checkpoint / Resume System
+
+Every experiment saves rolling checkpoints so interrupted runs (SLURM wall-time, SIGKILL, graceful time-limit shutdown) can be resumed automatically.
+
+**Files saved per round** (inside `logs/<LOGFOLDER>/checkpoint/`):
+
+| File | Written by | Content |
+|---|---|---|
+| `client_{cid}.npz` | each client after every round | float16 model weights for that client |
+| `server_agg.npz` | server after `aggregate_fit` (plaintext only) | float16 aggregated weights |
+| `meta.json` | server after `aggregate_fit` | `{"round": N, "solution_type": "..."}` |
+
+**When an experiment stops before completing all rounds**, the shell `_write_incomplete_log()` helper (present in `lib_tmux.sh`, `lib_slurm.sh`, `start_all.sh`) writes `logs/<LOGFOLDER>/INCOMPLETE.log` with timestamp, round/total, remaining, and all config fields. The Python server also writes it proactively before `sys.exit(0)` in the graceful time-limit shutdown path.
+
+**Automatic resume detection**: before launching each experiment, `run_theme` calls `_find_resume_checkpoint`. It globs all folders with the same config (any `NUM_ROUNDS`, any timestamp) and picks the one with the highest incomplete checkpoint round (i.e. `round < NUM_ROUNDS`). If found, sets `RESUME_LOGFOLDER` and `RESUME_ROUND`; both are propagated to server and clients and recorded in `experiment_details.json` as `RESUMED_FROM` / `RESUME_ROUND`.
+
+**Resume behaviour by solution type**:
+- *HE (packing + non-packing)*: clients load `checkpoint/client_{cid}.npz` on startup. Server starts with `agg_parameters=''`, so round 1 sends an empty `config['he']`; clients skip HE decryption (guard: `if len(config['he']) > 0`) and train directly on checkpoint weights. Rounds continue from `start_round_offset + 1`.
+- *Plaintext*: server loads `checkpoint/server_agg.npz` and passes it as `initial_parameters` to FedAvg so clients receive the correct weights in round 1.
+
+**Round offset**: `server.start_round_offset = meta['round']`. All `config['round']` values sent to clients and all CSV rows use `server_round + start_round_offset` so global round numbers are continuous across resume boundaries.
+
+**Graceful time-limit shutdown** (SLURM only): `lib_slurm.sh` computes `JOB_DEADLINE_EPOCH` via `squeue` and passes it to the server container. In `configure_fit`, if `_time_remaining() < CHECKPOINT_THRESHOLD_SECS` (default 300 s), the server writes `INCOMPLETE.log` and calls `sys.exit(0)`. The checkpoint from the previous round is already saved.
+
+**Generating resume jobs**: `experiments/generate_resume_jobs.py` scans `logs/` for `INCOMPLETE.log` files, skips any whose config already has a completed run (`meta.json round >= NUM_ROUNDS`), deduplicates to the best checkpoint per config, and writes `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder. `resume_all.sh` calls the generator and submits all output sbatch files.
+
 ### Convenção: experiment_details.json
 
 Toda env var de experimento nova adicionada ao `run_client.sh` **deve** ser incluída também no bloco `experiment_details.json` em `experiments/lib_tmux.sh` e `experiments/lib_slurm.sh`. Variáveis de infraestrutura (`HF_*`, `TF_*`, `TORCH_*`, `CUDA_*`, `CID`, `LOGFOLDER`) são exceção — não pertencem ao JSON.
+
+`experiment_details.json` now also contains `RESUMED_FROM` (relative path of the source checkpoint folder, empty string if fresh start) and `RESUME_ROUND` (checkpoint round loaded, 0 if fresh).
 
 ### Important Constraints
 
@@ -423,3 +475,9 @@ CKKS backend-specific vars (only read when the relevant backend is active): `SIM
 `BATCH_SIZE` (optional, default `4`): training batch size passed to `model.fit()` in all `fit_*.py` files. Set to `32` or higher when using MobileNetV2 — BatchNorm is unstable with batch_size=4.
 
 `RR_START_ROUND` (optional, default `200`, `topkrr` only): the FL round at which the mask strategy switches from top-k to round-robin. Rounds `< RR_START_ROUND` use top-k by magnitude; rounds `>= RR_START_ROUND` use round-robin with window offset zeroed at the transition. Set in the experiment script (e.g. `RR_START_ROUND=100` for a 200-round run). Propagated by `lib_tmux.sh`, `lib_slurm.sh`, and `run_client.sh`; logged in `experiment_details.json`.
+
+`RESUME_LOGFOLDER` (optional): path relative to `logs/` of the experiment folder whose checkpoint to resume from. Set automatically by `_find_resume_checkpoint` in `run_theme`; passed to both server and client containers. When set, the server loads `checkpoint/meta.json` to compute `start_round_offset` and (for plaintext) `checkpoint/server_agg.npz` as `initial_parameters`; each client loads `checkpoint/client_{cid}.npz` as its starting weights.
+
+`JOB_DEADLINE_EPOCH` (optional, default `0`): Unix timestamp of the SLURM job's wall-time deadline. Computed in `lib_slurm.sh` via `squeue`. Passed to the server container; used by `_time_remaining()` to trigger graceful shutdown before the kill signal.
+
+`CHECKPOINT_THRESHOLD_SECS` (optional, default `300`): seconds before `JOB_DEADLINE_EPOCH` at which the server stops gracefully (writes `INCOMPLETE.log` and exits). Configurable per experiment script.
