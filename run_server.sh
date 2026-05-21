@@ -62,6 +62,9 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e N_LENGTH=$N_LENGTH \
         -e PYTHONHASHSEED=$SEED \
         -e EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
+        -e RESUME_LOGFOLDER=${RESUME_LOGFOLDER:-} \
+        -e JOB_DEADLINE_EPOCH=${JOB_DEADLINE_EPOCH:-0} \
+        -e CHECKPOINT_THRESHOLD_SECS=${CHECKPOINT_THRESHOLD_SECS:-300} \
         -e CKKS_BACKEND=${CKKS_BACKEND:-tenseal} \
         -e SIMPLIFY_N=${SIMPLIFY_N:-8192} \
         -e SIMPLIFY_BITS=${SIMPLIFY_BITS:-62} \
@@ -97,6 +100,9 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env N_LENGTH=$N_LENGTH \
         --env PYTHONHASHSEED=$SEED \
         --env EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
+        --env RESUME_LOGFOLDER=${RESUME_LOGFOLDER:-} \
+        --env JOB_DEADLINE_EPOCH=${JOB_DEADLINE_EPOCH:-0} \
+        --env CHECKPOINT_THRESHOLD_SECS=${CHECKPOINT_THRESHOLD_SECS:-300} \
         --env CKKS_BACKEND=${CKKS_BACKEND:-tenseal} \
         --env SIMPLIFY_N=${SIMPLIFY_N:-8192} \
         --env SIMPLIFY_BITS=${SIMPLIFY_BITS:-62} \

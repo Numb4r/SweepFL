@@ -91,6 +91,38 @@ is_packing_solution() {
     return 1
 }
 
+# Finds the best incomplete checkpoint for the current experiment config.
+# Sets RESUME_LOGFOLDER (path relative to logs/) and RESUME_ROUND.
+_find_resume_checkpoint() {
+    RESUME_LOGFOLDER=""
+    RESUME_ROUND=0
+
+    local search_base="logs/${FOLDER:+${FOLDER}/}"
+    local name_prefix="${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_"
+    local name_suffix="_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_"
+
+    local best_dir="" best_round=0
+    for dir in "${search_base}${name_prefix}"*rounds"${name_suffix}"????-??-??_??-??-??; do
+        [[ -d "$dir" ]] || continue
+        local meta="${dir}/checkpoint/meta.json"
+        [[ -f "$meta" ]] || continue
+        local ckpt_round
+        ckpt_round=$(python3 -c "import json,sys; d=json.load(open('$meta')); sys.stdout.write(str(d.get('round',0)))" 2>/dev/null) || continue
+        [[ "$ckpt_round" =~ ^[0-9]+$ ]] || continue
+        (( ckpt_round < NUM_ROUNDS )) || continue
+        if (( ckpt_round > best_round )); then
+            best_round=$ckpt_round
+            best_dir="$dir"
+        fi
+    done
+
+    if [[ -n "$best_dir" ]]; then
+        RESUME_LOGFOLDER="${best_dir#logs/}"
+        RESUME_ROUND=$best_round
+        echo "[RESUME] Found checkpoint: $best_dir (round $best_round / $NUM_ROUNDS)"
+    fi
+}
+
 # Generates HE keys by calling generate_keys.py
 generate_keys() {
     local schema="$1" poly="$2" coeffs="$3" scale="$4" key_type="$5"
@@ -149,7 +181,10 @@ run_experiment() {
   "SCALE":           $SCALE,
   "KEY_TYPE":        "$KEY_TYPE",
   "PLAIN_MODULUS":   $PLAIN_MODULUS,
-  "N_LENGTH":        $N_LENGTH
+  "N_LENGTH":        $N_LENGTH,
+
+  "RESUMED_FROM":    "${RESUME_LOGFOLDER:-}",
+  "RESUME_ROUND":    ${RESUME_ROUND:-0}
 }
 JSON
 
@@ -157,6 +192,7 @@ JSON
     tmux kill-session -t "$SERVER_SESSION" 2>/dev/null || true
     tmux new-session -d -s "$SERVER_SESSION" \
         "RUNTIME='$RUNTIME' SIF_DIR='$SIF_DIR' EXPERIMENT_NAME='$EXP_NAME' \
+         RESUME_LOGFOLDER='${RESUME_LOGFOLDER:-}' \
          CKKS_BACKEND='${CKKS_BACKEND:-tenseal}' \
          SIMPLIFY_N='${SIMPLIFY_N:-8192}' SIMPLIFY_BITS='${SIMPLIFY_BITS:-62}' SIMPLIFY_SCALE_BITS='${SIMPLIFY_SCALE_BITS:-60}' \
          PYCRYPT_N='${PYCRYPT_N:-8192}' PYCRYPT_BITS='${PYCRYPT_BITS:-60}' \
@@ -175,6 +211,7 @@ JSON
             "RUNTIME='$RUNTIME' SIF_DIR='$SIF_DIR' SERVER_HOST='${SERVER_HOST:-}' \
              MODEL_ARCH='$MODEL' EXPERIMENT_NAME='$EXP_NAME' \
              PRETRAINED_WEIGHTS='${PRETRAINED_WEIGHTS:-}' USE_GPU='${USE_GPU:-true}' \
+             RESUME_LOGFOLDER='${RESUME_LOGFOLDER:-}' \
              CKKS_BACKEND='${CKKS_BACKEND:-tenseal}' \
              SIMPLIFY_N='${SIMPLIFY_N:-8192}' SIMPLIFY_BITS='${SIMPLIFY_BITS:-62}' SIMPLIFY_SCALE_BITS='${SIMPLIFY_SCALE_BITS:-60}' \
              PYCRYPT_N='${PYCRYPT_N:-8192}' PYCRYPT_BITS='${PYCRYPT_BITS:-60}' \
@@ -245,6 +282,7 @@ for config in "${CKKS_CONFIGS[@]}"; do
             fi
 
             for PERCENTAGE in "${ITER_PERCENTAGES[@]}"; do
+                _find_resume_checkpoint
                 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
                 LOGFOLDER="${FOLDER:+${FOLDER}/}${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${TIMESTAMP}"
 

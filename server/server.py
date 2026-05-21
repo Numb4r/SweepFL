@@ -5,6 +5,8 @@ from flwr.server.strategy.aggregate import aggregate, weighted_loss_avg
 import pickle
 import tenseal as ts
 import os
+import sys
+import json
 import numpy as np
 from functools import reduce
 import logging
@@ -46,6 +48,11 @@ class HEServer(fl.server.strategy.FedAvg):
         self.log_folder       = log_folder
         self.experiment_name  = experiment_name
 
+        self.start_round_offset  = 0
+        self.initial_parameters  = None
+        self.job_deadline        = int(os.environ.get("JOB_DEADLINE_EPOCH", "0"))
+        self.checkpoint_threshold = int(os.environ.get("CHECKPOINT_THRESHOLD_SECS", "300"))
+
         self.config_solution()
         self.poly_modulus_degree  = self.key_config.get("poly_modulus_degree")
         self.plain_modulus        = self.key_config.get("plain_modulus")
@@ -54,10 +61,30 @@ class HEServer(fl.server.strategy.FedAvg):
         self.key_type             = self.key_config.get("key_type")
 
         self.context = self.get_server_context()
+
+        resume_logfolder = os.environ.get("RESUME_LOGFOLDER", "")
+        if resume_logfolder:
+            meta_path = f'logs/{resume_logfolder}/checkpoint/meta.json'
+            if os.path.exists(meta_path):
+                with open(meta_path) as f:
+                    meta = json.load(f)
+                self.start_round_offset = int(meta.get('round', 0))
+                print(f"[RESUME] Resuming from round {self.start_round_offset} ({resume_logfolder})")
+                if not self.homomorphic:
+                    server_ckpt = f'logs/{resume_logfolder}/checkpoint/server_agg.npz'
+                    if os.path.exists(server_ckpt):
+                        data = np.load(server_ckpt)
+                        weights = [data[f'arr_{i}'].astype(np.float32) for i in range(len(data.files))]
+                        self.initial_parameters = ndarrays_to_parameters(weights)
+                        print(f"[RESUME] Loaded server checkpoint ({len(weights)} arrays)")
+            else:
+                print(f"[RESUME] No meta.json found at {meta_path}, starting fresh")
+
         super().__init__(
             fraction_fit=fraction_fit,
             min_available_clients=num_clients,
             min_evaluate_clients=num_clients,
+            initial_parameters=self.initial_parameters,
         )
         print("SERVER_READY")
 
@@ -87,16 +114,26 @@ class HEServer(fl.server.strategy.FedAvg):
             with open('./context/bfv_server_key.pkl', 'rb') as f:
                 return ts.context_from(pickle.load(f)["context"])
 
+    def _time_remaining(self):
+        if not self.job_deadline:
+            return float('inf')
+        return self.job_deadline - time.time()
+
     def configure_fit(self, server_round, parameters, client_manager):
+        if self._time_remaining() < self.checkpoint_threshold:
+            print(f"[CHECKPOINT] Time limit approaching ({self._time_remaining():.0f}s left), stopping gracefully")
+            sys.exit(0)
+
         selection_start = time.time()
         data2send = ''
         if len(self.agg_parameters) > 0:
             data2send = self.agg_parameters
 
+        global_round = server_round + self.start_round_offset
         config = {
             'he':             data2send,
             'mask':           self.agg_mask,
-            'round':          server_round,
+            'round':          global_round,
             'total_examples': str(self.total_examples),
         }
         fit_ins = FitIns(parameters, config)
@@ -107,10 +144,18 @@ class HEServer(fl.server.strategy.FedAvg):
         self.selection_time = time.time() - selection_start
         return [(client, fit_ins) for client in clients]
 
+    def _save_checkpoint_meta(self, global_round):
+        ckpt_folder = f'logs/{self.log_folder}/checkpoint'
+        os.makedirs(ckpt_folder, exist_ok=True)
+        meta = {'round': global_round, 'solution_type': self.homomorphic_type}
+        with open(f'{ckpt_folder}/meta.json', 'w') as f:
+            json.dump(meta, f)
+
     def aggregate_fit(self, server_round, results, failures):
         aggregation_start = time.time()
         parameters_list   = []
         total_examples    = 0
+        global_round      = server_round + self.start_round_offset
 
         if self.homomorphic:
             if self.packing:
@@ -134,10 +179,11 @@ class HEServer(fl.server.strategy.FedAvg):
                     self.agg_parameters = agg_parameters.serialize()
                 self.total_examples = total_examples
 
+            self._save_checkpoint_meta(global_round)
             aggregation_time = time.time() - aggregation_start
             write_agg_logs(
                 self.log_folder, self.experiment_name,
-                server_round, len(results), total_examples,
+                global_round, len(results), total_examples,
                 self.selection_time, aggregation_time,
             )
             return [], {}
@@ -151,9 +197,15 @@ class HEServer(fl.server.strategy.FedAvg):
             aggregation_time    = time.time() - aggregation_start
             self.total_examples = total_examples
 
+            self._save_checkpoint_meta(global_round)
+            ckpt_folder = f'logs/{self.log_folder}/checkpoint'
+            np.savez_compressed(
+                f'{ckpt_folder}/server_agg',
+                *[w.astype(np.float16) for w in agg_parameters],
+            )
             write_agg_logs(
                 self.log_folder, self.experiment_name,
-                server_round, len(results), total_examples,
+                global_round, len(results), total_examples,
                 self.selection_time, aggregation_time,
             )
             return ndarrays_to_parameters(agg_parameters), {}
@@ -169,12 +221,13 @@ class HEServer(fl.server.strategy.FedAvg):
             [(r.num_examples, r.loss) for _, r in results]
         )
         mean_acc = sum(accuracies) / len(accuracies)
+        global_round = server_round + self.start_round_offset
 
-        print(f"Round {server_round} | loss={loss_aggregated:.4f} | acc={mean_acc:.4f}")
+        print(f"Round {global_round} | loss={loss_aggregated:.4f} | acc={mean_acc:.4f}")
 
         write_eval_logs(
             self.log_folder, self.experiment_name,
-            server_round, len(results), loss_aggregated, mean_acc,
+            global_round, len(results), loss_aggregated, mean_acc,
         )
         return loss_aggregated, {}
 
@@ -182,9 +235,10 @@ class HEServer(fl.server.strategy.FedAvg):
         if self.fraction_evaluate == 0.0:
             return []
 
+        global_round = server_round + self.start_round_offset
         config = {
             'he':             self.agg_parameters,
-            'round':          server_round,
+            'round':          global_round,
             'mask':           self.agg_mask,
             'total_examples': str(self.total_examples),
         }
@@ -225,9 +279,10 @@ def main():
         experiment_name = os.environ.get('EXPERIMENT_NAME', ''),
     )
 
+    remaining_rounds = max(1, int(os.environ['NUM_ROUNDS']) - server.start_round_offset)
     fl.server.start_server(
         server_address=os.environ['SERVER_IP'],
-        config=fl.server.ServerConfig(num_rounds=int(os.environ['NUM_ROUNDS'])),
+        config=fl.server.ServerConfig(num_rounds=remaining_rounds),
         strategy=server,
     )
 

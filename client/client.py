@@ -164,9 +164,18 @@ class HEClient(fl.client.NumPyClient):
             self.model.save_weights(init_weights)
         else:
             raise Exception("Cannot start, generate plaintext first")
-        
-        
-        
+
+        resume_logfolder = os.environ.get("RESUME_LOGFOLDER", "")
+        if resume_logfolder:
+            ckpt_path = f'logs/{resume_logfolder}/checkpoint/client_{cid}.npz'
+            if os.path.exists(ckpt_path):
+                data = np.load(ckpt_path)
+                ckpt_weights = [data[f'arr_{i}'].astype(np.float32) for i in range(len(data.files))]
+                self.model.set_weights(ckpt_weights)
+                print(f"[RESUME] Loaded checkpoint: {ckpt_path}")
+            else:
+                print(f"[RESUME] No checkpoint for cid={cid}, using init_weights")
+
         # dataset_folder = self.dataset.replace("/","_")
         self.log_folder=log_folder
         self.len_shared_data  =  len(flat_parameters(self.model.get_weights()))
@@ -322,6 +331,12 @@ class HEClient(fl.client.NumPyClient):
             
         else:
             self.model.set_weights(parameters)
+            ckpt_folder = f'logs/{self.log_folder}/checkpoint'
+            os.makedirs(ckpt_folder, exist_ok=True)
+            np.savez_compressed(
+                f'{ckpt_folder}/client_{self.cid}',
+                *[w.astype(np.float16) for w in parameters],
+            )
         decypher_time_process = time.process_time() - decypher_time_process
         decypher_time_clock = time.time() - decypher_time_clock
         loss, acc = self.model.evaluate(self.x_test, self.y_test)

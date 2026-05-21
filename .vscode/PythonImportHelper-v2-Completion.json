@@ -2262,6 +2262,15 @@
         "documentation": {}
     },
     {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
         "label": "align_packs",
         "importPath": "server_utils",
         "description": "server_utils",
@@ -2493,15 +2502,6 @@
         "description": "urllib.parse",
         "isExtraImport": true,
         "detail": "urllib.parse",
-        "documentation": {}
-    },
-    {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
         "documentation": {}
     },
     {
@@ -3913,7 +3913,7 @@
         "kind": 2,
         "importPath": "client.literature.plaintext",
         "description": "client.literature.plaintext",
-        "peekOfCode": "def fit_plaintext(self, parameters, config):\n    self.model.set_weights(parameters)\n    if self.cid == 0:\n        folder = f'logs/{self.log_folder}/model'\n        os.makedirs(folder, exist_ok=True)\n        np.savez_compressed(\n            f\"{folder}/round_{config['round']}\",\n            *[w.astype(np.float16) for w in parameters],\n        )\n    train_time_clock = time.time()",
+        "peekOfCode": "def fit_plaintext(self, parameters, config):\n    self.model.set_weights(parameters)\n    if self.cid == 0:\n        folder = f'logs/{self.log_folder}/model'\n        os.makedirs(folder, exist_ok=True)\n        np.savez_compressed(\n            f\"{folder}/round_{config['round']}\",\n            *[w.astype(np.float16) for w in parameters],\n        )\n    ckpt_folder = f'logs/{self.log_folder}/checkpoint'",
         "detail": "client.literature.plaintext",
         "documentation": {}
     },

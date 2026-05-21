@@ -75,6 +75,12 @@ def he_parameters_to_model(self, config):
                 f"{folder}/round_{config['round']}",
                 *[w.astype(np.float16) for w in reshaped_parameters],
             )
+        ckpt_folder = f'logs/{self.log_folder}/checkpoint'
+        os.makedirs(ckpt_folder, exist_ok=True)
+        np.savez_compressed(
+            f'{ckpt_folder}/client_{self.cid}',
+            *[w.astype(np.float16) for w in reshaped_parameters],
+        )
                 
                 
                 
@@ -108,3 +114,9 @@ def he_packs_to_model(self, config):
             f"{folder}/round_{config['round']}",
             *[w.astype(np.float16) for w in reshaped_parameters],
         )
+    ckpt_folder = f'logs/{self.log_folder}/checkpoint'
+    os.makedirs(ckpt_folder, exist_ok=True)
+    np.savez_compressed(
+        f'{ckpt_folder}/client_{self.cid}',
+        *[w.astype(np.float16) for w in reshaped_parameters],
+    )
