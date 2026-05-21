@@ -231,6 +231,10 @@ Columns unused by a technique are emitted as `0`. `coeff_mod_bits` uses semicolo
 
 Per-round model snapshots are saved as `logs/<LOGFOLDER>/model/round_<N>.npz` using `np.savez_compressed` with float16 weights. This reduces storage by ~54% vs float32. Only client 0 saves snapshots. All rounds are kept (not just the last).
 
+**Save timing**: for HE/packing solutions (`nvnl`, `fedphe`, `sw`, `rw`, `topkrr`, `srr`), saves happen inside `he_packs_to_model` / `he_parameters_to_model` in `client/literature/set_parameters.py`, called from both `fit()` and `evaluate()`. Round N's file reflects the server's aggregated weights sent back for that round. For `plaintext`, the save is at the top of `fit_plaintext()` in `client/literature/plaintext.py`.
+
+**Path convention**: the Docker client container has no `WORKDIR` set, so CWD inside the container is `/`. The logs volume is mounted as `/logs`. All model-save paths **must** use the `logs/` prefix: `f'logs/{self.log_folder}/model'`. Omitting `logs/` writes to an ephemeral container path that is lost on container exit. Both `set_parameters.py` and `plaintext.py` must use this prefix consistently.
+
 Loading saved weights:
 ```python
 data = np.load("round_N.npz")
@@ -386,6 +390,7 @@ Toda env var de experimento nova adicionada ao `run_client.sh` **deve** ser incl
 - **gRPC message size**: set to 1 GB (`MAX_MESSAGE_LENGTH = 1024*1024*1024`) in `client/client.py` to accommodate large ciphertexts.
 - **ckks_backend.py must be kept in sync** across `encryption/`, `client/encryption/`, and `server/encryption/` — each Docker container only mounts its own directory.
 - **`np.load` ordering**: use `[data[f'arr_{i}'] for i in range(len(data.files))]`, never `sorted(data.files)` — lexicographic sort breaks shape order for 10+ layers.
+- **Model save path inside containers**: Docker CWD is `/`; logs volume is mounted at `/logs`. Always use `f'logs/{self.log_folder}/model'` — never `f'{self.log_folder}/model'`. The latter writes to ephemeral container storage and the file is lost when the container exits. (`set_parameters.py` and `plaintext.py`)
 - Python version is **3.10** (see `pyproject.toml` and `Makefile`).
 - **GPU access in Docker**: `run_client.sh` uses `--gpus="device=$GPU_ID"`, which requires the `nvidia-persistenced` daemon to be running (`sudo systemctl start nvidia-persistenced`). Set `USE_GPU=false` to skip the GPU flag and run clients in CPU mode — useful for local smoke-tests or machines without a working nvidia-persistenced socket. `lib.sh` and `start_all.sh` propagate this variable to all client tmux sessions.
 - **Singularity images** (`flhe_client.sif`, `flhe_server.sif`) are built from Docker images via `make singularity-from-docker` or from scratch via `make singularity-configure`. Both `.sif` files must exist at `SIF_DIR` (default: repo root) before running `RUNTIME=singularity` experiments. Singularity clients connect to `localhost:9999` by default (no Docker bridge needed).
