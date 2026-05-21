@@ -69,7 +69,7 @@ def he_parameters_to_model(self, config):
                 print("ATT COMPLETA")
         # # debug   
         if self.cid == 0:
-            folder = f'{self.log_folder}/model'
+            folder = f'logs/{self.log_folder}/model'
             os.makedirs(folder, exist_ok=True)
             np.savez_compressed(
                 f"{folder}/round_{config['round']}",
@@ -102,7 +102,7 @@ def he_packs_to_model(self, config):
     self.model.set_weights(reshaped_parameters)
 
     if self.cid == 0:
-        folder = f'{self.log_folder}/model'
+        folder = f'logs/{self.log_folder}/model'
         os.makedirs(folder, exist_ok=True)
         np.savez_compressed(
             f"{folder}/round_{config['round']}",
