@@ -287,7 +287,7 @@ run_theme() {
                 PRETRAINED_WEIGHTS=$(
                     find "logs/models/pretrained/${MODEL}" -name "pretrained.weights.h5" \
                          2>/dev/null -printf "%T@ %p\n" | sort -rn | head -1 | awk '{print $2}'
-                )
+                ) || PRETRAINED_WEIGHTS=""
                 if [[ -n "$PRETRAINED_WEIGHTS" ]]; then
                     echo "  [pretrain] $MODEL → $PRETRAINED_WEIGHTS"
                 fi

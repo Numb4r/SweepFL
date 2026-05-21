@@ -367,7 +367,7 @@ run_theme() {
                 PRETRAINED_WEIGHTS=$(
                     find "logs/models/pretrained/${MODEL}" -name "pretrained.weights.h5" \
                          2>/dev/null -printf "%T@ %p\n" | sort -rn | head -1 | awk '{print $2}'
-                )
+                ) || PRETRAINED_WEIGHTS=""
                 [[ -n "$PRETRAINED_WEIGHTS" ]] && echo "  [pretrain] $MODEL → $PRETRAINED_WEIGHTS"
 
                 for NIID in "${NIIDS[@]}"; do
