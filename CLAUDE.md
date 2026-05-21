@@ -281,6 +281,7 @@ python3 07_convergence_speed.py     # rounds to threshold + AUC bar
 python3 08_efficiency_frontier.py   # Pareto scatter: accuracy vs payload/round
 python3 09_summary_table.py         # CSV + LaTeX summary table
 python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
+python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy + stacked bar
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
@@ -354,6 +355,21 @@ Answers: how much data does each technique need to transmit to reach 80% accurac
 
 **Output**: `12_bytes_acc_p{pct}.{png,pdf}` (one per percentage), `12_bytes_acc_plaintext.{png,pdf}`.
 **Table**: `12_bytes_to_80pct.{csv,tex}`.
+
+### Script 13 — Communication time overhead vs accuracy
+
+Answers: how much time do HE/communication operations consume to reach 80% accuracy?
+
+**Communication overhead** = `pack_time_s + mask_select_time_s + encrypt_time_s + serialize_time_s + decrypt_time_s` (training time excluded — focus is on the privacy/communication cost).
+
+**Layout**: one figure per percentage. Each figure row = (model, niid).
+- **Left panel** (2/3 width): X = cumulative communication overhead (s), Y-left = accuracy %, Y-right = round (approx.). Round annotations every ~4 points. ★ marker when 80% is reached.
+- **Right panel** (1/3 width): stacked horizontal bars per technique — overhead split by `Pack+Mask | Encrypt | Serialize | Decrypt` (median per round).
+
+Key insight: complements study 12 (bytes axis) with a time axis, revealing how much compute each technique spends on privacy operations per unit of accuracy gained.
+
+**Output**: `13_overhead_acc_p{pct}.{png,pdf}` (one per percentage), `13_overhead_acc_plaintext.{png,pdf}`.
+**Table**: `13_overhead_summary.{csv,tex}` — columns: model, solution, percentage, niid, rounds_to_80pct, seconds_to_80pct, comm_overhead_s_median, final_acc.
 
 ### Duplicate detection
 
