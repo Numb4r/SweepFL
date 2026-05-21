@@ -233,6 +233,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -7246,6 +7254,195 @@
         "description": "studies.sparsification_percentage.12_bytes_vs_accuracy",
         "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Raw float32 model data per client per round (pre-encryption).\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in PACKING_SOLS:",
         "detail": "studies.sparsification_percentage.12_bytes_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_overhead",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum comm overhead over clients per round, then cumsum over rounds.\"\"\"\n    df = train.copy()\n    present = [c for c in COMM_COLS if c in df.columns]\n    df[\"overhead_s\"] = df[present].fillna(0.0).sum(axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"overhead_s\"]\n        .sum()\n        .reset_index()",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Merge cumulative overhead with server evaluation accuracy, avg over seeds.\"\"\"\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "compute_comm_overhead_medians",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def compute_comm_overhead_medians(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Median per-round overhead per operation group, averaged over seeds.\"\"\"\n    df = train.copy()\n    present_cols = [c for g in COMM_OP_GROUPS for c in g[1] if c in df.columns]\n    if not present_cols:\n        return pd.DataFrame()\n    seed_round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    # Sum over clients per round\n    per_round = (\n        df.groupby(seed_round_group, dropna=False)[present_cols]",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "plot_for_percentage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def plot_for_percentage(data: pd.DataFrame, overhead_medians: pd.DataFrame,\n                        pct, models: list, niids: list):\n    if pct is None:\n        sub = data[data[\"percentage\"].isna()].copy()\n    else:\n        pct_mask = data[\"percentage\"].notna() & (data[\"percentage\"] == pct)\n        pt_mask  = data[\"percentage\"].isna() & (data[\"solution\"] == \"plaintext\")\n        sub = data[pct_mask | pt_mask].copy()\n    if sub.empty:\n        return None",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def build_summary(data: pd.DataFrame, overhead_medians: pd.DataFrame) -> pd.DataFrame:\n    dims = [c for c in DIMS if c in data.columns]\n    rows = []\n    for keys, group in data.groupby(dims, dropna=False):\n        kd = dict(zip(dims, keys if isinstance(keys, tuple) else [keys]))\n        # Total median comm overhead per round\n        m_filt = True\n        n_filt = True\n        s_filt = overhead_medians[\"solution\"] == kd.get(\"solution\", \"\")\n        if \"model\" in overhead_medians.columns and \"model\" in kd:",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame):\n    path = OUT_TAB / \"13_overhead_summary.csv\"\n    summary.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"rounds_to_80pct\": r\"Rounds to 80\\%\",\n        \"seconds_to_80pct\": r\"Seconds to 80\\%\",\n        \"comm_overhead_s_median\": \"Overhead (s/round)\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"rounds_to_80pct\": r\"Rounds to 80\\%\",\n        \"seconds_to_80pct\": r\"Seconds to 80\\%\",\n        \"comm_overhead_s_median\": \"Overhead (s/round)\",\n        \"final_acc\": \"Final acc.\",\n    }\n    cols = [c for c in display if c in summary.columns]\n    best_rounds = summary[\"rounds_to_80pct\"].dropna().min() if \"rounds_to_80pct\" in summary else None",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_ACC",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "TARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\n# Communication overhead columns (training excluded)\nCOMM_COLS = [\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_COLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "COMM_COLS = [\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",\n    \"decrypt_time_s\",\n]\n# How to group columns into stacked bar segments\nCOMM_OP_GROUPS = [\n    (\"Pack+Mask\",  [\"pack_time_s\", \"mask_select_time_s\"]),",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_OP_GROUPS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "COMM_OP_GROUPS = [\n    (\"Pack+Mask\",  [\"pack_time_s\", \"mask_select_time_s\"]),\n    (\"Encrypt\",    [\"encrypt_time_s\"]),\n    (\"Serialize\",  [\"serialize_time_s\"]),\n    (\"Decrypt\",    [\"decrypt_time_s\"]),\n]\nBAR_COLORS = [plt.colormaps[\"Set2\"](i) for i in range(len(COMM_OP_GROUPS))]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "BAR_COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "BAR_COLORS = [plt.colormaps[\"Set2\"](i) for i in range(len(COMM_OP_GROUPS))]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Cumulative overhead computation ──────────────────────────────────────────\ndef compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum comm overhead over clients per round, then cumsum over rounds.\"\"\"",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Cumulative overhead computation ──────────────────────────────────────────\ndef compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum comm overhead over clients per round, then cumsum over rounds.\"\"\"\n    df = train.copy()\n    present = [c for c in COMM_COLS if c in df.columns]",
+        "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
         "documentation": {}
     },
     {

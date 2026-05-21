@@ -26,7 +26,8 @@ for script in 01_accuracy_curves.py \
               09_summary_table.py \
               10_total_data_convergence.py \
               11_data_vs_coverage.py \
-              12_bytes_vs_accuracy.py; do
+              12_bytes_vs_accuracy.py \
+              13_overhead_vs_accuracy.py; do
     echo ""
     echo "==> $script"
     python3 "$script" $EXTRA_ARGS
