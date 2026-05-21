@@ -104,6 +104,31 @@ combo_keys("$schema", args={
 EOF
 }
 
+_write_incomplete_log() {
+    local logfolder="$1"
+    local meta="logs/${logfolder}/checkpoint/meta.json"
+    [[ -f "$meta" ]] || return 0
+    local completed
+    completed=$(python3 -c "import json; print(json.load(open('$meta'))['round'])" 2>/dev/null) || return 0
+    [[ "$completed" =~ ^[0-9]+$ ]] || return 0
+    (( completed < NUM_ROUNDS )) || return 0
+    local remaining=$(( NUM_ROUNDS - completed ))
+    local ts; ts=$(date '+%Y-%m-%d %H:%M:%S')
+    cat > "logs/${logfolder}/INCOMPLETE.log" <<EOF
+INTERRUPTED : $ts
+Round       : $completed / $NUM_ROUNDS
+Remaining   : $remaining
+LOGFOLDER   : $logfolder
+Solution    : $SOLUTION
+Model       : $MODEL
+Dataset     : $DATASET
+Seed        : $SEED
+NIID        : $NIID
+Percentage  : $PERCENTAGE
+EOF
+    echo "[INCOMPLETE] $logfolder (round $completed / $NUM_ROUNDS)"
+}
+
 run_experiment() {
     local LOGFOLDER="$1"
     local SERVER_SESSION="SERVER"
@@ -218,6 +243,7 @@ JSON
         sleep 1; (( _port_wait++ ))
     done
 
+    _write_incomplete_log "$LOGFOLDER"
     echo "[OK] $LOGFOLDER"
 }
 

@@ -50,8 +50,9 @@ class HEServer(fl.server.strategy.FedAvg):
 
         self.start_round_offset  = 0
         self.initial_parameters  = None
-        self.job_deadline        = int(os.environ.get("JOB_DEADLINE_EPOCH", "0"))
+        self.job_deadline         = int(os.environ.get("JOB_DEADLINE_EPOCH", "0"))
         self.checkpoint_threshold = int(os.environ.get("CHECKPOINT_THRESHOLD_SECS", "300"))
+        self.total_target_rounds  = int(os.environ.get("NUM_ROUNDS", "0"))
 
         self.config_solution()
         self.poly_modulus_degree  = self.key_config.get("poly_modulus_degree")
@@ -119,9 +120,28 @@ class HEServer(fl.server.strategy.FedAvg):
             return float('inf')
         return self.job_deadline - time.time()
 
+    def _write_incomplete_log(self, completed_round: int):
+        target = self.total_target_rounds
+        if target <= 0 or completed_round >= target:
+            return
+        remaining = target - completed_round
+        ts = time.strftime('%Y-%m-%d %H:%M:%S')
+        log_path = f'logs/{self.log_folder}/INCOMPLETE.log'
+        with open(log_path, 'w') as f:
+            f.write(
+                f"INTERRUPTED : {ts}\n"
+                f"Round       : {completed_round} / {target}\n"
+                f"Remaining   : {remaining}\n"
+                f"LOGFOLDER   : {self.log_folder}\n"
+                f"Solution    : {self.solution}\n"
+            )
+        print(f"[INCOMPLETE] {log_path} (round {completed_round}/{target})")
+
     def configure_fit(self, server_round, parameters, client_manager):
         if self._time_remaining() < self.checkpoint_threshold:
+            completed = (server_round - 1) + self.start_round_offset
             print(f"[CHECKPOINT] Time limit approaching ({self._time_remaining():.0f}s left), stopping gracefully")
+            self._write_incomplete_log(completed)
             sys.exit(0)
 
         selection_start = time.time()
