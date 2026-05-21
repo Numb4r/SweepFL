@@ -241,6 +241,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -7443,6 +7451,168 @@
         "description": "studies.sparsification_percentage.13_overhead_vs_accuracy",
         "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Cumulative overhead computation ──────────────────────────────────────────\ndef compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum comm overhead over clients per round, then cumsum over rounds.\"\"\"\n    df = train.copy()\n    present = [c for c in COMM_COLS if c in df.columns]",
         "detail": "studies.sparsification_percentage.13_overhead_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_neurons",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def compute_cumulative_neurons(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum neurons over clients per round, then cumsum over rounds per experiment.\"\"\"\n    df = train.copy()\n    df[\"neurons_client\"] = df.apply(_neurons_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"neurons_client\"]\n        .sum()\n        .reset_index()\n        .rename(columns={\"neurons_client\": \"neurons_round\"})",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Merge cumulative neurons with server evaluation accuracy, average over seeds.\"\"\"\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[[*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (\n        merged.groupby(avg_group, dropna=False)\n        .agg(",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "compute_neurons_per_round_medians",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def compute_neurons_per_round_medians(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Median neurons/round per solution (summed over clients, median over rounds, avg over seeds).\"\"\"\n    df = train.copy()\n    df[\"neurons_client\"] = df.apply(_neurons_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"neurons_client\"]\n        .sum()\n        .reset_index()\n        .rename(columns={\"neurons_client\": \"neurons_round\"})",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "plot_for_percentage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def plot_for_percentage(data: pd.DataFrame, neuron_medians: pd.DataFrame,\n                        pct, models: list, niids: list):\n    if pct is None:\n        sub = data[data[\"percentage\"].isna()].copy()\n    else:\n        pct_mask = data[\"percentage\"].notna() & (data[\"percentage\"] == pct)\n        pt_mask  = data[\"percentage\"].isna() & (data[\"solution\"] == \"plaintext\")\n        sub = data[pct_mask | pt_mask].copy()\n    if sub.empty:\n        return None",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def build_summary(data: pd.DataFrame, neuron_medians: pd.DataFrame) -> pd.DataFrame:\n    dims = [c for c in DIMS if c in data.columns]\n    rows = []\n    for keys, group in data.groupby(dims, dropna=False):\n        kd = dict(zip(dims, keys if isinstance(keys, tuple) else [keys]))\n        m_filt = True\n        n_filt = True\n        s_filt = neuron_medians[\"solution\"] == kd.get(\"solution\", \"\")\n        if \"model\" in neuron_medians.columns and \"model\" in kd:\n            m_filt = neuron_medians[\"model\"] == kd[\"model\"]",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame):\n    path = OUT_TAB / \"14_neurons_summary.csv\"\n    summary.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"rounds_to_80pct\": r\"Rounds to 80\\%\",\n        \"neurons_to_80pct_M\": r\"Neurons to 80\\% (M)\",\n        \"neurons_per_round_median\": \"Neurons/round (M)\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"rounds_to_80pct\": r\"Rounds to 80\\%\",\n        \"neurons_to_80pct_M\": r\"Neurons to 80\\% (M)\",\n        \"neurons_per_round_median\": \"Neurons/round (M)\",\n        \"final_acc\": \"Final acc.\",\n    }\n    cols = [c for c in display if c in summary.columns]\n    best_rounds   = summary[\"rounds_to_80pct\"].dropna().min() if \"rounds_to_80pct\" in summary else None",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_ACC",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "TARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Neuron estimation ─────────────────────────────────────────────────────────\ndef _neurons_per_client(row) -> float:\n    \"\"\"Parameters actually transmitted per client per round.\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in PACKING_SOLS:",
+        "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
         "documentation": {}
     },
     {
