@@ -2182,6 +2182,48 @@
         "documentation": {}
     },
     {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "stat",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "stat",
+        "description": "stat",
+        "detail": "stat",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "namedtuple",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "gmpy_math",
         "importPath": "encryption",
         "description": "encryption",
@@ -2267,15 +2309,6 @@
         "description": "flwr.server.strategy.aggregate",
         "isExtraImport": true,
         "detail": "flwr.server.strategy.aggregate",
-        "documentation": {}
-    },
-    {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
         "documentation": {}
     },
     {
@@ -2426,14 +2459,6 @@
         "description": "types",
         "isExtraImport": true,
         "detail": "types",
-        "documentation": {}
-    },
-    {
-        "label": "namedtuple",
-        "importPath": "collections",
-        "description": "collections",
-        "isExtraImport": true,
-        "detail": "collections",
         "documentation": {}
     },
     {
@@ -5372,6 +5397,87 @@
         "description": "experiments.estimate_time",
         "peekOfCode": "SETUP_OVERHEAD_S = 90.0\n# ─── Leitura do SLURM.md ──────────────────────────────────────────────────────\ndef parse_slurm_md(slurm_path: Path) -> dict:\n    \"\"\"\n    Lê o SLURM.md e retorna dict keyed por partição.\n    \"\"\"\n    machines = {}\n    if not slurm_path.exists():\n        print(f\"[AVISO] SLURM.md não encontrado em {slurm_path}. Usando apenas 'local'.\",\n              file=sys.stderr)",
         "detail": "experiments.estimate_time",
+        "documentation": {}
+    },
+    {
+        "label": "info",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def info(msg: str) -> None:\n    print(msg, file=sys.stderr)\ndef load_details(folder: str):\n    path = os.path.join(folder, \"experiment_details.json\")\n    if not os.path.exists(path):\n        return None\n    try:\n        with open(path) as f:\n            return json.load(f)\n    except Exception as exc:",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "load_details",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def load_details(folder: str):\n    path = os.path.join(folder, \"experiment_details.json\")\n    if not os.path.exists(path):\n        return None\n    try:\n        with open(path) as f:\n            return json.load(f)\n    except Exception as exc:\n        info(f\"  [WARN] Cannot read experiment_details.json in {folder}: {exc}\")\n        return None",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "get_checkpoint_round",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def get_checkpoint_round(folder: str):\n    meta_path = os.path.join(folder, \"checkpoint\", \"meta.json\")\n    if not os.path.exists(meta_path):\n        return None\n    try:\n        with open(meta_path) as f:\n            meta = json.load(f)\n        return int(meta.get(\"round\", 0))\n    except Exception:\n        return None",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "config_fingerprint",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def config_fingerprint(details: dict) -> tuple:\n    \"\"\"Stable key for an experiment config (excludes timestamp, includes NUM_ROUNDS).\"\"\"\n    coeffs_str = \",\".join(str(c) for c in details.get(\"COEFFS\", []))\n    return (\n        details.get(\"FOLDER\", \"\"),\n        details.get(\"MODEL\", \"\"),\n        details.get(\"DATASET\", \"\"),\n        details.get(\"SOLUTION\", \"\"),\n        details.get(\"TECHNIQUE\", \"\"),\n        int(details.get(\"NUM_ROUNDS\", 0)),",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "is_completed",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def is_completed(details: dict, logs_dir: str) -> bool:\n    \"\"\"Return True if any run with the same config has checkpoint round >= NUM_ROUNDS.\"\"\"\n    folder = details.get(\"FOLDER\", \"\")\n    model = details[\"MODEL\"]\n    dataset_folder = details[\"DATASET\"].replace(\"/\", \"_\")\n    solution = details[\"SOLUTION\"]\n    technique = details[\"TECHNIQUE\"]\n    nclientes = details[\"NCLIENTES\"]\n    seed = details[\"SEED\"]\n    niid = details[\"NIID\"]",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "generate_resume_script",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def generate_resume_script(details: dict, logfolder_rel: str, completed_round: int) -> str:\n    gpu_ids = details.get(\"GPU_IDS\", [0])\n    clients_per_gpu = details.get(\"CLIENTS_PER_GPU\", 1)\n    folder = details.get(\"FOLDER\", \"\")\n    model = details[\"MODEL\"]\n    dataset = details[\"DATASET\"]\n    solution = details[\"SOLUTION\"]\n    technique = details[\"TECHNIQUE\"]\n    niid = details[\"NIID\"]\n    seed = details[\"SEED\"]",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "generate_sbatch_script",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def generate_sbatch_script(\n    details: dict,\n    logfolder_rel: str,\n    completed_round: int,\n    partition: str,\n    time_limit: str,\n) -> str:\n    gpu_ids = details.get(\"GPU_IDS\", [0])\n    n_gpus = len(gpu_ids)\n    model = details[\"MODEL\"]",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def main() -> None:\n    parser = argparse.ArgumentParser(\n        description=\"Generate resume scripts for interrupted FL experiments.\"\n    )\n    parser.add_argument(\n        \"--logs-dir\", default=\"logs\", help=\"Root logs directory (default: logs/)\"\n    )\n    parser.add_argument(\n        \"--partition\", default=\"l40s\", help=\"SLURM partition (default: l40s)\"\n    )",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLUTIONS",
+        "kind": 5,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "PACKING_SOLUTIONS = frozenset(\n    {\"fedphe\", \"nvnl\", \"fedphe-scout\", \"nvnl-scout\", \"sw\", \"rw\", \"topkrr\", \"srr\"}\n)\ndef info(msg: str) -> None:\n    print(msg, file=sys.stderr)\ndef load_details(folder: str):\n    path = os.path.join(folder, \"experiment_details.json\")\n    if not os.path.exists(path):\n        return None\n    try:",
+        "detail": "experiments.generate_resume_jobs",
         "documentation": {}
     },
     {
