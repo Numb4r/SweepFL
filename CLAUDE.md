@@ -286,6 +286,7 @@ python3 08_efficiency_frontier.py   # Pareto scatter: accuracy vs payload/round
 python3 09_summary_table.py         # CSV + LaTeX summary table
 python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
 python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy + stacked bar
+python3 14_neurons_vs_accuracy.py     # cumulative neurons transmitted vs accuracy + neurons/round bar
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
@@ -374,6 +375,23 @@ Key insight: complements study 12 (bytes axis) with a time axis, revealing how m
 
 **Output**: `13_overhead_acc_p{pct}.{png,pdf}` (one per percentage), `13_overhead_acc_plaintext.{png,pdf}`.
 **Table**: `13_overhead_summary.{csv,tex}` — columns: model, solution, percentage, niid, rounds_to_80pct, seconds_to_80pct, comm_overhead_s_median, final_acc.
+
+### Script 14 — Cumulative neurons transmitted vs accuracy
+
+Answers: how many model parameters does each technique need to transmit to reach 80% accuracy?
+
+**Neurons metric** (parameters actually sent per client per round):
+- Packing (`nvnl`, `sw`, `rw`, `fedphe`, `topkrr`, `srr`): `packs_sent × pack_size`
+- Other (`plaintext`, `ckks`, `bfv`): `n_params`
+
+**Layout**: one figure per percentage. Each figure row = (model, niid).
+- **Left panel** (2/3 width): X = cumulative neurons transmitted (M), Y-left = accuracy %, Y-right = round (approx.). Round annotations every ~4 points. ★ marker when 80% is reached.
+- **Right panel** (1/3 width): horizontal bars per technique — median neurons/round, labelled in M (e.g. `73.7k`, `12.5M`).
+
+Key insight: complements study 12 (bytes axis) and 13 (time axis) with a parameter-count axis, revealing how much of the model each technique exposes per unit of accuracy gained — independent of encoding size or hardware speed.
+
+**Output**: `14_neurons_acc_p{pct}.{png,pdf}` (one per percentage), `14_neurons_acc_plaintext.{png,pdf}`.
+**Table**: `14_neurons_summary.{csv,tex}` — columns: model, solution, percentage, niid, rounds_to_80pct, neurons_to_80pct_M, neurons_per_round_median, final_acc.
 
 ### Duplicate detection
 
