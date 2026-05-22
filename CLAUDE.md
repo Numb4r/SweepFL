@@ -8,7 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Slidhe** is a research project implementing privacy-preserving Federated Learning (FL) using Homomorphic Encryption (HE). Clients train local ML models and send encrypted gradients to an aggregation server. The system supports multiple HE schemes (CKKS, BFV, Paillier/BatchCrypt) and packet selection strategies (top-k, round-robin, sliding window, pondering-random, hybrid top-k→round-robin, spread round-robin).
+**Slidhe** is a research project implementing privacy-preserving Federated Learning (FL) using Homomorphic Encryption (HE). Clients train local ML models and send encrypted gradients to an aggregation server. The system supports multiple HE schemes (CKKS, BFV, Paillier/BatchCrypt) and packet selection strategies (top-k, round-robin, sliding window, pondering-random).
+
+**Research focus (June–August 2026)**: impact of NVNL (round-robin) sparsification on communication overhead and time, compared against FedPHE (top-k), SW (sliding window), and RW (pondering-random). Culminates in dissertation correction and journal submission. See `docs/plano_pesquisa.md` for the full research plan prompt (Claude Opus).
 
 ## Commands
 
