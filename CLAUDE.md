@@ -75,6 +75,14 @@ bash experiments/test_resume_e2e.sh
 # Checkpoint/resume unit tests (no Docker required; uses existing logs)
 bash tests/test_checkpoint_resume.sh
 
+# Audit experiment status: done / partial / missing / wrong backend
+python3 experiments/check_status.py                          # show partial + missing only
+python3 experiments/check_status.py --all                    # show everything including done
+python3 experiments/check_status.py --summary-only           # global summary table only
+python3 experiments/check_status.py --scripts sparsification_percentage_sw.sh
+python3 experiments/check_status.py --no-color               # plain text (for logs)
+python3 experiments/check_status.py --logs-dir /path/to/logs # custom logs dir
+
 # Run tests
 pytest tests/
 
@@ -83,6 +91,7 @@ pytest tests/test_server_utils.py
 pytest tests/test_model_reconstruction.py
 pytest tests/test_topkrr.py
 pytest tests/test_srr.py
+pytest tests/test_check_status.py
 
 # Test ckks_project installation inside Docker containers
 make test-ckks
@@ -221,6 +230,8 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `benchmark/cifar-10-python.tar.gz` — local copy of the official CIFAR-10 Python dataset; loaded directly without extraction via `tarfile`+`pickle`
 - `tests/test_topkrr.py` — unit tests for the `topkrr` mask logic (46 tests, no GPU required): top-k phase, round-robin phase, phase transition at `RR_START_ROUND`, coverage guarantee, edge cases
 - `tests/test_srr.py` — unit tests for the `srr` mask logic (34 tests, no GPU required): count, binary mask, uniform spacing, offset advance, coverage (when n%k==0), wrap-around, disjoint windows, edge cases
+- `experiments/check_status.py` — experiment audit tool: parses all `experiments/*.sh` scripts that call `run_theme`, enumerates every expected experiment, scans `logs/` for matching folders, and reports status per experiment; statuses: `✅ done`, `⚠️ partial`, `❌ missing`, `🔀 wrong backend` (CKKS_BACKEND in `experiment_details.json` doesn't match the script's `CKKS_BACKEND`); default shows only partial/missing — use `--all` to include done; columns: Solution, Model, Dataset, niid, %pct, seed, clients, poly, coeffs, scale, backend, Status, Rounds; `classify()` returns `(status, max_round, logfolder, found_backend)` 4-tuple; log matching uses `*clients` glob wildcard to tolerate client-count drift; backward-compat: folders without `experiment_details.json` are accepted regardless of backend
+- `tests/test_check_status.py` — 44 unit tests for `check_status.py` (no Docker required): `TestParseBashScript` (10), `TestEnumerateExpected` (5), `TestGetMaxRound` (5), `TestClassify` (10, includes backend-verification cases), `TestDiscoverScripts` (7), `TestCLI` (7)
 
 ### CSV Log Schema
 

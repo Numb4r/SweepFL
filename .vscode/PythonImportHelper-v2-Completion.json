@@ -249,6 +249,30 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2173,6 +2197,15 @@
         "documentation": {}
     },
     {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
         "label": "re",
         "kind": 6,
         "isExtraImport": true,
@@ -2182,12 +2215,27 @@
         "documentation": {}
     },
     {
-        "label": "json",
-        "kind": 6,
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
         "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
         "documentation": {}
     },
     {
@@ -2216,11 +2264,12 @@
         "documentation": {}
     },
     {
-        "label": "datetime",
-        "importPath": "datetime",
-        "description": "datetime",
+        "label": "shutil",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "datetime",
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
         "documentation": {}
     },
     {
@@ -2445,12 +2494,70 @@
         "documentation": {}
     },
     {
+        "label": "subprocess",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "subprocess",
+        "description": "subprocess",
+        "detail": "subprocess",
+        "documentation": {}
+    },
+    {
+        "label": "textwrap",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "textwrap",
+        "description": "textwrap",
+        "detail": "textwrap",
+        "documentation": {}
+    },
+    {
         "label": "pytest",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "pytest",
         "description": "pytest",
         "detail": "pytest",
+        "documentation": {}
+    },
+    {
+        "label": "classify",
+        "importPath": "check_status",
+        "description": "check_status",
+        "isExtraImport": true,
+        "detail": "check_status",
+        "documentation": {}
+    },
+    {
+        "label": "discover_scripts",
+        "importPath": "check_status",
+        "description": "check_status",
+        "isExtraImport": true,
+        "detail": "check_status",
+        "documentation": {}
+    },
+    {
+        "label": "enumerate_expected",
+        "importPath": "check_status",
+        "description": "check_status",
+        "isExtraImport": true,
+        "detail": "check_status",
+        "documentation": {}
+    },
+    {
+        "label": "get_max_round",
+        "importPath": "check_status",
+        "description": "check_status",
+        "isExtraImport": true,
+        "detail": "check_status",
+        "documentation": {}
+    },
+    {
+        "label": "parse_bash_script",
+        "importPath": "check_status",
+        "description": "check_status",
+        "isExtraImport": true,
+        "detail": "check_status",
         "documentation": {}
     },
     {
@@ -5211,6 +5318,213 @@
         "documentation": {}
     },
     {
+        "label": "Colors",
+        "kind": 6,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "class Colors:\n    RESET  = \"\\033[0m\"\n    BOLD   = \"\\033[1m\"\n    GREEN  = \"\\033[92m\"\n    YELLOW = \"\\033[93m\"\n    RED    = \"\\033[91m\"\n    CYAN   = \"\\033[96m\"\n    DIM    = \"\\033[2m\"\nUSE_COLOR = True\ndef _c(text, *codes):",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "green",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def green(t):  return _c(t, Colors.GREEN)\ndef yellow(t): return _c(t, Colors.YELLOW)\ndef red(t):    return _c(t, Colors.RED)\ndef cyan(t):   return _c(t, Colors.CYAN)\ndef bold(t):   return _c(t, Colors.BOLD)\ndef dim(t):    return _c(t, Colors.DIM)\n# ── Bash parser ───────────────────────────────────────────────────────────────\ndef _strip_quotes(s: str) -> str:\n    s = s.strip()\n    if (s.startswith('\"') and s.endswith('\"')) or \\",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "yellow",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def yellow(t): return _c(t, Colors.YELLOW)\ndef red(t):    return _c(t, Colors.RED)\ndef cyan(t):   return _c(t, Colors.CYAN)\ndef bold(t):   return _c(t, Colors.BOLD)\ndef dim(t):    return _c(t, Colors.DIM)\n# ── Bash parser ───────────────────────────────────────────────────────────────\ndef _strip_quotes(s: str) -> str:\n    s = s.strip()\n    if (s.startswith('\"') and s.endswith('\"')) or \\\n       (s.startswith(\"'\") and s.endswith(\"'\")):",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "red",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def red(t):    return _c(t, Colors.RED)\ndef cyan(t):   return _c(t, Colors.CYAN)\ndef bold(t):   return _c(t, Colors.BOLD)\ndef dim(t):    return _c(t, Colors.DIM)\n# ── Bash parser ───────────────────────────────────────────────────────────────\ndef _strip_quotes(s: str) -> str:\n    s = s.strip()\n    if (s.startswith('\"') and s.endswith('\"')) or \\\n       (s.startswith(\"'\") and s.endswith(\"'\")):\n        return s[1:-1]",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "cyan",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def cyan(t):   return _c(t, Colors.CYAN)\ndef bold(t):   return _c(t, Colors.BOLD)\ndef dim(t):    return _c(t, Colors.DIM)\n# ── Bash parser ───────────────────────────────────────────────────────────────\ndef _strip_quotes(s: str) -> str:\n    s = s.strip()\n    if (s.startswith('\"') and s.endswith('\"')) or \\\n       (s.startswith(\"'\") and s.endswith(\"'\")):\n        return s[1:-1]\n    return s",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "bold",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def bold(t):   return _c(t, Colors.BOLD)\ndef dim(t):    return _c(t, Colors.DIM)\n# ── Bash parser ───────────────────────────────────────────────────────────────\ndef _strip_quotes(s: str) -> str:\n    s = s.strip()\n    if (s.startswith('\"') and s.endswith('\"')) or \\\n       (s.startswith(\"'\") and s.endswith(\"'\")):\n        return s[1:-1]\n    return s\ndef parse_bash_script(path: str) -> dict:",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "dim",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def dim(t):    return _c(t, Colors.DIM)\n# ── Bash parser ───────────────────────────────────────────────────────────────\ndef _strip_quotes(s: str) -> str:\n    s = s.strip()\n    if (s.startswith('\"') and s.endswith('\"')) or \\\n       (s.startswith(\"'\") and s.endswith(\"'\")):\n        return s[1:-1]\n    return s\ndef parse_bash_script(path: str) -> dict:\n    \"\"\"",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "parse_bash_script",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def parse_bash_script(path: str) -> dict:\n    \"\"\"\n    Parse a bash experiment script and return a dict of config variables.\n    Handles:\n    - Multi-line array definitions\n    - Commented-out entries inside arrays (lines containing only # text)\n    - Both single and double quoted values\n    \"\"\"\n    with open(path) as f:\n        content = f.read()",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "enumerate_expected",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def enumerate_expected(cfg: dict) -> list:\n    \"\"\"\n    Replicate run_theme()'s nested loop to produce all expected experiment keys.\n    Returns a list of dicts, each describing one expected experiment.\n    \"\"\"\n    gpu_ids = cfg.get(\"GPU_IDS\", [])\n    clients_per_gpu = int(cfg.get(\"CLIENTS_PER_GPU\", 3))\n    nclientes = len(gpu_ids) * clients_per_gpu\n    folder         = cfg.get(\"FOLDER\", \"\")\n    num_rounds     = int(cfg.get(\"NUM_ROUNDS\", 50))",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "get_max_round",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def get_max_round(logfolder: str) -> int:\n    \"\"\"Return the maximum completed round from server_eval.csv, or 0 if absent.\"\"\"\n    csv_path = os.path.join(logfolder, \"server_eval.csv\")\n    if not os.path.isfile(csv_path):\n        return 0\n    last_line = \"\"\n    try:\n        with open(csv_path) as f:\n            for line in f:\n                stripped = line.strip()",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "read_experiment_details",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def read_experiment_details(logfolder: str) -> dict:\n    \"\"\"Read experiment_details.json from a log folder. Returns {} if absent/invalid.\"\"\"\n    path = os.path.join(logfolder, \"experiment_details.json\")\n    try:\n        with open(path) as f:\n            return json.load(f)\n    except (OSError, json.JSONDecodeError):\n        return {}\ndef find_log_matches(exp: dict, logs_dir: str) -> list:\n    \"\"\"",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "find_log_matches",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def find_log_matches(exp: dict, logs_dir: str) -> list:\n    \"\"\"\n    Glob for log folders matching the experiment, ignoring client count and timestamp.\n    Returns list of (max_round, logfolder_path) sorted best-first.\n    \"\"\"\n    folder        = exp[\"folder\"]\n    model         = exp[\"model\"]\n    dataset_folder= exp[\"dataset_folder\"]\n    solution      = exp[\"solution\"]\n    technique     = exp[\"technique\"]",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "classify",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def classify(exp: dict, logs_dir: str) -> tuple:\n    \"\"\"\n    Returns (status, max_round, best_logfolder, found_backend) where status is\n    'done', 'partial', 'missing', or 'wrong_backend'.\n    found_backend is non-empty only when status == 'wrong_backend', indicating\n    the CKKS_BACKEND actually recorded in experiment_details.json.\n    \"\"\"\n    matches = find_log_matches(exp, logs_dir)\n    if not matches:\n        return (\"missing\", 0, \"\", \"\")",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "render_table",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def render_table(headers: list, rows: list, title: str = \"\"):\n    \"\"\"Print a Unicode box-drawing table.\"\"\"\n    widths = _col_widths(rows, headers)\n    top    = \"┌\" + \"┬\".join(\"─\" * (w + 2) for w in widths) + \"┐\"\n    mid    = \"├\" + \"┼\".join(\"─\" * (w + 2) for w in widths) + \"┤\"\n    bottom = \"└\" + \"┴\".join(\"─\" * (w + 2) for w in widths) + \"┘\"\n    def row_str(cells):\n        return \"│\" + \"│\".join(\n            \" \" + _pad(c, widths[i]) + \" \" for i, c in enumerate(cells)\n        ) + \"│\"",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "render_script_section",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def render_script_section(script_name: str, cfg: dict, results: list, show_all: bool):\n    \"\"\"\n    Print the section for one script.\n    results: list of (exp, status, max_round, logfolder, found_backend)\n    \"\"\"\n    folder     = cfg.get(\"FOLDER\", \"(no folder)\")\n    num_rounds = cfg.get(\"NUM_ROUNDS\", \"?\")\n    total         = len(results)\n    n_done        = sum(1 for r in results if r[1] == \"done\")\n    n_partial     = sum(1 for r in results if r[1] == \"partial\")",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "discover_scripts",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def discover_scripts(experiments_dir: str, include_test: bool,\n                     filter_scripts: list) -> list:\n    \"\"\"\n    Find all .sh files that call run_theme and aren't lib/template/test files.\n    Returns list of script paths sorted alphabetically.\n    \"\"\"\n    candidates = sorted(Path(experiments_dir).glob(\"*.sh\"))\n    result = []\n    for p in candidates:\n        name = p.name",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "def main():\n    global USE_COLOR\n    parser = argparse.ArgumentParser(\n        description=\"Audit experiment status: done / partial / missing.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\"--logs-dir\", default=\"logs\",\n                        help=\"Path to the logs directory (default: logs/)\")\n    parser.add_argument(\"--experiments-dir\", default=\"experiments\",",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLUTIONS",
+        "kind": 5,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "PACKING_SOLUTIONS = frozenset(\n    {\"fedphe\", \"nvnl\", \"fedphe-scout\", \"nvnl-scout\", \"sw\", \"rw\", \"topkrr\", \"srr\"}\n)\n# Scripts to exclude even when they contain run_theme\nEXCLUDE_SCRIPTS = frozenset(\n    {\"lib.sh\", \"lib_tmux.sh\", \"lib_slurm.sh\", \"template.sh\"}\n)\n# Test scripts excluded by default\nTEST_SCRIPTS_RE = re.compile(r\"^test_\")\n# ── ANSI colors ───────────────────────────────────────────────────────────────",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "EXCLUDE_SCRIPTS",
+        "kind": 5,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "EXCLUDE_SCRIPTS = frozenset(\n    {\"lib.sh\", \"lib_tmux.sh\", \"lib_slurm.sh\", \"template.sh\"}\n)\n# Test scripts excluded by default\nTEST_SCRIPTS_RE = re.compile(r\"^test_\")\n# ── ANSI colors ───────────────────────────────────────────────────────────────\nclass Colors:\n    RESET  = \"\\033[0m\"\n    BOLD   = \"\\033[1m\"\n    GREEN  = \"\\033[92m\"",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "TEST_SCRIPTS_RE",
+        "kind": 5,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "TEST_SCRIPTS_RE = re.compile(r\"^test_\")\n# ── ANSI colors ───────────────────────────────────────────────────────────────\nclass Colors:\n    RESET  = \"\\033[0m\"\n    BOLD   = \"\\033[1m\"\n    GREEN  = \"\\033[92m\"\n    YELLOW = \"\\033[93m\"\n    RED    = \"\\033[91m\"\n    CYAN   = \"\\033[96m\"\n    DIM    = \"\\033[2m\"",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "USE_COLOR",
+        "kind": 5,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "USE_COLOR = True\ndef _c(text, *codes):\n    if not USE_COLOR:\n        return text\n    return \"\".join(codes) + text + Colors.RESET\ndef green(t):  return _c(t, Colors.GREEN)\ndef yellow(t): return _c(t, Colors.YELLOW)\ndef red(t):    return _c(t, Colors.RED)\ndef cyan(t):   return _c(t, Colors.CYAN)\ndef bold(t):   return _c(t, Colors.BOLD)",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "STATUS_ICON",
+        "kind": 5,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "STATUS_ICON = {\n    \"done\":          \"✅\",\n    \"partial\":       \"⚠️ \",\n    \"missing\":       \"❌\",\n    \"wrong_backend\": \"🔀\",\n}\nSTATUS_LABEL = {\n    \"done\":          \"done\",\n    \"partial\":       \"partial\",\n    \"missing\":       \"missing\",",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
+        "label": "STATUS_LABEL",
+        "kind": 5,
+        "importPath": "experiments.check_status",
+        "description": "experiments.check_status",
+        "peekOfCode": "STATUS_LABEL = {\n    \"done\":          \"done\",\n    \"partial\":       \"partial\",\n    \"missing\":       \"missing\",\n    \"wrong_backend\": \"wrong backend\",\n}\ndef _status_str(status: str, extra: str = \"\") -> str:\n    \"\"\"Return a colored status string. extra appends info (e.g. found backend).\"\"\"\n    icon  = STATUS_ICON.get(status, \"?\")\n    label = STATUS_LABEL.get(status, status)",
+        "detail": "experiments.check_status",
+        "documentation": {}
+    },
+    {
         "label": "parse_slurm_md",
         "kind": 2,
         "importPath": "experiments.estimate_time",
@@ -5478,6 +5792,42 @@
         "description": "experiments.generate_resume_jobs",
         "peekOfCode": "PACKING_SOLUTIONS = frozenset(\n    {\"fedphe\", \"nvnl\", \"fedphe-scout\", \"nvnl-scout\", \"sw\", \"rw\", \"topkrr\", \"srr\"}\n)\ndef info(msg: str) -> None:\n    print(msg, file=sys.stderr)\ndef load_details(folder: str):\n    path = os.path.join(folder, \"experiment_details.json\")\n    if not os.path.exists(path):\n        return None\n    try:",
         "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "find_chains",
+        "kind": 2,
+        "importPath": "experiments.merge_resume",
+        "description": "experiments.merge_resume",
+        "peekOfCode": "def find_chains(logs_dir: Path) -> list[list[Path]]:\n    \"\"\"\n    Return a list of merge-ready chains.\n    Each chain is [original, resume1, resume2, ...] ordered oldest→newest.\n    Only chains whose LAST folder is complete (all rounds done) are returned.\n    Chains whose original already has MERGED_FROM are skipped (already merged).\n    \"\"\"\n    # Map: original_path → chain  (None = conflicted, skip)\n    chains_by_original: dict[Path, list[Path] | None] = {}\n    for details_path in sorted(logs_dir.rglob(\"experiment_details.json\")):",
+        "detail": "experiments.merge_resume",
+        "documentation": {}
+    },
+    {
+        "label": "merge_chain",
+        "kind": 2,
+        "importPath": "experiments.merge_resume",
+        "description": "experiments.merge_resume",
+        "peekOfCode": "def merge_chain(chain: list[Path], *, dry_run: bool, logs_dir: Path) -> bool:\n    \"\"\"\n    Merge all CSV/model/checkpoint data from chain[1:] into chain[0] (original).\n    Moves chain[1:] to <parent>/archive/ afterwards.\n    Returns True on success.\n    \"\"\"\n    original = chain[0]\n    resumed_folders = chain[1:]\n    archive_dir = original.parent / \"archive\"\n    if dry_run:",
+        "detail": "experiments.merge_resume",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "experiments.merge_resume",
+        "description": "experiments.merge_resume",
+        "peekOfCode": "def main() -> None:\n    parser = argparse.ArgumentParser(\n        description=\"Merge original + resumed experiment folders in-place.\",\n        formatter_class=argparse.RawDescriptionHelpFormatter,\n        epilog=__doc__,\n    )\n    parser.add_argument(\n        \"--logs-dir\", default=\"logs\", help=\"Root logs directory (default: logs/)\"\n    )\n    parser.add_argument(",
+        "detail": "experiments.merge_resume",
+        "documentation": {}
+    },
+    {
+        "label": "CSV_FILES",
+        "kind": 5,
+        "importPath": "experiments.merge_resume",
+        "description": "experiments.merge_resume",
+        "peekOfCode": "CSV_FILES = [\"train.csv\", \"evaluate.csv\", \"server_agg.csv\", \"server_eval.csv\"]\n# Columns to sort by when merging each CSV\n_SORT_COLS: dict[str, list[str]] = {\n    \"train.csv\": [\"round\", \"cid\"],\n    \"evaluate.csv\": [\"round\", \"cid\"],\n    \"server_agg.csv\": [\"round\"],\n    \"server_eval.csv\": [\"round\"],\n}\n# Columns that uniquely identify a row (used for dedup)\n_DEDUP_COLS: dict[str, list[str]] = {",
+        "detail": "experiments.merge_resume",
         "documentation": {}
     },
     {
@@ -7800,6 +8150,114 @@
         "description": "studies.sparsification_percentage.load_data",
         "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    return Path(__file__).parent / _DEFAULT_LOGS_RELATIVE\ndef _parse_folder(name: str) -> dict | None:\n    m = _FOLDER_RE.match(name)",
         "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "TestParseBashScript",
+        "kind": 6,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "class TestParseBashScript:\n    def test_scalars(self, minimal_script):\n        cfg = parse_bash_script(str(minimal_script))\n        assert cfg[\"NUM_ROUNDS\"] == 10\n        assert cfg[\"CLIENTS_PER_GPU\"] == 2\n        assert cfg[\"SCALE_POWER\"] == 30\n        assert cfg[\"PLAIN_MODULUS\"] == -1\n        assert cfg[\"N_LENGTH\"] == -1\n        assert cfg[\"FOLDER\"] == \"my_folder\"\n        assert cfg[\"TECHNIQUE\"] == \"none\"",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "TestEnumerateExpected",
+        "kind": 6,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "class TestEnumerateExpected:\n    def test_packing_count(self, minimal_script):\n        \"\"\"nvnl (packing) × 1 niid × 1 pct × 1 model × 1 seed = 1 experiment.\"\"\"\n        cfg = parse_bash_script(str(minimal_script))\n        exps = enumerate_expected(cfg)\n        assert len(exps) == 1\n    def test_packing_multi_pct(self, commented_pairs_script):\n        \"\"\"nvnl × 2 niids × 5 pcts × 1 model × 1 seed = 10 experiments.\"\"\"\n        cfg = parse_bash_script(str(commented_pairs_script))\n        exps = enumerate_expected(cfg)",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "TestGetMaxRound",
+        "kind": 6,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "class TestGetMaxRound:\n    def test_missing_file(self, tmp_path):\n        assert get_max_round(str(tmp_path / \"nonexistent\")) == 0\n    def test_empty_dir(self, tmp_path):\n        log_dir = tmp_path / \"exp\"\n        log_dir.mkdir()\n        assert get_max_round(str(log_dir)) == 0\n    def test_header_only(self, tmp_path):\n        log_dir = tmp_path / \"exp\"\n        log_dir.mkdir()",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "TestClassify",
+        "kind": 6,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "class TestClassify:\n    \"\"\"Uses real logs dir structure with synthetic log folders.\"\"\"\n    def _make_exp(self, folder=\"my_folder\", model=\"resnet20\",\n                  dataset_folder=\"CIFAR10\", solution=\"nvnl\",\n                  technique=\"none\", num_rounds=10, nclientes=4,\n                  seed=\"42\", niid=\"0.5\", pct=\"0.3\", poly=\"4096\",\n                  plain_modulus=\"-1\", n_length=\"-1\", coeffs=\"60\",\n                  scale=None, key_type=\"None\", ckks_backend=\"tenseal\"):\n        scale = scale or str(2 ** 30)\n        return {",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "TestDiscoverScripts",
+        "kind": 6,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "class TestDiscoverScripts:\n    def _make_script(self, directory: Path, name: str, has_run_theme: bool,\n                     defines_run_theme: bool = False) -> Path:\n        p = directory / name\n        if defines_run_theme:\n            body = \"run_theme() {\\n  echo hi\\n}\\nrun_theme\\n\"\n        elif has_run_theme:\n            body = \"source lib.sh\\nrun_theme\\n\"\n        else:\n            body = \"echo hello\\n\"",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "TestCLI",
+        "kind": 6,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "class TestCLI:\n    \"\"\"Run the script as a subprocess against the real repo.\"\"\"\n    SCRIPT = str(_ROOT / \"experiments\" / \"check_status.py\")\n    def _run(self, *extra_args):\n        cmd = [sys.executable, self.SCRIPT] + list(extra_args)\n        result = subprocess.run(\n            cmd,\n            cwd=str(_ROOT),\n            capture_output=True,\n            text=True,",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "tmp_exp_dir",
+        "kind": 2,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "def tmp_exp_dir(tmp_path):\n    \"\"\"Temporary experiments directory with a minimal script.\"\"\"\n    exp_dir = tmp_path / \"experiments\"\n    exp_dir.mkdir()\n    return exp_dir\n@pytest.fixture()\ndef tmp_logs_dir(tmp_path):\n    \"\"\"Temporary logs directory.\"\"\"\n    logs_dir = tmp_path / \"logs\"\n    logs_dir.mkdir()",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "tmp_logs_dir",
+        "kind": 2,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "def tmp_logs_dir(tmp_path):\n    \"\"\"Temporary logs directory.\"\"\"\n    logs_dir = tmp_path / \"logs\"\n    logs_dir.mkdir()\n    return logs_dir\n@pytest.fixture()\ndef minimal_script(tmp_exp_dir):\n    \"\"\"A minimal experiment script that produces 2 experiments (packing, 1 niid, 1 pct).\"\"\"\n    p = tmp_exp_dir / \"my_experiment.sh\"\n    _write(p, \"\"\"\\",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "minimal_script",
+        "kind": 2,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "def minimal_script(tmp_exp_dir):\n    \"\"\"A minimal experiment script that produces 2 experiments (packing, 1 niid, 1 pct).\"\"\"\n    p = tmp_exp_dir / \"my_experiment.sh\"\n    _write(p, \"\"\"\\\n        #!/bin/bash\n        GPU_IDS=(0 1)\n        CLIENTS_PER_GPU=2\n        FOLDER=\"my_folder\"\n        NUM_ROUNDS=10\n        NIIDS=(0.5)",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "commented_pairs_script",
+        "kind": 2,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "def commented_pairs_script(tmp_exp_dir):\n    \"\"\"Script where MODEL_DATASET_PAIRS has commented-out entries.\"\"\"\n    p = tmp_exp_dir / \"commented.sh\"\n    _write(p, \"\"\"\\\n        #!/bin/bash\n        GPU_IDS=(5 6 7)\n        CLIENTS_PER_GPU=3\n        FOLDER=\"sparsification_percentage\"\n        NUM_ROUNDS=200\n        NIIDS=(0.1 1)",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "_ROOT",
+        "kind": 5,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "_ROOT = Path(__file__).parent.parent\n_EXP_DIR = _ROOT / \"experiments\"\nsys.path.insert(0, str(_EXP_DIR))\nfrom check_status import (\n    classify,\n    discover_scripts,\n    enumerate_expected,\n    get_max_round,\n    parse_bash_script,\n)",
+        "detail": "tests.test_check_status",
+        "documentation": {}
+    },
+    {
+        "label": "_EXP_DIR",
+        "kind": 5,
+        "importPath": "tests.test_check_status",
+        "description": "tests.test_check_status",
+        "peekOfCode": "_EXP_DIR = _ROOT / \"experiments\"\nsys.path.insert(0, str(_EXP_DIR))\nfrom check_status import (\n    classify,\n    discover_scripts,\n    enumerate_expected,\n    get_max_round,\n    parse_bash_script,\n)\n# ── fixtures ───────────────────────────────────────────────────────────────────",
+        "detail": "tests.test_check_status",
         "documentation": {}
     },
     {
