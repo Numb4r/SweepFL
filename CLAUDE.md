@@ -61,6 +61,7 @@ tail -f logs/slurm_<jobid>.out
 ./resume_all.sh
 ./resume_all.sh --dry-run            # list what would be submitted (no files created)
 ./resume_all.sh --generate-only      # generate resume.sh + resume_sbatch.sh without submitting
+./resume_all.sh --merge-only         # merge completed (original + resumed) pairs, no submission
 ./resume_all.sh --partition p100     # override SLURM partition (default: l40s)
 ./resume_all.sh --time 1-00:00:00    # override wall-time limit (default: 2-00:00:00)
 ./resume_all.sh --logs-dir /path     # use a non-default logs directory
@@ -69,11 +70,20 @@ tail -f logs/slurm_<jobid>.out
 python3 experiments/generate_resume_jobs.py
 python3 experiments/generate_resume_jobs.py --dry-run
 
+# Merge original + resumed experiment folders in-place (called automatically by resume.sh)
+python3 experiments/merge_resume.py                      # interactive y/N prompt
+python3 experiments/merge_resume.py --dry-run            # show what would be merged
+python3 experiments/merge_resume.py --yes                # skip prompt (used in SLURM/batch)
+python3 experiments/merge_resume.py --logs-dir /path     # custom logs directory
+
 # End-to-end resume smoke test (Docker, ~5 min: plaintext seed → nvnl 1 round → nvnl 2 rounds)
 bash experiments/test_resume_e2e.sh
 
 # Checkpoint/resume unit tests (no Docker required; uses existing logs)
 bash tests/test_checkpoint_resume.sh
+
+# Merge smoke tests (no Docker required; creates synthetic log structures)
+bash tests/test_merge_resume.sh
 
 # Audit experiment status: done / partial / missing / wrong backend
 python3 experiments/check_status.py                          # show partial + missing only
@@ -92,6 +102,7 @@ pytest tests/test_model_reconstruction.py
 pytest tests/test_topkrr.py
 pytest tests/test_srr.py
 pytest tests/test_check_status.py
+bash tests/test_merge_resume.sh
 
 # Test ckks_project installation inside Docker containers
 make test-ckks
@@ -204,11 +215,12 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `encryption/ckks_backend.py` — CKKS backend abstraction (mirrored to `client/encryption/` and `server/encryption/`)
 - `encryption/` and `server/encryption/` and `client/encryption/` — largely mirrored; `encrypt.py` defines base `Encrypt` class; `ckks.py`, `bfv.py`, `paillier.py` implement scheme-specific logic; `quantize.py` / `quantize_batchcrypt.py` handle quantization
 - `sync_remote.sh` — rsync to `yuri.faria@ssh.recod.ic.unicamp.br:~/keys` (excludes `.venv/`, `logs/`, `logs/**`, `__pycache__`, `*.csv`, `.git/`); `logs/**` is excluded in addition to `logs/` to prevent `--delete` from removing experiment results inside `logs/` on the cluster
-- `resume_all.sh` — top-level resume launcher: runs `generate_resume_jobs.py`, submits all generated `resume_sbatch.sh` files via `sbatch`; flags: `--dry-run`, `--generate-only`, `--partition`, `--time`, `--logs-dir`
+- `resume_all.sh` — top-level resume launcher: runs `generate_resume_jobs.py`, submits all generated `resume_sbatch.sh` files via `sbatch`; flags: `--dry-run`, `--generate-only`, `--merge-only`, `--partition`, `--time`, `--logs-dir`; `--merge-only` skips submission and runs `merge_resume.py` interactively
 - `experiments/lib.sh` — auto-dispatcher: sources `lib_slurm.sh` when `SLURM_JOB_ID` is set, otherwise sources `lib_tmux.sh`; experiment scripts always `source lib.sh` and call `run_theme` — no changes needed per environment
 - `experiments/lib_tmux.sh` — tmux backend (local/Docker/Singularity): launches server as tmux session `SERVER` and one session per client; waits for server session to exit, then kills client sessions; contains `_find_resume_checkpoint` and `_write_incomplete_log` helpers
 - `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free; contains same `_find_resume_checkpoint`, `_write_incomplete_log` helpers as lib_tmux.sh plus `JOB_DEADLINE_EPOCH` computation
-- `experiments/generate_resume_jobs.py` — scans `logs/` for `INCOMPLETE.log` files, checks if already completed (skips), deduplicates by config fingerprint (picks best checkpoint), generates `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder; outputs sbatch paths to stdout, info to stderr
+- `experiments/generate_resume_jobs.py` — scans `logs/` for `INCOMPLETE.log` files, checks if already completed (skips), deduplicates by config fingerprint (picks best checkpoint), generates `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder; the generated `resume.sh` automatically calls `merge_resume.py --yes` after `run_theme` so the merge happens at the end of every resumed experiment; outputs sbatch paths to stdout, info to stderr
+- `experiments/merge_resume.py` — merges original + resumed experiment folders in-place: appends CSV rows from all resumed folders into the original, copies model snapshots, replaces checkpoint with the latest, updates `experiment_details.json` with `MERGED_FROM`/`MERGED_AT`, removes `INCOMPLETE.log`; archives all non-original folders to `<parent>/archive/` (safety backup of original also kept there); handles chains of N resumes; skips already-merged originals (idempotent); flags: `--dry-run`, `--yes`/`--auto`, `--logs-dir`
 - `experiments/test_resume_e2e.sh` — end-to-end Docker resume smoke test: plaintext seed → nvnl 1-round (creates checkpoint) → nvnl 2-round (detects checkpoint, resumes); verifies experiment_details.json, server_eval.csv round numbering, `[RESUME]` in logs, checkpoint updated
 - `experiments/sparsification_percentage_topkrr.sh` — topkrr experiment; same sweep as other sparsification scripts; sets `RR_START_ROUND=100` (switches at round 100 out of 200)
 - `sbatch/sbatch_sparsification_percentage_topkrr.sh` — SLURM job for the topkrr sweep (l40s, 3 GPUs, 9 clients)
@@ -217,6 +229,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `experiments/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
 - `experiments/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
 - `tests/test_checkpoint_resume.sh` — unit tests for checkpoint/resume logic (6 tests): verifies checkpoint files present, `_find_resume_checkpoint` for completed/incomplete runs, Python round offset math, `lib_slurm.sh` path, artificial partial checkpoint selection
+- `tests/test_merge_resume.sh` — smoke tests for `merge_resume.py` (31 tests, no Docker): dry-run, basic merge (2+2 rounds), CSV row counts, model snapshots, checkpoint update, `experiment_details.json` metadata, archive behaviour, idempotency, 3-folder chain merge, conflict detection
 - `experiments/estimate_time.py` — estimates wall-clock time for an experiment script by parsing its config variables and applying per-machine speed factors; supports `--machine <partition>`, `--all`, and `--margin <factor>`; machine table sourced from `SLURM.md`
 - `experiments/ESTIMATION_METHODOLOGY.md` — documents the time estimation model (GPU-bound train time, CPU-bound HE time, scaling formulas)
 - `sbatch/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
@@ -458,7 +471,9 @@ Every experiment saves rolling checkpoints so interrupted runs (SLURM wall-time,
 
 **Graceful time-limit shutdown** (SLURM only): `lib_slurm.sh` computes `JOB_DEADLINE_EPOCH` via `squeue` and passes it to the server container. In `configure_fit`, if `_time_remaining() < CHECKPOINT_THRESHOLD_SECS` (default 300 s), the server writes `INCOMPLETE.log` and calls `sys.exit(0)`. The checkpoint from the previous round is already saved.
 
-**Generating resume jobs**: `experiments/generate_resume_jobs.py` scans `logs/` for `INCOMPLETE.log` files, skips any whose config already has a completed run (`meta.json round >= NUM_ROUNDS`), deduplicates to the best checkpoint per config, and writes `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder. `resume_all.sh` calls the generator and submits all output sbatch files.
+**Generating resume jobs**: `experiments/generate_resume_jobs.py` scans `logs/` for `INCOMPLETE.log` files, skips any whose config already has a completed run (`meta.json round >= NUM_ROUNDS`), deduplicates to the best checkpoint per config, and writes `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder. The generated `resume.sh` always calls `python3 experiments/merge_resume.py --yes` after `run_theme` so the merge is automatic. `resume_all.sh` calls the generator and submits all output sbatch files.
+
+**Post-resume merge**: when a resumed experiment finishes, `experiments/merge_resume.py` merges the two folders **in-place** into the original: CSV rows from the resumed folder are appended and sorted by round, `model/round_*.npz` snapshots are copied, the checkpoint is replaced with the latest one, `experiment_details.json` gains `MERGED_FROM` / `MERGED_AT`, and `INCOMPLETE.log` is deleted. The resumed folder(s) are **moved to `<parent>/archive/`**; a safety backup of the original is also placed there before any modification. Running the script a second time is a no-op (idempotent). To merge manually after experiments already ran: `./resume_all.sh --merge-only` (interactive) or `python3 experiments/merge_resume.py --dry-run` (preview only).
 
 ### Convenção: experiment_details.json
 
