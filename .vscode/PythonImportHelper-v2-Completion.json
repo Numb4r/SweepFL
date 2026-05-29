@@ -273,6 +273,22 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -3567,7 +3583,7 @@
         "kind": 2,
         "importPath": "client.literature.NVNL",
         "description": "client.literature.NVNL",
-        "peekOfCode": "def fit_nvnl(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
+        "peekOfCode": "def fit_nvnl(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    # he_packs_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu",
         "detail": "client.literature.NVNL",
         "documentation": {}
     },
@@ -3693,7 +3709,7 @@
         "kind": 2,
         "importPath": "client.literature.batchcrypt",
         "description": "client.literature.batchcrypt",
-        "peekOfCode": "def fit_batchcrypt(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=int(os.environ.get(\"BATCH_SIZE\", \"4\")), verbose=0)",
+        "peekOfCode": "def fit_batchcrypt(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    # he_parameters_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu\n    train_time_clock = time.time()",
         "detail": "client.literature.batchcrypt",
         "documentation": {}
     },
@@ -3702,7 +3718,7 @@
         "kind": 2,
         "importPath": "client.literature.bfv",
         "description": "client.literature.bfv",
-        "peekOfCode": "def fit_bfv(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()\n    history = self.model.fit(self.x_train, self.y_train, epochs=1, batch_size=int(os.environ.get(\"BATCH_SIZE\", \"4\")), verbose=0)",
+        "peekOfCode": "def fit_bfv(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    # he_parameters_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu\n    train_time_clock = time.time()",
         "detail": "client.literature.bfv",
         "documentation": {}
     },
@@ -3900,7 +3916,7 @@
         "kind": 2,
         "importPath": "client.literature.ckks",
         "description": "client.literature.ckks",
-        "peekOfCode": "def fit_ckks(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    if config[\"round\"] % 5 == 0:\n        v = flat_parameters(self.model.get_weights())\n        self.sigma = estimate_ckks_sigma(self.context, v, self.num_clients)",
+        "peekOfCode": "def fit_ckks(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        he_parameters_to_model(self, config)\n    # he_parameters_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu\n    if config[\"round\"] % 5 == 0:",
         "detail": "client.literature.ckks",
         "documentation": {}
     },
@@ -3918,7 +3934,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def fit_fedphe(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
+        "peekOfCode": "def fit_fedphe(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    # he_packs_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -4062,7 +4078,7 @@
         "kind": 2,
         "importPath": "client.literature.rw",
         "description": "client.literature.rw",
-        "peekOfCode": "def fit_rw(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
+        "peekOfCode": "def fit_rw(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    # he_packs_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu",
         "detail": "client.literature.rw",
         "documentation": {}
     },
@@ -4107,7 +4123,7 @@
         "kind": 2,
         "importPath": "client.literature.set_parameters",
         "description": "client.literature.set_parameters",
-        "peekOfCode": "def he_parameters_to_model(self, config):\n        if self.homomorphic_type == 'Paillier':\n            quan_bits     = 32\n            batch_size    = 50\n            padding_bits  = int(np.ceil(np.log2(self.num_clients + 1)))\n            elem_bits     = quan_bits + padding_bits\n            he_parameters = pickle.loads(config['he'])\n            he_parameters = self.context.decrypt(he_parameters)\n            print(f\"[DEBUG] Batchcrypt Pós-Desempacotar: {list(he_parameters[:5])}\")\n            he_parameters = unbatching_padding_batchcrypt(he_parameters, elem_bits, batch_size)[:(int(np.prod((self.len_shared_data))))]",
+        "peekOfCode": "def he_parameters_to_model(self, config):\n        t0 = time.time()\n        c0 = time.process_time()\n        if self.homomorphic_type == 'Paillier':\n            quan_bits     = 32\n            batch_size    = 50\n            padding_bits  = int(np.ceil(np.log2(self.num_clients + 1)))\n            elem_bits     = quan_bits + padding_bits\n            he_parameters = pickle.loads(config['he'])\n            he_parameters = self.context.decrypt(he_parameters)",
         "detail": "client.literature.set_parameters",
         "documentation": {}
     },
@@ -4116,7 +4132,7 @@
         "kind": 2,
         "importPath": "client.literature.set_parameters",
         "description": "client.literature.set_parameters",
-        "peekOfCode": "def he_packs_to_model(self, config):\n    chunk_size = self.key_config[\"poly_modulus_degree\"]//2\n    packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)\n    cyphered_packs     = pickle.loads(config['he'])\n    backend            = get_backend(self.key_config.get(\"ckks_backend\"))\n    decyphered_pack    = decypher_packs(cyphered_packs, self.context, backend=backend)\n    aggredated_mask    = pickle.loads(config['mask'])\n    for idx_mask, m in enumerate(aggredated_mask):\n        if m > 0:\n            if self.only_sum:",
+        "peekOfCode": "def he_packs_to_model(self, config):\n    t0 = time.time()\n    c0 = time.process_time()\n    chunk_size = self.key_config[\"poly_modulus_degree\"]//2\n    packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)\n    cyphered_packs     = pickle.loads(config['he'])\n    backend            = get_backend(self.key_config.get(\"ckks_backend\"))\n    decyphered_pack    = decypher_packs(cyphered_packs, self.context, backend=backend)\n    aggredated_mask    = pickle.loads(config['mask'])\n    for idx_mask, m in enumerate(aggredated_mask):",
         "detail": "client.literature.set_parameters",
         "documentation": {}
     },
@@ -4125,7 +4141,7 @@
         "kind": 2,
         "importPath": "client.literature.srr",
         "description": "client.literature.srr",
-        "peekOfCode": "def fit_srr(self, parameters, config):\n    current_round = config['round']\n    # ── Decrypt ───────────────────────────────────────────────────────────────\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock",
+        "peekOfCode": "def fit_srr(self, parameters, config):\n    current_round = config['round']\n    # ── Decrypt ───────────────────────────────────────────────────────────────\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    # he_packs_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.",
         "detail": "client.literature.srr",
         "documentation": {}
     },
@@ -4134,7 +4150,7 @@
         "kind": 2,
         "importPath": "client.literature.sw",
         "description": "client.literature.sw",
-        "peekOfCode": "def fit_sw(self, parameters, config):\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu\n    decrypt_time_clock = time.time() - decrypt_time_clock\n    train_time_clock = time.time()\n    train_time_cpu   = time.process_time()",
+        "peekOfCode": "def fit_sw(self, parameters, config):\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:\n            he_packs_to_model(self, config)\n    # he_packs_to_model sets self.last_decrypt_* timing only the model\n    # manipulation (deserialize + decrypt + reshape), excluding disk writes.\n    decrypt_time_clock = self.last_decrypt_clock\n    decrypt_time_cpu   = self.last_decrypt_cpu",
         "detail": "client.literature.sw",
         "documentation": {}
     },
@@ -4170,7 +4186,7 @@
         "kind": 2,
         "importPath": "client.literature.topkrr",
         "description": "client.literature.topkrr",
-        "peekOfCode": "def fit_topkrr(self, parameters, config):\n    \"\"\"FedAvg fit with top-k selection for the first rr_start_round rounds,\n    then round-robin for all subsequent rounds.\"\"\"\n    rr_start = self.rr_start_round\n    current_round = config['round']\n    # ── Decrypt ───────────────────────────────────────────────────────────────\n    decrypt_time_clock = time.time()\n    decrypt_time_cpu   = time.process_time()\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:",
+        "peekOfCode": "def fit_topkrr(self, parameters, config):\n    \"\"\"FedAvg fit with top-k selection for the first rr_start_round rounds,\n    then round-robin for all subsequent rounds.\"\"\"\n    rr_start = self.rr_start_round\n    current_round = config['round']\n    # ── Decrypt ───────────────────────────────────────────────────────────────\n    self.last_decrypt_clock = 0.0\n    self.last_decrypt_cpu   = 0.0\n    if len(config['he']) > 0 and self.homomorphic:\n        if self.packing:",
         "detail": "client.literature.topkrr",
         "documentation": {}
     },
@@ -8069,6 +8085,294 @@
         "description": "studies.sparsification_percentage.14_neurons_vs_accuracy",
         "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Neuron estimation ─────────────────────────────────────────────────────────\ndef _neurons_per_client(row) -> float:\n    \"\"\"Parameters actually transmitted per client per round.\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in PACKING_SOLS:",
         "detail": "studies.sparsification_percentage.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_bytes",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def compute_cumulative_bytes(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum bytes over clients per round, then cumsum over rounds per experiment.\"\"\"\n    df = train.copy()\n    df[\"bytes_client\"] = df.apply(_est_bytes_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"bytes_client\"]\n        .sum()\n        .reset_index()\n        .rename(columns={\"bytes_client\": \"bytes_round\"})",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Merge cumulative bytes with server evaluation accuracy, average over seeds.\"\"\"\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[[*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (\n        merged.groupby(avg_group, dropna=False)\n        .agg(cumulative_mb=(\"cumulative_mb\", \"mean\"),",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "plot_for_percentage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def plot_for_percentage(data: pd.DataFrame, pct: float,\n                        models: list, niids: list) -> plt.Figure | None:\n    sub = data[data[\"percentage\"].notna() & (data[\"percentage\"] == pct)].copy()\n    if sub.empty:\n        return None\n    n_rows = len(models) * len(niids)\n    if n_rows == 0:\n        return None\n    fig, axes = plt.subplots(\n        n_rows, 2,",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def build_summary(data: pd.DataFrame) -> pd.DataFrame:\n    dims = [c for c in DIMS if c in data.columns]\n    rows = []\n    for keys, group in data.groupby(dims, dropna=False):\n        kd = dict(zip(dims, keys if isinstance(keys, tuple) else [keys]))\n        rows.append({\n            **kd,\n            \"max_acc\":      _max_acc(group),\n            \"round_at_max\": _peak_round(group),\n            \"mb_at_max\":    _cost_at_peak(group),",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame):\n    path = OUT_TAB / \"15_bytes_maxacc.csv\"\n    summary.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"max_acc\": r\"Max acc.\", \"round_at_max\": \"Peak round\",\n        \"mb_at_max\": \"MB at peak\", \"final_acc\": \"Final acc.\",\n    }",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"max_acc\": r\"Max acc.\", \"round_at_max\": \"Peak round\",\n        \"mb_at_max\": \"MB at peak\", \"final_acc\": \"Final acc.\",\n    }\n    cols = [c for c in display if c in summary.columns]\n    # best max_acc per (model, niid, percentage) is bolded\n    grp_cols = [c for c in [\"model\", \"niid\", \"percentage\"] if c in summary.columns]\n    best_idx = (summary.groupby(grp_cols, dropna=False)[\"max_acc\"].idxmax()",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train      = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "SOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",\n    \"batchcrypt\": \"#795548\",",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "SOL_MARKERS = {\n    \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\", \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "description": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Raw float32 model data per client per round (pre-encryption).\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in PACKING_SOLS:",
+        "detail": "studies.sparsification_percentage.15_bytes_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_overhead",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum comm overhead over clients per round, then cumsum over rounds.\"\"\"\n    df = train.copy()\n    present = [c for c in COMM_COLS if c in df.columns]\n    df[\"overhead_s\"] = df[present].fillna(0.0).sum(axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"overhead_s\"]\n        .sum()\n        .reset_index()",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Merge cumulative overhead with server evaluation accuracy, avg over seeds.\"\"\"\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "plot_for_percentage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def plot_for_percentage(data: pd.DataFrame, pct: float,\n                        models: list, niids: list) -> plt.Figure | None:\n    sub = data[data[\"percentage\"].notna() & (data[\"percentage\"] == pct)].copy()\n    if sub.empty:\n        return None\n    n_rows = len(models) * len(niids)\n    if n_rows == 0:\n        return None\n    fig, axes = plt.subplots(\n        n_rows, 2,",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def build_summary(data: pd.DataFrame) -> pd.DataFrame:\n    dims = [c for c in DIMS if c in data.columns]\n    rows = []\n    for keys, group in data.groupby(dims, dropna=False):\n        kd = dict(zip(dims, keys if isinstance(keys, tuple) else [keys]))\n        rows.append({\n            **kd,\n            \"max_acc\":        _max_acc(group),\n            \"round_at_max\":   _peak_round(group),\n            \"seconds_at_max\": _cost_at_peak(group),",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame):\n    path = OUT_TAB / \"16_overhead_maxacc.csv\"\n    summary.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"max_acc\": r\"Max acc.\", \"round_at_max\": \"Peak round\",\n        \"seconds_at_max\": \"Overhead s at peak\", \"final_acc\": \"Final acc.\",\n    }",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame):\n    display = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"percentage\": \"Pct.\",\n        \"niid\": \"NIID\", \"max_acc\": r\"Max acc.\", \"round_at_max\": \"Peak round\",\n        \"seconds_at_max\": \"Overhead s at peak\", \"final_acc\": \"Final acc.\",\n    }\n    cols = [c for c in display if c in summary.columns]\n    grp_cols = [c for c in [\"model\", \"niid\", \"percentage\"] if c in summary.columns]\n    best_idx = (summary.groupby(grp_cols, dropna=False)[\"max_acc\"].idxmax()\n                if \"max_acc\" in summary.columns and grp_cols else [])",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "SOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",\n    \"batchcrypt\": \"#795548\",",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "SOL_MARKERS = {\n    \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\", \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\n# Communication overhead columns (training excluded)\nCOMM_COLS = [\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_COLS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "COMM_COLS = [\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",\n    \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "description": "studies.sparsification_percentage.16_overhead_vs_maxacc",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:\n        return f\"{s:.0f}s\"\n    if s >= 10:\n        return f\"{s:.1f}s\"",
+        "detail": "studies.sparsification_percentage.16_overhead_vs_maxacc",
         "documentation": {}
     },
     {

@@ -20,11 +20,11 @@ PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
 
 # dnn_tiny and lenet5 share FashionMNIST; mobilenetv2 → CIFAR-10; vit_tiny → GTSRB
 MODEL_DATASET_PAIRS=(
-    # "dnn_tiny:FASHION_MNIST"
-    # "lenet5:FASHION_MNIST"
+    "dnn_tiny:FASHION_MNIST"
+    "lenet5:FASHION_MNIST"
     "resnet20:CIFAR10"
-    # "mobilenetv2:CIFAR10"
-    # "vit_tiny:tanganke/gtsrb"
+    "mobilenetv2:CIFAR10"
+    "vit_tiny:tanganke/gtsrb"
 )
 # ── Per-model configuration (optional) ───────────────────────────
 # Define model_config() to set per-model env vars before each experiment.

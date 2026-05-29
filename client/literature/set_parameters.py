@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 import os
+import time
 import pickle as pk
 from encryption.ckks_backend import get_backend
 
@@ -11,7 +12,9 @@ from encryption.quantize import  unquantize, unbatching_padding
 from encryption.quantize_batchcrypt import unquantize_batchcrypt,unbatching_padding_batchcrypt
 import encryption.quantize as q
 def he_parameters_to_model(self, config):
-        
+        t0 = time.time()
+        c0 = time.process_time()
+
         if self.homomorphic_type == 'Paillier':
             quan_bits     = 32
             batch_size    = 50
@@ -67,7 +70,14 @@ def he_parameters_to_model(self, config):
                 print("RESHAPED")
                 self.model.set_weights(reshaped_parameters)
                 print("ATT COMPLETA")
-        # # debug   
+
+        # decrypt timing covers model manipulation only (deserialize + decrypt +
+        # reshape/set_weights). The disk writes below are logging, not part of
+        # the decryption cost, so they are intentionally left out of the window.
+        self.last_decrypt_clock = time.time() - t0
+        self.last_decrypt_cpu   = time.process_time() - c0
+
+        # # debug
         if self.cid == 0:
             folder = f'logs/{self.log_folder}/model'
             os.makedirs(folder, exist_ok=True)
@@ -87,6 +97,8 @@ def he_parameters_to_model(self, config):
    
         
 def he_packs_to_model(self, config):
+    t0 = time.time()
+    c0 = time.process_time()
     chunk_size = self.key_config["poly_modulus_degree"]//2
     packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)
     cyphered_packs     = pickle.loads(config['he'])
@@ -106,6 +118,12 @@ def he_packs_to_model(self, config):
     flatted_packs       = remove_padding(self, flatted_packs)
     reshaped_parameters = reshape_parameters(self, flatted_packs)
     self.model.set_weights(reshaped_parameters)
+
+    # decrypt timing covers model manipulation only (deserialize + decrypt +
+    # reshape/set_weights). The disk writes below are logging, not part of the
+    # decryption cost, so they are intentionally left out of the window.
+    self.last_decrypt_clock = time.time() - t0
+    self.last_decrypt_cpu   = time.process_time() - c0
 
     if self.cid == 0:
         folder = f'logs/{self.log_folder}/model'

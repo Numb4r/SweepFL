@@ -319,26 +319,30 @@ class HEClient(fl.client.NumPyClient):
         return self.model.get_weights(), len(self.x_train), fit_msg
 
     def evaluate(self, parameters, config):
-        decypher_time_clock = time.time()   
-        decypher_time_process = time.process_time()
-        
-        
+        self.last_decrypt_clock = 0.0
+        self.last_decrypt_cpu   = 0.0
         if len(config['he']) > 0 and self.homomorphic:
             if self.packing:
                 he_packs_to_model(self, config)
             else:
                 he_parameters_to_model(self, config)
-            
+            # he_*_to_model time only the model manipulation (deserialize +
+            # decrypt + reshape), excluding the disk writes.
+            decypher_time_clock   = self.last_decrypt_clock
+            decypher_time_process = self.last_decrypt_cpu
         else:
+            t0 = time.time()
+            c0 = time.process_time()
             self.model.set_weights(parameters)
+            decypher_time_clock   = time.time() - t0
+            decypher_time_process = time.process_time() - c0
+            # checkpoint save (logging) stays outside the timed window.
             ckpt_folder = f'logs/{self.log_folder}/checkpoint'
             os.makedirs(ckpt_folder, exist_ok=True)
             np.savez_compressed(
                 f'{ckpt_folder}/client_{self.cid}',
                 *[w.astype(np.float16) for w in parameters],
             )
-        decypher_time_process = time.process_time() - decypher_time_process
-        decypher_time_clock = time.time() - decypher_time_clock
         loss, acc = self.model.evaluate(self.x_test, self.y_test)
 
         write_evaluate_logs(self, config['round'], loss, acc, decypher_time_clock, decypher_time_process)

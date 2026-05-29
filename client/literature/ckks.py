@@ -22,12 +22,14 @@ def estimate_ckks_sigma(context, v, n_clients, dim=1000, trials=50):
 
 def fit_ckks(self, parameters, config):
 
-    decrypt_time_clock = time.time()
-    decrypt_time_cpu   = time.process_time()
+    self.last_decrypt_clock = 0.0
+    self.last_decrypt_cpu   = 0.0
     if len(config['he']) > 0 and self.homomorphic:
         he_parameters_to_model(self, config)
-    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu
-    decrypt_time_clock = time.time() - decrypt_time_clock
+    # he_parameters_to_model sets self.last_decrypt_* timing only the model
+    # manipulation (deserialize + decrypt + reshape), excluding disk writes.
+    decrypt_time_clock = self.last_decrypt_clock
+    decrypt_time_cpu   = self.last_decrypt_cpu
 
     if config["round"] % 5 == 0:
         v = flat_parameters(self.model.get_weights())

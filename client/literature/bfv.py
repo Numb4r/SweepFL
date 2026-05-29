@@ -11,12 +11,14 @@ from client_logs import write_train_logs
 
 def fit_bfv(self, parameters, config):
 
-    decrypt_time_clock = time.time()
-    decrypt_time_cpu   = time.process_time()
+    self.last_decrypt_clock = 0.0
+    self.last_decrypt_cpu   = 0.0
     if len(config['he']) > 0 and self.homomorphic:
         he_parameters_to_model(self, config)
-    decrypt_time_cpu   = time.process_time() - decrypt_time_cpu
-    decrypt_time_clock = time.time() - decrypt_time_clock
+    # he_parameters_to_model sets self.last_decrypt_* timing only the model
+    # manipulation (deserialize + decrypt + reshape), excluding disk writes.
+    decrypt_time_clock = self.last_decrypt_clock
+    decrypt_time_cpu   = self.last_decrypt_cpu
 
     train_time_clock = time.time()
     train_time_cpu   = time.process_time()

@@ -6,25 +6,25 @@
 # Percentage sweep:    10 % → 30 % → 50 % → 70 %
 
 GPU_IDS=(7)
-CLIENTS_PER_GPU=2
+CLIENTS_PER_GPU=3
 
 FOLDER="sparsification_percentage"
 EXPERIMENT_NAME=""
 NUM_ROUNDS=200
-NIIDS=(1)
+NIIDS=(0.1 1)
 SEEDS=(42)
 TECHNIQUE="none"
-USE_GPU=false
+
 SOLUTIONS=('plaintext')
 PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
 
 # dnn_tiny and lenet5 share FashionMNIST; mobilenetv2 → CIFAR-10; vit_tiny → GTSRB
 MODEL_DATASET_PAIRS=(
-    # "dnn_tiny:FASHION_MNIST"
-    # "lenet5:FASHION_MNIST"
+    "dnn_tiny:FASHION_MNIST"
+    "lenet5:FASHION_MNIST"
     "resnet20:CIFAR10"
-    # "mobilenetv2:CIFAR10"
-    # "vit_tiny:tanganke/gtsrb"
+    "mobilenetv2:CIFAR10"
+    "vit_tiny:tanganke/gtsrb"
 )
 # ── Per-model configuration (optional) ───────────────────────────
 # Define model_config() to set per-model env vars before each experiment.
