@@ -5,7 +5,7 @@ import pickle
 import math
 from .set_parameters import he_packs_to_model
 from client_utils import cypher_packs, flat_parameters, packing, get_size
-from client_logs import write_train_logs
+from client_logs import write_mask_logs, write_train_logs
 
 
 def fit_fedphe(self, parameters, config):
@@ -74,6 +74,7 @@ def fit_fedphe(self, parameters, config):
         mask = get_topk_mask(packed_parameters, self.percentage)
         mask_select_time_cpu   = time.process_time() - mask_select_time_cpu
         mask_select_time_clock = time.time() - mask_select_time_clock
+        write_mask_logs(self, config['round'], mask)
 
         encrypt_time_clock = time.time()
         encrypt_time_cpu   = time.process_time()

@@ -1411,7 +1411,7 @@
         "documentation": {}
     },
     {
-        "label": "write_train_logs",
+        "label": "write_mask_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -1507,7 +1507,7 @@
         "documentation": {}
     },
     {
-        "label": "write_train_logs",
+        "label": "write_mask_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -1539,7 +1539,55 @@
         "documentation": {}
     },
     {
+        "label": "write_mask_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
         "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_mask_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_mask_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_mask_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -4254,6 +4302,15 @@
         "documentation": {}
     },
     {
+        "label": "write_mask_logs",
+        "kind": 2,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "def write_mask_logs(self, rnd: int, mask) -> None:\n    \"\"\"Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).\n    Normalizes both return formats from mask helpers:\n      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)\n      - list of int8   (fedphe, srr, topkrr) → same after np.asarray\n    selected_packs uses ';' as separator (same convention as coeff_mod_bits).\n    \"\"\"\n    import numpy as np\n    arr        = np.asarray(mask).ravel()\n    selected   = np.flatnonzero(arr > 0)",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
         "label": "write_evaluate_logs",
         "kind": 2,
         "importPath": "client.client_logs",
@@ -4277,6 +4334,15 @@
         "importPath": "client.client_logs",
         "description": "client.client_logs",
         "peekOfCode": "_EVAL_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"eval_loss,eval_acc,decrypt_time_s,\"\n    \"poly_modulus_degree,coeff_mod_bits,scale_bits\"\n)\n# ── Helpers ───────────────────────────────────────────────────────────────────\ndef _coeff_str(coeff_mod_bit_sizes) -> str:\n    if not coeff_mod_bit_sizes:\n        return \"\"",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "_MASK_HEADER",
+        "kind": 5,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "_MASK_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,model,dataset,distribution,\"\n    \"n_packs,packs_sent,selected_packs\"\n)\ndef write_mask_logs(self, rnd: int, mask) -> None:\n    \"\"\"Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).\n    Normalizes both return formats from mask helpers:\n      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)\n      - list of int8   (fedphe, srr, topkrr) → same after np.asarray",
         "detail": "client.client_logs",
         "documentation": {}
     },

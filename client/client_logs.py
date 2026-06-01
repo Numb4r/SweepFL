@@ -189,6 +189,38 @@ def write_train_logs(
     _append(f"logs/{self.log_folder}/train.csv", _TRAIN_HEADER, row)
 
 
+_MASK_HEADER = (
+    "experiment_name,round,cid,"
+    "solution,model,dataset,distribution,"
+    "n_packs,packs_sent,selected_packs"
+)
+
+
+def write_mask_logs(self, rnd: int, mask) -> None:
+    """Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).
+
+    Normalizes both return formats from mask helpers:
+      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)
+      - list of int8   (fedphe, srr, topkrr) → same after np.asarray
+    selected_packs uses ';' as separator (same convention as coeff_mod_bits).
+    """
+    import numpy as np
+    arr        = np.asarray(mask).ravel()
+    selected   = np.flatnonzero(arr > 0)
+    n_packs    = int(arr.size)
+    packs_sent = int(selected.size)
+    selected_str = ";".join(map(str, selected.tolist()))
+    distribution = "niid" if self.niid else "iid"
+    dataset      = self.dataset.replace("/", "_")
+    exp_name     = getattr(self, "experiment_name", "")
+    row = (
+        f"{exp_name},{rnd},{self.cid},"
+        f"{self.solution},{self.model_name},{dataset},{distribution},"
+        f"{n_packs},{packs_sent},{selected_str}"
+    )
+    _append(f"logs/{self.log_folder}/mask.csv", _MASK_HEADER, row)
+
+
 def write_evaluate_logs(
     self,
     rnd: int,

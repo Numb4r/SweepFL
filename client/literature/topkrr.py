@@ -6,7 +6,7 @@ import numpy as np
 
 from .fedphe import get_robin_round_mask, get_topk_mask
 from .set_parameters import he_packs_to_model
-from client_logs import write_train_logs
+from client_logs import write_mask_logs, write_train_logs
 from client_utils import cypher_packs, flat_parameters, get_size, packing
 
 
@@ -91,6 +91,7 @@ def fit_topkrr(self, parameters, config):
             )
         mask_select_time_cpu   = time.process_time() - mask_select_time_cpu
         mask_select_time_clock = time.time() - mask_select_time_clock
+        write_mask_logs(self, current_round, mask)
 
         # ── Encrypt ───────────────────────────────────────────────────────────
         encrypt_time_clock = time.time()
