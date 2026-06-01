@@ -198,7 +198,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 
 - `client/client.py` — `HEClient`: reads `MODEL_ARCH` env var to select model; falls back to `dnn` if unset; dispatches per-round training to `fit_*` functions in `client/literature/`
 - `client/literature/` — one `fit_<solution>.py` per HE scheme; each implements local train → encrypt → return fit message with granular per-operation timing
-- `client/literature/set_parameters.py` — decryption and model weight reconstruction on the client side; saves per-round compressed model snapshots (`np.savez_compressed` + float16, cid==0 only)
+- `client/literature/set_parameters.py` — decryption and model weight reconstruction on the client side; saves per-round compressed model snapshots (`np.savez_compressed` + float16, cid==0 only). `he_packs_to_model` / `he_parameters_to_model` time only the model-manipulation work (deserialize + decrypt + reshape) into `self.last_decrypt_clock` / `self.last_decrypt_cpu`; the snapshot + checkpoint `np.savez_compressed` writes run **after** the timer stops, so they are excluded from `decrypt_time_s`. Each `fit_*.py` (and `client.py::evaluate()`) reads `self.last_decrypt_*` rather than wrapping the call in its own timer.
 - `client/literature/fedphe.py` — top-k packing; also contains mask helpers: `get_topk_mask`, `get_robin_round_mask`, `get_slide_window_mask`, `get_pondering_random_mask`, `get_spread_rr_mask`
 - `client/literature/NVNL.py` — round-robin packing
 - `client/literature/sw.py` — sliding-window packing (stride=0.5)
@@ -271,6 +271,8 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 
 Columns unused by a technique are emitted as `0`. `coeff_mod_bits` uses semicolons as separator (e.g. `60;40;40;60`) to avoid CSV breakage. `scale_bits` stores the exponent (e.g. `40` for `2^40`).
 
+**`decrypt_time_s` scope**: for HE solutions this column bundles deserialize + decryption + re-packing the full model + reshape into one value, so it is **not** directly comparable to `encrypt_time_s` (which is encryption only — `flatten_time_s` / `pack_time_s` / `serialize_time_s` are separate columns). The disk writes (model snapshot + checkpoint) are **excluded** from this timer — `he_*_to_model` stops timing before the `np.savez_compressed` calls (see Model Compression → Save timing). Magnitude is backend-dependent (ckks_python_simplify decryption ≫ tenseal). Note: logs produced before this timing fix still include the disk writes in `decrypt_time_s`.
+
 **`evaluate.csv`** (15 columns): `experiment_name`, `round`, `cid`, `solution`, `schema`, `model`, `dataset`, `distribution`, `dirichlet_alpha`, `eval_loss`, `eval_acc`, `decrypt_time_s`, `poly_modulus_degree`, `coeff_mod_bits`, `scale_bits`.
 
 **Server logs** (in `logs/<LOGFOLDER>/`):
@@ -281,7 +283,7 @@ Columns unused by a technique are emitted as `0`. `coeff_mod_bits` uses semicolo
 
 Per-round model snapshots are saved as `logs/<LOGFOLDER>/model/round_<N>.npz` using `np.savez_compressed` with float16 weights. This reduces storage by ~54% vs float32. Only client 0 saves snapshots. All rounds are kept (not just the last).
 
-**Save timing**: for HE/packing solutions (`nvnl`, `fedphe`, `sw`, `rw`, `topkrr`, `srr`), saves happen inside `he_packs_to_model` / `he_parameters_to_model` in `client/literature/set_parameters.py`, called from both `fit()` and `evaluate()`. Round N's file reflects the server's aggregated weights sent back for that round. For `plaintext`, the save is at the top of `fit_plaintext()` in `client/literature/plaintext.py`.
+**Save timing**: for HE/packing solutions (`nvnl`, `fedphe`, `sw`, `rw`, `topkrr`, `srr`), saves happen inside `he_packs_to_model` / `he_parameters_to_model` in `client/literature/set_parameters.py`, called from both `fit()` and `evaluate()`. Round N's file reflects the server's aggregated weights sent back for that round. For `plaintext`, the save is at the top of `fit_plaintext()` in `client/literature/plaintext.py`. These `np.savez_compressed` writes run **after** the decrypt timer stops, so they are not counted in `decrypt_time_s` / evaluate's `decypher_time` (the timer ends at `self.last_decrypt_clock` / `self.last_decrypt_cpu`, before the writes).
 
 **Path convention**: the Docker client container has no `WORKDIR` set, so CWD inside the container is `/`. The logs volume is mounted as `/logs`. All model-save paths **must** use the `logs/` prefix: `f'logs/{self.log_folder}/model'`. Omitting `logs/` writes to an ephemeral container path that is lost on container exit. Both `set_parameters.py` and `plaintext.py` must use this prefix consistently.
 
@@ -337,6 +339,8 @@ python3 09_summary_table.py         # CSV + LaTeX summary table
 python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
 python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy + stacked bar
 python3 14_neurons_vs_accuracy.py     # cumulative neurons transmitted vs accuracy + neurons/round bar
+python3 15_bytes_vs_maxacc.py         # bytes vs accuracy, techniques only, best-technique max-acc target
+python3 16_overhead_vs_maxacc.py      # comm overhead vs accuracy, techniques only, best-technique max-acc target
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
@@ -442,6 +446,28 @@ Key insight: complements study 12 (bytes axis) and 13 (time axis) with a paramet
 
 **Output**: `14_neurons_acc_p{pct}.{png,pdf}` (one per percentage), `14_neurons_acc_plaintext.{png,pdf}`.
 **Table**: `14_neurons_summary.{csv,tex}` — columns: model, solution, percentage, niid, rounds_to_80pct, neurons_to_80pct_M, neurons_per_round_median, final_acc.
+
+### Script 15 — Cumulative bytes vs accuracy (techniques only, max-acc target)
+
+Like script 12, but **techniques only** (plaintext fully excluded — no baseline curve, no plaintext figure) and targeting the **maximum accuracy reached by the best technique** of each panel instead of a fixed 80%.
+
+**Layout**: one figure per percentage. Each figure row = (model, niid).
+- **Left panel** (3/4 width): X = cumulative upload MB (raw float32 pre-encryption), Y-left = accuracy %, Y-right = round (approx.). Dashed reference line = best technique's max accuracy in the panel (labelled `best: <sol> X%`). Each curve is clipped at its own peak-accuracy round with a ★ marker.
+- **Right panel** (1/4 width): horizontal bars per technique — max accuracy reached, sorted best-on-top, labelled `acc% · R{peak round} · MB`.
+
+Helpers (replace the 80%-target helpers of scripts 12/13): `_peak_row`, `_max_acc`, `_peak_round`, `_cost_at_peak`, `_clip_at_peak`.
+
+**Output**: `15_bytes_maxacc_p{pct}.{png,pdf}` (one per percentage).
+**Table**: `15_bytes_maxacc.{csv,tex}` — columns: model, solution, percentage, niid, max_acc, round_at_max, mb_at_max, final_acc (best `max_acc` per model×niid×pct bolded in LaTeX).
+
+### Script 16 — Communication overhead vs accuracy (techniques only, max-acc target)
+
+Same max-acc design as script 15, but X = cumulative communication overhead (s) = `pack + mask_select + encrypt + serialize + decrypt` (as in script 13). Techniques only; right-panel bars labelled `acc% · R{peak round} · overhead s`.
+
+**Caveat (decrypt)**: `decrypt_time_s` bundles deserialize + decrypt + re-pack of the full model + reshape into one value and is backend-dependent (ckks_python_simplify ≫ tenseal), so it dominates the overhead and is **not** directly comparable to `encrypt_time_s` (encryption only). Logs produced before the timing fix also counted the snapshot/checkpoint disk writes inside this window (now excluded). See the `decrypt_time_s` scope note under CSV Log Schema.
+
+**Output**: `16_overhead_maxacc_p{pct}.{png,pdf}` (one per percentage).
+**Table**: `16_overhead_maxacc.{csv,tex}` — columns: model, solution, percentage, niid, max_acc, round_at_max, seconds_at_max, final_acc.
 
 ### Duplicate detection
 
