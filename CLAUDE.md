@@ -55,6 +55,13 @@ sbatch sbatch/my_experiment.sh
 squeue -u $USER
 tail -f logs/slurm_<jobid>.out
 
+# Submit one independent SLURM job per model:dataset pair (parallel on cluster)
+# Each job runs the full solution/niid/percentage/seed sweep for its single pair.
+# The original sbatch script is unchanged — direct sbatch still runs all pairs in one job.
+bash sbatch/submit_per_pair.sh sbatch/sbatch_sparsification_percentage_srr.sh --dry-run
+bash sbatch/submit_per_pair.sh sbatch/sbatch_sparsification_percentage_srr.sh
+# Works for all sbatch/sbatch_*.sh scripts that set EXPERIMENT_SCRIPT
+
 # ── Checkpoint / Resume ───────────────────────────────────────────────────────
 
 # Find all interrupted experiments, generate resume scripts, and submit via sbatch
@@ -233,6 +240,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `experiments/estimate_time.py` — estimates wall-clock time for an experiment script by parsing its config variables and applying per-machine speed factors; supports `--machine <partition>`, `--all`, and `--margin <factor>`; machine table sourced from `SLURM.md`
 - `experiments/ESTIMATION_METHODOLOGY.md` — documents the time estimation model (GPU-bound train time, CPU-bound HE time, scaling formulas)
 - `sbatch/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
+- `sbatch/submit_per_pair.sh` — launcher that reads `EXPERIMENT_SCRIPT` from any `sbatch/sbatch_*.sh`, enumerates its `MODEL_DATASET_PAIRS`, and submits one independent SLURM job per pair (via `--export=ALL,MODEL_DATASET_PAIR=<pair>`); supports `--dry-run`; backward-compat: direct `sbatch sbatch/*.sh` still runs all pairs in one job
 - `sbatch/` — directory for SLURM job scripts; one file per experiment batch
 - `SLURM.md` — cluster partition reference table: partition name, nodes, GPU model, max wall time, GPU Speed factor, CPU Speed factor (used by `estimate_time.py`)
 - `benchmark/train_mobilenetv2_cifar10.py` — standalone MobileNetV2 + CIFAR-10 benchmark; loads CIFAR-10 from `benchmark/cifar-10-python.tar.gz` (local) or falls back to `tf.keras` download; trains 200 epochs; accepts `--batch-size N`; results in `benchmark/results/`
@@ -535,3 +543,7 @@ CKKS backend-specific vars (only read when the relevant backend is active): `SIM
 `JOB_DEADLINE_EPOCH` (optional, default `0`): Unix timestamp of the SLURM job's wall-time deadline. Computed in `lib_slurm.sh` via `squeue`. Passed to the server container; used by `_time_remaining()` to trigger graceful shutdown before the kill signal.
 
 `CHECKPOINT_THRESHOLD_SECS` (optional, default `300`): seconds before `JOB_DEADLINE_EPOCH` at which the server stops gracefully (writes `INCOMPLETE.log` and exits). Configurable per experiment script.
+
+`MODEL_DATASET_PAIR` (optional): when set in the environment of a themed experiment script (e.g. `MODEL_DATASET_PAIR=lenet5:FASHION_MNIST bash experiments/foo.sh`), `run_theme()` replaces the script's `MODEL_DATASET_PAIRS` array with this single entry, restricting the run to that one pair. All other sweeps (solution, niid, percentage, seed) are unaffected. Set automatically by `sbatch/submit_per_pair.sh` via `--export`.
+
+`PRINT_PAIRS_ONLY` (optional): when set (any non-empty value), `run_theme()` prints the (possibly `MODEL_DATASET_PAIR`-overridden) pairs to stdout and returns immediately — no tmux, no docker, no key generation. Used internally by `sbatch/submit_per_pair.sh` to enumerate pairs on the login node before submitting jobs.

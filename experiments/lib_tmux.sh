@@ -250,6 +250,21 @@ JSON
 # ── Main loop (called at the end of every theme script) ───────────
 # Reads all config variables from the calling script's environment.
 run_theme() {
+    # Single-pair override: when MODEL_DATASET_PAIR is set, restrict this run to
+    # just that one pair. Used by sbatch/submit_per_pair.sh to fan a theme out into
+    # one SLURM job per pair. All other sweeps (solution/niid/percentage/seed) are
+    # unaffected. Also handy locally:
+    #   MODEL_DATASET_PAIR=lenet5:FASHION_MNIST bash experiments/foo.sh
+    if [[ -n "${MODEL_DATASET_PAIR:-}" ]]; then
+        MODEL_DATASET_PAIRS=("$MODEL_DATASET_PAIR")
+    fi
+    # List mode: print the (possibly overridden) pairs and exit so the launcher
+    # can enumerate them without triggering any tmux/docker/key-gen work.
+    if [[ -n "${PRINT_PAIRS_ONLY:-}" ]]; then
+        printf '%s\n' "${MODEL_DATASET_PAIRS[@]}"
+        return 0
+    fi
+
     NCLIENTES=$(( ${#GPU_IDS[@]} * CLIENTS_PER_GPU ))
 
     mkdir -p "${CONTEXT_DIR:-context}" logs logs/models
