@@ -55,10 +55,15 @@ def fit_fedphe(self, parameters, config):
         flatten_time_cpu   = time.process_time()
         flatted_parameters = flat_parameters(trained_parameters)
         _ckks_backend = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
-        if self.only_sum:
+        _magg_renorm = int(os.environ.get("MAGG_RENORM", "1"))
+        if self.only_sum or (_ckks_backend == "ckks_python_simplify" and _magg_renorm):
+            # Pre-weight by local dataset size D_i so the server accumulates Σ D_i·w_i.
+            # Per-pack renorm by M_agg[k]=Σ_{S_k} D_i (in set_parameters) then gives the
+            # correct FedAvg weighted average per pack, even for sparse packs.
             flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
         elif _ckks_backend == "ckks_python_simplify":
-            # Pre-division protocol: server sums ciphertexts only; sum(w_i/K) = average(w_i)
+            # MAGG_RENORM=0 legacy: pre-division by K gives approx. average but ignores
+            # per-pack contributor set — biased for sparse/data-dependent masks (fedphe, rw).
             flatted_parameters = np.array(flatted_parameters) / self.num_clients
         flatten_time_cpu   = time.process_time() - flatten_time_cpu
         flatten_time_clock = time.time() - flatten_time_clock
@@ -125,7 +130,7 @@ def get_topk_mask(packs, percentage):
     if topk <= 0:
         return [0] * n
 
-    avg = np.array([np.mean(np.abs(pack)) for pack in packs], dtype=np.float64)
+    avg = np.array([np.linalg.norm(pack) for pack in packs], dtype=np.float64)
     avg = np.nan_to_num(avg, nan=-np.inf, posinf=np.inf, neginf=-np.inf)
 
     idx = np.argsort(avg)[::-1][:topk]

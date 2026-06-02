@@ -63,9 +63,14 @@ def fit_topkrr(self, parameters, config):
         flatten_time_cpu   = time.process_time()
         flatted = flat_parameters(trained_parameters)
         _ckks_backend = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
-        if self.only_sum:
+        _magg_renorm = int(os.environ.get("MAGG_RENORM", "1"))
+        if self.only_sum or (_ckks_backend == "ckks_python_simplify" and _magg_renorm):
+            # Pre-weight by local dataset size D_i so the server accumulates Σ D_i·w_i.
+            # Per-pack renorm by M_agg[k]=Σ_{S_k} D_i (in set_parameters) then gives the
+            # correct FedAvg weighted average per pack, even for sparse packs.
             flatted = np.array(flatted) * len(self.x_train)
         elif _ckks_backend == "ckks_python_simplify":
+            # MAGG_RENORM=0 legacy: pre-division by K; phase-1 top-k is data-dependent (biased).
             flatted = np.array(flatted) / self.num_clients
         flatten_time_cpu   = time.process_time() - flatten_time_cpu
         flatten_time_clock = time.time() - flatten_time_clock

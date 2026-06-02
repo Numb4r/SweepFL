@@ -107,9 +107,15 @@ def he_packs_to_model(self, config):
     aggredated_mask    = pickle.loads(config['mask'])
 
 
+    # MAGG_RENORM=1 (default, corrected): divide each active pack by its per-pack
+    # contributor mass M_agg[k] = Σ_{S_k} D_i, giving the correct FedAvg weighted
+    # average regardless of how many clients contributed to pack k.
+    # MAGG_RENORM=0 (legacy): skip renorm — biased for fedphe/rw (sparse, data-dependent
+    # masks), no-op for nvnl/sw/srr (deterministic masks → all clients contribute equally).
+    _magg_renorm = int(os.environ.get("MAGG_RENORM", "1"))
     for idx_mask, m in enumerate(aggredated_mask):
         if m > 0:
-            if self.only_sum:
+            if self.only_sum or _magg_renorm:
                 packed_parameters[idx_mask] = np.array(decyphered_pack.pop(0)) / m
             else:
                 packed_parameters[idx_mask] = decyphered_pack.pop(0)

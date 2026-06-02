@@ -158,6 +158,7 @@ run_experiment() {
   "USE_GPU":         "${USE_GPU:-true}",
   "BATCH_SIZE":      ${BATCH_SIZE:-4},
   "RR_START_ROUND":  ${RR_START_ROUND:-200},
+  "MAGG_RENORM":     ${MAGG_RENORM:-1},
   "PRETRAINED_WEIGHTS": "${PRETRAINED_WEIGHTS:-}",
 
   "POLY":            $POLY,
@@ -205,6 +206,7 @@ JSON
              PRETRAINED_WEIGHTS='${PRETRAINED_WEIGHTS:-}' USE_GPU='${USE_GPU:-true}' \
              BATCH_SIZE='${BATCH_SIZE:-4}' \
              RR_START_ROUND='${RR_START_ROUND:-200}' \
+             MAGG_RENORM='${MAGG_RENORM:-1}' \
              RESUME_LOGFOLDER='${RESUME_LOGFOLDER:-}' \
              CKKS_BACKEND='${CKKS_BACKEND:-tenseal}' \
              SIMPLIFY_N='${SIMPLIFY_N:-8192}' SIMPLIFY_BITS='${SIMPLIFY_BITS:-62}' SIMPLIFY_SCALE_BITS='${SIMPLIFY_SCALE_BITS:-60}' \

@@ -86,6 +86,7 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e PRETRAINED_WEIGHTS=${PRETRAINED_WEIGHTS:-} \
         -e BATCH_SIZE=${BATCH_SIZE:-4} \
         -e RR_START_ROUND=${RR_START_ROUND:-200} \
+        -e MAGG_RENORM=${MAGG_RENORM:-1} \
         -e RESUME_LOGFOLDER=${RESUME_LOGFOLDER:-} \
         -e HF_DATASETS_CACHE=/client/data \
         -e HF_HOME=/tmp/hf_home \
@@ -136,6 +137,7 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env PRETRAINED_WEIGHTS=${PRETRAINED_WEIGHTS:-} \
         --env BATCH_SIZE=${BATCH_SIZE:-4} \
         --env RR_START_ROUND=${RR_START_ROUND:-200} \
+        --env MAGG_RENORM=${MAGG_RENORM:-1} \
         --env RESUME_LOGFOLDER=${RESUME_LOGFOLDER:-} \
         --env HF_DATASETS_CACHE=/client/data \
         --env HF_HOME=/tmp/hf_home \

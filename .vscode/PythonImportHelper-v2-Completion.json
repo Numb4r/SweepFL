@@ -3991,7 +3991,7 @@
         "kind": 2,
         "importPath": "client.literature.fedphe",
         "description": "client.literature.fedphe",
-        "peekOfCode": "def get_topk_mask(packs, percentage):\n    n = len(packs)\n    if n == 0:\n        return []\n    percentage = float(percentage)\n    percentage = max(0.0, min(1.0, percentage))\n    topk = int(math.ceil(n * percentage))\n    if topk <= 0:\n        return [0] * n\n    avg = np.array([np.mean(np.abs(pack)) for pack in packs], dtype=np.float64)",
+        "peekOfCode": "def get_topk_mask(packs, percentage):\n    n = len(packs)\n    if n == 0:\n        return []\n    percentage = float(percentage)\n    percentage = max(0.0, min(1.0, percentage))\n    topk = int(math.ceil(n * percentage))\n    if topk <= 0:\n        return [0] * n\n    avg = np.array([np.linalg.norm(pack) for pack in packs], dtype=np.float64)",
         "detail": "client.literature.fedphe",
         "documentation": {}
     },
@@ -4180,7 +4180,7 @@
         "kind": 2,
         "importPath": "client.literature.set_parameters",
         "description": "client.literature.set_parameters",
-        "peekOfCode": "def he_packs_to_model(self, config):\n    t0 = time.time()\n    c0 = time.process_time()\n    chunk_size = self.key_config[\"poly_modulus_degree\"]//2\n    packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)\n    cyphered_packs     = pickle.loads(config['he'])\n    backend            = get_backend(self.key_config.get(\"ckks_backend\"))\n    decyphered_pack    = decypher_packs(cyphered_packs, self.context, backend=backend)\n    aggredated_mask    = pickle.loads(config['mask'])\n    for idx_mask, m in enumerate(aggredated_mask):",
+        "peekOfCode": "def he_packs_to_model(self, config):\n    t0 = time.time()\n    c0 = time.process_time()\n    chunk_size = self.key_config[\"poly_modulus_degree\"]//2\n    packed_parameters  = packing(flat_parameters(self.model.get_weights()), chunk_size=chunk_size)\n    cyphered_packs     = pickle.loads(config['he'])\n    backend            = get_backend(self.key_config.get(\"ckks_backend\"))\n    decyphered_pack    = decypher_packs(cyphered_packs, self.context, backend=backend)\n    aggredated_mask    = pickle.loads(config['mask'])\n    # MAGG_RENORM=1 (default, corrected): divide each active pack by its per-pack",
         "detail": "client.literature.set_parameters",
         "documentation": {}
     },
@@ -8691,6 +8691,87 @@
         "description": "tests.test_ckks_install",
         "peekOfCode": "TESTS = [\n    test_ckks_python_importable,\n    test_ckks_federated_importable,\n    test_ckks_python_simplify_importable,\n    test_context_creation,\n    test_encrypt_add_decrypt,\n    test_simplify_alias_same_api,\n]\nif __name__ == \"__main__\":\n    print(f\"Python {sys.version}\")",
         "detail": "tests.test_ckks_install",
+        "documentation": {}
+    },
+    {
+        "label": "test_T1_full_coverage_matches_oracle",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T1_full_coverage_matches_oracle():\n    \"\"\"All packs covered by all clients: corrected == oracle (weighted average).\"\"\"\n    rng = np.random.default_rng(42)\n    n_clients, B, K = 3, 8, 4\n    Ds = [100, 200, 150]\n    total = sum(Ds)\n    weights = [rng.standard_normal((K, B)) for _ in range(n_clients)]\n    masks = [np.ones(K, dtype=np.int8)] * n_clients\n    # Corrected: D_i pre-scale\n    clients = [(weights[i] * Ds[i], masks[i], Ds[i]) for i in range(n_clients)]",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T2_fedphe_corrected_matches_oracle",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T2_fedphe_corrected_matches_oracle():\n    \"\"\"MAGG_RENORM=1: corrected path matches FedAvg oracle for sparse packs.\"\"\"\n    rng = np.random.default_rng(7)\n    n_clients, B, K = 3, 16, 6\n    Ds = [80, 200, 120]\n    total = sum(Ds)\n    weights = [rng.standard_normal((K, B)) for _ in range(n_clients)]\n    # Deliberately divergent masks (clients pick different subsets of packs)\n    masks = [\n        np.array([1, 1, 1, 0, 0, 0], dtype=np.int8),",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T2_fedphe_legacy_biased",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T2_fedphe_legacy_biased():\n    \"\"\"\n    MAGG_RENORM=0 (legacy): /num_clients pre-scale without renorm is biased.\n    Specifically, sparse packs (not all clients contribute) are underweighted.\n    \"\"\"\n    rng = np.random.default_rng(7)\n    n_clients, B, K = 3, 16, 6\n    Ds = [80, 200, 120]\n    N = n_clients\n    total = sum(Ds)",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T2_bias_is_corrected",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T2_bias_is_corrected():\n    \"\"\"Corrected path has < 1e-9 error; legacy path has much larger error on same data.\"\"\"\n    rng = np.random.default_rng(7)\n    n_clients, B, K = 3, 16, 6\n    Ds = [80, 200, 120]\n    N = n_clients\n    total = sum(Ds)\n    weights = [rng.standard_normal((K, B)) for _ in range(n_clients)]\n    masks = [\n        np.array([1, 1, 1, 0, 0, 0], dtype=np.int8),",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T3_nvnl_identical_masks_both_paths_match_oracle",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T3_nvnl_identical_masks_both_paths_match_oracle():\n    \"\"\"\n    With identical RR masks (all clients same window) AND equal dataset sizes:\n      - M_agg[k] = total for every active pack k (full coverage, no sparsity bias).\n      - Corrected and legacy give the same result (data-weighted = simple average).\n      - The sparsity-induced bias that affects fedphe does NOT apply to nvnl.\n    Note: with unequal Ds the corrected path STILL gives the correct FedAvg, while\n    legacy gives a simple average — that's a separate (data-weighting) correction\n    also addressed by the fix, tested in test_T3_nvnl_unequal_ds_corrected_wins.\n    \"\"\"",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T3b_nvnl_unequal_ds_corrected_wins",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T3b_nvnl_unequal_ds_corrected_wins():\n    \"\"\"\n    nvnl with unequal Ds (non-IID): identical masks mean no sparsity bias, but the\n    legacy /N pre-scale gives a simple average instead of the FedAvg weighted average.\n    Corrected path (D_i pre-scale + renorm by M_agg) always matches FedAvg oracle.\n    \"\"\"\n    rng = np.random.default_rng(13)\n    n_clients, B, K, zeta = 4, 8, 6, 0.5\n    Ds = [50, 200, 80, 170]   # deliberately unequal (non-IID scenario)\n    N = n_clients",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T4_single_contributor_pack",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T4_single_contributor_pack():\n    \"\"\"Pack with only one contributor: corrected result equals that client's weights.\"\"\"\n    rng = np.random.default_rng(99)\n    n_clients, B, K = 3, 8, 4\n    Ds = [100, 200, 150]\n    total = sum(Ds)\n    weights = [rng.standard_normal((K, B)) for _ in range(n_clients)]\n    # Pack index 1 kept only by client 0\n    masks = [\n        np.array([1, 1, 0, 1], dtype=np.int8),",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T5_corrected_stays_near_zero_regardless_of_sparsity",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T5_corrected_stays_near_zero_regardless_of_sparsity(zeta):\n    \"\"\"Corrected path error < 1e-9 for all sparsity levels.\"\"\"\n    rng = np.random.default_rng(21)\n    n_clients, B, K = 5, 16, 10\n    Ds = [100, 150, 80, 120, 90]\n    total = sum(Ds)\n    weights = [rng.standard_normal((K, B)) for _ in range(n_clients)]\n    # Divergent random masks with zeta% coverage\n    topk = max(1, math.ceil(K * zeta))\n    rng2 = np.random.default_rng(42)",
+        "detail": "tests.test_magg_renorm",
+        "documentation": {}
+    },
+    {
+        "label": "test_T5_legacy_bias_on_sparse_packs",
+        "kind": 2,
+        "importPath": "tests.test_magg_renorm",
+        "description": "tests.test_magg_renorm",
+        "peekOfCode": "def test_T5_legacy_bias_on_sparse_packs():\n    \"\"\"\n    Legacy (MAGG_RENORM=0) error > corrected when masks are divergent (fedphe scenario).\n    This quantifies the regression that the fix addresses.\n    \"\"\"\n    rng = np.random.default_rng(21)\n    n_clients, B, K, zeta = 5, 16, 10, 0.3\n    Ds = [100, 150, 80, 120, 90]\n    N = n_clients\n    total = sum(Ds)",
+        "detail": "tests.test_magg_renorm",
         "documentation": {}
     },
     {
