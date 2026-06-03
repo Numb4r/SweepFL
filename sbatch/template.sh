@@ -26,14 +26,14 @@
 
 # ── SLURM directives ──────────────────────────────────────────────────────────
 #SBATCH --job-name=fl_experiment
-#SBATCH --partition=l40s                  # see SLURM.md for available partitions
-#SBATCH --nodes=1                         # keep server + clients on the same node
-#SBATCH --gres=gpu:3                      # number of GPUs (= |GPU_IDS| in your script)
-#SBATCH --cpus-per-task=12               # adjust to node's core count
-#SBATCH --time=1-00:00:00                 # wall time limit (see SLURM.md)
-#SBATCH --output=logs/slurm_%j.out       # %j = job ID
+#SBATCH --partition=l40s
+#SBATCH --nodes=1
+#SBATCH --gres=gpu:3
+#SBATCH --cpus-per-task=12
+#SBATCH --time=1-00:00:00
+#SBATCH --output=logs/slurm_%j.out
 #SBATCH --error=logs/slurm_%j.err
-#SBATCH --mail-type=FAIL,TIME_LIMIT       # SLURM-level email: OOM kills, time limit exceeded
+#SBATCH --mail-type=FAIL,TIME_LIMIT
 #SBATCH --mail-user=y218172@dac.unicamp.br
 
 # ── Environment ───────────────────────────────────────────────────────────────
