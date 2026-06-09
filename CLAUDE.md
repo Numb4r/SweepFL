@@ -352,6 +352,8 @@ python3 16_overhead_vs_maxacc.py      # comm overhead vs accuracy, techniques on
 python3 17_coverage_unique.py         # observed unique-pack coverage per round (sawtooth, no duplicate counting)
 python3 18_coverage_volume.py         # observed volume-based coverage per round (sawtooth, with duplicate counting)
 python3 19_coverage_accuracy.py       # coverage (study 17) + accuracy per round on dual Y axes
+python3 20_pack_frequency.py          # how often each pack index was transmitted (horizontal bar)
+python3 21_layer_frequency.py         # how often each model layer was transmitted (horizontal bar, needs snapshots)
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
@@ -534,6 +536,27 @@ unique-coverage metric (study 17); volume metric (study 18) is not duplicated he
 
 **Output**: `output/figures/19_coverage_accuracy/{model}_{technique}.{png,pdf}`.
 **Table**: `19_coverage_accuracy_summary.{csv,tex}` — columns: model, solution, niid, percentage, rounds_per_cycle, final_acc, max_acc.
+
+### Script 20 — Pack transmission frequency
+
+Answers: over all rounds, how often was each pack index transmitted?
+
+**Metric**: server-side union of selected pack indices per round (same convention as studies 17–19). `send_pct[pack_k]` = % of rounds where pack k appeared in the union. Horizontal bar chart per subplot.
+
+| Technique | Expected pattern |
+|---|---|
+| nvnl | nearly uniform bars at ~pct% |
+| sw | bars at ~2×pct% (each pack covered by two overlapping windows) |
+| rw | non-uniform; high-magnitude packs sent more often |
+| fedphe | bimodal: ~pct% packs at 100%, rest at 0% |
+
+Source: `mask.csv` only (no snapshot needed). **Output**: `output/figures/20_pack_frequency/{model}_{technique}.{png,pdf}`. **Table**: `20_pack_frequency_summary.{csv,tex}`.
+
+### Script 21 — Layer transmission frequency
+
+Same as script 20, but per model **layer** instead of per pack. A layer is "sent" in a round if any of its covering packs is in the server-union. Layer→pack mapping uses flat-offset arithmetic (`pack_size = poly_modulus_degree//2`); shapes come from one model snapshot (`logs/.../model/round_N.npz`). Bar annotations show the number of packs covering each layer ("N pk"). Small bias layers sharing a pack with adjacent weight layers always show near-100%.
+
+Source: `mask.csv` + one snapshot per (model, solution) combo. **Output**: `output/figures/21_layer_frequency/{model}_{technique}.{png,pdf}`. **Table**: `21_layer_frequency_summary.{csv,tex}` — columns: model, solution, niid, percentage, layer_idx, layer_shape, n_packs_covering, send_count, send_pct.
 
 ### Duplicate detection
 

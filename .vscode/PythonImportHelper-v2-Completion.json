@@ -313,6 +313,22 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2333,6 +2349,22 @@
         "importPath": "stat",
         "description": "stat",
         "detail": "stat",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
         "documentation": {}
     },
     {
@@ -8823,6 +8855,240 @@
         "description": "studies.sparsification_percentage.19_coverage_accuracy",
         "peekOfCode": "ACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: unique-coverage (identical to study 17) ────────────────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Server-side union per round → accumulate unique covered set; reset at 100%.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
         "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute per-pack send-pct for every (config+seed) group.\"\"\"\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        result = _pack_send_counts(grp)\n        n_packs = result[\"n_packs\"]\n        n_rounds = result[\"n_rounds\"]\n        if n_rounds == 0:\n            continue",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "plot_model_technique",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_rows = max(len(sorted_pcts), 1)",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"pack_idx\", \"send_count\", \"send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"20_pack_frequency_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(freq_avg: pd.DataFrame):",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"pack_idx\": \"Pack\", \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):\n            return \"—\"",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "send_pct[pack_k]",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "send_pct[pack_k] = (rounds where pack_k was in the server-union) / total_rounds × 100%\nBehaviour by technique:\n  nvnl   : non-overlapping RR → each pack sent ~pct% of rounds; bars nearly uniform.\n  sw     : 50% stride overlap → each pack sent ~2×pct% of rounds (appears in two windows).\n  rw     : random/adaptive → spread depends on weights; high-magnitude packs sent more often.\n  fedphe : top-k fixed → a fixed subset of ~pct% packs at 100%, all others at 0%.\n  srr    : evenly spaced RR → similar to nvnl but different spacing.\n  topkrr : top-k phase then RR phase → visible transition in bar heights.\nSource data: mask.csv (via load_data.load_masks). No model snapshot needed.\nLayout: 1 figure per (model, technique), grid rows=percentage × cols=niid.",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.20_pack_frequency",
+        "description": "studies.sparsification_percentage.20_pack_frequency",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)",
+        "detail": "studies.sparsification_percentage.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame,\n                  layer_info_cache: dict,   # {(model,solution): (sizes,shapes,labels,layer_packs)}\n                  logs_dir=None) -> pd.DataFrame:\n    \"\"\"Compute per-layer send-pct for every (config+seed) group.\"\"\"\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "plot_model_technique",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_rows = max(len(sorted_pcts), 1)",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"layer_idx\", \"layer_shape\", \"n_packs_covering\",\n                         \"send_count\", \"send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"21_layer_frequency_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_idx\": \"Layer\",\n        \"layer_shape\": \"Shape\", \"n_packs_covering\": \"Packs\",\n        \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "send_pct[layer_i]",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "send_pct[layer_i] = (rounds where layer_i was sent) / total_rounds × 100%\nLayer → pack mapping:\n  Weights are flattened in positional order (arr_0, arr_1, ...) and tiled into packs of\n  size pack_size = poly_modulus_degree // 2. Layer i occupies flat indices\n  [offsets[i], offsets[i+1]), which maps to pack range\n  [offsets[i]//pack_size, (offsets[i+1]-1)//pack_size] (inclusive). Small bias layers\n  often share a pack with adjacent weight layers → always sent together.\nSource data: mask.csv (via load_data.load_masks) + one model snapshot (.npz) per config\n             to obtain per-layer shapes. pack_size from train.csv.\nLayout: 1 figure per (model, technique), grid rows=percentage × cols=niid.",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Snapshot loading & layer→pack mapping ────────────────────────────────────",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Snapshot loading & layer→pack mapping ────────────────────────────────────\ndef _find_snapshot(model_name: str, solution: str, logs_dir=None):",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.21_layer_frequency",
+        "description": "studies.sparsification_percentage.21_layer_frequency",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Snapshot loading & layer→pack mapping ────────────────────────────────────\ndef _find_snapshot(model_name: str, solution: str, logs_dir=None):\n    \"\"\"Find any .npz snapshot for this model/solution combo (any seed/pct/niid).\n    Returns (path_to_npz, pack_size) or (None, None).\n    \"\"\"",
+        "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
     {
