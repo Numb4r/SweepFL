@@ -305,6 +305,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2571,6 +2579,15 @@
         "importPath": "matplotlib.ticker",
         "description": "matplotlib.ticker",
         "detail": "matplotlib.ticker",
+        "documentation": {}
+    },
+    {
+        "label": "matplotlib.lines",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.lines",
+        "description": "matplotlib.lines",
+        "detail": "matplotlib.lines",
         "documentation": {}
     },
     {
@@ -8680,6 +8697,132 @@
         "description": "studies.sparsification_percentage.18_coverage_volume",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Per round: server union size (deduplicated across clients for that round).",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "build_coverage_df",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute unique-coverage series for all (config+seed) groups.\"\"\"\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _unique_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "plot_model_technique",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, acc_avg: pd.DataFrame,\n                         model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Grid: rows = sparsification percentage, cols = niid.\n    Each subplot: dual Y axes — coverage (left, blue) and accuracy (right, red).\n    \"\"\"\n    cov_sub = cov_avg.copy()\n    if \"model\" in cov_sub.columns:",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "def save_csv(table: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"rounds_per_cycle\", \"final_acc\", \"max_acc\"] if c in table.columns]\n    out = table[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"19_coverage_accuracy_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(table: pd.DataFrame):",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "def save_latex(table: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"rounds_per_cycle\": \"Rounds/cycle\",\n        \"final_acc\": \"Final acc (%)\", \"max_acc\": \"Max acc (%)\",\n    }\n    cols = [c for c in display_cols if c in table.columns]\n    best_acc = table[\"max_acc\"].dropna().max() if \"max_acc\" in table.columns else None\n    def _fmt(row, col):\n        val = row[col]",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"19_coverage_accuracy\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"19_coverage_accuracy\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR = \"tab:blue\"",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"19_coverage_accuracy\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR = \"tab:blue\"\nACC_COLOR = \"tab:red\"",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"19_coverage_accuracy\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR = \"tab:blue\"\nACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"19_coverage_accuracy\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR = \"tab:blue\"\nACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR = \"tab:blue\"\nACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR = \"tab:blue\"\nACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: unique-coverage (identical to study 17) ────────────────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "COV_COLOR",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "COV_COLOR = \"tab:blue\"\nACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: unique-coverage (identical to study 17) ────────────────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Server-side union per round → accumulate unique covered set; reset at 100%.\"\"\"",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "ACC_COLOR",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.19_coverage_accuracy",
+        "description": "studies.sparsification_percentage.19_coverage_accuracy",
+        "peekOfCode": "ACC_COLOR = \"tab:red\"\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: unique-coverage (identical to study 17) ────────────────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Server-side union per round → accumulate unique covered set; reset at 100%.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "detail": "studies.sparsification_percentage.19_coverage_accuracy",
         "documentation": {}
     },
     {

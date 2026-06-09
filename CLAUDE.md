@@ -351,6 +351,7 @@ python3 15_bytes_vs_maxacc.py         # bytes vs accuracy, techniques only, best
 python3 16_overhead_vs_maxacc.py      # comm overhead vs accuracy, techniques only, best-technique max-acc target
 python3 17_coverage_unique.py         # observed unique-pack coverage per round (sawtooth, no duplicate counting)
 python3 18_coverage_volume.py         # observed volume-based coverage per round (sawtooth, with duplicate counting)
+python3 19_coverage_accuracy.py       # coverage (study 17) + accuracy per round on dual Y axes
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
@@ -519,6 +520,20 @@ Key contrast with study 17:
 
 **Output**: `output/figures/18_coverage_volume/{model}_{technique}.{png,pdf}` — one figure per (model, technique); each figure has subplots for iid/niid, lines = sparsification percentages (viridis colormap).
 **Table**: `18_coverage_volume_summary.{csv,tex}` — columns: model, solution, niid, percentage, n_packs, packs_per_round, rounds_per_cycle, n_cycles.
+
+### Script 19 — Coverage vs accuracy per round (dual Y axes)
+
+Same layout as study 17 (one figure per model×technique, grid rows=percentage × cols=niid, x=round),
+but each subplot has **two Y axes**:
+- **Y left (blue)** = unique-pack coverage % — sawtooth identical to study 17.
+- **Y right (red)** = model accuracy % per round (`server_eval.csv` → `mean_acc × 100`, averaged across seeds).
+
+Reveals how accuracy evolves as the server progressively covers the model: whether accuracy gains
+correlate with coverage cycles or proceed independently of the packing pattern. Only for the
+unique-coverage metric (study 17); volume metric (study 18) is not duplicated here.
+
+**Output**: `output/figures/19_coverage_accuracy/{model}_{technique}.{png,pdf}`.
+**Table**: `19_coverage_accuracy_summary.{csv,tex}` — columns: model, solution, niid, percentage, rounds_per_cycle, final_acc, max_acc.
 
 ### Duplicate detection
 
