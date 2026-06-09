@@ -30,7 +30,9 @@ for script in 01_accuracy_curves.py \
               13_overhead_vs_accuracy.py \
               14_neurons_vs_accuracy.py \
               15_bytes_vs_maxacc.py \
-              16_overhead_vs_maxacc.py; do
+              16_overhead_vs_maxacc.py \
+              17_coverage_unique.py \
+              18_coverage_volume.py; do
     echo ""
     echo "==> $script"
     python3 "$script" $EXTRA_ARGS

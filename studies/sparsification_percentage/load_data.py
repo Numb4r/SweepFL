@@ -2,10 +2,11 @@
 Shared data loading utility for sparsification_percentage studies.
 
 Usage:
-    from load_data import load_all, last_round, rounds_to_threshold, auc_accuracy, discover_dims
+    from load_data import load_all, load_masks, last_round, rounds_to_threshold, auc_accuracy, discover_dims
 
     dfs = load_all()          # uses default logs dir
     dfs = load_all("/path/to/logs/sparsification_percentage")
+    masks = load_masks()      # loads mask.csv from every experiment folder
     # or: LOGS_DIR env var override
 """
 
@@ -170,6 +171,58 @@ def auc_accuracy(df: pd.DataFrame, metric: str = "mean_acc") -> pd.DataFrame:
         return pd.Series({"auc": area, "auc_norm": norm})
 
     return df.groupby(gc, dropna=False).apply(_auc).reset_index()
+
+
+def _parse_sel(val) -> list:
+    """Parse a ';'-separated pack-index string into a list of ints.
+
+    Handles empty strings and NaN (returns []).
+    """
+    if not isinstance(val, str) or val.strip() == "":
+        return []
+    try:
+        return [int(x) for x in val.split(";") if x.strip() != ""]
+    except ValueError:
+        return []
+
+
+def load_masks(logs_dir=None) -> pd.DataFrame:
+    """Load mask.csv from every experiment folder into a single DataFrame.
+
+    Columns from the CSV: experiment_name, round, cid, solution, model, dataset,
+    distribution, n_packs, packs_sent, selected_packs.
+    Meta injected from folder name (overrides csv columns): model, dataset, solution,
+    niid, percentage, seed, rounds, clients.
+    Extra column added: 'selected' = list[int] parsed from selected_packs.
+    percentage=None means plaintext/no-packing (was -1 in folder name).
+    """
+    root = _resolve_logs_dir(logs_dir)
+    if not root.exists():
+        raise FileNotFoundError(f"Logs directory not found: {root.resolve()}")
+
+    parts = []
+    for folder in sorted(root.iterdir()):
+        if not folder.is_dir():
+            continue
+        meta = _parse_folder(folder.name)
+        if meta is None:
+            continue
+        df = _read_csv_safe(folder / "mask.csv")
+        if df is None or len(df) == 0:
+            continue
+        for k, v in meta.items():
+            df[k] = v
+        parts.append(df)
+
+    if not parts:
+        return pd.DataFrame()
+
+    df = pd.concat(parts, ignore_index=True)
+    for col in ["round", "n_packs", "packs_sent", "niid", "seed"]:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+    df["selected"] = df["selected_packs"].map(_parse_sel)
+    return df
 
 
 def discover_dims(df: pd.DataFrame) -> dict[str, list]:

@@ -349,6 +349,8 @@ python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy 
 python3 14_neurons_vs_accuracy.py     # cumulative neurons transmitted vs accuracy + neurons/round bar
 python3 15_bytes_vs_maxacc.py         # bytes vs accuracy, techniques only, best-technique max-acc target
 python3 16_overhead_vs_maxacc.py      # comm overhead vs accuracy, techniques only, best-technique max-acc target
+python3 17_coverage_unique.py         # observed unique-pack coverage per round (sawtooth, no duplicate counting)
+python3 18_coverage_volume.py         # observed volume-based coverage per round (sawtooth, with duplicate counting)
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
@@ -359,11 +361,18 @@ LOGS_DIR=/path python3 01_accuracy_curves.py
 ### Shared utility — `load_data.py`
 
 ```python
-from load_data import load_all, last_round, rounds_to_threshold, auc_accuracy, discover_dims
+from load_data import load_all, load_masks, last_round, rounds_to_threshold, auc_accuracy, discover_dims
 dfs = load_all()          # reads logs/sparsification_percentage/
 dfs = load_all("/custom/path")
 # Keys: 'train', 'evaluate', 'server_eval', 'server_agg'
 # percentage=None means plaintext/no-packing baseline (was -1 in folder name)
+
+masks = load_masks()      # reads mask.csv from every experiment folder (NOT included in load_all)
+masks = load_masks("/custom/path")
+# Columns: experiment_name, round, cid, solution, model, dataset, distribution,
+#          n_packs, packs_sent, selected_packs, selected (list[int])
+# Meta injected from folder name: model, dataset, solution, niid, percentage, seed, rounds, clients
+# 'selected' = list[int] parsed from selected_packs (';'-separated pack indices)
 ```
 
 Key details:
@@ -476,6 +485,40 @@ Same max-acc design as script 15, but X = cumulative communication overhead (s) 
 
 **Output**: `16_overhead_maxacc_p{pct}.{png,pdf}` (one per percentage).
 **Table**: `16_overhead_maxacc.{csv,tex}` — columns: model, solution, percentage, niid, max_acc, round_at_max, seconds_at_max, final_acc.
+
+### Script 17 — Observed unique-pack coverage per round (sem duplicação)
+
+Answers: as rounds progress, what fraction of the model's packs has the server received **at least once** (within the current cycle)?
+
+**Metric**: server-side union of all clients' pack indices per round accumulated into a running set `covered`. Coverage = `|covered| / n_packs × 100%`. Resets when `|covered| >= n_packs` → sawtooth pattern restarts. Duplicate packs re-sent in different rounds do **not** advance the counter (only genuinely new packs do).
+
+| Technique | Behaviour |
+|---|---|
+| nvnl | rises `packs_sent/n_packs` per round; resets at 100% (no overlap) |
+| sw | ~50% stride overlap → new-pack contribution per round ≈ half of nvnl → longer cycle |
+| rw | irregular slope (random); cycle length ≈ coupon-collector |
+| srr | same as nvnl (spread, no intra-cycle overlap) |
+| topkrr | top-k phase: saturates below 100% (never resets); RR phase: full cycle |
+| fedphe | top-k fixed: curve saturates at `packs_sent/n_packs%`, never resets |
+
+Source: `mask.csv` read via `load_data.load_masks`. Complements study 10 (theoretical rounds) with **observed** coverage.
+
+**Output**: `17_coverage_unique_p{pct}.{png,pdf}` (one per percentage).
+**Table**: `17_coverage_unique_summary.{csv,tex}` — columns: model, solution, niid, percentage, n_packs, packs_per_round, rounds_per_cycle (NaN if never completes), n_cycles, ever_full.
+
+### Script 18 — Observed volume-based coverage per round (com duplicação)
+
+Same sawtooth design as script 17, but every pack transmission counts (including re-sent packs).
+
+**Metric**: per round, the server-side union size (intra-round deduplication across clients) is added to `vol`. Coverage = `vol / n_packs × 100%`. Resets when `vol >= n_packs`. Unlike study 17, duplicate packs re-sent across rounds **do** inflate the counter.
+
+Key contrast with study 17:
+- **nvnl/srr**: identical to study 17 (no overlap → no difference).
+- **sw**: per-round volume ≈ nvnl (union size same); BUT same packs repeat across rounds → SW cycle length ≈ nvnl in study 18, while study 17 shows SW takes ~2× nvnl rounds.
+- **fedphe**: here becomes a sawtooth (volume resets every `ceil(n_packs/packs_sent)` rounds), evidencing the retransmission cost of always sending the same top-k packs.
+
+**Output**: `18_coverage_volume_p{pct}.{png,pdf}` (one per percentage).
+**Table**: `18_coverage_volume_summary.{csv,tex}` — columns: model, solution, niid, percentage, n_packs, packs_per_round, rounds_per_cycle, n_cycles.
 
 ### Duplicate detection
 

@@ -289,6 +289,22 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -8442,6 +8458,213 @@
         "documentation": {}
     },
     {
+        "label": "build_coverage_df",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute unique-coverage series for all (config+seed) groups.\"\"\"\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _unique_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "def build_summary(cov_df: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute per-group summary statistics over all seeds.\"\"\"\n    if cov_df.empty:\n        return pd.DataFrame()\n    gcols_no_seed = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n                     if c in cov_df.columns]\n    gcols = [c for c in GROUP if c in cov_df.columns]\n    rows = []\n    for key, grp in cov_df.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "plot_coverage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "def plot_coverage(cov_avg: pd.DataFrame, models: list, niids: list,\n                  pct: float, sol_colors: dict) -> plt.Figure:\n    \"\"\"One figure for a single sparsification percentage.\"\"\"\n    sub = cov_avg[cov_avg[\"percentage\"] == pct] if \"percentage\" in cov_avg.columns else cov_avg\n    all_solutions = sorted(sub[\"solution\"].dropna().unique())\n    n_rows = max(len(models), 1)\n    n_cols = max(len(niids), 1)\n    fig, axes = plt.subplots(n_rows, n_cols,\n                             figsize=(7 * n_cols, 5 * n_rows),\n                             squeeze=False)",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "def save_csv(table: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"n_packs\", \"packs_per_round\", \"rounds_per_cycle\",\n                         \"n_cycles\", \"ever_full\"] if c in table.columns]\n    out = table[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"17_coverage_unique_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "def save_latex(table: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"n_packs\": \"Total packs\",\n        \"packs_per_round\": \"Packs/rnd\", \"rounds_per_cycle\": \"Rounds/cycle\",\n        \"n_cycles\": \"Cycles\", \"ever_full\": \"Full?\",\n    }\n    cols = [c for c in display_cols if c in table.columns]\n    def _fmt(row, col):\n        val = row[col]",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    # drop plaintext (no packing) and rows with no selected packs info\n    if masks.empty:\n        print(\"No mask data found.\")",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Server-side union of all clients per round → accumulate unique covered set.\n    Resets when covered == n_packs.",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "build_coverage_df",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute volume-coverage series for all (config+seed) groups.\"\"\"\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _volume_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "plot_coverage",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "def plot_coverage(cov_avg: pd.DataFrame, models: list, niids: list,\n                  pct: float, sol_colors: dict) -> plt.Figure:\n    sub = cov_avg[cov_avg[\"percentage\"] == pct] if \"percentage\" in cov_avg.columns else cov_avg\n    all_solutions = sorted(sub[\"solution\"].dropna().unique())\n    n_rows = max(len(models), 1)\n    n_cols = max(len(niids), 1)\n    fig, axes = plt.subplots(n_rows, n_cols,\n                             figsize=(7 * n_cols, 5 * n_rows),\n                             squeeze=False)\n    fig.suptitle(f\"Volume-based coverage per round — sparsification {pct:.0%}\",",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "def save_csv(table: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"n_packs\", \"packs_per_round\", \"rounds_per_cycle\",\n                         \"n_cycles\"] if c in table.columns]\n    out = table[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"18_coverage_volume_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "def save_latex(table: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"n_packs\": \"Total packs\",\n        \"packs_per_round\": \"Packs/rnd\", \"rounds_per_cycle\": \"Rounds/cycle (vol)\",\n        \"n_cycles\": \"Cycles\",\n    }\n    cols = [c for c in display_cols if c in table.columns]\n    # highlight minimum rounds_per_cycle per (model, niid, percentage)\n    lower_better = {\"rounds_per_cycle\"}",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Per round: server union size (deduplicated across clients for that round).\n    Accumulate as running volume; reset when vol >= n_packs.",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
         "label": "load_all",
         "kind": 2,
         "importPath": "studies.sparsification_percentage.load_data",
@@ -8474,6 +8697,15 @@
         "importPath": "studies.sparsification_percentage.load_data",
         "description": "studies.sparsification_percentage.load_data",
         "peekOfCode": "def auc_accuracy(df: pd.DataFrame, metric: str = \"mean_acc\") -> pd.DataFrame:\n    \"\"\"Compute trapezoidal AUC of metric vs round for each group.\n    Returns DataFrame with group columns + 'auc'.\n    \"\"\"\n    if df.empty or metric not in df.columns:\n        return pd.DataFrame()\n    gc = [c for c in _GROUP_COLS if c in df.columns]\n    def _auc(g):\n        g = g.sort_values(\"round\")\n        area = np.trapz(g[metric].values, g[\"round\"].values)",
+        "detail": "studies.sparsification_percentage.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "load_masks",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.load_data",
+        "description": "studies.sparsification_percentage.load_data",
+        "peekOfCode": "def load_masks(logs_dir=None) -> pd.DataFrame:\n    \"\"\"Load mask.csv from every experiment folder into a single DataFrame.\n    Columns from the CSV: experiment_name, round, cid, solution, model, dataset,\n    distribution, n_packs, packs_sent, selected_packs.\n    Meta injected from folder name (overrides csv columns): model, dataset, solution,\n    niid, percentage, seed, rounds, clients.\n    Extra column added: 'selected' = list[int] parsed from selected_packs.\n    percentage=None means plaintext/no-packing (was -1 in folder name).\n    \"\"\"\n    root = _resolve_logs_dir(logs_dir)",
         "detail": "studies.sparsification_percentage.load_data",
         "documentation": {}
     },
