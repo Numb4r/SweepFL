@@ -8476,11 +8476,11 @@
         "documentation": {}
     },
     {
-        "label": "plot_coverage",
+        "label": "plot_model_technique",
         "kind": 2,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "def plot_coverage(cov_avg: pd.DataFrame, models: list, niids: list,\n                  pct: float, sol_colors: dict) -> plt.Figure:\n    \"\"\"One figure for a single sparsification percentage.\"\"\"\n    sub = cov_avg[cov_avg[\"percentage\"] == pct] if \"percentage\" in cov_avg.columns else cov_avg\n    all_solutions = sorted(sub[\"solution\"].dropna().unique())\n    n_rows = max(len(models), 1)\n    n_cols = max(len(niids), 1)\n    fig, axes = plt.subplots(n_rows, n_cols,\n                             figsize=(7 * n_cols, 5 * n_rows),\n                             squeeze=False)",
+        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Subplots = one per niid value (side by side).\n    Lines = one per sparsification percentage.\n    \"\"\"\n    sub = cov_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8516,7 +8516,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"17_coverage_unique\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8525,7 +8525,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"17_coverage_unique\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8534,7 +8534,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"17_coverage_unique\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8543,7 +8543,16 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"17_coverage_unique\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)",
+        "detail": "studies.sparsification_percentage.17_coverage_unique",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.17_coverage_unique",
+        "description": "studies.sparsification_percentage.17_coverage_unique",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"17_coverage_unique\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8552,7 +8561,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8561,7 +8570,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Server-side union of all clients per round → accumulate unique covered set.\n    Resets when covered == n_packs.",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: compute unique-coverage sawtooth per (config+seed) ─────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Server-side union of all clients per round → accumulate unique covered set.",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8575,11 +8584,11 @@
         "documentation": {}
     },
     {
-        "label": "plot_coverage",
+        "label": "plot_model_technique",
         "kind": 2,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "def plot_coverage(cov_avg: pd.DataFrame, models: list, niids: list,\n                  pct: float, sol_colors: dict) -> plt.Figure:\n    sub = cov_avg[cov_avg[\"percentage\"] == pct] if \"percentage\" in cov_avg.columns else cov_avg\n    all_solutions = sorted(sub[\"solution\"].dropna().unique())\n    n_rows = max(len(models), 1)\n    n_cols = max(len(niids), 1)\n    fig, axes = plt.subplots(n_rows, n_cols,\n                             figsize=(7 * n_cols, 5 * n_rows),\n                             squeeze=False)\n    fig.suptitle(f\"Volume-based coverage per round — sparsification {pct:.0%}\",",
+        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Subplots = one per niid value (side by side).\n    Lines = one per sparsification percentage.\n    \"\"\"\n    sub = cov_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
@@ -8615,7 +8624,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"18_coverage_volume\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
@@ -8624,7 +8633,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"18_coverage_volume\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
@@ -8633,7 +8642,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"18_coverage_volume\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
@@ -8642,7 +8651,16 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"18_coverage_volume\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)",
+        "detail": "studies.sparsification_percentage.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.18_coverage_volume",
+        "description": "studies.sparsification_percentage.18_coverage_volume",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"18_coverage_volume\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
@@ -8651,7 +8669,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
@@ -8660,7 +8678,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _cmap(solutions):\n    cm = plt.colormaps.get_cmap(\"tab10\")\n    sorted_sols = sorted(solutions)\n    return {s: cm(i / max(len(sorted_sols) - 1, 1)) for i, s in enumerate(sorted_sols)}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Per round: server union size (deduplicated across clients for that round).\n    Accumulate as running volume; reset when vol >= n_packs.",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Per round: server union size (deduplicated across clients for that round).",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },

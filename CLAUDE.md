@@ -503,7 +503,7 @@ Answers: as rounds progress, what fraction of the model's packs has the server r
 
 Source: `mask.csv` read via `load_data.load_masks`. Complements study 10 (theoretical rounds) with **observed** coverage.
 
-**Output**: `17_coverage_unique_p{pct}.{png,pdf}` (one per percentage).
+**Output**: `output/figures/17_coverage_unique/{model}_{technique}.{png,pdf}` — one figure per (model, technique); each figure has subplots for iid/niid, lines = sparsification percentages (viridis colormap).
 **Table**: `17_coverage_unique_summary.{csv,tex}` — columns: model, solution, niid, percentage, n_packs, packs_per_round, rounds_per_cycle (NaN if never completes), n_cycles, ever_full.
 
 ### Script 18 — Observed volume-based coverage per round (com duplicação)
@@ -517,7 +517,7 @@ Key contrast with study 17:
 - **sw**: per-round volume ≈ nvnl (union size same); BUT same packs repeat across rounds → SW cycle length ≈ nvnl in study 18, while study 17 shows SW takes ~2× nvnl rounds.
 - **fedphe**: here becomes a sawtooth (volume resets every `ceil(n_packs/packs_sent)` rounds), evidencing the retransmission cost of always sending the same top-k packs.
 
-**Output**: `18_coverage_volume_p{pct}.{png,pdf}` (one per percentage).
+**Output**: `output/figures/18_coverage_volume/{model}_{technique}.{png,pdf}` — one figure per (model, technique); each figure has subplots for iid/niid, lines = sparsification percentages (viridis colormap).
 **Table**: `18_coverage_volume_summary.{csv,tex}` — columns: model, solution, niid, percentage, n_packs, packs_per_round, rounds_per_cycle, n_cycles.
 
 ### Duplicate detection
