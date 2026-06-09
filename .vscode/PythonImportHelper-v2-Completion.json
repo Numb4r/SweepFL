@@ -8480,7 +8480,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.17_coverage_unique",
         "description": "studies.sparsification_percentage.17_coverage_unique",
-        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Subplots = one per niid value (side by side).\n    Lines = one per sparsification percentage.\n    \"\"\"\n    sub = cov_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]",
+        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Grid: rows = sparsification percentage, cols = niid.\n    Each subplot has one coverage curve (unique per % × niid combination).\n    \"\"\"\n    sub = cov_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]",
         "detail": "studies.sparsification_percentage.17_coverage_unique",
         "documentation": {}
     },
@@ -8588,7 +8588,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.18_coverage_volume",
         "description": "studies.sparsification_percentage.18_coverage_volume",
-        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Subplots = one per niid value (side by side).\n    Lines = one per sparsification percentage.\n    \"\"\"\n    sub = cov_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]",
+        "peekOfCode": "def plot_model_technique(cov_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    \"\"\"One figure for a single (model, technique) pair.\n    Grid: rows = sparsification percentage, cols = niid.\n    Each subplot has one volume-coverage curve (unique per % × niid combination).\n    \"\"\"\n    sub = cov_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]",
         "detail": "studies.sparsification_percentage.18_coverage_volume",
         "documentation": {}
     },
