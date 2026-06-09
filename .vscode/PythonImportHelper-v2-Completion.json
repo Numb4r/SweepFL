@@ -2368,14 +2368,6 @@
         "documentation": {}
     },
     {
-        "label": "defaultdict",
-        "importPath": "collections",
-        "description": "collections",
-        "isExtraImport": true,
-        "detail": "collections",
-        "documentation": {}
-    },
-    {
         "label": "namedtuple",
         "importPath": "collections",
         "description": "collections",
@@ -8979,7 +8971,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "def build_freq_df(masks: pd.DataFrame,\n                  layer_info_cache: dict,   # {(model,solution): (sizes,shapes,labels,layer_packs)}\n                  logs_dir=None) -> pd.DataFrame:\n    \"\"\"Compute per-layer send-pct for every (config+seed) group.\"\"\"\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame,\n                  layer_info_cache: dict,\n                  logs_dir=None) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")\n        cache_key = (model_name, solution)",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -8997,7 +8989,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"layer_idx\", \"layer_shape\", \"n_packs_covering\",\n                         \"send_count\", \"send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"21_layer_frequency_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
+        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"layer_idx\", \"layer_label\", \"n_packs_covering\",\n                         \"send_count\", \"send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"21_layer_frequency_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -9006,7 +8998,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_idx\": \"Layer\",\n        \"layer_shape\": \"Shape\", \"n_packs_covering\": \"Packs\",\n        \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\", \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -9020,11 +9012,11 @@
         "documentation": {}
     },
     {
-        "label": "send_pct[layer_i]",
+        "label": "send_pct[layer]",
         "kind": 5,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "send_pct[layer_i] = (rounds where layer_i was sent) / total_rounds × 100%\nLayer → pack mapping:\n  Weights are flattened in positional order (arr_0, arr_1, ...) and tiled into packs of\n  size pack_size = poly_modulus_degree // 2. Layer i occupies flat indices\n  [offsets[i], offsets[i+1]), which maps to pack range\n  [offsets[i]//pack_size, (offsets[i+1]-1)//pack_size] (inclusive). Small bias layers\n  often share a pack with adjacent weight layers → always sent together.\nSource data: mask.csv (via load_data.load_masks) + one model snapshot (.npz) per config\n             to obtain per-layer shapes. pack_size from train.csv.\nLayout: 1 figure per (model, technique), grid rows=percentage × cols=niid.",
+        "peekOfCode": "send_pct[layer] = (rounds where layer was sent) / total_rounds × 100%\nLayers are Keras layers (not individual weight tensors). Each Keras layer corresponds to\none or more consecutive weight tensors from model.get_weights():\n  - Dense / Conv2D with bias    → kernel (ND) + bias (1D)        = 2 tensors\n  - Conv2D / DepthwiseConv + BN → kernel (ND) + γ,β,μ,σ² (4×1D) = 5 tensors\n  - LayerNorm / standalone norm → γ + β (2×1D)                   = 2 tensors\n  - ViT attention projection    → weight (3D) + bias (2D)         = 2 tensors\nGrouping is inferred from tensor shapes (no TF required).\nSource data: mask.csv (via load_data.load_masks) + one model snapshot (.npz) per config.\npack_size from train.csv.",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -9069,7 +9061,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Snapshot loading & layer→pack mapping ────────────────────────────────────",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"21_layer_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Tensor → Keras-layer grouping (shape-based, no TF) ───────────────────────",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -9078,7 +9070,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Snapshot loading & layer→pack mapping ────────────────────────────────────\ndef _find_snapshot(model_name: str, solution: str, logs_dir=None):",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Tensor → Keras-layer grouping (shape-based, no TF) ───────────────────────\ndef _group_tensors(shapes: list) -> list:",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -9087,7 +9079,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Snapshot loading & layer→pack mapping ────────────────────────────────────\ndef _find_snapshot(model_name: str, solution: str, logs_dir=None):\n    \"\"\"Find any .npz snapshot for this model/solution combo (any seed/pct/niid).\n    Returns (path_to_npz, pack_size) or (None, None).\n    \"\"\"",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Tensor → Keras-layer grouping (shape-based, no TF) ───────────────────────\ndef _group_tensors(shapes: list) -> list:\n    \"\"\"Group consecutive weight tensors into Keras layers by shape heuristics.\n    Rules (applied in priority order per group start):\n    1. ND kernel + 4× same 1D  → Conv/Dense + BatchNorm   (5 tensors)",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
