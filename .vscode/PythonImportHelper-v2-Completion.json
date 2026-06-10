@@ -8863,7 +8863,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list,\n                         pct_color_map: dict) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_rows = max(len(sorted_pcts), 1)",
+        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_rows = max(len(sorted_pcts), 1)\n    n_cols = max(len(niids), 1)",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
@@ -8917,7 +8917,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
@@ -8926,7 +8926,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
@@ -8935,7 +8935,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
@@ -8944,7 +8944,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"20_pack_frequency\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
@@ -8953,7 +8953,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
@@ -8962,7 +8962,7 @@
         "kind": 5,
         "importPath": "studies.sparsification_percentage.20_pack_frequency",
         "description": "studies.sparsification_percentage.20_pack_frequency",
-        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):\n        server_union = set()\n        for sel in rnd_df[\"selected\"]:",
         "detail": "studies.sparsification_percentage.20_pack_frequency",
         "documentation": {}
     },
