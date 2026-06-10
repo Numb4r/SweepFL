@@ -35,7 +35,8 @@ for script in 01_accuracy_curves.py \
               18_coverage_volume.py \
               19_coverage_accuracy.py \
               20_pack_frequency.py \
-              21_layer_frequency.py; do
+              21_layer_frequency.py \
+              22_layer_heatmap.py; do
     echo ""
     echo "==> $script"
     python3 "$script" $EXTRA_ARGS
