@@ -8989,7 +8989,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"layer_idx\", \"layer_label\", \"n_packs_covering\",\n                         \"send_count\", \"send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"21_layer_frequency_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
+        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"layer_idx\", \"layer_label\", \"n_packs_covering\",\n                         \"send_count\", \"send_pct\", \"normalized_send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"21_layer_frequency_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -8998,7 +8998,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\", \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\", \"normalized_send_pct\": \"Norm. send rate (\\\\%/pack)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
