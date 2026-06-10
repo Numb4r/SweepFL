@@ -9006,7 +9006,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.21_layer_frequency",
         "description": "studies.sparsification_percentage.21_layer_frequency",
-        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\", \"normalized_send_pct\": \"Norm. send rate (\\\\%/pack)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\", \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):",
         "detail": "studies.sparsification_percentage.21_layer_frequency",
         "documentation": {}
     },
@@ -9123,7 +9123,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.22_layer_heatmap",
         "description": "studies.sparsification_percentage.22_layer_heatmap",
-        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\",\n        \"normalized_send_pct\": \"Norm. send rate (\\\\%/pack)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"layer_label\": \"Layer\",\n        \"n_packs_covering\": \"Packs\",\n        \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]",
         "detail": "studies.sparsification_percentage.22_layer_heatmap",
         "documentation": {}
     },
