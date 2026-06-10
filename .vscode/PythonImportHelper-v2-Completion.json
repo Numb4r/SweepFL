@@ -337,6 +337,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2357,6 +2365,14 @@
         "importPath": "stat",
         "description": "stat",
         "detail": "stat",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
         "documentation": {}
     },
     {
@@ -9206,6 +9222,114 @@
         "description": "studies.sparsification_percentage.22_layer_heatmap",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Tensor → Keras-layer grouping (identical to study 21) ────────────────────\ndef _group_tensors(shapes: list) -> list:\n    \"\"\"Group consecutive weight tensors into Keras layers by shape heuristics.\"\"\"\n    groups = []\n    i = 0\n    n = len(shapes)\n    while i < n:\n        s = shapes[i]\n        nd = len(s)",
         "detail": "studies.sparsification_percentage.22_layer_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        result = _pack_send_counts(grp)\n        n_packs = result[\"n_packs\"]\n        n_rounds = result[\"n_rounds\"]\n        if n_rounds == 0:\n            continue\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "plot_model_technique",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_pcts = len(sorted_pcts)\n    n_cols = max(len(niids), 1)",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "def save_csv(freq_avg: pd.DataFrame):\n    cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\",\n                         \"pack_idx\", \"send_count\", \"send_pct\"] if c in freq_avg.columns]\n    out = freq_avg[cols].copy()\n    for col in out.select_dtypes(include=float).columns:\n        out[col] = out[col].round(3)\n    path = OUT_TAB / \"23_pack_heatmap_summary.csv\"\n    out.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(freq_avg: pd.DataFrame):",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "def save_latex(freq_avg: pd.DataFrame):\n    display_cols = {\n        \"model\": \"Model\", \"solution\": \"Solution\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"pack_idx\": \"Pack\",\n        \"send_pct\": \"Send \\\\% (rounds)\",\n    }\n    cols = [c for c in display_cols if c in freq_avg.columns]\n    def _fmt(row, col):\n        val = row[col]\n        if pd.isna(val):",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"23_pack_heatmap\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"23_pack_heatmap\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"23_pack_heatmap\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_STUDY = OUT_FIG / \"23_pack_heatmap\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "OUT_FIG_STUDY = OUT_FIG / \"23_pack_heatmap\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.sparsification_percentage.23_pack_heatmap",
+        "description": "studies.sparsification_percentage.23_pack_heatmap",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):\n        server_union = set()\n        for sel in rnd_df[\"selected\"]:\n            server_union.update(sel)",
+        "detail": "studies.sparsification_percentage.23_pack_heatmap",
         "documentation": {}
     },
     {

@@ -314,7 +314,8 @@ python3 18_coverage_volume.py         # observed volume-based coverage per round
 python3 19_coverage_accuracy.py       # coverage (study 17) + accuracy per round on dual Y axes
 python3 20_pack_frequency.py          # how often each pack index was transmitted (horizontal bar)
 python3 21_layer_frequency.py         # how often each model layer was transmitted (horizontal bar, needs snapshots)
-python3 22_layer_heatmap.py           # same as 21 but as heatmap strip (like study 20); X=layer, color=normalized send rate
+python3 22_layer_heatmap.py           # 2D heatmap: Y=layer, X=percentage, color=send_pct; scales for large models
+python3 23_pack_heatmap.py            # 2D heatmap: Y=pack index, X=percentage, color=send_pct (like study 22 but for packs)
 
 # Pass a custom logs dir:
 python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
