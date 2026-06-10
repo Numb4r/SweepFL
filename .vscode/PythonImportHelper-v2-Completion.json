@@ -9105,7 +9105,7 @@
         "kind": 2,
         "importPath": "studies.sparsification_percentage.22_layer_heatmap",
         "description": "studies.sparsification_percentage.22_layer_heatmap",
-        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_rows = max(len(sorted_pcts), 1)\n    n_cols = max(len(niids), 1)",
+        "peekOfCode": "def plot_model_technique(freq_avg: pd.DataFrame, model: str, technique: str,\n                         niids: list, percentages: list) -> plt.Figure:\n    sub = freq_avg.copy()\n    if \"model\" in sub.columns:\n        sub = sub[sub[\"model\"] == model]\n    if \"solution\" in sub.columns:\n        sub = sub[sub[\"solution\"] == technique]\n    sorted_pcts = sorted(percentages)\n    n_pcts = len(sorted_pcts)\n    n_cols = max(len(niids), 1)",
         "detail": "studies.sparsification_percentage.22_layer_heatmap",
         "documentation": {}
     },
