@@ -55,6 +55,12 @@ PLAIN_MODULUS=-1       # BFV plain modulus   (-1 if unused)
 N_LENGTH=-1            # Paillier key length (-1 if unused)
 CKKS_BACKEND="tenseal" # tenseal | ckks_python_simplify | ckks_python | openfhe
 
+# Fração de clientes que participam de treino E validação por rodada (1.0 = 100%).
+# Ex.: 0.5 = 50% dos clientes; 0.25 = 25%. Amostragem aleatória independente por rodada.
+# Pastas com fração < 1.0 recebem o prefixo cf<frac>_ antes do timestamp para
+# evitar cruzamento de checkpoints com runs a 100%.
+CLIENT_FRACTION=1.0
+
 # Optional backend-specific overrides (uncomment only what you need):
 # SIMPLIFY_N=8192; SIMPLIFY_BITS=62; SIMPLIFY_SCALE_BITS=60
 # PYCRYPT_N=8192; PYCRYPT_BITS=60

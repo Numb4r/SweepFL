@@ -99,7 +99,11 @@ _find_resume_checkpoint() {
 
     local search_base="logs/${FOLDER:+${FOLDER}/}"
     local name_prefix="${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_"
-    local name_suffix="_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_"
+    # Inclui o token cf<frac> no sufixo para que runs com CLIENT_FRACTION != 1.0
+    # não retomem checkpoints de runs a 100% (e vice-versa).
+    local _cf_token=""
+    case "${CLIENT_FRACTION:-1.0}" in 1.0|1|1.00) ;; *) _cf_token="cf${CLIENT_FRACTION}_" ;; esac
+    local name_suffix="_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${_cf_token}"
 
     local best_dir="" best_round=0
     for dir in "${search_base}${name_prefix}"*rounds"${name_suffix}"????-??-??_??-??-??; do
@@ -208,6 +212,8 @@ run_experiment() {
   "PLAIN_MODULUS":   $PLAIN_MODULUS,
   "N_LENGTH":        $N_LENGTH,
 
+  "CLIENT_FRACTION": ${CLIENT_FRACTION:-1.0},
+
   "RESUMED_FROM":    "${RESUME_LOGFOLDER:-}",
   "RESUME_ROUND":    ${RESUME_ROUND:-0}
 }
@@ -218,6 +224,7 @@ JSON
     tmux new-session -d -s "$SERVER_SESSION" \
         "RUNTIME='$RUNTIME' SIF_DIR='$SIF_DIR' EXPERIMENT_NAME='$EXP_NAME' \
          RESUME_LOGFOLDER='${RESUME_LOGFOLDER:-}' \
+         CLIENT_FRACTION='${CLIENT_FRACTION:-1.0}' \
          CKKS_BACKEND='${CKKS_BACKEND:-tenseal}' \
          SIMPLIFY_N='${SIMPLIFY_N:-8192}' SIMPLIFY_BITS='${SIMPLIFY_BITS:-62}' SIMPLIFY_SCALE_BITS='${SIMPLIFY_SCALE_BITS:-60}' \
          PYCRYPT_N='${PYCRYPT_N:-8192}' PYCRYPT_BITS='${PYCRYPT_BITS:-60}' \
@@ -308,9 +315,13 @@ for config in "${CKKS_CONFIGS[@]}"; do
             fi
 
             for PERCENTAGE in "${ITER_PERCENTAGES[@]}"; do
+                # Token condicional: só inserido quando CLIENT_FRACTION != 1.0
+                # para preservar retrocompatibilidade com pastas existentes (100%).
+                CF_TOKEN=""
+                case "${CLIENT_FRACTION:-1.0}" in 1.0|1|1.00) ;; *) CF_TOKEN="cf${CLIENT_FRACTION}_" ;; esac
                 _find_resume_checkpoint
                 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-                LOGFOLDER="${FOLDER:+${FOLDER}/}${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${TIMESTAMP}"
+                LOGFOLDER="${FOLDER:+${FOLDER}/}${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${CF_TOKEN}${TIMESTAMP}"
 
                 run_experiment "$LOGFOLDER"
             done

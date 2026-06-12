@@ -30,6 +30,7 @@ class HEServer(fl.server.strategy.FedAvg):
         dirichlet_alpha: float,
         dataset: str,
         fraction_fit: float,
+        fraction_evaluate: float,
         solution: str,
         key_config: Dict[str, Any],
         log_folder: str = "",
@@ -81,10 +82,15 @@ class HEServer(fl.server.strategy.FedAvg):
             else:
                 print(f"[RESUME] No meta.json found at {meta_path}, starting fresh")
 
+        # Número de clientes esperados por rodada para fit e evaluate.
+        # max(1,...) garante pelo menos 1 cliente mesmo com fração muito pequena.
+        n_part = max(1, round(num_clients * fraction_fit))
         super().__init__(
             fraction_fit=fraction_fit,
+            fraction_evaluate=fraction_evaluate,
+            min_fit_clients=n_part,
+            min_evaluate_clients=n_part,
             min_available_clients=num_clients,
-            min_evaluate_clients=num_clients,
             initial_parameters=self.initial_parameters,
         )
         print("SERVER_READY")
@@ -288,15 +294,17 @@ def main():
     keys_config['openfhe_scale_bits']   = int(os.environ.get('OPENFHE_SCALE_BITS', 50))
     keys_config['n_length']             = int(os.environ.get('N_LENGTH', 0))
 
+    client_fraction = float(os.environ.get('CLIENT_FRACTION', 1.0))
     server = HEServer(
-        num_clients     = int(os.environ['NCLIENTS']),
-        dirichlet_alpha = float(os.environ.get('NIID', 1.0)),
-        dataset         = os.environ.get('DATASET', ''),
-        fraction_fit    = 1.0,
-        solution        = str(os.environ['SOLUTION']),
-        key_config      = keys_config,
-        log_folder      = os.environ.get('LOGFOLDER', ''),
-        experiment_name = os.environ.get('EXPERIMENT_NAME', ''),
+        num_clients       = int(os.environ['NCLIENTS']),
+        dirichlet_alpha   = float(os.environ.get('NIID', 1.0)),
+        dataset           = os.environ.get('DATASET', ''),
+        fraction_fit      = client_fraction,
+        fraction_evaluate = client_fraction,
+        solution          = str(os.environ['SOLUTION']),
+        key_config        = keys_config,
+        log_folder        = os.environ.get('LOGFOLDER', ''),
+        experiment_name   = os.environ.get('EXPERIMENT_NAME', ''),
     )
 
     remaining_rounds = max(1, int(os.environ['NUM_ROUNDS']) - server.start_round_offset)
