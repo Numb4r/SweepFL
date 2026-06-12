@@ -345,6 +345,9 @@ run_theme() {
     fi
 
     NCLIENTES=$(( ${#GPU_IDS[@]} * CLIENTS_PER_GPU ))
+    # CLIENT_FRACTIONS array: default to (1.0) when the script doesn't define it
+    # so that existing scripts run exactly once at 100% (backward-compatible).
+    [[ ${#CLIENT_FRACTIONS[@]} -eq 0 ]] && CLIENT_FRACTIONS=(1.0)
 
     mkdir -p "$CONTEXT_DIR" logs logs/models
     [[ -n "${FOLDER:-}" ]] && mkdir -p "logs/${FOLDER}"
@@ -379,9 +382,9 @@ run_theme() {
             for NIID in "${NIIDS[@]}"; do
               for SEED in "${SEEDS[@]}"; do
                 if is_packing_solution "$SOLUTION"; then
-                    (( total += ${#PERCENTAGES[@]} ))
+                    (( total += ${#PERCENTAGES[@]} * ${#CLIENT_FRACTIONS[@]} ))
                 else
-                    (( total += 1 ))
+                    (( total += ${#CLIENT_FRACTIONS[@]} ))
                 fi
               done
             done
@@ -430,6 +433,7 @@ run_theme() {
                         ITER_PERCENTAGES=(-1)
                     fi
 
+                    for CLIENT_FRACTION in "${CLIENT_FRACTIONS[@]}"; do
                     for PERCENTAGE in "${ITER_PERCENTAGES[@]}"; do
                         (( done_count++ ))
                         # Token condicional: só inserido quando CLIENT_FRACTION != 1.0
@@ -440,8 +444,9 @@ run_theme() {
                         TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
                         LOGFOLDER="${FOLDER:+${FOLDER}/}${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${CF_TOKEN}${TIMESTAMP}"
 
-                        echo "[$done_count/$total] $MODEL @ $DATASET | $SOLUTION | pct=$PERCENTAGE | seed=$SEED | niid=$NIID"
+                        echo "[$done_count/$total] $MODEL @ $DATASET | $SOLUTION | pct=$PERCENTAGE | cf=$CLIENT_FRACTION | seed=$SEED | niid=$NIID"
                         run_experiment "$LOGFOLDER"
+                    done
                     done
 
                 done; done

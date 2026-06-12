@@ -75,6 +75,8 @@ TELEGRAM_CHAT="111824133"
 #  DERIVED VALUES
 # ══════════════════════════════════════════════════════════════════
 NCLIENTES=$(( ${#GPU_IDS[@]} * CLIENTS_PER_GPU ))
+# CLIENT_FRACTIONS sweep — default to (1.0) for backward-compat.
+[[ ${#CLIENT_FRACTIONS[@]} -eq 0 ]] && CLIENT_FRACTIONS=(1.0)
 
 # ══════════════════════════════════════════════════════════════════
 #  HELPERS
@@ -314,6 +316,7 @@ for config in "${CKKS_CONFIGS[@]}"; do
                 ITER_PERCENTAGES=(-1)
             fi
 
+            for CLIENT_FRACTION in "${CLIENT_FRACTIONS[@]}"; do
             for PERCENTAGE in "${ITER_PERCENTAGES[@]}"; do
                 # Token condicional: só inserido quando CLIENT_FRACTION != 1.0
                 # para preservar retrocompatibilidade com pastas existentes (100%).
@@ -324,6 +327,7 @@ for config in "${CKKS_CONFIGS[@]}"; do
                 LOGFOLDER="${FOLDER:+${FOLDER}/}${MODEL}_${DATASET_FOLDER}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${NIID}_percentage${PERCENTAGE}_${POLY}_${PLAIN_MODULUS}_${N_LENGTH}_${COEFFS}_${SCALE}_${KEY_TYPE}_${CF_TOKEN}${TIMESTAMP}"
 
                 run_experiment "$LOGFOLDER"
+            done
             done
 
         done; done; done; done; done

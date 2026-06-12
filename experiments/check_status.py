@@ -102,7 +102,7 @@ def parse_bash_script(path: str) -> dict:
         "PLAIN_MODULUS": -1,
         "N_LENGTH": -1,
         "CKKS_BACKEND": "tenseal",
-        "CLIENT_FRACTION": "1.0",
+        "CLIENT_FRACTIONS": ["1.0"],
     }
 
     i = 0
@@ -210,6 +210,11 @@ def _set_cfg_scalar(cfg: dict, varname: str, val: str):
     if varname == "GPU_IDS":
         # Sometimes written as scalar-ish (rare) — skip; handled by array parser
         return
+    # Backward-compat: old scripts use scalar CLIENT_FRACTION=<val>;
+    # new scripts use array CLIENT_FRACTIONS=(...).  Map the old form.
+    if varname == "CLIENT_FRACTION":
+        cfg["CLIENT_FRACTIONS"] = [val]
+        return
     int_vars = {"CLIENTS_PER_GPU", "NUM_ROUNDS", "SCALE_POWER", "PLAIN_MODULUS", "N_LENGTH"}
     if varname in int_vars:
         try:
@@ -239,13 +244,14 @@ def enumerate_expected(cfg: dict) -> list:
     scale_power    = int(cfg.get("SCALE_POWER", 40))
     scale          = 2 ** scale_power
 
-    solutions       = cfg.get("SOLUTIONS", [])
-    percentages     = cfg.get("PERCENTAGES", [])
-    niids           = cfg.get("NIIDS", [])
-    seeds           = cfg.get("SEEDS", [])
-    model_pairs     = cfg.get("MODEL_DATASET_PAIRS", [])
-    ckks_configs    = cfg.get("CKKS_CONFIGS", ["ckks 8192 60,40,40,60"])
-    key_types       = cfg.get("KEY_TYPES", ["None"])
+    solutions        = cfg.get("SOLUTIONS", [])
+    percentages      = cfg.get("PERCENTAGES", [])
+    niids            = cfg.get("NIIDS", [])
+    seeds            = cfg.get("SEEDS", [])
+    model_pairs      = cfg.get("MODEL_DATASET_PAIRS", [])
+    ckks_configs     = cfg.get("CKKS_CONFIGS", ["ckks 8192 60,40,40,60"])
+    key_types        = cfg.get("KEY_TYPES", ["None"])
+    client_fractions = cfg.get("CLIENT_FRACTIONS", ["1.0"])
 
     experiments = []
 
@@ -270,28 +276,29 @@ def enumerate_expected(cfg: dict) -> list:
                             else:
                                 iter_pct = ["-1"]
 
-                            for pct in iter_pct:
-                                experiments.append({
-                                    "folder":          folder,
-                                    "model":           model,
-                                    "dataset":         dataset,
-                                    "dataset_folder":  dataset_folder,
-                                    "solution":        solution,
-                                    "technique":       technique,
-                                    "num_rounds":      num_rounds,
-                                    "nclientes":       nclientes,
-                                    "seed":            str(seed),
-                                    "niid":            str(niid),
-                                    "pct":             str(pct),
-                                    "poly":            str(poly),
-                                    "plain_modulus":   str(plain_modulus),
-                                    "n_length":        str(n_length),
-                                    "coeffs":          str(coeffs),
-                                    "scale":           str(scale),
-                                    "key_type":        str(key_type),
-                                    "ckks_backend":    cfg.get("CKKS_BACKEND", "tenseal"),
-                                    "client_fraction": str(cfg.get("CLIENT_FRACTION", "1.0")),
-                                })
+                            for cf in client_fractions:
+                                for pct in iter_pct:
+                                    experiments.append({
+                                        "folder":          folder,
+                                        "model":           model,
+                                        "dataset":         dataset,
+                                        "dataset_folder":  dataset_folder,
+                                        "solution":        solution,
+                                        "technique":       technique,
+                                        "num_rounds":      num_rounds,
+                                        "nclientes":       nclientes,
+                                        "seed":            str(seed),
+                                        "niid":            str(niid),
+                                        "pct":             str(pct),
+                                        "poly":            str(poly),
+                                        "plain_modulus":   str(plain_modulus),
+                                        "n_length":        str(n_length),
+                                        "coeffs":          str(coeffs),
+                                        "scale":           str(scale),
+                                        "key_type":        str(key_type),
+                                        "ckks_backend":    cfg.get("CKKS_BACKEND", "tenseal"),
+                                        "client_fraction": str(cf),
+                                    })
     return experiments
 
 
@@ -518,13 +525,14 @@ def render_script_section(script_name: str, cfg: dict, results: list, show_all: 
         print(green(f"  ✅ All {total} experiments done!"))
     else:
         headers = [
-            "Solution", "Model", "Dataset", "niid", "%pct",
+            "Solution", "Model", "Dataset", "niid", "%pct", "cf%",
             "seed", "clients", "poly", "coeffs", "scale",
             "backend", "Status", "Rounds",
         ]
         rows = []
         for exp, status, max_round, logfolder, found_backend in display:
             pct_str    = exp["pct"] if exp["pct"] != "-1" else "—"
+            cf_str     = exp.get("client_fraction", "1.0")
             rounds_str = f"{max_round}/{num_rounds}" if max_round else f"—/{num_rounds}"
             try:
                 scale_exp = int(math.log2(int(exp["scale"])))
@@ -539,6 +547,7 @@ def render_script_section(script_name: str, cfg: dict, results: list, show_all: 
                 exp["dataset_folder"],
                 exp["niid"],
                 pct_str,
+                cf_str,
                 exp["seed"],
                 str(exp["nclientes"]),
                 exp["poly"],
