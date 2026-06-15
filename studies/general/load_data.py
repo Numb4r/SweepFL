@@ -1,11 +1,11 @@
 """
-Shared data loading utility for sparsification_percentage studies.
+Shared data loading utility for experiment studies (generic — works for any experiment type).
 
 Usage:
     from load_data import load_all, load_masks, last_round, rounds_to_threshold, auc_accuracy, discover_dims
 
-    dfs = load_all()          # uses default logs dir
-    dfs = load_all("/path/to/logs/sparsification_percentage")
+    dfs = load_all()          # uses LOGS_DIR env var (set by run_all.sh) or default fallback
+    dfs = load_all("/path/to/logs/client_frac")
     masks = load_masks()      # loads mask.csv from every experiment folder
     # or: LOGS_DIR env var override
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-_DEFAULT_LOGS_RELATIVE = "../../logs/sparsification_percentage"
+_DEFAULT_LOGS_RELATIVE = "../../logs"  # fallback: repo/logs/ root; use LOGS_DIR or --logs-dir for specific experiment
 
 _FOLDER_RE = re.compile(
     r"^(?P<model>.+?)_(?P<dataset>(?:tanganke/)?[^_]+(?:_[^_]+)?)_"

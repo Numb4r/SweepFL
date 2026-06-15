@@ -56,5 +56,5 @@ N_LENGTH=-1
 CKKS_BACKEND="tenseal"
 
 # ── Run ───────────────────────────────────────────────────────────
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 run_theme

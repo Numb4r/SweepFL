@@ -577,7 +577,7 @@ def discover_scripts(experiments_dir: str, include_test: bool,
     Find all .sh files that call run_theme and aren't lib/template/test files.
     Returns list of script paths sorted alphabetically.
     """
-    candidates = sorted(Path(experiments_dir).glob("*.sh"))
+    candidates = sorted(Path(experiments_dir).rglob("*.sh"))
     result = []
     for p in candidates:
         name = p.name

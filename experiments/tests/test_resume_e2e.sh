@@ -40,7 +40,7 @@ FOLDER="test_resume_e2e"
 RUNTIME="docker"
 SIF_DIR="."
 
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 
 PASS=0; FAIL=0
 ok()   { echo "  [PASS] $*"; PASS=$(( PASS + 1 )); }

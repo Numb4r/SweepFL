@@ -37,7 +37,7 @@ bash experiments/my_theme.sh
 
 # Smoke-test ckks_python_simplify backend: Docker + Singularity, nvnl + fedphe,
 # 2 clients, 3 rounds, FashionMNIST, LeNet-5 (run from repo root)
-bash experiments/test_ckks_backend.sh
+bash experiments/tests/test_ckks_backend.sh
 
 # Estimate wall-clock time for an experiment script (local machine)
 python3 experiments/estimate_time.py experiments/my_theme.sh
@@ -58,9 +58,10 @@ tail -f logs/slurm_<jobid>.out
 # Submit one independent SLURM job per model:dataset pair (parallel on cluster)
 # Each job runs the full solution/niid/percentage/seed sweep for its single pair.
 # The original sbatch script is unchanged — direct sbatch still runs all pairs in one job.
-bash sbatch/submit_per_pair.sh sbatch/sbatch_sparsification_percentage_srr.sh --dry-run
-bash sbatch/submit_per_pair.sh sbatch/sbatch_sparsification_percentage_srr.sh
-# Works for all sbatch/sbatch_*.sh scripts that set EXPERIMENT_SCRIPT
+bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh --dry-run
+bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh
+bash sbatch/submit_per_pair.sh sbatch/client_frac/sbatch_client_frac_rw.sh --dry-run
+# Works for all sbatch/<tipo>/sbatch_*.sh scripts that set EXPERIMENT_SCRIPT
 
 # ── Checkpoint / Resume ───────────────────────────────────────────────────────
 
@@ -84,7 +85,7 @@ python3 experiments/merge_resume.py --yes                # skip prompt (used in 
 python3 experiments/merge_resume.py --logs-dir /path     # custom logs directory
 
 # End-to-end resume smoke test (Docker, ~5 min: plaintext seed → nvnl 1 round → nvnl 2 rounds)
-bash experiments/test_resume_e2e.sh
+bash experiments/tests/test_resume_e2e.sh
 
 # Checkpoint/resume unit tests (no Docker required; uses existing logs)
 bash tests/test_checkpoint_resume.sh
@@ -228,22 +229,22 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free; contains same `_find_resume_checkpoint`, `_write_incomplete_log` helpers as lib_tmux.sh plus `JOB_DEADLINE_EPOCH` computation
 - `experiments/generate_resume_jobs.py` — scans `logs/` for `INCOMPLETE.log` files, checks if already completed (skips), deduplicates by config fingerprint (picks best checkpoint), generates `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder; the generated `resume.sh` automatically calls `merge_resume.py --yes` after `run_theme` so the merge happens at the end of every resumed experiment; outputs sbatch paths to stdout, info to stderr
 - `experiments/merge_resume.py` — merges original + resumed experiment folders in-place: appends CSV rows from all resumed folders into the original, copies model snapshots, replaces checkpoint with the latest, updates `experiment_details.json` with `MERGED_FROM`/`MERGED_AT`, removes `INCOMPLETE.log`; archives all non-original folders to `<parent>/archive/` (safety backup of original also kept there); handles chains of N resumes; skips already-merged originals (idempotent); flags: `--dry-run`, `--yes`/`--auto`, `--logs-dir`
-- `experiments/test_resume_e2e.sh` — end-to-end Docker resume smoke test: plaintext seed → nvnl 1-round (creates checkpoint) → nvnl 2-round (detects checkpoint, resumes); verifies experiment_details.json, server_eval.csv round numbering, `[RESUME]` in logs, checkpoint updated
-- `experiments/sparsification_percentage_topkrr.sh` — topkrr experiment; same sweep as other sparsification scripts; sets `RR_START_ROUND=100` (switches at round 100 out of 200)
-- `sbatch/sbatch_sparsification_percentage_topkrr.sh` — SLURM job for the topkrr sweep (l40s, 3 GPUs, 9 clients)
-- `experiments/sparsification_percentage_srr.sh` — srr experiment; same sweep as other sparsification scripts
-- `sbatch/sbatch_sparsification_percentage_srr.sh` — SLURM job for the srr sweep (l40s, 3 GPUs, 9 clients)
-- `experiments/client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — client participation fraction sweep for all 7 solutions; `FOLDER="client_frac"` (shared); `CLIENT_FRACTIONS=(0.25 0.5 0.75)`, `PERCENTAGES=(0.1 0.5)`, `NIIDS=(0.1 1)`, resnet20+mobilenetv2, 20 clients/GPU × 3 GPUs = 60 clients; topkrr sets `RR_START_ROUND=100`; plaintext runs first (generates init_weights, 12 experiments); packing solutions run 24 experiments each
-- `sbatch/sbatch_client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — SLURM jobs for client_frac sweep (l40s, 3 GPUs, 32 CPUs, 4-day wall time, `--mem=0`)
-- `experiments/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
-- `experiments/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
+- `experiments/tests/test_resume_e2e.sh` — end-to-end Docker resume smoke test: plaintext seed → nvnl 1-round (creates checkpoint) → nvnl 2-round (detects checkpoint, resumes); verifies experiment_details.json, server_eval.csv round numbering, `[RESUME]` in logs, checkpoint updated
+- `experiments/sparsification_percentage/sparsification_percentage_topkrr.sh` — topkrr experiment; same sweep as other sparsification scripts; sets `RR_START_ROUND=100` (switches at round 100 out of 200)
+- `sbatch/sparsification_percentage/sbatch_sparsification_percentage_topkrr.sh` — SLURM job for the topkrr sweep (l40s, 3 GPUs, 9 clients)
+- `experiments/sparsification_percentage/sparsification_percentage_srr.sh` — srr experiment; same sweep as other sparsification scripts
+- `sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh` — SLURM job for the srr sweep (l40s, 3 GPUs, 9 clients)
+- `experiments/client_frac/client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — client participation fraction sweep for all 7 solutions; `FOLDER="client_frac"` (shared); `CLIENT_FRACTIONS=(0.25 0.5 0.75)`, `PERCENTAGES=(0.1 0.5)`, `NIIDS=(0.1 1)`, resnet20+mobilenetv2, 20 clients/GPU × 3 GPUs = 60 clients; topkrr sets `RR_START_ROUND=100`; plaintext runs first (generates init_weights, 12 experiments); packing solutions run 24 experiments each
+- `sbatch/client_frac/sbatch_client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — SLURM jobs for client_frac sweep (l40s, 3 GPUs, 32 CPUs, 4-day wall time, `--mem=0`)
+- `experiments/standalone/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
+- `experiments/tests/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
 - `tests/test_checkpoint_resume.sh` — unit tests for checkpoint/resume logic (6 tests): verifies checkpoint files present, `_find_resume_checkpoint` for completed/incomplete runs, Python round offset math, `lib_slurm.sh` path, artificial partial checkpoint selection
 - `tests/test_merge_resume.sh` — smoke tests for `merge_resume.py` (31 tests, no Docker): dry-run, basic merge (2+2 rounds), CSV row counts, model snapshots, checkpoint update, `experiment_details.json` metadata, archive behaviour, idempotency, 3-folder chain merge, conflict detection
 - `experiments/estimate_time.py` — estimates wall-clock time for an experiment script by parsing its config variables and applying per-machine speed factors; supports `--machine <partition>`, `--all`, and `--margin <factor>`; machine table sourced from `SLURM.md`
 - `experiments/ESTIMATION_METHODOLOGY.md` — documents the time estimation model (GPU-bound train time, CPU-bound HE time, scaling formulas)
-- `sbatch/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
-- `sbatch/submit_per_pair.sh` — launcher that reads `EXPERIMENT_SCRIPT` from any `sbatch/sbatch_*.sh`, enumerates its `MODEL_DATASET_PAIRS`, and submits one independent SLURM job per pair (via `--export=ALL,MODEL_DATASET_PAIR=<pair>`); supports `--dry-run`; backward-compat: direct `sbatch sbatch/*.sh` still runs all pairs in one job
-- `sbatch/` — directory for SLURM job scripts; one file per experiment batch
+- `sbatch/standalone/template.sh` — SLURM job template; copy and edit `--partition`, `--gres`, `--time`, and `EXPERIMENT_SCRIPT` then submit with `sbatch`
+- `sbatch/submit_per_pair.sh` — launcher that reads `EXPERIMENT_SCRIPT` from any `sbatch/<tipo>/sbatch_*.sh`, enumerates its `MODEL_DATASET_PAIRS`, and submits one independent SLURM job per pair (via `--export=ALL,MODEL_DATASET_PAIR=<pair>`); supports `--dry-run`; backward-compat: direct `sbatch sbatch/<tipo>/sbatch_*.sh` still runs all pairs in one job
+- `sbatch/<tipo>/` — SLURM job scripts grouped by experiment type: `client_frac/`, `sparsification_percentage/`, `standalone/`
 - `SLURM.md` — cluster partition reference table: partition name, nodes, GPU model, max wall time, GPU Speed factor, CPU Speed factor (used by `estimate_time.py`)
 - `benchmark/train_mobilenetv2_cifar10.py` — standalone MobileNetV2 + CIFAR-10 benchmark; loads CIFAR-10 from `benchmark/cifar-10-python.tar.gz` (local) or falls back to `tf.keras` download; trains 200 epochs; accepts `--batch-size N`; results in `benchmark/results/`
 - `benchmark/train_vit_gtsrb.py` — standalone ViT-Tiny + GTSRB benchmark; loads `tanganke/gtsrb` via HuggingFace `datasets`, cached in `benchmark/data/`; resizes images to 32×32; 43 classes; results in `benchmark/results_vit_gtsrb/`
@@ -253,7 +254,7 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `benchmark/cifar-10-python.tar.gz` — local copy of the official CIFAR-10 Python dataset; loaded directly without extraction via `tarfile`+`pickle`
 - `tests/test_topkrr.py` — unit tests for the `topkrr` mask logic (46 tests, no GPU required): top-k phase, round-robin phase, phase transition at `RR_START_ROUND`, coverage guarantee, edge cases
 - `tests/test_srr.py` — unit tests for the `srr` mask logic (34 tests, no GPU required): count, binary mask, uniform spacing, offset advance, coverage (when n%k==0), wrap-around, disjoint windows, edge cases
-- `experiments/check_status.py` — experiment audit tool: parses all `experiments/*.sh` scripts that call `run_theme`, enumerates every expected experiment, scans `logs/` for matching folders, and reports status per experiment; statuses: `✅ done`, `⚠️ partial`, `❌ missing`, `🔀 wrong backend` (CKKS_BACKEND in `experiment_details.json` doesn't match the script's `CKKS_BACKEND`); default shows only partial/missing — use `--all` to include done; columns: Solution, Model, Dataset, niid, %pct, seed, clients, poly, coeffs, scale, backend, Status, Rounds; `classify()` returns `(status, max_round, logfolder, found_backend)` 4-tuple; log matching uses `*clients` glob wildcard to tolerate client-count drift; backward-compat: folders without `experiment_details.json` are accepted regardless of backend
+- `experiments/check_status.py` — experiment audit tool: discovers all `experiments/**/*.sh` scripts (recursive) that call `run_theme`, enumerates every expected experiment, scans `logs/` for matching folders, and reports status per experiment; statuses: `✅ done`, `⚠️ partial`, `❌ missing`, `🔀 wrong backend` (CKKS_BACKEND in `experiment_details.json` doesn't match the script's `CKKS_BACKEND`); default shows only partial/missing — use `--all` to include done; columns: Solution, Model, Dataset, niid, %pct, seed, clients, poly, coeffs, scale, backend, Status, Rounds; `classify()` returns `(status, max_round, logfolder, found_backend)` 4-tuple; log matching uses `*clients` glob wildcard to tolerate client-count drift; backward-compat: folders without `experiment_details.json` are accepted regardless of backend
 - `tests/test_check_status.py` — 44 unit tests for `check_status.py` (no Docker required): `TestParseBashScript` (10), `TestEnumerateExpected` (5), `TestGetMaxRound` (5), `TestClassify` (10, includes backend-verification cases), `TestDiscoverScripts` (7), `TestCLI` (7)
 
 ### CSV Log Schema & Model Compression
@@ -287,42 +288,48 @@ To select a model at runtime set `MODEL_ARCH` to the factory name without the `c
 
 ## Analysis Studies
 
-Results analysis lives in `studies/sparsification_percentage/`. All scripts are fully generic (auto-discover models, datasets, solutions from logs) and write to `output/figures/`, `output/tables/`, `output/notebooks/`. See `docs/analysis_studies.md` for per-script details (scripts 10–21, `load_data.py` API, coverage formulas).
+**Convention**: `studies/` is only for generating graphs and tables — it never runs experiments.
+
+- **`studies/general/`** — generic analysis suite (CÓDIGO): `01_*.py` … `23_*.py`, `load_data.py`, `run_all.sh`. The same suite works for every experiment type (auto-discovers models, datasets, solutions from logs).
+- **`studies/<nome>/`** — OUTPUT for each experiment type: `figures/`, `tables/`, `notebooks/`. Created automatically by `run_all.sh`.
+
+See `docs/analysis_studies.md` for per-script details (scripts 10–23, `load_data.py` API, coverage formulas).
 
 **Comparison rule**: always compare techniques at the same sparsification percentage. Plaintext baseline must appear in every percentage-specific figure. Never mix percentages across techniques in the same plot.
 
 ```bash
-# Run all analysis scripts in sequence
-bash studies/sparsification_percentage/run_all.sh
-
-# Run individual scripts
-cd studies/sparsification_percentage
-python3 01_accuracy_curves.py       # convergence grid + final-accuracy bar
-python3 02_solution_comparison.py   # heatmap + grouped bar across solutions
-python3 03_overhead_breakdown.py    # timing breakdown (encrypt/decrypt/train)
-python3 04_communication.py         # payload per round
-python3 05_niid_impact.py           # paired bar + delta heatmap per niid
-python3 06_memory_profile.py        # RAM usage over rounds
-python3 07_convergence_speed.py     # rounds to threshold + AUC bar
-python3 08_efficiency_frontier.py   # Pareto scatter: accuracy vs payload/round
-python3 09_summary_table.py         # CSV + LaTeX summary table
-python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
-python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy + stacked bar
-python3 14_neurons_vs_accuracy.py     # cumulative neurons transmitted vs accuracy + neurons/round bar
-python3 15_bytes_vs_maxacc.py         # bytes vs accuracy, techniques only, best-technique max-acc target
-python3 16_overhead_vs_maxacc.py      # comm overhead vs accuracy, techniques only, best-technique max-acc target
-python3 17_coverage_unique.py         # observed unique-pack coverage per round (sawtooth, no duplicate counting)
-python3 18_coverage_volume.py         # observed volume-based coverage per round (sawtooth, with duplicate counting)
-python3 19_coverage_accuracy.py       # coverage (study 17) + accuracy per round on dual Y axes
-python3 20_pack_frequency.py          # how often each pack index was transmitted (horizontal bar)
-python3 21_layer_frequency.py         # how often each model layer was transmitted (horizontal bar, needs snapshots)
-python3 22_layer_heatmap.py           # 2D heatmap: Y=layer, X=percentage, color=send_pct; scales for large models
-python3 23_pack_heatmap.py            # 2D heatmap: Y=pack index, X=percentage, color=send_pct (like study 22 but for packs)
+# Run all analysis scripts for an experiment type (reads logs/<nome>/, writes studies/<nome>/)
+bash studies/general/run_all.sh sparsification_percentage
+bash studies/general/run_all.sh client_frac
+# or from studies/general/:
+cd studies/general && ./run_all.sh client_frac
 
 # Pass a custom logs dir:
-python3 01_accuracy_curves.py --logs-dir /path/to/logs/sparsification_percentage
-# or:
-LOGS_DIR=/path python3 01_accuracy_curves.py
+bash studies/general/run_all.sh client_frac --logs-dir /path/to/logs/client_frac
+
+# Run individual scripts (LOGS_DIR env var sets the logs source):
+cd studies/general
+LOGS_DIR=../../logs/client_frac python3 01_accuracy_curves.py  # convergence grid + final-accuracy bar
+LOGS_DIR=../../logs/client_frac python3 02_solution_comparison.py   # heatmap + grouped bar across solutions
+LOGS_DIR=../../logs/client_frac python3 03_overhead_breakdown.py    # timing breakdown (encrypt/decrypt/train)
+LOGS_DIR=../../logs/client_frac python3 04_communication.py         # payload per round
+LOGS_DIR=../../logs/client_frac python3 05_niid_impact.py           # paired bar + delta heatmap per niid
+LOGS_DIR=../../logs/client_frac python3 06_memory_profile.py        # RAM usage over rounds
+LOGS_DIR=../../logs/client_frac python3 07_convergence_speed.py     # rounds to threshold + AUC bar
+LOGS_DIR=../../logs/client_frac python3 08_efficiency_frontier.py   # Pareto scatter: accuracy vs payload/round
+LOGS_DIR=../../logs/client_frac python3 09_summary_table.py         # CSV + LaTeX summary table
+LOGS_DIR=../../logs/client_frac python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
+LOGS_DIR=../../logs/client_frac python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy + stacked bar
+LOGS_DIR=../../logs/client_frac python3 14_neurons_vs_accuracy.py     # cumulative neurons transmitted vs accuracy + neurons/round bar
+LOGS_DIR=../../logs/client_frac python3 15_bytes_vs_maxacc.py         # bytes vs accuracy, techniques only, best-technique max-acc target
+LOGS_DIR=../../logs/client_frac python3 16_overhead_vs_maxacc.py      # comm overhead vs accuracy, techniques only, best-technique max-acc target
+LOGS_DIR=../../logs/client_frac python3 17_coverage_unique.py         # observed unique-pack coverage per round (sawtooth, no duplicate counting)
+LOGS_DIR=../../logs/client_frac python3 18_coverage_volume.py         # observed volume-based coverage per round (sawtooth, with duplicate counting)
+LOGS_DIR=../../logs/client_frac python3 19_coverage_accuracy.py       # coverage (study 17) + accuracy per round on dual Y axes
+LOGS_DIR=../../logs/client_frac python3 20_pack_frequency.py          # how often each pack index was transmitted (horizontal bar)
+LOGS_DIR=../../logs/client_frac python3 21_layer_frequency.py         # how often each model layer was transmitted (horizontal bar, needs snapshots)
+LOGS_DIR=../../logs/client_frac python3 22_layer_heatmap.py           # 2D heatmap: Y=layer, X=percentage, color=send_pct; scales for large models
+LOGS_DIR=../../logs/client_frac python3 23_pack_heatmap.py            # 2D heatmap: Y=pack index, X=percentage, color=send_pct (like study 22 but for packs)
 ```
 
 ### Checkpoint / Resume System
@@ -376,7 +383,7 @@ Clients and server are configured entirely via environment variables: `CID`, `NC
 
 CKKS backend-specific vars (only read when the relevant backend is active): `SIMPLIFY_N`, `SIMPLIFY_BITS`, `SIMPLIFY_SCALE_BITS` (ckks_python_simplify); `PYCRYPT_N`, `PYCRYPT_BITS` (ckks_python); `OPENFHE_RING_DIM`, `OPENFHE_MULT_DEPTH`, `OPENFHE_SCALE_BITS` (openfhe).
 
-`USE_GPU` (optional, default `true`): set to `false` in `run_client.sh` to omit the `--gpus` flag — clients run in CPU mode. Automatically set by `experiments/test_ckks_backend.sh` when `/run/nvidia-persistenced/socket` is absent.
+`USE_GPU` (optional, default `true`): set to `false` in `run_client.sh` to omit the `--gpus` flag — clients run in CPU mode. Automatically set by `experiments/tests/test_ckks_backend.sh` when `/run/nvidia-persistenced/socket` is absent.
 
 `BATCH_SIZE` (optional, default `4`): training batch size passed to `model.fit()` in all `fit_*.py` files. Set to `32` or higher when using MobileNetV2 — BatchNorm is unstable with batch_size=4.
 

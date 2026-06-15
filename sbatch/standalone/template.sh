@@ -71,7 +71,7 @@ mkdir -p logs
 
 # ── Run experiment ────────────────────────────────────────────────────────────
 # Change this to the experiment script you want to run.
-EXPERIMENT_SCRIPT="experiments/sparsification_percentage.sh"
+EXPERIMENT_SCRIPT="experiments/sparsification_percentage/sparsification_percentage_<TECNICA>.sh"
 
 bash "$EXPERIMENT_SCRIPT"
 

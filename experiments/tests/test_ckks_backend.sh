@@ -43,7 +43,7 @@ MODEL_DATASET_PAIRS=("resnet20:CIFAR10")
 
 EXPERIMENT_NAME=""      # auto-generates as {model}_{dataset}_{solution}
 
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 
 # ── Inter-phase cleanup ───────────────────────────────────────────────────────
 # Stops any lingering FL containers and frees port 9999.

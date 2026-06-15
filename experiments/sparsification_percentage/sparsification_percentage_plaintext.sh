@@ -5,7 +5,7 @@
 # Techniques compared: nvnl, sw, rw, fedphe
 # Percentage sweep:    10 % → 30 % → 50 % → 70 %
 
-GPU_IDS=(7 8 9)
+GPU_IDS=(7)
 CLIENTS_PER_GPU=3
 
 FOLDER="sparsification_percentage"
@@ -15,7 +15,7 @@ NIIDS=(0.1 1)
 SEEDS=(42)
 TECHNIQUE="none"
 
-SOLUTIONS=('rw')
+SOLUTIONS=('plaintext')
 PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
 
 # dnn_tiny and lenet5 share FashionMNIST; mobilenetv2 → CIFAR-10; vit_tiny → GTSRB
@@ -75,5 +75,5 @@ model_config() {
         *)           BATCH_SIZE=4  ;;
     esac
 }
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 run_theme

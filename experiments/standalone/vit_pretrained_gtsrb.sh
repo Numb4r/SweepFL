@@ -31,5 +31,5 @@ PLAIN_MODULUS=-1
 N_LENGTH=-1
 CKKS_BACKEND="tenseal"
 
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 run_theme

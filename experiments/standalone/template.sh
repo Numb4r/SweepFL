@@ -86,5 +86,5 @@ CLIENT_FRACTION=1.0
 # }
 
 # ── Run ───────────────────────────────────────────────────────────
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 run_theme

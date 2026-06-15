@@ -47,5 +47,5 @@ PYCRYPT_N=8192; PYCRYPT_BITS=62
 OPENFHE_RING_DIM=8192; OPENFHE_MULT_DEPTH=1; OPENFHE_SCALE_BITS=50
 CKKS_BACKEND="ckks_python_simplify"
 
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/../lib.sh"
 run_theme
