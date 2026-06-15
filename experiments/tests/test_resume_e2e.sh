@@ -11,7 +11,7 @@
 #    - [RESUME] appears in server and client logs
 
 set -uo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 GPU_IDS=(0)
 CLIENTS_PER_GPU=2
