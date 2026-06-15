@@ -33,6 +33,14 @@
 #SBATCH --mail-type=FAIL,END
 #SBATCH --mail-user=y218172@dac.unicamp.br
 
+# ── Guard: este é um job SLURM; submeta, não rode com bash ───────────────────
+if [[ -z "${SLURM_JOB_ID:-}" ]]; then
+    echo "ERROR: '$0' é um script SLURM — submeta com sbatch, não execute com bash." >&2
+    echo "  Submeter:        sbatch $0" >&2
+    echo "  Um job por par:  bash sbatch/submit_per_pair.sh $0" >&2
+    exit 1
+fi
+
 # ── Batch size mapping ────────────────────────────────────────────────────────
 BATCH_SIZES=(16 32 64 128)
 BS=${BATCH_SIZES[$SLURM_ARRAY_TASK_ID]}
