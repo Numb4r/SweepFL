@@ -87,7 +87,8 @@ for script in 01_accuracy_curves.py \
               20_pack_frequency.py \
               21_layer_frequency.py \
               22_layer_heatmap.py \
-              23_pack_heatmap.py; do
+              23_pack_heatmap.py \
+              24_full_coverage_convergence.py; do
     [[ -f "$script" ]] || continue
     echo ""
     echo "==> $script"

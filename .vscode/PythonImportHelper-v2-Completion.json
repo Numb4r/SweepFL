@@ -345,6 +345,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -482,6 +490,14 @@
         "isExtraImport": true,
         "importPath": "math",
         "description": "math",
+        "detail": "math",
+        "documentation": {}
+    },
+    {
+        "label": "isnan",
+        "importPath": "math",
+        "description": "math",
+        "isExtraImport": true,
         "detail": "math",
         "documentation": {}
     },
@@ -9330,6 +9346,150 @@
         "description": "studies.general.23_pack_heatmap",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):\n        server_union = set()\n        for sel in rnd_df[\"selected\"]:\n            server_union.update(sel)",
         "detail": "studies.general.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "compute_conv_rounds",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def compute_conv_rounds(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute the first-100%-coverage round for every (config+seed) group.\n    Returns a DataFrame with columns SEED_DIMS + ['conv_round'].\n    \"\"\"\n    gcols = [c for c in SEED_DIMS if c in masks.columns]\n    rows = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        rows.append({**meta, \"conv_round\": _first_full_coverage_round(grp)})\n    return pd.DataFrame(rows)",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_bytes",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def compute_cumulative_bytes(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Sum bytes over clients per round, cumsum over rounds per experiment.\n    Returns SEED_DIMS + ['round', 'cumulative_mb'].\n    \"\"\"\n    df = train.copy()\n    df[\"bytes_client\"] = df.apply(_est_bytes_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"bytes_client\"]\n        .sum()",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_time",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def compute_cumulative_time(train: pd.DataFrame,\n                             server_agg: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute cumulative wall-clock time (s) per round per experiment.\n    Per round:\n      client_time = mean over clients of sum(TIME_COLS)  (parallel execution)\n      server_time = selection_time_s + aggregation_time_s  (from server_agg)\n      total_round = client_time + server_time\n    Returns SEED_DIMS + ['round', 'cumulative_time_s'].\n    \"\"\"\n    df = train.copy()",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "build_per_seed_summary",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def build_per_seed_summary(conv_rounds: pd.DataFrame,\n                            server_eval: pd.DataFrame,\n                            cum_bytes: pd.DataFrame,\n                            cum_time: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"For each (config+seed), collect: conv_round, acc, time_s, mb.\"\"\"\n    gcols = [c for c in SEED_DIMS if c in conv_rounds.columns]\n    rows = []\n    for key, grp in conv_rounds.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        conv_round = float(grp[\"conv_round\"].iloc[0])",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "average_over_seeds",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def average_over_seeds(per_seed: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Mean of conv_round, acc, mb, time_s over seeds per GROUP_DIMS.\"\"\"\n    gcols = [c for c in GROUP_DIMS if c in per_seed.columns]\n    return (\n        per_seed.groupby(gcols, dropna=False)[[\"conv_round\", \"acc\", \"mb\", \"time_s\"]]\n        .mean()\n        .reset_index()\n    )\n# ── Step 7: Pivot IID / NIID ──────────────────────────────────────────────────\ndef pivot_iid_niid(averaged: pd.DataFrame,",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "pivot_iid_niid",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def pivot_iid_niid(averaged: pd.DataFrame,\n                   niid_label_map: dict) -> pd.DataFrame:\n    \"\"\"Pivot so IID and NIID become column groups on the same row.\n    Index: (solution, model, dataset, percentage)\n    Columns per group: round_100, acc, time_s, mb\n    \"\"\"\n    idx_cols = [\"solution\", \"model\", \"dataset\", \"percentage\"]\n    idx_cols = [c for c in idx_cols if c in averaged.columns]\n    value_cols = [\"conv_round\", \"acc\", \"time_s\", \"mb\"]\n    parts = []",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def save_csv(table: pd.DataFrame, path: Path):\n    for c in table.select_dtypes(include=float).columns:\n        table[c] = table[c].round(3)\n    table.to_csv(path, index=False)\n    print(f\"Saved {path}\")\ndef save_latex(table: pd.DataFrame, pct: float, path: Path,\n               niid_labels: list[str]):\n    \"\"\"Write a longtable with a two-row header: technique cols + IID/NIID groups.\"\"\"\n    # Fixed left cols\n    left_cols  = [c for c in [\"solution\", \"model\", \"dataset\"] if c in table.columns]",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def save_latex(table: pd.DataFrame, pct: float, path: Path,\n               niid_labels: list[str]):\n    \"\"\"Write a longtable with a two-row header: technique cols + IID/NIID groups.\"\"\"\n    # Fixed left cols\n    left_cols  = [c for c in [\"solution\", \"model\", \"dataset\"] if c in table.columns]\n    # Dynamic value cols, ordered by IID then NIID\n    val_suffixes = [\"round\", \"acc\", \"time_s\", \"mb\"]\n    grp_cols = {}\n    for lbl in niid_labels:\n        gcols = [f\"{lbl.lower()}_{s}\" for s in val_suffixes if f\"{lbl.lower()}_{s}\" in table.columns]",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error loading masks: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\n# ── Dimensions ────────────────────────────────────────────────────────────────\nSEED_DIMS   = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nGROUP_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\n# ── Dimensions ────────────────────────────────────────────────────────────────\nSEED_DIMS   = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nGROUP_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n# niid → column-group label\nNIID_LABEL = {1.0: \"IID\", 0.1: \"NIID\"}",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\n# ── Dimensions ────────────────────────────────────────────────────────────────\nSEED_DIMS   = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nGROUP_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n# niid → column-group label\nNIID_LABEL = {1.0: \"IID\", 0.1: \"NIID\"}\n# Packing solutions (bytes estimated from packs_sent * pack_size * 4)",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\n# ── Dimensions ────────────────────────────────────────────────────────────────\nSEED_DIMS   = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nGROUP_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n# niid → column-group label\nNIID_LABEL = {1.0: \"IID\", 0.1: \"NIID\"}\n# Packing solutions (bytes estimated from packs_sent * pack_size * 4)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"srr\", \"topkrr\"}",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "NIID_LABEL",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "NIID_LABEL = {1.0: \"IID\", 0.1: \"NIID\"}\n# Packing solutions (bytes estimated from packs_sent * pack_size * 4)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"srr\", \"topkrr\"}\n# Client-side timing columns to sum for per-round wall-clock estimate\nTIME_COLS = [\n    \"train_time_s\",\n    \"decrypt_time_s\",\n    \"flatten_time_s\",\n    \"quantize_time_s\",",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"srr\", \"topkrr\"}\n# Client-side timing columns to sum for per-round wall-clock estimate\nTIME_COLS = [\n    \"train_time_s\",\n    \"decrypt_time_s\",\n    \"flatten_time_s\",\n    \"quantize_time_s\",\n    \"batch_padding_time_s\",\n    \"pack_time_s\",",
+        "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_COLS",
+        "kind": 5,
+        "importPath": "studies.general.24_full_coverage_convergence",
+        "description": "studies.general.24_full_coverage_convergence",
+        "peekOfCode": "TIME_COLS = [\n    \"train_time_s\",\n    \"decrypt_time_s\",\n    \"flatten_time_s\",\n    \"quantize_time_s\",\n    \"batch_padding_time_s\",\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",",
+        "detail": "studies.general.24_full_coverage_convergence",
         "documentation": {}
     },
     {
