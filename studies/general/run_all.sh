@@ -80,14 +80,23 @@ for script in 01_accuracy_curves.py \
               13_overhead_vs_accuracy.py \
               14_neurons_vs_accuracy.py \
               15_bytes_vs_maxacc.py \
+              15_bytes_vs_maxacc_individual.py \
               16_overhead_vs_maxacc.py \
+              16_overhead_vs_maxacc_individual.py \
               17_coverage_unique.py \
+              17_coverage_unique_individual.py \
               18_coverage_volume.py \
+              18_coverage_volume_individual.py \
               19_coverage_accuracy.py \
+              19_coverage_accuracy_individual.py \
               20_pack_frequency.py \
+              20_pack_frequency_individual.py \
               21_layer_frequency.py \
+              21_layer_frequency_individual.py \
               22_layer_heatmap.py \
+              22_layer_heatmap_individual.py \
               23_pack_heatmap.py \
+              23_pack_heatmap_individual.py \
               24_full_coverage_convergence.py; do
     [[ -f "$script" ]] || continue
     echo ""

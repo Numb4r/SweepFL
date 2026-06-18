@@ -353,6 +353,78 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2381,6 +2453,22 @@
         "importPath": "stat",
         "description": "stat",
         "detail": "stat",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
         "documentation": {}
     },
     {
@@ -8395,6 +8483,114 @@
         "documentation": {}
     },
     {
+        "label": "compute_cumulative_bytes",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "def compute_cumulative_bytes(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    df[\"bytes_client\"] = df.apply(_est_bytes_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"bytes_client\"]\n        .sum()\n        .reset_index()\n        .rename(columns={\"bytes_client\": \"bytes_round\"})\n    )",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[[*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (\n        merged.groupby(avg_group, dropna=False)\n        .agg(cumulative_mb=(\"cumulative_mb\", \"mean\"),\n             mean_acc=(\"mean_acc\", \"mean\"))",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model: str, dataset: str,\n              niid, pct: float) -> plt.Figure | None:\n    \"\"\"Two-panel figure (curve + bar) for a single (model, dataset, niid, pct) cell.\"\"\"\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2,\n        figsize=(16, 5.5),\n        gridspec_kw={\"width_ratios\": [3, 1]},\n    )",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\",\n                \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "SOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",\n    \"batchcrypt\": \"#795548\",",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "SOL_MARKERS = {\n    \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\", \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_individual",
+        "description": "studies.general.15_bytes_vs_maxacc_individual",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\ndef _tok(model, dataset, niid, pct=None) -> str:\n    \"\"\"Build filename token from (model, dataset, niid[, pct]).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), niid_s]\n    if pct is not None:",
+        "detail": "studies.general.15_bytes_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
         "label": "compute_cumulative_overhead",
         "kind": 2,
         "importPath": "studies.general.16_overhead_vs_maxacc",
@@ -8539,6 +8735,105 @@
         "documentation": {}
     },
     {
+        "label": "compute_cumulative_overhead",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "def compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    present = [c for c in COMM_COLS if c in df.columns]\n    df[\"overhead_s\"] = df[present].fillna(0.0).sum(axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"overhead_s\"]\n        .sum()\n        .reset_index()\n        .rename(columns={\"overhead_s\": \"overhead_round\"})",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    result = (\n        merged.groupby(avg_group, dropna=False)",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model: str, dataset: str,\n              niid, pct: float) -> plt.Figure | None:\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2,\n        figsize=(16, 5.5),\n        gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nSOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "SOL_COLORS = {\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",\n    \"batchcrypt\": \"#795548\",",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_COLS",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "COMM_COLS = [\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",\n    \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_individual",
+        "description": "studies.general.16_overhead_vs_maxacc_individual",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:\n        return f\"{s:.0f}s\"\n    if s >= 10:\n        return f\"{s:.1f}s\"\n    return f\"{s:.2f}s\"\ndef _tok(model, dataset, niid, pct=None) -> str:",
+        "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
         "label": "build_coverage_df",
         "kind": 2,
         "importPath": "studies.general.17_coverage_unique",
@@ -8658,6 +8953,78 @@
     {
         "label": "build_coverage_df",
         "kind": 2,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _unique_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        for k, v in meta.items():",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "def plot_cell(s: pd.DataFrame, model: str, dataset: str,\n              technique: str, niid, pct: float) -> plt.Figure:\n    \"\"\"Single subplot for one (model, dataset, technique, niid, pct).\"\"\"\n    fig, ax = plt.subplots(figsize=(7, 4))\n    s = s.sort_values(\"round\")\n    if not s.empty:\n        ax.plot(s[\"round\"], s[\"coverage_pct\"], linewidth=1.8, color=\"tab:blue\")\n    ax.axhline(100, color=\"black\", linestyle=\"--\", linewidth=1, alpha=0.4)\n    ax.set_ylim(0, 110)\n    ax.grid(True, alpha=0.3)",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"17_coverage_unique_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"17_coverage_unique_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"17_coverage_unique_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"17_coverage_unique_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Core: unique-coverage sawtooth ───────────────────────────────────────────",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.17_coverage_unique_individual",
+        "description": "studies.general.17_coverage_unique_individual",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Core: unique-coverage sawtooth ───────────────────────────────────────────\ndef _unique_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "detail": "studies.general.17_coverage_unique_individual",
+        "documentation": {}
+    },
+    {
+        "label": "build_coverage_df",
+        "kind": 2,
         "importPath": "studies.general.18_coverage_volume",
         "description": "studies.general.18_coverage_volume",
         "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute volume-coverage series for all (config+seed) groups.\"\"\"\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _volume_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
@@ -8761,6 +9128,78 @@
         "description": "studies.general.18_coverage_volume",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _pct_colors(percentages: list) -> dict:\n    \"\"\"Map each percentage to a viridis color (sequential: low%=light, high%=dark).\"\"\"\n    cm = plt.colormaps.get_cmap(\"viridis\")\n    n = max(len(percentages) - 1, 1)\n    return {p: cm(i / n) for i, p in enumerate(sorted(percentages))}\n# ── Core: compute volume-coverage sawtooth per (config+seed) ─────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, coverage_pct} for one (config+seed) group.\n    Per round: server union size (deduplicated across clients for that round).",
         "detail": "studies.general.18_coverage_volume",
+        "documentation": {}
+    },
+    {
+        "label": "build_coverage_df",
+        "kind": 2,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _volume_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        for k, v in meta.items():",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "def plot_cell(s: pd.DataFrame, model: str, dataset: str,\n              technique: str, niid, pct: float) -> plt.Figure:\n    fig, ax = plt.subplots(figsize=(7, 4))\n    s = s.sort_values(\"round\")\n    if not s.empty:\n        ax.plot(s[\"round\"], s[\"coverage_pct\"], linewidth=1.8, color=\"tab:orange\")\n    ax.axhline(100, color=\"black\", linestyle=\"--\", linewidth=1, alpha=0.4)\n    ax.set_ylim(0, 110)\n    ax.grid(True, alpha=0.3)\n    ax.set_xlabel(\"Round\", fontsize=9)",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"18_coverage_volume_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"18_coverage_volume_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"18_coverage_volume_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"18_coverage_volume_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Core: volume-coverage sawtooth ───────────────────────────────────────────",
+        "detail": "studies.general.18_coverage_volume_individual",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.18_coverage_volume_individual",
+        "description": "studies.general.18_coverage_volume_individual",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Core: volume-coverage sawtooth ───────────────────────────────────────────\ndef _volume_cycle_series(group_df: pd.DataFrame) -> list[dict]:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "detail": "studies.general.18_coverage_volume_individual",
         "documentation": {}
     },
     {
@@ -8890,6 +9329,69 @@
         "documentation": {}
     },
     {
+        "label": "build_coverage_df",
+        "kind": 2,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "def build_coverage_df(masks: pd.DataFrame) -> pd.DataFrame:\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _unique_cycle_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        for k, v in meta.items():",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "def plot_cell(cs: pd.DataFrame, ac: pd.DataFrame,\n              model: str, dataset: str, technique: str,\n              niid, pct: float) -> plt.Figure:\n    \"\"\"Single figure with dual Y axes: coverage (left) + accuracy (right).\"\"\"\n    fig, ax = plt.subplots(figsize=(7, 4))\n    ax.set_ylim(0, 110)\n    if not cs.empty:\n        ax.plot(cs[\"round\"], cs[\"coverage_pct\"],\n                linewidth=1.8, color=COV_COLOR)\n    ax.axhline(100, color=COV_COLOR, linestyle=\"--\", linewidth=0.8, alpha=0.35)",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"19_coverage_accuracy_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR  = \"tab:blue\"\nACC_COLOR  = \"tab:red\"",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"19_coverage_accuracy_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR  = \"tab:blue\"\nACC_COLOR  = \"tab:red\"\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"19_coverage_accuracy_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR  = \"tab:blue\"\nACC_COLOR  = \"tab:red\"\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.19_coverage_accuracy_individual",
+        "description": "studies.general.19_coverage_accuracy_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"19_coverage_accuracy_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\nCOV_COLOR  = \"tab:blue\"\nACC_COLOR  = \"tab:red\"\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")",
+        "detail": "studies.general.19_coverage_accuracy_individual",
+        "documentation": {}
+    },
+    {
         "label": "build_freq_df",
         "kind": 2,
         "importPath": "studies.general.20_pack_frequency",
@@ -9004,6 +9506,78 @@
         "description": "studies.general.20_pack_frequency",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count per (config+seed) ───────────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    \"\"\"Return {pack_idx: send_count, '_n_rounds': total_rounds, '_n_packs': n_packs}.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):\n        server_union = set()\n        for sel in rnd_df[\"selected\"]:",
         "detail": "studies.general.20_pack_frequency",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        result = _pack_send_counts(grp)\n        n_packs  = result[\"n_packs\"]\n        n_rounds = result[\"n_rounds\"]\n        if n_rounds == 0:\n            continue\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "def plot_cell(s: pd.DataFrame, model: str, dataset: str,\n              technique: str, niid, pct: float) -> plt.Figure:\n    \"\"\"Single heatmap strip for one (model, dataset, technique, niid, pct).\"\"\"\n    fig, ax = plt.subplots(figsize=(8, 1.6))\n    ax.set_yticks([])\n    if not s.empty:\n        n_packs = int(s[\"pack_idx\"].max()) + 1\n        data = s.sort_values(\"pack_idx\")[\"send_pct\"].values.reshape(1, -1)\n        im = ax.imshow(\n            data, aspect=\"auto\", cmap=\"viridis\",",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Core: pack send-count (identical to study 20) ────────────────────────────",
+        "detail": "studies.general.20_pack_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_individual",
+        "description": "studies.general.20_pack_frequency_individual",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "detail": "studies.general.20_pack_frequency_individual",
         "documentation": {}
     },
     {
@@ -9126,6 +9700,78 @@
     {
         "label": "build_freq_df",
         "kind": 2,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame, layer_info_cache: dict,\n                  logs_dir=None) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta       = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")\n        cache_key  = (model_name, solution)\n        if cache_key not in layer_info_cache:",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "def plot_cell(s: pd.DataFrame, model: str, dataset: str,\n              technique: str, niid, pct: float, color=\"steelblue\") -> plt.Figure:\n    \"\"\"Horizontal bar chart for one (model, dataset, technique, niid, pct).\"\"\"\n    n_layers = len(s) if not s.empty else 1\n    PER_LAYER_IN, MIN_IN, MAX_IN = 0.30, 2.5, 16.0\n    fig_h = min(max(MIN_IN, n_layers * PER_LAYER_IN), MAX_IN)\n    in_per_layer = fig_h / max(n_layers, 1)\n    ytick_fs = max(4, min(8, in_per_layer * 22))\n    annot_fs = max(3, ytick_fs - 1)\n    fig, ax = plt.subplots(figsize=(7, fig_h))",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"21_layer_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"21_layer_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"21_layer_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"21_layer_frequency_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Tensor → Keras-layer grouping (copied from study 21, unchanged) ──────────",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.21_layer_frequency_individual",
+        "description": "studies.general.21_layer_frequency_individual",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    parts = [str(model), str(dataset), str(technique), niid_s]\n    if pct is not None:\n        parts.append(f\"p{int(round(pct * 100)):03d}\")\n    return \"_\".join(parts)\n# ── Tensor → Keras-layer grouping (copied from study 21, unchanged) ──────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []",
+        "detail": "studies.general.21_layer_frequency_individual",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
         "importPath": "studies.general.22_layer_heatmap",
         "description": "studies.general.22_layer_heatmap",
         "peekOfCode": "def build_freq_df(masks: pd.DataFrame, layer_info_cache: dict,\n                  logs_dir=None) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")\n        cache_key  = (model_name, solution)\n        if cache_key not in layer_info_cache:",
@@ -9243,6 +9889,78 @@
     {
         "label": "build_freq_df",
         "kind": 2,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame, layer_info_cache: dict,\n                  logs_dir=None) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")\n        cache_key  = (model_name, solution)\n        if cache_key not in layer_info_cache:",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "def plot_cell(sub: pd.DataFrame, model: str, dataset: str,\n              technique: str, niid, percentages: list) -> plt.Figure:\n    \"\"\"2D heatmap (Y=layer, X=pct) for one (model, dataset, technique, niid).\"\"\"\n    sorted_pcts  = sorted(percentages)\n    n_pcts       = len(sorted_pcts)\n    layer_order = (\n        sub.drop_duplicates(\"layer_idx\")\n        .sort_values(\"layer_idx\")[\"layer_label\"]\n        .tolist()\n    ) if not sub.empty else []",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Tensor → Keras-layer grouping (identical to studies 21/22) ───────────────",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Tensor → Keras-layer grouping (identical to studies 21/22) ───────────────\ndef _group_tensors(shapes: list) -> list:",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Tensor → Keras-layer grouping (identical to studies 21/22) ───────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []\n    i = 0",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_individual",
+        "description": "studies.general.22_layer_heatmap_individual",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Tensor → Keras-layer grouping (identical to studies 21/22) ───────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []\n    i = 0\n    n = len(shapes)\n    while i < n:",
+        "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
         "importPath": "studies.general.23_pack_heatmap",
         "description": "studies.general.23_pack_heatmap",
         "peekOfCode": "def build_freq_df(masks: pd.DataFrame) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        result = _pack_send_counts(grp)\n        n_packs = result[\"n_packs\"]\n        n_rounds = result[\"n_rounds\"]\n        if n_rounds == 0:\n            continue\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
@@ -9346,6 +10064,78 @@
         "description": "studies.general.23_pack_heatmap",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# ── Core: pack send-count (identical to study 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):\n        server_union = set()\n        for sel in rnd_df[\"selected\"]:\n            server_union.update(sel)",
         "detail": "studies.general.23_pack_heatmap",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        result  = _pack_send_counts(grp)\n        n_packs  = result[\"n_packs\"]\n        n_rounds = result[\"n_rounds\"]\n        if n_rounds == 0:\n            continue\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "def plot_cell(sub: pd.DataFrame, model: str, dataset: str,\n              technique: str, niid, percentages: list) -> plt.Figure:\n    \"\"\"2D heatmap (Y=pack index, X=pct) for one (model, dataset, technique, niid).\"\"\"\n    sorted_pcts = sorted(percentages)\n    n_pcts      = len(sorted_pcts)\n    n_packs     = int(sub[\"pack_idx\"].max()) + 1 if not sub.empty else 1\n    fig_h = max(4.0, n_packs * 0.18)\n    fig_w = max(3.5, n_pcts * 0.7 + 2.5)\n    fig, ax = plt.subplots(figsize=(fig_w, fig_h))\n    mat = np.full((n_packs, n_pcts), np.nan)",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"23_pack_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"23_pack_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Core: pack send-count (identical to study 23) ────────────────────────────",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"23_pack_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Core: pack send-count (identical to study 23) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"23_pack_heatmap_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Core: pack send-count (identical to study 23) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)",
+        "detail": "studies.general.23_pack_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.23_pack_heatmap_individual",
+        "description": "studies.general.23_pack_heatmap_individual",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Core: pack send-count (identical to study 23) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0\n    for rnd, rnd_df in group_df.sort_values(\"round\").groupby(\"round\", sort=False):",
+        "detail": "studies.general.23_pack_heatmap_individual",
         "documentation": {}
     },
     {
