@@ -8025,7 +8025,7 @@
         "kind": 2,
         "importPath": "studies.general.12_bytes_vs_accuracy_individual",
         "description": "studies.general.12_bytes_vs_accuracy_individual",
-        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    return (\n        merged.groupby(avg_group, dropna=False)",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    for c in join_keys:\n        if cumulative[c].dtype != se[c].dtype:\n            se[c] = pd.to_numeric(se[c], errors=\"ignore\")\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")",
         "detail": "studies.general.12_bytes_vs_accuracy_individual",
         "documentation": {}
     },
@@ -8331,7 +8331,7 @@
         "kind": 2,
         "importPath": "studies.general.13_overhead_vs_accuracy_individual",
         "description": "studies.general.13_overhead_vs_accuracy_individual",
-        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    return (\n        merged.groupby(avg_group, dropna=False)",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    for c in join_keys:\n        if cumulative[c].dtype != se[c].dtype:\n            se[c] = pd.to_numeric(se[c], errors=\"ignore\")\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")",
         "detail": "studies.general.13_overhead_vs_accuracy_individual",
         "documentation": {}
     },
@@ -8637,7 +8637,7 @@
         "kind": 2,
         "importPath": "studies.general.14_neurons_vs_accuracy_individual",
         "description": "studies.general.14_neurons_vs_accuracy_individual",
-        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    return (\n        merged.groupby(avg_group, dropna=False)",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    for c in join_keys:\n        if cumulative[c].dtype != se[c].dtype:\n            se[c] = pd.to_numeric(se[c], errors=\"ignore\")\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")",
         "detail": "studies.general.14_neurons_vs_accuracy_individual",
         "documentation": {}
     },
