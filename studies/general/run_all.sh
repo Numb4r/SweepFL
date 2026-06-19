@@ -77,8 +77,11 @@ for script in 01_accuracy_curves.py \
               10_total_data_convergence.py \
               11_data_vs_coverage.py \
               12_bytes_vs_accuracy.py \
+              12_bytes_vs_accuracy_individual.py \
               13_overhead_vs_accuracy.py \
+              13_overhead_vs_accuracy_individual.py \
               14_neurons_vs_accuracy.py \
+              14_neurons_vs_accuracy_individual.py \
               15_bytes_vs_maxacc.py \
               15_bytes_vs_maxacc_individual.py \
               16_overhead_vs_maxacc.py \

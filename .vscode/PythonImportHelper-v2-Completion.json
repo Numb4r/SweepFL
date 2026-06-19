@@ -425,6 +425,30 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -7988,6 +8012,123 @@
         "documentation": {}
     },
     {
+        "label": "compute_cumulative_bytes",
+        "kind": 2,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "def compute_cumulative_bytes(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    df[\"bytes_client\"] = df.apply(_est_bytes_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"bytes_client\"]\n        .sum().reset_index().rename(columns={\"bytes_client\": \"bytes_round\"})\n    )\n    seed_group = [c for c in SEED_DIMS if c in per_round.columns]\n    per_round = per_round.sort_values(seed_group + [\"round\"])",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    return (\n        merged.groupby(avg_group, dropna=False)",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model: str, dataset: str,\n              niid, pct) -> plt.Figure:\n    \"\"\"2-panel figure for one (model, dataset, niid, pct): curve left + bar right.\"\"\"\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5),\n        gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = _sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_bpr   = _ref_mb_per_round(combo)",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"12_bytes_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"12_bytes_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"12_bytes_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"12_bytes_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_ACC",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "TARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    if pct is None:",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.12_bytes_vs_accuracy_individual",
+        "description": "studies.general.12_bytes_vs_accuracy_individual",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    if pct is None:\n        return \"_\".join([str(model), str(dataset), niid_s, \"plaintext\"])\n    return \"_\".join([str(model), str(dataset), niid_s, f\"p{int(round(pct * 100)):03d}\"])\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:",
+        "detail": "studies.general.12_bytes_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
         "label": "compute_cumulative_overhead",
         "kind": 2,
         "importPath": "studies.general.13_overhead_vs_accuracy",
@@ -8177,6 +8318,150 @@
         "documentation": {}
     },
     {
+        "label": "compute_cumulative_overhead",
+        "kind": 2,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "def compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    present = [c for c in COMM_COLS if c in df.columns]\n    df[\"overhead_s\"] = df[present].fillna(0.0).sum(axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"overhead_s\"]\n        .sum().reset_index().rename(columns={\"overhead_s\": \"overhead_round\"})\n    )\n    seed_group = [c for c in SEED_DIMS if c in per_round.columns]",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    return (\n        merged.groupby(avg_group, dropna=False)",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "compute_comm_overhead_medians",
+        "kind": 2,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "def compute_comm_overhead_medians(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    present_cols = [c for g in COMM_OP_GROUPS for c in g[1] if c in df.columns]\n    if not present_cols:\n        return pd.DataFrame()\n    seed_round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = df.groupby(seed_round_group, dropna=False)[present_cols].sum().reset_index()\n    seed_group = [c for c in SEED_DIMS if c in per_round.columns]\n    medians_seed = per_round.groupby(seed_group, dropna=False)[present_cols].median().reset_index()\n    dim_group = [c for c in DIMS if c in medians_seed.columns]",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, overhead_medians: pd.DataFrame,\n              model: str, dataset: str, niid, pct) -> plt.Figure:\n    \"\"\"2-panel figure for one (model, dataset, niid, pct): curve left + stacked bar right.\"\"\"\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5),\n        gridspec_kw={\"width_ratios\": [2, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = _sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_spr   = _ref_s_per_round(combo)",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"13_overhead_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"13_overhead_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"13_overhead_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"13_overhead_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_ACC",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "TARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_COLS",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "COMM_COLS = [\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",\n    \"decrypt_time_s\",\n]\nCOMM_OP_GROUPS = [\n    (\"Pack+Mask\",  [\"pack_time_s\", \"mask_select_time_s\"]),\n    (\"Encrypt\",    [\"encrypt_time_s\"]),",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_OP_GROUPS",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "COMM_OP_GROUPS = [\n    (\"Pack+Mask\",  [\"pack_time_s\", \"mask_select_time_s\"]),\n    (\"Encrypt\",    [\"encrypt_time_s\"]),\n    (\"Serialize\",  [\"serialize_time_s\"]),\n    (\"Decrypt\",    [\"decrypt_time_s\"]),\n]\nBAR_COLORS = [plt.colormaps[\"Set2\"](i) for i in range(len(COMM_OP_GROUPS))]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, niid, pct=None) -> str:",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "BAR_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "BAR_COLORS = [plt.colormaps[\"Set2\"](i) for i in range(len(COMM_OP_GROUPS))]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    if pct is None:\n        return \"_\".join([str(model), str(dataset), niid_s, \"plaintext\"])\n    return \"_\".join([str(model), str(dataset), niid_s, f\"p{int(round(pct * 100)):03d}\"])\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.13_overhead_vs_accuracy_individual",
+        "description": "studies.general.13_overhead_vs_accuracy_individual",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    if pct is None:\n        return \"_\".join([str(model), str(dataset), niid_s, \"plaintext\"])\n    return \"_\".join([str(model), str(dataset), niid_s, f\"p{int(round(pct * 100)):03d}\"])\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\n# ── Cumulative overhead computation ──────────────────────────────────────────\ndef compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:",
+        "detail": "studies.general.13_overhead_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
         "label": "compute_cumulative_neurons",
         "kind": 2,
         "importPath": "studies.general.14_neurons_vs_accuracy",
@@ -8336,6 +8621,123 @@
         "description": "studies.general.14_neurons_vs_accuracy",
         "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _sol_marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\n# ── Neuron estimation ─────────────────────────────────────────────────────────\ndef _neurons_per_client(row) -> float:\n    \"\"\"Parameters actually transmitted per client per round.\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in PACKING_SOLS:",
         "detail": "studies.general.14_neurons_vs_accuracy",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_neurons",
+        "kind": 2,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "def compute_cumulative_neurons(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    df[\"neurons_client\"] = df.apply(_neurons_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"neurons_client\"]\n        .sum().reset_index().rename(columns={\"neurons_client\": \"neurons_round\"})\n    )\n    seed_group = [c for c in SEED_DIMS if c in per_round.columns]\n    per_round = per_round.sort_values(seed_group + [\"round\"])",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[\n        [*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]\n    ].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]\n    return (\n        merged.groupby(avg_group, dropna=False)",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "compute_neurons_per_round_medians",
+        "kind": 2,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "def compute_neurons_per_round_medians(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    df[\"neurons_client\"] = df.apply(_neurons_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"neurons_client\"]\n        .sum().reset_index().rename(columns={\"neurons_client\": \"neurons_round\"})\n    )\n    seed_group = [c for c in SEED_DIMS if c in per_round.columns]\n    medians_seed = (",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, neuron_medians: pd.DataFrame,\n              model: str, dataset: str, niid, pct) -> plt.Figure:\n    \"\"\"2-panel figure for one (model, dataset, niid, pct): curve left + neurons bar right.\"\"\"\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5),\n        gridspec_kw={\"width_ratios\": [2, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = _sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_npr   = _ref_neurons_per_round(combo)",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train       = dfs[\"train\"]\n    server_eval = dfs[\"server_eval\"]\n    if train.empty:\n        print(\"No train data found.\")\n        return\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"14_neurons_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"14_neurons_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"14_neurons_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"14_neurons_acc_individual\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nTARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "TARGET_ACC",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "TARGET_ACC = 0.80\nPACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"sw\", \"rw\", \"fedphe\", \"fedphe-scout\", \"nvnl-scout\", \"topkrr\", \"srr\"}\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.14_neurons_vs_accuracy_individual",
+        "description": "studies.general.14_neurons_vs_accuracy_individual",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, niid, pct=None) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    if pct is None:\n        return \"_\".join([str(model), str(dataset), niid_s, \"plaintext\"])\n    return \"_\".join([str(model), str(dataset), niid_s, f\"p{int(round(pct * 100)):03d}\"])\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _fmt_millions(n: float) -> str:\n    if n >= 1e6:",
+        "detail": "studies.general.14_neurons_vs_accuracy_individual",
         "documentation": {}
     },
     {
