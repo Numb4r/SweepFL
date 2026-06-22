@@ -10792,6 +10792,15 @@
         "documentation": {}
     },
     {
+        "label": "count_experiments",
+        "kind": 2,
+        "importPath": "studies.general.load_data",
+        "description": "studies.general.load_data",
+        "peekOfCode": "def count_experiments(logs_dir=None) -> int:\n    \"\"\"Return the number of valid experiment folders in logs_dir.\n    Useful for pre-flight validation before creating output directories.\n    Raises FileNotFoundError if the directory doesn't exist.\n    \"\"\"\n    root = _resolve_logs_dir(logs_dir)\n    if not root.exists():\n        raise FileNotFoundError(f\"Logs directory not found: {root.resolve()}\")\n    return sum(1 for f in root.iterdir() if f.is_dir() and _parse_folder(f.name) is not None)\ndef load_all(logs_dir=None) -> dict[str, pd.DataFrame]:",
+        "detail": "studies.general.load_data",
+        "documentation": {}
+    },
+    {
         "label": "load_all",
         "kind": 2,
         "importPath": "studies.general.load_data",
@@ -10846,15 +10855,6 @@
         "documentation": {}
     },
     {
-        "label": "_DEFAULT_LOGS_RELATIVE",
-        "kind": 5,
-        "importPath": "studies.general.load_data",
-        "description": "studies.general.load_data",
-        "peekOfCode": "_DEFAULT_LOGS_RELATIVE = \"../../logs\"  # fallback: repo/logs/ root; use LOGS_DIR or --logs-dir for specific experiment\n_FOLDER_RE = re.compile(\n    r\"^(?P<model>.+?)_(?P<dataset>(?:tanganke/)?[^_]+(?:_[^_]+)?)_\"\n    r\"(?P<solution>[^_]+)_(?:none|[^_]+)_\"\n    r\"(?P<rounds>\\d+)rounds_(?P<clients>\\d+)clients_\"\n    r\"seed(?P<seed>\\d+)_niid(?P<niid>[0-9.]+)_\"\n    r\"percentage(?P<percentage>-?[0-9.]+)_\"\n    r\"(?P<poly>\\d+)_\"\n)\n_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]",
-        "detail": "studies.general.load_data",
-        "documentation": {}
-    },
-    {
         "label": "_FOLDER_RE",
         "kind": 5,
         "importPath": "studies.general.load_data",
@@ -10868,7 +10868,7 @@
         "kind": 5,
         "importPath": "studies.general.load_data",
         "description": "studies.general.load_data",
-        "peekOfCode": "_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]\n_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    return Path(__file__).parent / _DEFAULT_LOGS_RELATIVE\ndef _parse_folder(name: str) -> dict | None:",
+        "peekOfCode": "_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]\n_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    raise ValueError(\n        \"LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou \"",
         "detail": "studies.general.load_data",
         "documentation": {}
     },
@@ -10877,7 +10877,7 @@
         "kind": 5,
         "importPath": "studies.general.load_data",
         "description": "studies.general.load_data",
-        "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    return Path(__file__).parent / _DEFAULT_LOGS_RELATIVE\ndef _parse_folder(name: str) -> dict | None:\n    m = _FOLDER_RE.match(name)",
+        "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    raise ValueError(\n        \"LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou \"\n        \"passe --logs-dir <caminho> (ex.: --logs-dir logs/sparsification_percentage).\"",
         "detail": "studies.general.load_data",
         "documentation": {}
     },

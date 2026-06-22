@@ -49,15 +49,34 @@ if [[ -z "${LOGS_DIR:-}" ]]; then
     fi
 fi
 
-# ── Output destination ────────────────────────────────────────────────────────
+# ── Pré-validação: a pasta de logs deve existir e ter experimentos válidos ────
+if [[ ! -d "$LOGS_DIR" ]]; then
+    echo "[ERRO] Pasta de logs não encontrada: $LOGS_DIR" >&2
+    echo "       Esperado: logs/$NOME/ — verifique o nome do experimento." >&2
+    exit 1
+fi
+
+# Muda para HERE antes do python para que load_data seja importável
+cd "$HERE"
+
+if ! python3 -c "
+import sys, load_data
+n = load_data.count_experiments('$LOGS_DIR')
+if n == 0:
+    sys.exit(3)
+"; then
+    echo "[ERRO] Pasta de logs existe mas não contém experimentos válidos: $LOGS_DIR" >&2
+    echo "       Verifique se os experimentos foram gerados com o nome correto." >&2
+    exit 1
+fi
+
+# ── Output destination (criado apenas após validação) ─────────────────────────
 OUT_DIR="$REPO/studies/$NOME"
 mkdir -p "$OUT_DIR/figures" "$OUT_DIR/tables" "$OUT_DIR/notebooks"
 
 # Temp output inside general/ (where scripts hardcode their output/)
 TEMP_OUT="$HERE/output"
 mkdir -p "$TEMP_OUT/figures" "$TEMP_OUT/tables" "$TEMP_OUT/notebooks"
-
-cd "$HERE"
 
 echo "============================================"
 echo " Analysis Suite: $NOME"

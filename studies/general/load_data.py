@@ -4,10 +4,10 @@ Shared data loading utility for experiment studies (generic — works for any ex
 Usage:
     from load_data import load_all, load_masks, last_round, rounds_to_threshold, auc_accuracy, discover_dims
 
-    dfs = load_all()          # uses LOGS_DIR env var (set by run_all.sh) or default fallback
+    # LOGS_DIR must be set (env var or explicit path) — no implicit fallback.
     dfs = load_all("/path/to/logs/client_frac")
+    dfs = load_all()          # uses LOGS_DIR env var (must be set by run_all.sh or caller)
     masks = load_masks()      # loads mask.csv from every experiment folder
-    # or: LOGS_DIR env var override
 """
 
 import os
@@ -17,8 +17,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
-_DEFAULT_LOGS_RELATIVE = "../../logs"  # fallback: repo/logs/ root; use LOGS_DIR or --logs-dir for specific experiment
 
 _FOLDER_RE = re.compile(
     r"^(?P<model>.+?)_(?P<dataset>(?:tanganke/)?[^_]+(?:_[^_]+)?)_"
@@ -39,7 +37,10 @@ def _resolve_logs_dir(logs_dir=None):
     env = os.environ.get("LOGS_DIR")
     if env:
         return Path(env)
-    return Path(__file__).parent / _DEFAULT_LOGS_RELATIVE
+    raise ValueError(
+        "LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou "
+        "passe --logs-dir <caminho> (ex.: --logs-dir logs/sparsification_percentage)."
+    )
 
 
 def _parse_folder(name: str) -> dict | None:
@@ -81,6 +82,18 @@ def _read_csv_safe(path: Path) -> pd.DataFrame | None:
         return None
 
 
+def count_experiments(logs_dir=None) -> int:
+    """Return the number of valid experiment folders in logs_dir.
+
+    Useful for pre-flight validation before creating output directories.
+    Raises FileNotFoundError if the directory doesn't exist.
+    """
+    root = _resolve_logs_dir(logs_dir)
+    if not root.exists():
+        raise FileNotFoundError(f"Logs directory not found: {root.resolve()}")
+    return sum(1 for f in root.iterdir() if f.is_dir() and _parse_folder(f.name) is not None)
+
+
 def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:
     """Load all experiment CSVs from logs_dir into four DataFrames.
 
@@ -93,6 +106,7 @@ def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:
         raise FileNotFoundError(f"Logs directory not found: {root.resolve()}")
 
     train_parts, eval_parts, seval_parts, sagg_parts = [], [], [], []
+    valid_folders = 0
 
     for folder in sorted(root.iterdir()):
         if not folder.is_dir():
@@ -101,6 +115,7 @@ def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:
         if meta is None:
             continue
 
+        valid_folders += 1
         for csv_name, parts in [
             ("train.csv", train_parts),
             ("evaluate.csv", eval_parts),
@@ -112,6 +127,12 @@ def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:
                 for k, v in meta.items():
                     df[k] = v
                 parts.append(df)
+
+    if valid_folders == 0:
+        raise FileNotFoundError(
+            f"Nenhum experimento válido encontrado em: {root.resolve()}\n"
+            "  Verifique se o nome do experimento está correto e se os logs foram gerados."
+        )
 
     def _concat(parts):
         if not parts:
