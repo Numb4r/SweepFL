@@ -449,6 +449,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -10682,6 +10690,105 @@
         "description": "studies.general.24_full_coverage_convergence",
         "peekOfCode": "TIME_COLS = [\n    \"train_time_s\",\n    \"decrypt_time_s\",\n    \"flatten_time_s\",\n    \"quantize_time_s\",\n    \"batch_padding_time_s\",\n    \"pack_time_s\",\n    \"mask_select_time_s\",\n    \"encrypt_time_s\",\n    \"serialize_time_s\",",
         "detail": "studies.general.24_full_coverage_convergence",
+        "documentation": {}
+    },
+    {
+        "label": "build_averaged",
+        "kind": 2,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "def build_averaged(server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Average mean_acc over seeds/reruns for every (config..., round) group.\"\"\"\n    if server_eval.empty:\n        return pd.DataFrame()\n    # Ensure numeric\n    for col in [\"round\", \"niid\", \"seed\", \"client_fraction\"]:\n        if col in server_eval.columns:\n            server_eval[col] = pd.to_numeric(server_eval[col], errors=\"coerce\")\n    if \"mean_acc\" in server_eval.columns:\n        server_eval[\"mean_acc\"] = pd.to_numeric(server_eval[\"mean_acc\"], errors=\"coerce\")",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "def plot_cell(\n    averaged: pd.DataFrame,\n    model: str,\n    dataset: str,\n    niid: float,\n    pct: float,\n    cf: float,\n) -> plt.Figure:\n    \"\"\"One figure: accuracy vs rounds for all solutions at (model,dataset,niid,pct,cf).\"\"\"\n    # Packing solutions at this percentage",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    server_eval = dfs[\"server_eval\"]\n    if server_eval.empty:\n        print(\"No server_eval data found.\")\n        return\n    averaged = build_averaged(server_eval)\n    if averaged.empty:\n        print(\"No data after averaging.\")\n        return",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_BASE = HERE / \"output\" / \"figures\" / \"25_accuracy_curves_individual\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_BASE = HERE / \"output\" / \"figures\" / \"25_accuracy_curves_individual\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_BASE = HERE / \"output\" / \"figures\" / \"25_accuracy_curves_individual\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_BASE",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "OUT_BASE = HERE / \"output\" / \"figures\" / \"25_accuracy_curves_individual\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\n# Dimensions used to identify a unique experiment run (before averaging over seeds/reruns)\nSEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"client_fraction\"]\n# Dimensions that define one \"cell\" (figure)\nCELL_DIMS = [\"model\", \"dataset\", \"niid\", \"percentage\", \"client_fraction\"]\n# Dimensions used to average over seeds and reruns for the plotted curves",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"client_fraction\"]\n# Dimensions that define one \"cell\" (figure)\nCELL_DIMS = [\"model\", \"dataset\", \"niid\", \"percentage\", \"client_fraction\"]\n# Dimensions used to average over seeds and reruns for the plotted curves\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"round\"]\ndef _sorted_solutions(sols):\n    \"\"\"Return solutions sorted: packing solutions first, plaintext last.\"\"\"\n    other = sorted(s for s in sols if s != \"plaintext\")\n    return other + ([\"plaintext\"] if \"plaintext\" in sols else [])\ndef _cf_label(cf: float) -> str:",
+        "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "CELL_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.25_accuracy_curves_individual",
+        "description": "studies.general.25_accuracy_curves_individual",
+        "peekOfCode": "CELL_DIMS = [\"model\", \"dataset\", \"niid\", \"percentage\", \"client_fraction\"]\n# Dimensions used to average over seeds and reruns for the plotted curves\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"round\"]\ndef _sorted_solutions(sols):\n    \"\"\"Return solutions sorted: packing solutions first, plaintext last.\"\"\"\n    other = sorted(s for s in sols if s != \"plaintext\")\n    return other + ([\"plaintext\"] if \"plaintext\" in sols else [])\ndef _cf_label(cf: float) -> str:\n    \"\"\"Format client_fraction as a folder-safe string like cf0.25.\"\"\"\n    return f\"cf{cf:g}\"",
+        "detail": "studies.general.25_accuracy_curves_individual",
         "documentation": {}
     },
     {

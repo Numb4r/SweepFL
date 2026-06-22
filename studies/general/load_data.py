@@ -54,6 +54,11 @@ def _parse_folder(name: str) -> dict | None:
     if sol == "nvnl" and pct == -1:
         return None
 
+    # Optional client_fraction token: _cf<frac>_ anywhere in folder name.
+    # Default 1.0 for folders without the token (e.g. sparsification_percentage).
+    cf_m = re.search(r"_cf([0-9.]+)_", name)
+    client_fraction = float(cf_m.group(1)) if cf_m else 1.0
+
     return {
         "model": d["model"],
         "dataset": d["dataset"],
@@ -63,6 +68,7 @@ def _parse_folder(name: str) -> dict | None:
         "seed": int(d["seed"]),
         "rounds": int(d["rounds"]),
         "clients": int(d["clients"]),
+        "client_fraction": client_fraction,
     }
 
 
