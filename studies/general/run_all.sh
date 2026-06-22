@@ -78,11 +78,28 @@ mkdir -p "$OUT_DIR/figures" "$OUT_DIR/tables" "$OUT_DIR/notebooks"
 TEMP_OUT="$HERE/output"
 mkdir -p "$TEMP_OUT/figures" "$TEMP_OUT/tables" "$TEMP_OUT/notebooks"
 
+MAX_JOBS="${MAX_JOBS:-$(nproc 2>/dev/null || echo 4)}"
+
 echo "============================================"
 echo " Analysis Suite: $NOME"
 echo " LOGS_DIR : $LOGS_DIR"
 echo " Output   : $OUT_DIR"
+echo " Paralelo : ${MAX_JOBS} jobs"
 echo "============================================"
+
+# ── Diretório de logs temporários por script ──────────────────────────────────
+_SCRIPT_LOGS="$TEMP_OUT/.script_logs"
+mkdir -p "$_SCRIPT_LOGS"
+
+pids=()
+script_names=()
+script_logs=()
+
+_throttle() {
+    while (( $(jobs -rp | wc -l) >= MAX_JOBS )); do
+        wait -n 2>/dev/null || true
+    done
+}
 
 for script in 01_accuracy_curves.py \
               02_solution_comparison.py \
@@ -122,10 +139,37 @@ for script in 01_accuracy_curves.py \
               24_full_coverage_convergence.py \
               25_accuracy_curves_individual.py; do
     [[ -f "$script" ]] || continue
-    echo ""
-    echo "==> $script"
-    python3 "$script" "${EXTRA_ARGS[@]}"
+    _throttle
+    _log="$_SCRIPT_LOGS/${script%.py}.log"
+    echo "  → $script"
+    python3 "$script" "${EXTRA_ARGS[@]}" > "$_log" 2>&1 &
+    pids+=($!)
+    script_names+=("$script")
+    script_logs+=("$_log")
 done
+
+# ── Aguardar todos e reportar ─────────────────────────────────────────────────
+echo ""
+echo "Aguardando scripts terminarem..."
+failed=()
+for i in "${!pids[@]}"; do
+    scr="${script_names[$i]}"
+    log="${script_logs[$i]}"
+    if wait "${pids[$i]}"; then
+        echo "  ✓ $scr"
+    else
+        echo "  ✗ $scr  [FALHOU]"
+        failed+=("$scr")
+        [[ -s "$log" ]] && sed "s/^/      /" "$log"
+    fi
+done
+rm -rf "$_SCRIPT_LOGS"
+
+if (( ${#failed[@]} > 0 )); then
+    echo ""
+    echo "[ERRO] ${#failed[@]} script(s) falharam: ${failed[*]}" >&2
+    exit 1
+fi
 
 echo ""
 echo "==> notebook.ipynb (executing...)"
