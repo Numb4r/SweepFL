@@ -63,7 +63,8 @@ _TRAIN_HEADER = (
     "payload_bytes,n_params,"
     "n_packs,packs_sent,pack_size,sigma_ckks,"
     "poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus,"
-    "ram_rss_mb,ram_peak_mb"
+    "ram_rss_mb,ram_peak_mb,"
+    "magg_renorm,ckks_backend,client_fraction"
 )
 
 _EVAL_HEADER = (
@@ -165,6 +166,9 @@ def write_train_logs(
     packs_sent = int(qnt_packing)
     n_packs    = (self.len_shared_data // size_pack + 1) if size_pack > 0 else 0
     rss_mb, peak_mb = _read_mem_mb()
+    magg_renorm    = os.environ.get("MAGG_RENORM", "1")
+    ckks_backend   = os.environ.get("CKKS_BACKEND", "tenseal")
+    client_fraction = os.environ.get("CLIENT_FRACTION", "1.0")
 
     row = (
         f"{exp_name},{rnd},{self.cid},"
@@ -184,7 +188,8 @@ def write_train_logs(
         f"{n_packs},{packs_sent},{size_pack},"
         f"{sigma if sigma is not None else ''},"
         f"{self.poly_modulus_degree},{coeff_bits},{scale_b},{self.plain_modulus},"
-        f"{rss_mb:.1f},{peak_mb:.1f}"
+        f"{rss_mb:.1f},{peak_mb:.1f},"
+        f"{magg_renorm},{ckks_backend},{client_fraction}"
     )
     _append(f"logs/{self.log_folder}/train.csv", _TRAIN_HEADER, row)
 

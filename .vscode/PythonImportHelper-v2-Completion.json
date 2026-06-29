@@ -2705,6 +2705,14 @@
         "documentation": {}
     },
     {
+        "label": "write_coverage_logs",
+        "importPath": "server_logs",
+        "description": "server_logs",
+        "isExtraImport": true,
+        "detail": "server_logs",
+        "documentation": {}
+    },
+    {
         "label": "PaillierCipher",
         "importPath": "encryption.paillier",
         "description": "encryption.paillier",
@@ -6868,11 +6876,20 @@
         "documentation": {}
     },
     {
-        "label": "_EVAL_HEADER",
+        "label": "write_coverage_logs",
+        "kind": 2,
+        "importPath": "server.server_logs",
+        "description": "server.server_logs",
+        "peekOfCode": "def write_coverage_logs(\n    log_folder: str,\n    experiment_name: str,\n    server_round: int,\n    solution: str,\n    contributor_counts: list,\n    n_clients_round: int,\n) -> None:\n    \"\"\"Write per-pack contributor counts for one round to logs/{log_folder}/coverage.csv.\n    One row per pack_idx. n_contributors = |S_k| = number of clients that sent",
+        "detail": "server.server_logs",
+        "documentation": {}
+    },
+    {
+        "label": "_COVERAGE_HEADER",
         "kind": 5,
         "importPath": "server.server_logs",
         "description": "server.server_logs",
-        "peekOfCode": "_EVAL_HEADER = \"experiment_name,round,n_clients,mean_loss,mean_acc\"\ndef _append(filename: str, header: str, row: str) -> None:\n    os.makedirs(os.path.dirname(filename), exist_ok=True)\n    with open(filename, \"a\") as f:\n        if os.path.getsize(filename) == 0:\n            f.write(header + \"\\n\")\n        f.write(row + \"\\n\")\ndef write_agg_logs(\n    log_folder: str,\n    experiment_name: str,",
+        "peekOfCode": "_COVERAGE_HEADER = \"experiment_name,round,solution,pack_idx,n_contributors,n_clients_round\"\ndef _append(filename: str, header: str, row: str) -> None:\n    os.makedirs(os.path.dirname(filename), exist_ok=True)\n    with open(filename, \"a\") as f:\n        if os.path.getsize(filename) == 0:\n            f.write(header + \"\\n\")\n        f.write(row + \"\\n\")\ndef write_agg_logs(\n    log_folder: str,\n    experiment_name: str,",
         "detail": "server.server_logs",
         "documentation": {}
     },

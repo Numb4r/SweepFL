@@ -17,7 +17,7 @@ from typing import Dict, Any
 
 from server_utils import align_packs, aggregate_packs_and_masks, serialize_packs, get_pack_mask_pair
 from server_utils import aggregate_packs_and_mask, get_cyphered_parameters, aggregated_cyphered_parameters
-from server_logs import write_agg_logs, write_eval_logs
+from server_logs import write_agg_logs, write_eval_logs, write_coverage_logs
 
 import pickle as pk
 from encryption.paillier import PaillierCipher
@@ -188,6 +188,15 @@ class HEServer(fl.server.strategy.FedAvg):
                 from encryption.ckks_backend import get_backend as _get_backend
                 _backend = _get_backend(self.key_config.get("ckks_backend"))
                 pack_mask_pair, total_examples     = get_pack_mask_pair(self, results)
+
+                # Per-pack contributor count: |S_k| = number of clients that sent pack k.
+                # weighted_mask[k] > 0 iff client sent pack k (mask is binary × D_i).
+                n_packs = len(pack_mask_pair[0][1]) if pack_mask_pair else 0
+                contributor_counts = [
+                    sum(1 for _, wm in pack_mask_pair if wm[k] > 0)
+                    for k in range(n_packs)
+                ]
+
                 aggregated_packs, aggregated_masks = aggregate_packs_and_mask(
                     pack_mask_pair, total_examples, self.onlysum,
                     backend=_backend, ctx=self.context,
@@ -196,6 +205,11 @@ class HEServer(fl.server.strategy.FedAvg):
                 self.agg_parameters = pickle.dumps(aggregated_packs)
                 self.agg_mask       = pickle.dumps(aggregated_masks)
                 self.total_examples = total_examples
+
+                write_coverage_logs(
+                    self.log_folder, self.experiment_name,
+                    global_round, self.solution, contributor_counts, len(results),
+                )
             else:
                 parameters_list, total_examples = get_cyphered_parameters(self, results)
                 agg_parameters                  = aggregated_cyphered_parameters(self, parameters_list, total_examples)
