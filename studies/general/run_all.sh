@@ -137,7 +137,8 @@ for script in 01_accuracy_curves.py \
               23_pack_heatmap.py \
               23_pack_heatmap_individual.py \
               24_full_coverage_convergence.py \
-              25_accuracy_curves_individual.py; do
+              25_accuracy_curves_individual.py \
+              26_union_coverage_downlink.py; do
     [[ -f "$script" ]] || continue
     _throttle
     _log="$_SCRIPT_LOGS/${script%.py}.log"

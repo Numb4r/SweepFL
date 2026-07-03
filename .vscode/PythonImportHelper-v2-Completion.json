@@ -457,6 +457,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -10806,6 +10814,159 @@
         "description": "studies.general.25_accuracy_curves_individual",
         "peekOfCode": "CELL_DIMS = [\"model\", \"dataset\", \"niid\", \"percentage\", \"client_fraction\"]\n# Dimensions used to average over seeds and reruns for the plotted curves\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"round\"]\ndef _sorted_solutions(sols):\n    \"\"\"Return solutions sorted: packing solutions first, plaintext last.\"\"\"\n    other = sorted(s for s in sols if s != \"plaintext\")\n    return other + ([\"plaintext\"] if \"plaintext\" in sols else [])\ndef _cf_label(cf: float) -> str:\n    \"\"\"Format client_fraction as a folder-safe string like cf0.25.\"\"\"\n    return f\"cf{cf:g}\"",
         "detail": "studies.general.25_accuracy_curves_individual",
+        "documentation": {}
+    },
+    {
+        "label": "build_series_df",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def build_series_df(masks: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Compute per-round coverage series for all (config+seed) groups.\"\"\"\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _round_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def build_summary(series_df: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Aggregate over rounds (post-warmup) and seeds into one row per config.\"\"\"\n    if series_df.empty:\n        return pd.DataFrame()\n    rows = []\n    gcols = [c for c in GROUP if c in series_df.columns]\n    for key, grp in series_df.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        max_round = grp[\"round\"].max()\n        start = max(int(max_round * WARMUP_FRAC), 1)",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "plot_curves",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def plot_curves(cov_avg: pd.DataFrame, model: str, cf: float,\n                 niids: list, percentages: list, sol_colors: dict) -> plt.Figure | None:\n    sub = cov_avg[(cov_avg[\"model\"] == model) & (cov_avg[\"client_fraction\"] == cf)]\n    if sub.empty:\n        return None\n    sorted_pcts = sorted(percentages)\n    n_rows = max(len(sorted_pcts), 1)\n    n_cols = max(len(niids), 1)\n    fig, axes = plt.subplots(n_rows, n_cols, figsize=(7 * n_cols, 3.5 * n_rows),\n                              squeeze=False, sharex=True)",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "plot_inflation_bars",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def plot_inflation_bars(summary: pd.DataFrame, model: str, cf: float,\n                         percentages: list, sol_colors: dict) -> plt.Figure | None:\n    sub = summary[(summary[\"model\"] == model) & (summary[\"client_fraction\"] == cf)]\n    if sub.empty:\n        return None\n    sorted_pcts = sorted(percentages)\n    solutions = sorted(sub[\"solution\"].unique())\n    n = len(solutions)\n    width = 0.8 / max(n, 1)\n    x = np.arange(len(sorted_pcts))",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame, multi_cf: bool):\n    cols = [\"model\", \"client_fraction\", \"niid\", \"percentage\", \"solution\",\n            \"client_cov_pct\", \"union_cov_pct\", \"inflation\", \"clients_per_round\"]\n    if not multi_cf:\n        cols = [c for c in cols if c != \"client_fraction\"]\n    out = summary[[c for c in cols if c in summary.columns]].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"26_union_coverage_downlink_summary.csv\"\n    out.to_csv(path, index=False)",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame, multi_cf: bool):\n    display_cols = {\n        \"model\": \"Model\", \"client_fraction\": \"Client frac.\", \"niid\": \"NIID\",\n        \"percentage\": \"Pct.\", \"solution\": \"Solution\",\n        \"client_cov_pct\": \"Upload (%)\", \"union_cov_pct\": \"Downlink (%)\",\n        \"inflation\": \"Inflation (x)\", \"clients_per_round\": \"Clients/rnd\",\n    }\n    if not multi_cf:\n        display_cols.pop(\"client_fraction\")\n    cols = [c for c in display_cols if c in summary.columns]",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Loading mask data...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Error: {e}\")\n        return\n    if masks.empty:\n        print(\"No mask data found.\")\n        return",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves\"\nOUT_FIG_BARS = OUT_FIG / \"26_downlink_inflation\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves\"\nOUT_FIG_BARS = OUT_FIG / \"26_downlink_inflation\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves\"\nOUT_FIG_BARS = OUT_FIG / \"26_downlink_inflation\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves\"\nOUT_FIG_BARS = OUT_FIG / \"26_downlink_inflation\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_CURVES",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "OUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves\"\nOUT_FIG_BARS = OUT_FIG / \"26_downlink_inflation\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_BARS",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "OUT_FIG_BARS = OUT_FIG / \"26_downlink_inflation\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:\n    cmap = plt.colormaps.get_cmap(\"tab10\")",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:\n    cmap = plt.colormaps.get_cmap(\"tab10\")\n    return {s: cmap(i % 10) for i, s in enumerate(sorted(solutions))}",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:\n    cmap = plt.colormaps.get_cmap(\"tab10\")\n    return {s: cmap(i % 10) for i, s in enumerate(sorted(solutions))}\n# ── Core: per-round union/client coverage series ──────────────────────────────\ndef _round_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, union_cov_pct, client_cov_pct, n_clients_round} for one\n    (config+seed) group.\"\"\"",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP_NO_SEED",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "GROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:\n    cmap = plt.colormaps.get_cmap(\"tab10\")\n    return {s: cmap(i % 10) for i, s in enumerate(sorted(solutions))}\n# ── Core: per-round union/client coverage series ──────────────────────────────\ndef _round_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, union_cov_pct, client_cov_pct, n_clients_round} for one\n    (config+seed) group.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "WARMUP_FRAC",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink",
+        "description": "studies.general.26_union_coverage_downlink",
+        "peekOfCode": "WARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:\n    cmap = plt.colormaps.get_cmap(\"tab10\")\n    return {s: cmap(i % 10) for i, s in enumerate(sorted(solutions))}\n# ── Core: per-round union/client coverage series ──────────────────────────────\ndef _round_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, union_cov_pct, client_cov_pct, n_clients_round} for one\n    (config+seed) group.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:",
+        "detail": "studies.general.26_union_coverage_downlink",
         "documentation": {}
     },
     {
