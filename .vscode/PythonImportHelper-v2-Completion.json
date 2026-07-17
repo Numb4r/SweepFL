@@ -473,6 +473,46 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2501,6 +2541,14 @@
         "importPath": "stat",
         "description": "stat",
         "detail": "stat",
+        "documentation": {}
+    },
+    {
+        "label": "defaultdict",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
         "documentation": {}
     },
     {
@@ -9034,6 +9082,87 @@
         "documentation": {}
     },
     {
+        "label": "compute_cumulative_bytes",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "def compute_cumulative_bytes(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    if \"client_fraction\" not in df.columns:\n        df[\"client_fraction\"] = 1.0\n    df[\"client_fraction\"] = df[\"client_fraction\"].fillna(1.0)\n    df[\"bytes_client\"] = df.apply(_est_bytes_per_client, axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"bytes_client\"]\n        .sum().reset_index().rename(columns={\"bytes_client\": \"bytes_round\"})",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    if \"client_fraction\" not in server_eval.columns:\n        server_eval = server_eval.copy()\n        server_eval[\"client_fraction\"] = 1.0\n    server_eval[\"client_fraction\"] = server_eval[\"client_fraction\"].fillna(1.0)\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[[*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_bpr   = _ref_mb_per_round(combo)\n    stats, max_mb, best_acc, best_sol = [], 0.0, 0.0, None",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train, server_eval = dfs[\"train\"], dfs[\"server_eval\"]\n    if train.empty or server_eval.empty:\n        print(\"Sem dados de train/server_eval.\")\n        return\n    dims        = load_data.discover_dims(train)\n    models      = dims.get(\"model\", [])\n    datasets    = dims.get(\"dataset\", [])\n    niids       = dims.get(\"niid\", [None])",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Dado bruto float32 por cliente por rodada (pré-cifragem).\"\"\"",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.15_bytes_vs_maxacc_pt",
+        "description": "studies.general.15_bytes_vs_maxacc_pt",
+        "peekOfCode": "SEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Dado bruto float32 por cliente por rodada (pré-cifragem).\"\"\"\n    sol = str(row.get(\"solution\", \"\"))\n    if sol in sstyle.PACKING_SOLS:\n        packs = float(row.get(\"packs_sent\") or 0)",
+        "detail": "studies.general.15_bytes_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
         "label": "compute_cumulative_overhead",
         "kind": 2,
         "importPath": "studies.general.16_overhead_vs_maxacc",
@@ -9274,6 +9403,96 @@
         "description": "studies.general.16_overhead_vs_maxacc_individual",
         "peekOfCode": "SEED_DIMS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _sol_color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:\n        return f\"{s:.0f}s\"\n    if s >= 10:\n        return f\"{s:.1f}s\"\n    return f\"{s:.2f}s\"\ndef _tok(model, dataset, niid, pct=None) -> str:",
         "detail": "studies.general.16_overhead_vs_maxacc_individual",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_overhead",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "def compute_cumulative_overhead(train: pd.DataFrame) -> pd.DataFrame:\n    df = train.copy()\n    if \"client_fraction\" not in df.columns:\n        df[\"client_fraction\"] = 1.0\n    df[\"client_fraction\"] = df[\"client_fraction\"].fillna(1.0)\n    present = [c for c in COMM_COLS if c in df.columns]\n    df[\"overhead_s\"] = df[present].fillna(0.0).sum(axis=1)\n    round_group = [c for c in SEED_DIMS + [\"round\"] if c in df.columns]\n    per_round = (\n        df.groupby(round_group, dropna=False)[\"overhead_s\"]",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "merge_accuracy",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "def merge_accuracy(cumulative: pd.DataFrame, server_eval: pd.DataFrame) -> pd.DataFrame:\n    if \"client_fraction\" not in server_eval.columns:\n        server_eval = server_eval.copy()\n        server_eval[\"client_fraction\"] = 1.0\n    server_eval[\"client_fraction\"] = server_eval[\"client_fraction\"].fillna(1.0)\n    join_keys = [c for c in SEED_DIMS + [\"round\"]\n                 if c in cumulative.columns and c in server_eval.columns]\n    se = server_eval[[*join_keys, *(c for c in [\"mean_acc\"] if c in server_eval.columns)]].copy()\n    merged = cumulative.merge(se, on=join_keys, how=\"inner\")\n    avg_group = [c for c in DIMS + [\"round\"] if c in merged.columns]",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_spr   = _ref_s_per_round(combo)\n    stats, max_s, best_acc, best_sol = [], 0.0, 0.0, None",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train, server_eval = dfs[\"train\"], dfs[\"server_eval\"]\n    if train.empty or server_eval.empty:\n        print(\"Sem dados de train/server_eval.\")\n        return\n    dims        = load_data.discover_dims(train)\n    models      = dims.get(\"model\", [])\n    datasets    = dims.get(\"dataset\", [])\n    niids       = dims.get(\"niid\", [None])",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "COMM_COLS",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "COMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:\n        return f\"{s:.0f}s\"\n    if s >= 10:",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "SEED_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.16_overhead_vs_maxacc_pt",
+        "description": "studies.general.16_overhead_vs_maxacc_pt",
+        "peekOfCode": "SEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:\n        return f\"{s:.0f}s\"\n    if s >= 10:\n        return f\"{s:.1f}s\"\n    return f\"{s:.2f}s\"\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"",
+        "detail": "studies.general.16_overhead_vs_maxacc_pt",
         "documentation": {}
     },
     {
@@ -10026,6 +10245,78 @@
     {
         "label": "build_freq_df",
         "kind": 2,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        result = _pack_send_counts(grp)\n        n_packs, n_rounds = result[\"n_packs\"], result[\"n_rounds\"]\n        if n_rounds == 0:\n            continue\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        for pack_idx in range(n_packs):",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf):\n    \"\"\"Faixa de heatmap (1 linha) para um (model, dataset, technique, niid, pct, cf).\"\"\"\n    fig, ax = plt.subplots(figsize=(8, 1.6))\n    ax.set_yticks([])\n    if not s.empty:\n        n_packs = int(s[\"pack_idx\"].max()) + 1\n        data = s.sort_values(\"pack_idx\")[\"send_pct\"].values.reshape(1, -1)\n        im = ax.imshow(\n            data, aspect=\"auto\", cmap=\"viridis\", vmin=0, vmax=100,\n            extent=[0, n_packs, 0, 1],",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Carregando dados de máscara...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Erro: {e}\")\n        return\n    if masks.empty:\n        print(\"Sem dados de máscara.\")\n        return",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.20_pack_frequency_pt",
+        "description": "studies.general.20_pack_frequency_pt",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    counts = defaultdict(int)\n    n_rounds = 0",
+        "detail": "studies.general.20_pack_frequency_pt",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
         "importPath": "studies.general.21_layer_frequency",
         "description": "studies.general.21_layer_frequency",
         "peekOfCode": "def build_freq_df(masks: pd.DataFrame,\n                  layer_info_cache: dict,\n                  logs_dir=None) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")\n        cache_key = (model_name, solution)",
@@ -10399,6 +10690,78 @@
         "description": "studies.general.22_layer_heatmap_individual",
         "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _tok(model, dataset, technique, niid) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid}\"\n    return \"_\".join([str(model), str(dataset), str(technique), niid_s])\n# ── Tensor → Keras-layer grouping (identical to studies 21/22) ───────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []\n    i = 0\n    n = len(shapes)\n    while i < n:",
         "detail": "studies.general.22_layer_heatmap_individual",
+        "documentation": {}
+    },
+    {
+        "label": "build_freq_df",
+        "kind": 2,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "def build_freq_df(masks: pd.DataFrame, layer_info_cache: dict, logs_dir=None) -> pd.DataFrame:\n    gcols = [c for c in GROUP if c in masks.columns]\n    parts = []\n    for key, grp in masks.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        model_name = meta.get(\"model\", \"\")\n        solution   = meta.get(\"solution\", \"\")\n        cache_key  = (model_name, solution)\n        if cache_key not in layer_info_cache:\n            npz_path, pack_size = _find_snapshot(model_name, solution, logs_dir)",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf):\n    s = s.sort_values(\"layer_idx\")\n    layer_order = s[\"layer_label\"].tolist()\n    n_layers = len(layer_order)\n    if n_layers == 0:\n        return None\n    fig_w = max(6.0, n_layers * 0.55)\n    fig, ax = plt.subplots(figsize=(fig_w, 1.8))\n    data = s[\"normalized_send_pct\"].values.reshape(1, -1)\n    vmax = float(np.nanmax(data)) if not np.all(np.isnan(data)) else 100.0",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Carregando dados de máscara...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Erro: {e}\")\n        return\n    if masks.empty:\n        print(\"Sem dados de máscara.\")\n        return",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []",
+        "detail": "studies.general.22_layer_heatmap_pt",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.22_layer_heatmap_pt",
+        "description": "studies.general.22_layer_heatmap_pt",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []\n    i = 0\n    n = len(shapes)",
+        "detail": "studies.general.22_layer_heatmap_pt",
         "documentation": {}
     },
     {
@@ -10978,6 +11341,150 @@
         "documentation": {}
     },
     {
+        "label": "build_series_df",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def build_series_df(masks: pd.DataFrame) -> pd.DataFrame:\n    parts = []\n    gcols = [c for c in GROUP if c in masks.columns]\n    for key, grp in masks.groupby(gcols, dropna=False):\n        series = _round_series(grp)\n        if not series:\n            continue\n        df = pd.DataFrame(series)\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        for k, v in meta.items():",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "build_summary",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def build_summary(series_df: pd.DataFrame) -> pd.DataFrame:\n    if series_df.empty:\n        return pd.DataFrame()\n    rows = []\n    gcols = [c for c in GROUP if c in series_df.columns]\n    for key, grp in series_df.groupby(gcols, dropna=False):\n        meta = dict(zip(gcols, key if isinstance(key, tuple) else (key,)))\n        max_round = grp[\"round\"].max()\n        start = max(int(max_round * WARMUP_FRAC), 1)\n        warm = grp[grp[\"round\"] >= start]",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_curves_cell",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, pct, cf):\n    sub = cov_avg[\n        (cov_avg[\"model\"] == model) & (cov_avg[\"dataset\"] == dataset)\n        & (cov_avg[\"niid\"] == niid) & (cov_avg[\"percentage\"] == pct)\n        & (cov_avg[\"client_fraction\"] == cf)\n    ]\n    if sub.empty:\n        return None\n    fig, ax = plt.subplots(figsize=(8, 5))\n    solutions = sstyle.sorted_solutions(sub[\"solution\"].dropna().unique().tolist())",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_inflation_cell",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def plot_inflation_cell(summary: pd.DataFrame, model, dataset, niid, pct, cf):\n    sub = summary[\n        (summary[\"model\"] == model) & (summary[\"dataset\"] == dataset)\n        & (summary[\"niid\"] == niid) & (summary[\"percentage\"] == pct)\n        & (summary[\"client_fraction\"] == cf)\n    ]\n    if sub.empty:\n        return None\n    solutions = sstyle.sorted_solutions(sub[\"solution\"].dropna().unique().tolist())\n    n = len(solutions)",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "save_csv",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def save_csv(summary: pd.DataFrame, multi_cf: bool):\n    cols = [\"model\", \"dataset\", \"client_fraction\", \"niid\", \"percentage\", \"solution\",\n            \"client_cov_pct\", \"union_cov_pct\", \"inflation\", \"clients_per_round\"]\n    if not multi_cf:\n        cols = [c for c in cols if c != \"client_fraction\"]\n    out = summary[[c for c in cols if c in summary.columns]].copy()\n    for c in out.select_dtypes(include=float).columns:\n        out[c] = out[c].round(3)\n    path = OUT_TAB / \"26_union_coverage_downlink_summary_pt.csv\"\n    out.to_csv(path, index=False)",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "save_latex",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def save_latex(summary: pd.DataFrame, multi_cf: bool):\n    display_cols = {\n        \"model\": \"Modelo\", \"dataset\": \"Base\", \"client_fraction\": \"Fração cli.\",\n        \"niid\": \"NIID\", \"percentage\": \"Pct.\", \"solution\": \"Solução\",\n        \"client_cov_pct\": \"Upload (%)\", \"union_cov_pct\": \"Downlink (%)\",\n        \"inflation\": \"Inflação (x)\", \"clients_per_round\": \"Clientes/rodada\",\n    }\n    if not multi_cf:\n        display_cols.pop(\"client_fraction\")\n    cols = [c for c in display_cols if c in summary.columns]",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "def main(logs_dir=None):\n    print(\"Carregando dados de máscara...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:\n        print(f\"Erro: {e}\")\n        return\n    if masks.empty:\n        print(\"Sem dados de máscara.\")\n        return",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\"",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_CURVES",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "OUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, pct, cf) -> str:",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─\ndef _round_series(group_df: pd.DataFrame) -> list:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "GROUP_NO_SEED",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "GROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─\ndef _round_series(group_df: pd.DataFrame) -> list:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:\n        return []",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
+        "label": "WARMUP_FRAC",
+        "kind": 5,
+        "importPath": "studies.general.26_union_coverage_downlink_pt",
+        "description": "studies.general.26_union_coverage_downlink_pt",
+        "peekOfCode": "WARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─\ndef _round_series(group_df: pd.DataFrame) -> list:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:\n        return []\n    records = []",
+        "detail": "studies.general.26_union_coverage_downlink_pt",
+        "documentation": {}
+    },
+    {
         "label": "build_acc",
         "kind": 2,
         "importPath": "studies.general.27_three_panel",
@@ -11209,6 +11716,114 @@
         "description": "studies.general.load_data",
         "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    raise ValueError(\n        \"LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou \"\n        \"passe --logs-dir <caminho> (ex.: --logs-dir logs/sparsification_percentage).\"",
         "detail": "studies.general.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "label",
+        "kind": 2,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "def label(sol: str) -> str:\n    \"\"\"PT-BR display name for a solution; falls back to the raw string.\"\"\"\n    return SOL_LABELS.get(sol, sol)\ndef color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\ndef sorted_solutions(sols) -> list:\n    \"\"\"Order a solution list: known solutions in SOL_ORDER, unknown appended sorted.\"\"\"\n    sols = set(sols)",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "color",
+        "kind": 2,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "def color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\ndef sorted_solutions(sols) -> list:\n    \"\"\"Order a solution list: known solutions in SOL_ORDER, unknown appended sorted.\"\"\"\n    sols = set(sols)\n    known = [s for s in SOL_ORDER if s in sols]\n    unknown = sorted(s for s in sols if s not in SOL_ORDER)\n    return known + unknown",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "marker",
+        "kind": 2,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "def marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\ndef sorted_solutions(sols) -> list:\n    \"\"\"Order a solution list: known solutions in SOL_ORDER, unknown appended sorted.\"\"\"\n    sols = set(sols)\n    known = [s for s in SOL_ORDER if s in sols]\n    unknown = sorted(s for s in sols if s not in SOL_ORDER)\n    return known + unknown\ndef cf_suffix(cf: float) -> str:\n    \"\"\"Filename token for client_fraction; empty when cf==1.0 (sparsification theme).\"\"\"",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "sorted_solutions",
+        "kind": 2,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "def sorted_solutions(sols) -> list:\n    \"\"\"Order a solution list: known solutions in SOL_ORDER, unknown appended sorted.\"\"\"\n    sols = set(sols)\n    known = [s for s in SOL_ORDER if s in sols]\n    unknown = sorted(s for s in sols if s not in SOL_ORDER)\n    return known + unknown\ndef cf_suffix(cf: float) -> str:\n    \"\"\"Filename token for client_fraction; empty when cf==1.0 (sparsification theme).\"\"\"\n    if cf is None or float(cf) == 1.0:\n        return \"\"",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "cf_suffix",
+        "kind": 2,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "def cf_suffix(cf: float) -> str:\n    \"\"\"Filename token for client_fraction; empty when cf==1.0 (sparsification theme).\"\"\"\n    if cf is None or float(cf) == 1.0:\n        return \"\"\n    return f\"_cf{cf:g}\"\ndef cf_title(cf: float) -> str:\n    \"\"\"Title fragment for client_fraction; empty when cf==1.0 (sparsification theme).\"\"\"\n    if cf is None or float(cf) == 1.0:\n        return \"\"\n    return f\" | fração de clientes={cf:.0%}\"",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "cf_title",
+        "kind": 2,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "def cf_title(cf: float) -> str:\n    \"\"\"Title fragment for client_fraction; empty when cf==1.0 (sparsification theme).\"\"\"\n    if cf is None or float(cf) == 1.0:\n        return \"\"\n    return f\" | fração de clientes={cf:.0%}\"",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\n# PT-BR display names with the correct literature naming (FedAvg for plaintext).\nSOL_LABELS = {\n    \"plaintext\":  \"FedAvg\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_LABELS",
+        "kind": 5,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "SOL_LABELS = {\n    \"plaintext\":  \"FedAvg\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",\n    \"rw\":         \"RW\",\n    \"topkrr\":     \"TopK-RR\",\n    \"srr\":        \"SRR\",\n    \"ckks\":       \"CKKS\",\n    \"bfv\":        \"BFV\",",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "FULL_MODEL_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "FULL_MODEL_SOLS = {\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\"}\n# Packing/sparsification techniques: rows with a real percentage.\nPACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\n# Display order: full-model baselines first, then packing techniques.\nSOL_ORDER = [\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\",\n             \"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\"]\ndef label(sol: str) -> str:\n    \"\"\"PT-BR display name for a solution; falls back to the raw string.\"\"\"\n    return SOL_LABELS.get(sol, sol)",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\n# Display order: full-model baselines first, then packing techniques.\nSOL_ORDER = [\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\",\n             \"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\"]\ndef label(sol: str) -> str:\n    \"\"\"PT-BR display name for a solution; falls back to the raw string.\"\"\"\n    return SOL_LABELS.get(sol, sol)\ndef color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")",
+        "detail": "studies.general.solution_style",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_ORDER",
+        "kind": 5,
+        "importPath": "studies.general.solution_style",
+        "description": "studies.general.solution_style",
+        "peekOfCode": "SOL_ORDER = [\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\",\n             \"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\"]\ndef label(sol: str) -> str:\n    \"\"\"PT-BR display name for a solution; falls back to the raw string.\"\"\"\n    return SOL_LABELS.get(sol, sol)\ndef color(sol: str) -> str:\n    return SOL_COLORS.get(sol, \"#888888\")\ndef marker(sol: str) -> str:\n    return SOL_MARKERS.get(sol, \"o\")\ndef sorted_solutions(sols) -> list:",
+        "detail": "studies.general.solution_style",
         "documentation": {}
     },
     {
