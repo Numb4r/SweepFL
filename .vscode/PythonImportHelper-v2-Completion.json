@@ -9122,7 +9122,7 @@
         "kind": 5,
         "importPath": "studies.general.15_bytes_vs_maxacc_pt",
         "description": "studies.general.15_bytes_vs_maxacc_pt",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"15_bytes_maxacc_pt\"",
         "detail": "studies.general.15_bytes_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9131,7 +9131,7 @@
         "kind": 5,
         "importPath": "studies.general.15_bytes_vs_maxacc_pt",
         "description": "studies.general.15_bytes_vs_maxacc_pt",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────",
         "detail": "studies.general.15_bytes_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9140,7 +9140,7 @@
         "kind": 5,
         "importPath": "studies.general.15_bytes_vs_maxacc_pt",
         "description": "studies.general.15_bytes_vs_maxacc_pt",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:",
         "detail": "studies.general.15_bytes_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9149,7 +9149,7 @@
         "kind": 5,
         "importPath": "studies.general.15_bytes_vs_maxacc_pt",
         "description": "studies.general.15_bytes_vs_maxacc_pt",
-        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Dado bruto float32 por cliente por rodada (pré-cifragem).\"\"\"",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"15_bytes_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _tok(model, dataset, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Byte estimation ───────────────────────────────────────────────────────────\ndef _est_bytes_per_client(row) -> float:\n    \"\"\"Dado bruto float32 por cliente por rodada (pré-cifragem).\"\"\"",
         "detail": "studies.general.15_bytes_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9446,7 +9446,7 @@
         "kind": 5,
         "importPath": "studies.general.16_overhead_vs_maxacc_pt",
         "description": "studies.general.16_overhead_vs_maxacc_pt",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"16_overhead_maxacc_pt\"",
         "detail": "studies.general.16_overhead_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9455,7 +9455,7 @@
         "kind": 5,
         "importPath": "studies.general.16_overhead_vs_maxacc_pt",
         "description": "studies.general.16_overhead_vs_maxacc_pt",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]",
         "detail": "studies.general.16_overhead_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9464,7 +9464,7 @@
         "kind": 5,
         "importPath": "studies.general.16_overhead_vs_maxacc_pt",
         "description": "studies.general.16_overhead_vs_maxacc_pt",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:",
         "detail": "studies.general.16_overhead_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9473,7 +9473,7 @@
         "kind": 5,
         "importPath": "studies.general.16_overhead_vs_maxacc_pt",
         "description": "studies.general.16_overhead_vs_maxacc_pt",
-        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"16_overhead_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nCOMM_COLS = [\n    \"pack_time_s\", \"mask_select_time_s\", \"encrypt_time_s\",\n    \"serialize_time_s\", \"decrypt_time_s\",\n]\nDIMS      = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nSEED_DIMS = DIMS + [\"seed\"]\ndef _fmt_secs(s: float) -> str:\n    if s >= 100:",
         "detail": "studies.general.16_overhead_vs_maxacc_pt",
         "documentation": {}
     },
@@ -10274,7 +10274,7 @@
         "kind": 5,
         "importPath": "studies.general.20_pack_frequency_pt",
         "description": "studies.general.20_pack_frequency_pt",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"20_pack_frequency_pt\"",
         "detail": "studies.general.20_pack_frequency_pt",
         "documentation": {}
     },
@@ -10283,7 +10283,7 @@
         "kind": 5,
         "importPath": "studies.general.20_pack_frequency_pt",
         "description": "studies.general.20_pack_frequency_pt",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────",
         "detail": "studies.general.20_pack_frequency_pt",
         "documentation": {}
     },
@@ -10292,7 +10292,7 @@
         "kind": 5,
         "importPath": "studies.general.20_pack_frequency_pt",
         "description": "studies.general.20_pack_frequency_pt",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:",
         "detail": "studies.general.20_pack_frequency_pt",
         "documentation": {}
     },
@@ -10301,7 +10301,7 @@
         "kind": 5,
         "importPath": "studies.general.20_pack_frequency_pt",
         "description": "studies.general.20_pack_frequency_pt",
-        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"20_pack_frequency_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────\ndef _pack_send_counts(group_df: pd.DataFrame) -> dict:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])",
         "detail": "studies.general.20_pack_frequency_pt",
         "documentation": {}
     },
@@ -10724,7 +10724,7 @@
         "kind": 5,
         "importPath": "studies.general.22_layer_heatmap_pt",
         "description": "studies.general.22_layer_heatmap_pt",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"22_layer_heatmap_pt\"",
         "detail": "studies.general.22_layer_heatmap_pt",
         "documentation": {}
     },
@@ -10733,7 +10733,7 @@
         "kind": 5,
         "importPath": "studies.general.22_layer_heatmap_pt",
         "description": "studies.general.22_layer_heatmap_pt",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────",
         "detail": "studies.general.22_layer_heatmap_pt",
         "documentation": {}
     },
@@ -10742,7 +10742,7 @@
         "kind": 5,
         "importPath": "studies.general.22_layer_heatmap_pt",
         "description": "studies.general.22_layer_heatmap_pt",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:",
         "detail": "studies.general.22_layer_heatmap_pt",
         "documentation": {}
     },
@@ -10751,7 +10751,7 @@
         "kind": 5,
         "importPath": "studies.general.22_layer_heatmap_pt",
         "description": "studies.general.22_layer_heatmap_pt",
-        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"22_layer_heatmap_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\ndef _tok(model, dataset, technique, niid, pct, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return (f\"{model}_{dataset}_{technique}_{niid_s}\"\n            f\"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\")\n# ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────\ndef _group_tensors(shapes: list) -> list:\n    groups = []",
         "detail": "studies.general.22_layer_heatmap_pt",
         "documentation": {}
     },
@@ -11408,7 +11408,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\"",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\" / \"capitulo5_pt\"",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11417,7 +11417,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\" / \"capitulo5_pt\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11426,7 +11426,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\nOUT_FIG = HERE / \"output\" / \"figures\" / \"capitulo5_pt\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11435,7 +11435,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)",
+        "peekOfCode": "OUT_FIG = HERE / \"output\" / \"figures\" / \"capitulo5_pt\"\nOUT_FIG_CURVES = OUT_FIG / \"26_union_coverage_curves_pt\"\nOUT_FIG_BARS   = OUT_FIG / \"26_downlink_inflation_pt\"\nOUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
