@@ -110,15 +110,18 @@ class HEServer(fl.server.strategy.FedAvg):
             self.homomorphic = False; self.packing = False; self.onlysum = False; self.homomorphic_type = 'None'
 
     def get_server_context(self):
+        # Inside containers the context dir is bound at /context; on the host
+        # fall back to CONTEXT_DIR (default ./context).
+        ctx_dir = '/context' if os.path.isdir('/context') else os.environ.get('CONTEXT_DIR', './context')
         if self.homomorphic_type == 'Paillier':
-            with open('context/paillier.pkl', 'rb') as f:
+            with open(f'{ctx_dir}/paillier.pkl', 'rb') as f:
                 return pickle.load(f)
         elif self.homomorphic_type == 'CKKS':
             from encryption.ckks_backend import get_backend
             backend_name = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
-            return get_backend(backend_name).load_server_context("./context")
+            return get_backend(backend_name).load_server_context(ctx_dir)
         else:  # BFV or plaintext
-            with open('./context/bfv_server_key.pkl', 'rb') as f:
+            with open(f'{ctx_dir}/bfv_server_key.pkl', 'rb') as f:
                 return ts.context_from(pickle.load(f)["context"])
 
     def _time_remaining(self):

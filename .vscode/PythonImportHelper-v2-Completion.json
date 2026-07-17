@@ -465,6 +465,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -6951,7 +6959,7 @@
         "kind": 2,
         "importPath": "server.server_utils",
         "description": "server.server_utils",
-        "peekOfCode": "def get_cyphered_parameters(self, results):\n    backend         = _backend(self)\n    parameters_list = []\n    total_examples  = 0\n    for _, fit_res in results:\n        if self.homomorphic_type == 'Paillier':\n            parameters = pk.loads(fit_res.metrics['he'])\n        else:\n            parameters = backend.deserialize(self.context, fit_res.metrics['he'])\n        parameters_list.append((parameters, int(fit_res.num_examples)))",
+        "peekOfCode": "def get_cyphered_parameters(self, results):\n    backend         = _backend(self)\n    parameters_list = []\n    total_examples  = 0\n    for _, fit_res in results:\n        if self.homomorphic_type == 'Paillier':\n            parameters = pk.loads(fit_res.metrics['he'])\n        elif self.homomorphic_type == 'BFV':\n            # BFV always uses TenSEAL, regardless of the CKKS backend.\n            import tenseal as ts",
         "detail": "server.server_utils",
         "documentation": {}
     },
@@ -10967,6 +10975,150 @@
         "description": "studies.general.26_union_coverage_downlink",
         "peekOfCode": "WARMUP_FRAC = 0.05  # drop the first 5% of rounds before averaging (transient startup)\ndef _solution_colors(solutions: list) -> dict:\n    cmap = plt.colormaps.get_cmap(\"tab10\")\n    return {s: cmap(i % 10) for i, s in enumerate(sorted(solutions))}\n# ── Core: per-round union/client coverage series ──────────────────────────────\ndef _round_series(group_df: pd.DataFrame) -> list[dict]:\n    \"\"\"Return list of {round, union_cov_pct, client_cov_pct, n_clients_round} for one\n    (config+seed) group.\"\"\"\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:",
         "detail": "studies.general.26_union_coverage_downlink",
+        "documentation": {}
+    },
+    {
+        "label": "build_acc",
+        "kind": 2,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "def build_acc(server_eval: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"mean_acc averaged over seeds/reruns per (config..., round).\"\"\"\n    for col in [\"round\", \"niid\", \"seed\", \"mean_acc\"]:\n        if col in server_eval.columns:\n            server_eval[col] = pd.to_numeric(server_eval[col], errors=\"coerce\")\n    avg_cols = [c for c in AVG_DIMS if c in server_eval.columns]\n    return (\n        server_eval.groupby(avg_cols, dropna=False)[\"mean_acc\"]\n        .mean()\n        .reset_index()",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "build_train_stats",
+        "kind": 2,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "def build_train_stats(train: pd.DataFrame) -> pd.DataFrame:\n    \"\"\"Per-config means over all rounds/clients: payload MB + per-op times.\"\"\"\n    cols = [\"payload_bytes\", \"n_params\", \"packs_sent\", \"poly_modulus_degree\"] \\\n        + [c for c, _ in TIME_OPS]\n    for col in cols + [\"niid\"]:\n        if col in train.columns:\n            train[col] = pd.to_numeric(train[col], errors=\"coerce\")\n    train[\"wire_bytes\"] = train.apply(_est_wire_bytes, axis=1)\n    group_cols = [c for c in [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\"]\n                  if c in train.columns]",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "def plot_cell(acc, stats, model, dataset, niid, pct):\n    fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))\n    if not _panel_accuracy(axes[0], acc, model, dataset, niid, pct):\n        plt.close(fig)\n        return None\n    _panel_payload(axes[1], stats, model, dataset, niid, pct)\n    _panel_overhead(axes[2], stats, model, dataset, niid, pct)\n    fig.suptitle(\n        f\"{model} / {dataset}  |  niid={niid:g}  |  sparsification={pct:.0%}\",\n        fontsize=12, fontweight=\"bold\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    server_eval, train = dfs[\"server_eval\"], dfs[\"train\"]\n    if server_eval.empty or train.empty:\n        print(\"No data found.\")\n        return\n    acc = build_acc(server_eval)\n    stats = build_train_stats(train)\n    dims = load_data.discover_dims(acc)\n    percentages = [p for p in dims.get(\"percentage\", []) if p is not None]",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\nspec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_BASE = HERE / \"output\" / \"figures\" / \"27_three_panel\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "spec",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "spec = importlib.util.spec_from_file_location(\"load_data\", HERE / \"load_data.py\")\nload_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_BASE = HERE / \"output\" / \"figures\" / \"27_three_panel\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "load_data = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(load_data)\nOUT_BASE = HERE / \"output\" / \"figures\" / \"27_three_panel\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_BASE",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "OUT_BASE = HERE / \"output\" / \"figures\" / \"27_three_panel\"\nSOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_COLORS",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "SOL_COLORS = {\n    \"plaintext\":  \"#333333\",\n    \"nvnl\":       \"#2196F3\",\n    \"sw\":         \"#FF5722\",\n    \"rw\":         \"#4CAF50\",\n    \"fedphe\":     \"#9C27B0\",\n    \"topkrr\":     \"#E91E63\",\n    \"srr\":        \"#009688\",\n    \"ckks\":       \"#FF9800\",\n    \"bfv\":        \"#00BCD4\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_MARKERS",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nSOL_LABELS = {\n    \"plaintext\":  \"Plaintext (FedAvg)\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_LABELS",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "SOL_LABELS = {\n    \"plaintext\":  \"Plaintext (FedAvg)\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",\n    \"rw\":         \"RW\",\n    \"topkrr\":     \"TopkRR\",\n    \"srr\":        \"SRR\",\n    \"ckks\":       \"CKKS\",\n    \"bfv\":        \"BFV\",",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_ORDER",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "SOL_ORDER = [\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\",\n             \"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\"]\nPACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\nPAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "PACKING_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\nPAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "PAILLIER_N_LENGTH",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "PAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_OPS",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "TIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)\ndef _pct_label(pct) -> str:\n    return f\"p{int(round(pct * 100)):03d}\"",
+        "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "CELL_DIMS",
+        "kind": 5,
+        "importPath": "studies.general.27_three_panel",
+        "description": "studies.general.27_three_panel",
+        "peekOfCode": "CELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)\ndef _pct_label(pct) -> str:\n    return f\"p{int(round(pct * 100)):03d}\"\ndef _cell_mask(df, model, dataset, niid, pct):\n    \"\"\"Rows for the packing techniques at `pct` plus every full-model baseline.\"\"\"\n    pct_mask = df[\"percentage\"].notna() & (df[\"percentage\"] == pct)",
+        "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
     {

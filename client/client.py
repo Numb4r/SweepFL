@@ -184,16 +184,19 @@ class HEClient(fl.client.NumPyClient):
         
         
     def get_client_context(self):
+        # Inside containers the context dir is bound at /context; on the host
+        # fall back to CONTEXT_DIR (default ./context).
+        ctx_dir = '/context' if os.path.isdir('/context') else os.environ.get('CONTEXT_DIR', 'context')
         if self.homomorphic_type == 'Paillier':
-            with open('context/paillier.pkl', 'rb') as file:
+            with open(f'{ctx_dir}/paillier.pkl', 'rb') as file:
                 return pickle.load(file)
         elif self.homomorphic_type == 'CKKS':
             from encryption.ckks_backend import get_backend
             backend_name = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
-            return get_backend(backend_name).load_client_context("/context")
+            return get_backend(backend_name).load_client_context(ctx_dir)
         else:  # BFV
             import tenseal as ts
-            with open('/context/bfv_secret.pkl', 'rb') as file:
+            with open(f'{ctx_dir}/bfv_secret.pkl', 'rb') as file:
                 return ts.context_from(pickle.load(file)["context"])
 
     def get_parameters(self, config):

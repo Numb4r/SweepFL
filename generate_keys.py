@@ -59,6 +59,11 @@ def combo_keys(type_key='ckks', client_path="secret.pkl", server_path="server_ke
         backend.generate_and_save(args, context_dir)
         print(f"CKKS keys generated via backend '{backend_name}'.")
 
+    elif type_key == 'paillier':
+        n_length = args.get("n_length")
+        Paillier_keys(n_length if n_length and n_length > 0 else 2048)
+        print("Paillier keys written: paillier.pkl")
+
     else:  # BFV — always TenSEAL
         context_client = context_bfv(
             plain_modulus=args.get("plain_modulus"),

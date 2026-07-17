@@ -128,6 +128,10 @@ def get_cyphered_parameters(self, results):
     for _, fit_res in results:
         if self.homomorphic_type == 'Paillier':
             parameters = pk.loads(fit_res.metrics['he'])
+        elif self.homomorphic_type == 'BFV':
+            # BFV always uses TenSEAL, regardless of the CKKS backend.
+            import tenseal as ts
+            parameters = ts.bfv_vector_from(self.context, fit_res.metrics['he'])
         else:
             parameters = backend.deserialize(self.context, fit_res.metrics['he'])
 
@@ -152,6 +156,9 @@ def aggregated_cyphered_parameters(self, parameters_list, total_examples):
                     agg = parameters
                 else:
                     agg = (agg * parameters) % pow(self.context.get_n(), 2)
+            elif self.homomorphic_type == 'BFV':
+                # TenSEAL BFV vectors: plain ciphertext addition.
+                agg = parameters if agg is None else agg + parameters
             else:
                 agg = parameters if agg is None else backend.add(self.context, agg, parameters)
         else:
