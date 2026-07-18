@@ -11363,7 +11363,7 @@
         "kind": 2,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, cf, percentages):\n    sub = cov_avg[\n        (cov_avg[\"model\"] == model) & (cov_avg[\"dataset\"] == dataset)\n        & (cov_avg[\"niid\"] == niid) & (cov_avg[\"client_fraction\"] == cf)\n    ]\n    if sub.empty:\n        return None\n    sorted_pcts = [p for p in sorted(percentages) if not sub[sub[\"percentage\"] == p].empty]\n    if not sorted_pcts:\n        return None",
+        "peekOfCode": "def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, pct, cf):\n    sub = cov_avg[\n        (cov_avg[\"model\"] == model) & (cov_avg[\"dataset\"] == dataset)\n        & (cov_avg[\"niid\"] == niid) & (cov_avg[\"percentage\"] == pct)\n        & (cov_avg[\"client_fraction\"] == cf)\n    ]\n    if sub.empty:\n        return None\n    fig, ax = plt.subplots(figsize=(8, 5))\n    solutions = sstyle.sorted_solutions(sub[\"solution\"].dropna().unique().tolist())",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11453,7 +11453,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"",
+        "peekOfCode": "OUT_TAB = HERE / \"output\" / \"tables\"\nOUT_FIG_CURVES.mkdir(parents=True, exist_ok=True)\nOUT_FIG_BARS.mkdir(parents=True, exist_ok=True)\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nGROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    \"\"\"Nome de arquivo para as barras de inflação (combinam porcentagens).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11462,7 +11462,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─\ndef _round_series(group_df: pd.DataFrame) -> list:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:",
+        "peekOfCode": "GROUP = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\", \"seed\"]\nGROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    \"\"\"Nome de arquivo para as barras de inflação (combinam porcentagens).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"\ndef _tok_pct(model, dataset, niid, pct, cf) -> str:\n    \"\"\"Nome de arquivo para as curvas (uma figura por porcentagem).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11471,7 +11471,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "GROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─\ndef _round_series(group_df: pd.DataFrame) -> list:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:\n        return []",
+        "peekOfCode": "GROUP_NO_SEED = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"client_fraction\"]\nWARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    \"\"\"Nome de arquivo para as barras de inflação (combinam porcentagens).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"\ndef _tok_pct(model, dataset, niid, pct, cf) -> str:\n    \"\"\"Nome de arquivo para as curvas (uma figura por porcentagem).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11480,7 +11480,7 @@
         "kind": 5,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "WARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─\ndef _round_series(group_df: pd.DataFrame) -> list:\n    n_packs = int(group_df[\"n_packs\"].iloc[0])\n    if n_packs <= 0:\n        return []\n    records = []",
+        "peekOfCode": "WARMUP_FRAC = 0.05  # descarta os primeiros 5% das rodadas (transiente inicial)\ndef _tok(model, dataset, niid, cf) -> str:\n    \"\"\"Nome de arquivo para as barras de inflação (combinam porcentagens).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}{sstyle.cf_suffix(cf)}\"\ndef _tok_pct(model, dataset, niid, pct, cf) -> str:\n    \"\"\"Nome de arquivo para as curvas (uma figura por porcentagem).\"\"\"\n    niid_s = \"niidNA\" if niid is None else f\"niid{niid:g}\"\n    return f\"{model}_{dataset}_{niid_s}_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}\"\n# ── Core: série por rodada de cobertura união/cliente (idêntico ao original) ─",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
