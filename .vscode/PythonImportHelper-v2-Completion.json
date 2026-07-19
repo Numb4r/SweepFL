@@ -5256,11 +5256,29 @@
         "documentation": {}
     },
     {
+        "label": "build_cf_bytes_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_cf_bytes_table():\n    dfs = load_data.load_all(str(CF_LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Acurácia máxima atingida por fração de clientes \"",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "build_cf_downlink_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_cf_downlink_table():\n    df = pd.read_csv(CF_SUMMARY_CSV)\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Fator de inflação de \\textit{downlink} \"\n        r\"($\\text{união}/\\text{upload}$) por fração de clientes participantes \"\n        r\"($f_c$), \" + label + r\", não-IID ($\\alpha=0{,}1$) (Estudo 26, tema \"\n        r\"\\textit{client\\_frac}).}\",",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
         "label": "HERE",
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "HERE = Path(__file__).parent\nSTUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))",
+        "peekOfCode": "HERE = Path(__file__).parent\nSTUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5269,7 +5287,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "STUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):",
+        "peekOfCode": "STUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5278,7 +5296,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")",
+        "peekOfCode": "LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5287,7 +5305,25 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)",
+        "peekOfCode": "SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CF_LOGS_DIR",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CF_SUMMARY_CSV",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5369,6 +5405,42 @@
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "peekOfCode": "SOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────\ndef build_bytes_table():\n    dfs = load_data.load_all(str(LOGS_DIR))",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CF_VALUES",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CF_VALUES = [0.25, 0.5, 0.75]\nCF_PAIR = (\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\")\nCF_NIID = 0.1\nCF_PCT_PRIMARY = 0.1\ndef build_cf_bytes_table():\n    dfs = load_data.load_all(str(CF_LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    model, dataset, label = CF_PAIR",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CF_PAIR",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CF_PAIR = (\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\")\nCF_NIID = 0.1\nCF_PCT_PRIMARY = 0.1\ndef build_cf_bytes_table():\n    dfs = load_data.load_all(str(CF_LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    model, dataset, label = CF_PAIR\n    lines = [",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CF_NIID",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CF_NIID = 0.1\nCF_PCT_PRIMARY = 0.1\ndef build_cf_bytes_table():\n    dfs = load_data.load_all(str(CF_LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CF_PCT_PRIMARY",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CF_PCT_PRIMARY = 0.1\ndef build_cf_bytes_table():\n    dfs = load_data.load_all(str(CF_LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
