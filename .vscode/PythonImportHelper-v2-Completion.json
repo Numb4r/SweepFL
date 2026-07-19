@@ -513,6 +513,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2493,6 +2501,15 @@
         "documentation": {}
     },
     {
+        "label": "importlib.util",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "importlib.util",
+        "description": "importlib.util",
+        "detail": "importlib.util",
+        "documentation": {}
+    },
+    {
         "label": "json",
         "kind": 6,
         "isExtraImport": true,
@@ -2790,15 +2807,6 @@
         "description": "encryption.paillier",
         "isExtraImport": true,
         "detail": "encryption.paillier",
-        "documentation": {}
-    },
-    {
-        "label": "importlib.util",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "importlib.util",
-        "description": "importlib.util",
-        "detail": "importlib.util",
         "documentation": {}
     },
     {
@@ -5218,6 +5226,150 @@
         "description": "client.models",
         "peekOfCode": "def reshape_model(flatted_packs, a, sentinel=0):\n    model = []\n    if type(a) not in (int, float):\n        for item in a:\n            m, sentinel = reshape_model(flatted_packs, item, sentinel)\n            model.append(m)\n    else:\n        sentinel += 1\n        return flatted_packs[sentinel - 1], sentinel\n    return model, sentinel",
         "detail": "client.models",
+        "documentation": {}
+    },
+    {
+        "label": "build_bytes_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_bytes_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Acurácia máxima atingida e custo acumulado em \\textit{upload} \"\n        r\"(dado bruto \\textit{float32} pré-cifragem, MB) no ponto de pico, para \"",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "build_overhead_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_overhead_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    cum = s16.compute_cumulative_overhead(dfs[\"train\"])\n    data = s16.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Acurácia máxima atingida e \\textit{overhead} de processamento \"\n        r\"acumulado (empacotamento + seleção + cifragem + serialização + \"",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "build_downlink_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_downlink_table():\n    df = pd.read_csv(SUMMARY_CSV)\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Cobertura por cliente (\\textit{upload}), cobertura da união \"\n        r\"no servidor (\\textit{downlink}) e fator de inflação \"\n        r\"($\\text{união}/\\text{upload}$), para $p=30\\%$ — NVNL-FL, FedPHE, SW e \"\n        r\"RW (Estudo 26).}\",\n        r\"\\label{tab:fedphe_downlink}\",",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "HERE = Path(__file__).parent\nSTUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "STUDIES_GENERAL",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "STUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "LOGS_DIR",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "SUMMARY_CSV",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_TAB",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "OUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "s15",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "s15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "s16",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "s16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "PAIRS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "PAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "NIIDS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "NIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "PCT",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "PCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────\ndef build_bytes_table():",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "SOL_ROWS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "SOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────\ndef build_bytes_table():\n    dfs = load_data.load_all(str(LOGS_DIR))",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
     {
