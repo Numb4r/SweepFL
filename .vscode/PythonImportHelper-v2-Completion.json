@@ -5274,6 +5274,15 @@
         "documentation": {}
     },
     {
+        "label": "build_study27_summary_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_study27_summary_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    se = dfs[\"server_eval\"].copy()\n    grp = (\n        se.groupby([\"model\", \"dataset\", \"niid\", \"percentage\", \"solution\", \"round\"], dropna=False)\n        [\"mean_acc\"].mean().reset_index()\n    )\n    last = grp.sort_values(\"round\").groupby(\n        [\"model\", \"dataset\", \"niid\", \"percentage\", \"solution\"], dropna=False\n    ).tail(1)",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
         "label": "HERE",
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
@@ -5441,6 +5450,33 @@
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "peekOfCode": "CF_PCT_PRIMARY = 0.1\ndef build_cf_bytes_table():\n    dfs = load_data.load_all(str(CF_LOGS_DIR))\n    cum = s15.compute_cumulative_bytes(dfs[\"train\"])\n    data = s15.merge_accuracy(cum, dfs[\"server_eval\"])\n    data = data[data[\"solution\"] != \"plaintext\"]\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "STUDY27_PAIRS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "STUDY27_PAIRS = [\n    (\"dnn_tiny\", \"FASHION_MNIST\", \"DNN / FashionMNIST\"),\n    (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\"),\n    (\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n    (\"mobilenetv2\", \"CIFAR10\", \"MobileNetV2 / CIFAR-10\"),\n    (\"vit_tiny\", \"tanganke_gtsrb\", \"ViT / GTSRB\"),\n]\nSTUDY27_PCTS = [0.1, 0.3, 0.5, 0.7, 0.9]\nSTUDY27_NIID = 0.1\ndef build_study27_summary_table():",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "STUDY27_PCTS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "STUDY27_PCTS = [0.1, 0.3, 0.5, 0.7, 0.9]\nSTUDY27_NIID = 0.1\ndef build_study27_summary_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    se = dfs[\"server_eval\"].copy()\n    grp = (\n        se.groupby([\"model\", \"dataset\", \"niid\", \"percentage\", \"solution\", \"round\"], dropna=False)\n        [\"mean_acc\"].mean().reset_index()\n    )\n    last = grp.sort_values(\"round\").groupby(",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "STUDY27_NIID",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "STUDY27_NIID = 0.1\ndef build_study27_summary_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    se = dfs[\"server_eval\"].copy()\n    grp = (\n        se.groupby([\"model\", \"dataset\", \"niid\", \"percentage\", \"solution\", \"round\"], dropna=False)\n        [\"mean_acc\"].mean().reset_index()\n    )\n    last = grp.sort_values(\"round\").groupby(\n        [\"model\", \"dataset\", \"niid\", \"percentage\", \"solution\"], dropna=False",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
