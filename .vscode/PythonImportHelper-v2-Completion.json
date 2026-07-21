@@ -9364,7 +9364,7 @@
         "kind": 2,
         "importPath": "studies.general.15_bytes_vs_maxacc_pt",
         "description": "studies.general.15_bytes_vs_maxacc_pt",
-        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_bpr   = _ref_mb_per_round(combo)\n    stats, max_mb, best_acc, best_sol = [], 0.0, 0.0, None",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(18, 7), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_bpr   = _ref_mb_per_round(combo)\n    stats, max_mb, best_acc, best_sol = [], 0.0, 0.0, None",
         "detail": "studies.general.15_bytes_vs_maxacc_pt",
         "documentation": {}
     },
@@ -9688,7 +9688,7 @@
         "kind": 2,
         "importPath": "studies.general.16_overhead_vs_maxacc_pt",
         "description": "studies.general.16_overhead_vs_maxacc_pt",
-        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(16, 5.5), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_spr   = _ref_s_per_round(combo)\n    stats, max_s, best_acc, best_sol = [], 0.0, 0.0, None",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(18, 7), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_spr   = _ref_s_per_round(combo)\n    stats, max_s, best_acc, best_sol = [], 0.0, 0.0, None",
         "detail": "studies.general.16_overhead_vs_maxacc_pt",
         "documentation": {}
     },
@@ -11623,7 +11623,7 @@
         "kind": 2,
         "importPath": "studies.general.26_union_coverage_downlink_pt",
         "description": "studies.general.26_union_coverage_downlink_pt",
-        "peekOfCode": "def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, pct, cf):\n    sub = cov_avg[\n        (cov_avg[\"model\"] == model) & (cov_avg[\"dataset\"] == dataset)\n        & (cov_avg[\"niid\"] == niid) & (cov_avg[\"percentage\"] == pct)\n        & (cov_avg[\"client_fraction\"] == cf)\n    ]\n    if sub.empty:\n        return None\n    fig, ax = plt.subplots(figsize=(8, 5))\n    solutions = sstyle.sorted_solutions(sub[\"solution\"].dropna().unique().tolist())",
+        "peekOfCode": "def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, pct, cf):\n    sub = cov_avg[\n        (cov_avg[\"model\"] == model) & (cov_avg[\"dataset\"] == dataset)\n        & (cov_avg[\"niid\"] == niid) & (cov_avg[\"percentage\"] == pct)\n        & (cov_avg[\"client_fraction\"] == cf)\n    ]\n    if sub.empty:\n        return None\n    fig, ax = plt.subplots(figsize=(9, 6.5))\n    solutions = sstyle.sorted_solutions(sub[\"solution\"].dropna().unique().tolist())",
         "detail": "studies.general.26_union_coverage_downlink_pt",
         "documentation": {}
     },
@@ -11767,7 +11767,7 @@
         "kind": 2,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "def plot_cell(acc, stats, model, dataset, niid, pct):\n    fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))\n    if not _panel_accuracy(axes[0], acc, model, dataset, niid, pct):\n        plt.close(fig)\n        return None\n    _panel_payload(axes[1], stats, model, dataset, niid, pct)\n    _panel_overhead(axes[2], stats, model, dataset, niid, pct)\n    fig.tight_layout()\n    return fig\ndef main(logs_dir=None):",
+        "peekOfCode": "def plot_cell(acc, stats, model, dataset, niid, pct):\n    fig, axes = plt.subplots(1, 3, figsize=(18, 6.5))\n    if not _panel_accuracy(axes[0], acc, model, dataset, niid, pct):\n        plt.close(fig)\n        return None\n    _panel_payload(axes[1], stats, model, dataset, niid, pct)\n    _panel_overhead(axes[2], stats, model, dataset, niid, pct)\n    sol_handles, sol_labels = axes[0].get_legend_handles_labels()\n    time_handles, time_labels = axes[2].get_legend_handles_labels()\n    fig.tight_layout(rect=[0, 0.14, 1, 1])",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
