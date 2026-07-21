@@ -11830,7 +11830,7 @@
         "kind": 5,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nSOL_LABELS = {\n    \"plaintext\":  \"Plaintext (FedAvg)\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",",
+        "peekOfCode": "SOL_MARKERS = {\n    \"plaintext\": \"D\", \"nvnl\": \"o\", \"sw\": \"s\", \"rw\": \"^\",\n    \"fedphe\": \"P\", \"topkrr\": \"p\", \"srr\": \"h\",\n    \"ckks\": \"v\", \"bfv\": \"X\", \"batchcrypt\": \"H\",\n}\nSOL_LABELS = {\n    \"plaintext\":  \"FedAvg\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
@@ -11839,7 +11839,7 @@
         "kind": 5,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "SOL_LABELS = {\n    \"plaintext\":  \"Plaintext (FedAvg)\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",\n    \"rw\":         \"RW\",\n    \"topkrr\":     \"TopkRR\",\n    \"srr\":        \"SRR\",\n    \"ckks\":       \"CKKS\",\n    \"bfv\":        \"BFV\",",
+        "peekOfCode": "SOL_LABELS = {\n    \"plaintext\":  \"FedAvg\",\n    \"nvnl\":       \"NVNL\",\n    \"fedphe\":     \"FedPHE\",\n    \"sw\":         \"SW\",\n    \"rw\":         \"RW\",\n    \"topkrr\":     \"TopkRR\",\n    \"srr\":        \"SRR\",\n    \"ckks\":       \"CKKS\",\n    \"bfv\":        \"BFV\",",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
@@ -11848,7 +11848,7 @@
         "kind": 5,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "SOL_ORDER = [\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\",\n             \"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\"]\nPACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\nPAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]",
+        "peekOfCode": "SOL_ORDER = [\"plaintext\", \"ckks\", \"bfv\", \"batchcrypt\",\n             \"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\"]\nPACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\nPAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Treino\"),\n            (\"encrypt_time_s\", \"Cifragem\"),\n            (\"decrypt_time_s\", \"Decifragem\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
@@ -11857,7 +11857,7 @@
         "kind": 5,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\nPAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):",
+        "peekOfCode": "PACKING_SOLS = {\"nvnl\", \"fedphe\", \"sw\", \"rw\", \"topkrr\", \"srr\",\n                \"nvnl-scout\", \"fedphe-scout\"}\nPAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Treino\"),\n            (\"encrypt_time_s\", \"Cifragem\"),\n            (\"decrypt_time_s\", \"Decifragem\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
@@ -11866,7 +11866,7 @@
         "kind": 5,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "PAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)",
+        "peekOfCode": "PAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)\nPAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)\nTIME_OPS = [(\"train_time_s\", \"Treino\"),\n            (\"encrypt_time_s\", \"Cifragem\"),\n            (\"decrypt_time_s\", \"Decifragem\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
@@ -11875,7 +11875,7 @@
         "kind": 5,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "TIME_OPS = [(\"train_time_s\", \"Train\"),\n            (\"encrypt_time_s\", \"Encrypt\"),\n            (\"decrypt_time_s\", \"Decrypt\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)\ndef _pct_label(pct) -> str:\n    return f\"p{int(round(pct * 100)):03d}\"",
+        "peekOfCode": "TIME_OPS = [(\"train_time_s\", \"Treino\"),\n            (\"encrypt_time_s\", \"Cifragem\"),\n            (\"decrypt_time_s\", \"Decifragem\")]\nCELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)\ndef _pct_label(pct) -> str:\n    return f\"p{int(round(pct * 100)):03d}\"",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
