@@ -11767,7 +11767,7 @@
         "kind": 2,
         "importPath": "studies.general.27_three_panel",
         "description": "studies.general.27_three_panel",
-        "peekOfCode": "def plot_cell(acc, stats, model, dataset, niid, pct):\n    fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))\n    if not _panel_accuracy(axes[0], acc, model, dataset, niid, pct):\n        plt.close(fig)\n        return None\n    _panel_payload(axes[1], stats, model, dataset, niid, pct)\n    _panel_overhead(axes[2], stats, model, dataset, niid, pct)\n    fig.suptitle(\n        f\"{model} / {dataset}  |  niid={niid:g}  |  sparsification={pct:.0%}\",\n        fontsize=12, fontweight=\"bold\",",
+        "peekOfCode": "def plot_cell(acc, stats, model, dataset, niid, pct):\n    fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))\n    if not _panel_accuracy(axes[0], acc, model, dataset, niid, pct):\n        plt.close(fig)\n        return None\n    _panel_payload(axes[1], stats, model, dataset, niid, pct)\n    _panel_overhead(axes[2], stats, model, dataset, niid, pct)\n    fig.tight_layout()\n    return fig\ndef main(logs_dir=None):",
         "detail": "studies.general.27_three_panel",
         "documentation": {}
     },
