@@ -11924,6 +11924,15 @@
         "documentation": {}
     },
     {
+        "label": "`STUDY_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "`STUDY_SOLS = sstyle.PACKING_SOLS - {\"rw\"}`.\nSaída: output/figures/capitulo5_pt/28_download_maxacc_pt/{model}_{dataset}_niid{n}_p{pct}[_cf{f}].{png,pdf}\n\"\"\"\nimport argparse\nimport importlib.util\nimport sys\nfrom pathlib import Path\nimport matplotlib\nmatplotlib.use(\"Agg\")\nimport matplotlib.pyplot as plt",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
         "label": "HERE",
         "kind": 5,
         "importPath": "studies.general.28_download_vs_maxacc_pt",
@@ -11937,7 +11946,7 @@
         "kind": 5,
         "importPath": "studies.general.28_download_vs_maxacc_pt",
         "description": "studies.general.28_download_vs_maxacc_pt",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\n# RW excluído: a comparação deste estudo deve ficar restrita a métodos de\n# seleção não inteiramente aleatórios (ver docstring do módulo).\nSTUDY_SOLS = sstyle.PACKING_SOLS - {\"rw\"}\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────",
         "detail": "studies.general.28_download_vs_maxacc_pt",
         "documentation": {}
     },
@@ -11946,7 +11955,7 @@
         "kind": 5,
         "importPath": "studies.general.28_download_vs_maxacc_pt",
         "description": "studies.general.28_download_vs_maxacc_pt",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):\n    return float(_final_row(group)[\"mean_acc\"])",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\n# RW excluído: a comparação deste estudo deve ficar restrita a métodos de\n# seleção não inteiramente aleatórios (ver docstring do módulo).\nSTUDY_SOLS = sstyle.PACKING_SOLS - {\"rw\"}\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):",
         "detail": "studies.general.28_download_vs_maxacc_pt",
         "documentation": {}
     },
@@ -11955,7 +11964,7 @@
         "kind": 5,
         "importPath": "studies.general.28_download_vs_maxacc_pt",
         "description": "studies.general.28_download_vs_maxacc_pt",
-        "peekOfCode": "s15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):\n    return float(_final_row(group)[\"mean_acc\"])\ndef _final_round(group):",
+        "peekOfCode": "s15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\n# RW excluído: a comparação deste estudo deve ficar restrita a métodos de\n# seleção não inteiramente aleatórios (ver docstring do módulo).\nSTUDY_SOLS = sstyle.PACKING_SOLS - {\"rw\"}\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]",
         "detail": "studies.general.28_download_vs_maxacc_pt",
         "documentation": {}
     },
@@ -11964,7 +11973,16 @@
         "kind": 5,
         "importPath": "studies.general.28_download_vs_maxacc_pt",
         "description": "studies.general.28_download_vs_maxacc_pt",
-        "peekOfCode": "s26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):\n    return float(_final_row(group)[\"mean_acc\"])\ndef _final_round(group):\n    return float(_final_row(group)[\"round\"])",
+        "peekOfCode": "s26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\n# RW excluído: a comparação deste estudo deve ficar restrita a métodos de\n# seleção não inteiramente aleatórios (ver docstring do módulo).\nSTUDY_SOLS = sstyle.PACKING_SOLS - {\"rw\"}\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "STUDY_SOLS",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "STUDY_SOLS = sstyle.PACKING_SOLS - {\"rw\"}\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):\n    return float(_final_row(group)[\"mean_acc\"])\ndef _final_round(group):\n    return float(_final_row(group)[\"round\"])",
         "detail": "studies.general.28_download_vs_maxacc_pt",
         "documentation": {}
     },
