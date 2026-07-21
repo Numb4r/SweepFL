@@ -521,6 +521,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -11886,6 +11894,87 @@
         "description": "studies.general.27_three_panel",
         "peekOfCode": "CELL_DIMS = [\"model\", \"dataset\", \"niid\"]\nAVG_DIMS  = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"round\"]\ndef _sol_order(sols):\n    known = [s for s in SOL_ORDER if s in sols]\n    return known + sorted(s for s in sols if s not in SOL_ORDER)\ndef _pct_label(pct) -> str:\n    return f\"p{int(round(pct * 100)):03d}\"\ndef _cell_mask(df, model, dataset, niid, pct):\n    \"\"\"Rows for the packing techniques at `pct` plus every full-model baseline.\"\"\"\n    pct_mask = df[\"percentage\"].notna() & (df[\"percentage\"] == pct)",
         "detail": "studies.general.27_three_panel",
+        "documentation": {}
+    },
+    {
+        "label": "compute_cumulative_download",
+        "kind": 2,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "def compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.DataFrame:\n    m = masks[masks[\"percentage\"].notna()].copy()\n    if \"client_fraction\" not in m.columns:\n        m[\"client_fraction\"] = 1.0\n    m[\"client_fraction\"] = m[\"client_fraction\"].fillna(1.0)\n    dedup_keys = [c for c in s26.GROUP if c in m.columns] + [\"round\", \"cid\"]\n    m = m.drop_duplicates(subset=dedup_keys, keep=\"first\")\n    series_df = s26.build_series_df(m)\n    if series_df.empty:\n        return series_df",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "plot_cell",
+        "kind": 2,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):\n    if combo.empty:\n        return None\n    fig, (ax, ax_bar) = plt.subplots(\n        1, 2, figsize=(18, 7), gridspec_kw={\"width_ratios\": [3, 1]},\n    )\n    ax_r = ax.twinx()\n    solutions = sstyle.sorted_solutions(combo[\"solution\"].dropna().unique().tolist())\n    ref_bpr   = s15._ref_mb_per_round(combo)\n    stats, max_mb, best_acc, best_sol = [], 0.0, 0.0, None",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "def main(logs_dir=None):\n    dfs = load_data.load_all(logs_dir)\n    train, server_eval = dfs[\"train\"], dfs[\"server_eval\"]\n    if train.empty or server_eval.empty:\n        print(\"Sem dados de train/server_eval.\")\n        return\n    print(\"Carregando dados de máscara...\")\n    try:\n        masks = load_data.load_masks(logs_dir)\n    except FileNotFoundError as e:",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "HERE = Path(__file__).parent\nsys.path.insert(0, str(HERE))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, HERE / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, peak helpers, painel lateral",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_data",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, peak helpers, painel lateral\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Download estimation (reaproveita a cobertura da união do Estudo 26) ─────\ndef compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.DataFrame:\n    m = masks[masks[\"percentage\"].notna()].copy()\n    if \"client_fraction\" not in m.columns:",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "sstyle",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, peak helpers, painel lateral\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Download estimation (reaproveita a cobertura da união do Estudo 26) ─────\ndef compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.DataFrame:\n    m = masks[masks[\"percentage\"].notna()].copy()\n    if \"client_fraction\" not in m.columns:\n        m[\"client_fraction\"] = 1.0",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "s15",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "s15 = _load(\"15_bytes_vs_maxacc_pt\")       # merge_accuracy, peak helpers, painel lateral\ns26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Download estimation (reaproveita a cobertura da união do Estudo 26) ─────\ndef compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.DataFrame:\n    m = masks[masks[\"percentage\"].notna()].copy()\n    if \"client_fraction\" not in m.columns:\n        m[\"client_fraction\"] = 1.0\n    m[\"client_fraction\"] = m[\"client_fraction\"].fillna(1.0)",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "s26",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "s26 = _load(\"26_union_coverage_downlink_pt\")  # build_series_df (cobertura da união)\nOUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Download estimation (reaproveita a cobertura da união do Estudo 26) ─────\ndef compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.DataFrame:\n    m = masks[masks[\"percentage\"].notna()].copy()\n    if \"client_fraction\" not in m.columns:\n        m[\"client_fraction\"] = 1.0\n    m[\"client_fraction\"] = m[\"client_fraction\"].fillna(1.0)\n    dedup_keys = [c for c in s26.GROUP if c in m.columns] + [\"round\", \"cid\"]",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "OUT_FIG_STUDY",
+        "kind": 5,
+        "importPath": "studies.general.28_download_vs_maxacc_pt",
+        "description": "studies.general.28_download_vs_maxacc_pt",
+        "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Download estimation (reaproveita a cobertura da união do Estudo 26) ─────\ndef compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.DataFrame:\n    m = masks[masks[\"percentage\"].notna()].copy()\n    if \"client_fraction\" not in m.columns:\n        m[\"client_fraction\"] = 1.0\n    m[\"client_fraction\"] = m[\"client_fraction\"].fillna(1.0)\n    dedup_keys = [c for c in s26.GROUP if c in m.columns] + [\"round\", \"cid\"]\n    m = m.drop_duplicates(subset=dedup_keys, keep=\"first\")",
+        "detail": "studies.general.28_download_vs_maxacc_pt",
         "documentation": {}
     },
     {
