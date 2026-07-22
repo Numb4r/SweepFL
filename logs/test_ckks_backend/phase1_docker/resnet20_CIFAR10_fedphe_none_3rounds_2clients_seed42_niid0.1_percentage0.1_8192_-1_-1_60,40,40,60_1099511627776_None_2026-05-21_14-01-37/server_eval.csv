@@ -1,0 +1,4 @@
+experiment_name,round,n_clients,mean_loss,mean_acc
+resnet20_CIFAR10_fedphe,1,2,1.583058,0.431600
+resnet20_CIFAR10_fedphe,2,2,1.407576,0.510100
+resnet20_CIFAR10_fedphe,3,2,1.753610,0.393700

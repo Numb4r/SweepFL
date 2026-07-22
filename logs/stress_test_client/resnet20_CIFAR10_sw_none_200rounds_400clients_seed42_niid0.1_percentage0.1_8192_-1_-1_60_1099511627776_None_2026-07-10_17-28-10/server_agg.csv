@@ -1,0 +1,2 @@
+experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
+resnet20_CIFAR10_sw,1,81,10125,796.5151,0.1158

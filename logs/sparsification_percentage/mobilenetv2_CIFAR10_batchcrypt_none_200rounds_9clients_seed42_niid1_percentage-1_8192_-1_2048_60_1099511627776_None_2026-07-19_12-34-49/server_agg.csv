@@ -1,0 +1,3 @@
+experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
+mobilenetv2_CIFAR10_batchcrypt,1,9,50000,15.6164,2.8918
+mobilenetv2_CIFAR10_batchcrypt,2,8,46237,0.0000,2.5001

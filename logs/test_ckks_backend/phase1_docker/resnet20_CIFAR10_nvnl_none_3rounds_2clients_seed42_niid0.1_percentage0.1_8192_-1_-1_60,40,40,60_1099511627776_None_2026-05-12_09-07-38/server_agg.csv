@@ -1,0 +1,4 @@
+experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
+resnet20_CIFAR10_nvnl,1,2,50000,1.0097,0.0077
+resnet20_CIFAR10_nvnl,2,2,50000,0.0000,0.0041
+resnet20_CIFAR10_nvnl,3,2,50000,0.0000,0.0033

@@ -1,0 +1,45 @@
+{
+  "EXPERIMENT_NAME": "resnet20_CIFAR10_plaintext",
+  "FOLDER":          "client_frac",
+  "TIMESTAMP":       "2026-06-13_12-03-08",
+
+  "SOLUTION":        "plaintext",
+  "MODEL":           "resnet20",
+  "DATASET":         "CIFAR10",
+  "NIID":            0.1,
+  "SEED":            42,
+  "PERCENTAGE":      -1,
+  "TECHNIQUE":       "none",
+  "NUM_ROUNDS":      200,
+
+  "NCLIENTES":       60,
+  "CLIENTS_PER_GPU": 20,
+  "GPU_IDS":         [0,1,2],
+  "RUNTIME":         "singularity",
+  "USE_GPU":         "true",
+  "BATCH_SIZE":      4,
+  "RR_START_ROUND":    200,
+  "MAGG_RENORM":       1,
+  "CLIENT_FRACTION":   0.75,
+  "PRETRAINED_WEIGHTS": "",
+
+  "POLY":            8192,
+  "COEFFS":          [60],
+  "SCALE":           1099511627776,
+  "KEY_TYPE":        "None",
+  "PLAIN_MODULUS":   -1,
+  "N_LENGTH":        -1,
+
+  "CKKS_BACKEND":          "ckks_python_simplify",
+  "SIMPLIFY_N":            8192,
+  "SIMPLIFY_BITS":         62,
+  "SIMPLIFY_SCALE_BITS":   40,
+  "PYCRYPT_N":             8192,
+  "PYCRYPT_BITS":          60,
+  "OPENFHE_RING_DIM":      8192,
+  "OPENFHE_MULT_DEPTH":    1,
+  "OPENFHE_SCALE_BITS":    50,
+
+  "RESUMED_FROM":          "",
+  "RESUME_ROUND":          0
+}

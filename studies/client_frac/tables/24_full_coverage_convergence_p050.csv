@@ -1,0 +1,9 @@
+solution,model,dataset,iid_round,iid_acc,iid_time_s,iid_mb,niid_round,niid_acc,niid_time_s,niid_mb
+fedphe,mobilenetv2,CIFAR10,105.0,0.14,2916.41,13624.934,,,,
+fedphe,resnet20,CIFAR10,2.0,0.094,401.097,97.321,3.0,0.169,425.132,145.981
+nvnl,mobilenetv2,CIFAR10,2.0,0.11,440.156,259.523,2.0,0.094,442.412,259.523
+nvnl,resnet20,CIFAR10,2.0,0.1,401.649,97.321,2.0,0.103,401.088,97.321
+rw,mobilenetv2,CIFAR10,9.0,0.102,637.932,1167.852,9.0,0.102,640.711,1167.852
+rw,resnet20,CIFAR10,8.0,0.359,490.38,389.284,8.0,0.439,505.697,389.284
+sw,mobilenetv2,CIFAR10,3.0,0.101,478.757,389.284,3.0,0.098,479.357,389.284
+sw,resnet20,CIFAR10,3.0,0.107,420.432,145.981,3.0,0.105,422.655,145.981

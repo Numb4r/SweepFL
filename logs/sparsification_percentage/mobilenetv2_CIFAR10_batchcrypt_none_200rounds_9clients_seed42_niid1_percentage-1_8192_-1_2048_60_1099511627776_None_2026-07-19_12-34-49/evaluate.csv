@@ -1,0 +1,10 @@
+experiment_name,round,cid,solution,schema,model,dataset,distribution,dirichlet_alpha,eval_loss,eval_acc,decrypt_time_s,poly_modulus_degree,coeff_mod_bits,scale_bits
+mobilenetv2_CIFAR10_batchcrypt,1,2,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.3097381591796875,0.09900990128517151,69.57640290260315,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,6,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.3056461811065674,0.10351034998893738,76.64946842193604,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,7,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.302269220352173,0.09990999102592468,77.14178848266602,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,1,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.3046021461486816,0.10171017050743103,77.13674998283386,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,3,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.306431531906128,0.11431143432855606,79.08257341384888,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,5,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.305142641067505,0.0855085477232933,86.31961441040039,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,0,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.3071091175079346,0.08633093535900116,89.47325921058655,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,4,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.3034722805023193,0.1062106192111969,89.6519045829773,8192,60,40
+mobilenetv2_CIFAR10_batchcrypt,1,8,batchcrypt,Paillier,mobilenetv2,CIFAR10,niid,1.0,2.3039321899414062,0.10351034998893738,93.77258396148682,8192,60,40

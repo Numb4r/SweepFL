@@ -1,0 +1,6 @@
+experiment_name,round,n_clients,mean_loss,mean_acc
+lenet5_FASHION_MNIST_plaintext,1,2,0.425243,0.846300
+lenet5_FASHION_MNIST_plaintext,2,2,0.380557,0.861800
+lenet5_FASHION_MNIST_plaintext,3,2,0.365137,0.866800
+lenet5_FASHION_MNIST_plaintext,4,2,0.358969,0.870100
+lenet5_FASHION_MNIST_plaintext,5,2,0.356143,0.869700

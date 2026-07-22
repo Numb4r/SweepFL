@@ -1,0 +1,2 @@
+experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
+mobilenetv2_CIFAR10_plaintext,1,0,0,792.4239,0.0000

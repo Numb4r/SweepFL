@@ -1,0 +1,3 @@
+experiment_name,round,cid,solution,schema,model,dataset,distribution,dirichlet_alpha,eval_loss,eval_acc,decrypt_time_s,poly_modulus_degree,coeff_mod_bits,scale_bits
+resnet20_CIFAR10_plaintext,1,0,plaintext,None,resnet20,CIFAR10,iid,0.1,3.6739609241485596,0.11140000075101852,0.04510045051574707,8192,60;40;40;60,40
+resnet20_CIFAR10_plaintext,1,1,plaintext,None,resnet20,CIFAR10,iid,0.1,3.629166841506958,0.11840000003576279,0.04331040382385254,8192,60;40;40;60,40

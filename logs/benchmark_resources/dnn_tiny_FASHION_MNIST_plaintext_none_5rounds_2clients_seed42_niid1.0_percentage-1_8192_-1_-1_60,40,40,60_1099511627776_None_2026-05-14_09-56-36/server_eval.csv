@@ -1,0 +1,6 @@
+experiment_name,round,n_clients,mean_loss,mean_acc
+dnn_tiny_FASHION_MNIST_plaintext,1,2,0.687472,0.785300
+dnn_tiny_FASHION_MNIST_plaintext,2,2,0.464509,0.825400
+dnn_tiny_FASHION_MNIST_plaintext,3,2,0.452298,0.835900
+dnn_tiny_FASHION_MNIST_plaintext,4,2,0.406873,0.849900
+dnn_tiny_FASHION_MNIST_plaintext,5,2,0.400665,0.855000

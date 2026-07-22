@@ -1,0 +1,13 @@
+Starting server | runtime=singularity solution=plaintext clients=60 rounds=200 dataset=CIFAR10
+  niid=0.1 seed=42 percentage=-1 logfolder=client_frac/resnet20_CIFAR10_plaintext_none_200rounds_60clients_seed42_niid0.1_percentage-1_8192_-1_-1_60_1099511627776_None_cf0.25_2026-06-15_10-29-03
+  poly=8192 coeffs=60 scale=1099511627776 key_type=None plain=-1 n_length=-1
+INFO flwr 2026-06-17 09:52:42,376 | app.py:148 | Starting Flower server, config: ServerConfig(num_rounds=200, round_timeout=None)
+INFO:flwr:Starting Flower server, config: ServerConfig(num_rounds=200, round_timeout=None)
+INFO flwr 2026-06-17 09:52:42,651 | app.py:168 | Flower ECE: gRPC server running (200 rounds), SSL is disabled
+INFO:flwr:Flower ECE: gRPC server running (200 rounds), SSL is disabled
+INFO flwr 2026-06-17 09:52:42,651 | server.py:86 | Initializing global parameters
+INFO:flwr:Initializing global parameters
+INFO flwr 2026-06-17 09:52:42,651 | server.py:273 | Requesting initial parameters from one random client
+INFO:flwr:Requesting initial parameters from one random client
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1781700762.658409 1405420 fork_posix.cc:75] Other threads are currently calling into gRPC, skipping fork() handlers

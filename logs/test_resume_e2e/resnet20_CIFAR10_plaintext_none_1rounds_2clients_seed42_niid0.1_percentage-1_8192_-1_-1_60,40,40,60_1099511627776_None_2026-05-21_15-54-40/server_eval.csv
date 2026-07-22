@@ -1,0 +1,2 @@
+experiment_name,round,n_clients,mean_loss,mean_acc
+resnet20_CIFAR10_plaintext,1,2,3.651564,0.114900
