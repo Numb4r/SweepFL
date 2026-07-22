@@ -50,6 +50,8 @@ def _load(name):
 
 load_data = _load("load_data")
 sstyle = _load("solution_style")
+cap5_style = _load("capitulo5_style")
+cap5_style.apply_style()
 
 OUT_FIG = HERE / "output" / "figures" / "capitulo5_pt"
 OUT_FIG_CURVES = OUT_FIG / "26_union_coverage_curves_pt"
@@ -171,7 +173,7 @@ def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, pct, cf):
     if sub.empty:
         return None
 
-    fig, ax = plt.subplots(figsize=(9, 6.5))
+    fig, ax = plt.subplots(figsize=(12, 8.5))
     solutions = sstyle.sorted_solutions(sub["solution"].dropna().unique().tolist())
     for sol in solutions:
         ss = sub[sub["solution"] == sol].sort_values("round")
@@ -183,15 +185,13 @@ def plot_curves_cell(cov_avg: pd.DataFrame, model, dataset, niid, pct, cf):
     ax.axhline(pct * 100, color="black", linestyle="--", linewidth=1, alpha=0.5,
                label="upload por cliente")
     ax.set_ylim(0, 105)
-    ax.set_xlabel("Rodada", fontsize=15)
-    ax.set_ylabel("Cobertura da união (%)", fontsize=15)
-    ax.tick_params(axis="both", labelsize=13)
-    ax.grid(True, alpha=0.3)
+    ax.set_xlabel("Rodada")
+    ax.set_ylabel("Cobertura da união (%)")
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.tight_layout(rect=[0, 0.14, 1, 1])
+    fig.tight_layout(rect=[0, 0.2, 1, 1])
     fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-               ncol=len(labels), fontsize=13, frameon=True)
+               ncol=len(labels), frameon=True)
     return fig
 
 
@@ -213,7 +213,7 @@ def plot_inflation_cell(summary: pd.DataFrame, model, dataset, niid, cf, percent
     width = 0.8 / max(n, 1)
     x = np.arange(len(sorted_pcts))
 
-    fig, ax = plt.subplots(figsize=(1.8 * len(sorted_pcts) + 2, 5.8))
+    fig, ax = plt.subplots(figsize=((1.8 * len(sorted_pcts) + 2) * 1.3, 7.5))
     for i, sol in enumerate(solutions):
         vals = []
         for pct in sorted_pcts:
@@ -225,16 +225,15 @@ def plot_inflation_cell(summary: pd.DataFrame, model, dataset, niid, cf, percent
     ax.axhline(1.0, color="black", linestyle="--", linewidth=1, alpha=0.6,
                label="sem inflação (downlink=upload)")
     ax.set_xticks(x)
-    ax.set_xticklabels([f"{p:.0%}" for p in sorted_pcts], fontsize=13)
-    ax.set_xlabel("Porcentagem de esparsificação", fontsize=15)
-    ax.set_ylabel("Inflação de downlink (união/upload)", fontsize=14)
-    ax.tick_params(axis="y", labelsize=13)
-    ax.grid(True, axis="y", alpha=0.3)
+    ax.set_xticklabels([f"{p:.0%}" for p in sorted_pcts])
+    ax.set_xlabel("Porcentagem de esparsificação")
+    ax.set_ylabel("Inflação de downlink")
+    ax.grid(True, axis="y")
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.tight_layout(rect=[0, 0.16, 1, 1])
+    fig.tight_layout(rect=[0, 0.22, 1, 1])
     fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-               ncol=len(labels), fontsize=13, frameon=True)
+               ncol=len(labels), frameon=True)
     return fig
 
 
@@ -366,7 +365,7 @@ def main(logs_dir=None):
                             fname = _tok_pct(model, dataset, niid, pct, cf)
                             for ext in ("png", "pdf"):
                                 fig.savefig(OUT_FIG_CURVES / f"{fname}.{ext}",
-                                            dpi=150, bbox_inches="tight", pad_inches=0.25)
+                                            dpi=300, bbox_inches="tight", pad_inches=0.25)
                             print(f"Salvo 26_union_coverage_curves_pt/{fname}.png/pdf")
                             plt.close(fig)
                             n_curve_figs += 1
@@ -376,7 +375,7 @@ def main(logs_dir=None):
                         fname = _tok(model, dataset, niid, cf)
                         for ext in ("png", "pdf"):
                             fig2.savefig(OUT_FIG_BARS / f"{fname}.{ext}",
-                                         dpi=150, bbox_inches="tight", pad_inches=0.25)
+                                         dpi=300, bbox_inches="tight", pad_inches=0.25)
                         print(f"Salvo 26_downlink_inflation_pt/{fname}.png/pdf")
                         plt.close(fig2)
                         n_bar_figs += 1

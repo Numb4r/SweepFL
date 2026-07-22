@@ -44,17 +44,23 @@ def _load(name):
 
 load_data = _load("load_data")
 sstyle = _load("solution_style")
+cap5_style = _load("capitulo5_style")
 
 OUT_FIG_STUDY = HERE / "output" / "figures" / "capitulo5_pt" / "22_layer_heatmap_pt"
 OUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)
 
 GROUP = ["model", "dataset", "solution", "niid", "percentage", "client_fraction", "seed"]
 
+# v1: faixa compacta de hoje (mesmo figsize/fontsize de sempre).
+# v2: estilo grande do Cap. 5 (título/eixos/legenda no padrão dos demais
+#     estudos), figura redimensionada para caber as fontes maiores.
+VARIANTS = ("v1", "v2")
 
-def _tok(model, dataset, technique, niid, pct, cf) -> str:
+
+def _tok(model, dataset, technique, niid, pct, cf, variant) -> str:
     niid_s = "niidNA" if niid is None else f"niid{niid:g}"
     return (f"{model}_{dataset}_{technique}_{niid_s}"
-            f"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}")
+            f"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}_{variant}")
 
 
 # ── Tensor → camada Keras (idêntico aos estudos 21/22) ───────────────────────
@@ -263,15 +269,30 @@ def _avg_over_seeds(freq_df: pd.DataFrame) -> pd.DataFrame:
 
 # ── Individual cell plot (heatmap-strip, formato do estudo 20) ──────────────
 
-def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf):
+def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf, variant="v1"):
+    """variant="v1": faixa compacta de hoje. variant="v2": estilo grande do Cap. 5."""
     s = s.sort_values("layer_idx")
     layer_order = s["layer_label"].tolist()
     n_layers = len(layer_order)
     if n_layers == 0:
         return None
 
-    fig_w = max(6.0, n_layers * 0.55)
-    fig, ax = plt.subplots(figsize=(fig_w, 1.8))
+    if variant == "v2":
+        cap5_style.apply_style(compact=False)
+        fig_w = max(18.0, n_layers * 1.6)
+        fig, ax = plt.subplots(figsize=(fig_w, 6.0))
+        cbar_label_fs, cbar_tick_fs = 24, 20
+        tick_fs = 20
+        xlabel_fs, title_fs = None, 26
+    else:
+        cap5_style.apply_style(compact=True)
+        fig_w = max(6.0, n_layers * 0.55)
+        fig, ax = plt.subplots(figsize=(fig_w, 1.8))
+        cbar_label_fs, cbar_tick_fs = 6.5, 6
+        tick_fs = max(5, min(9, int(140 / max(n_layers, 1))))
+        xlabel_fs, title_fs = 9, 9
+
+    ax.grid(False)
 
     data = s["normalized_send_pct"].values.reshape(1, -1)
     vmax = float(np.nanmax(data)) if not np.all(np.isnan(data)) else 100.0
@@ -280,23 +301,25 @@ def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf):
         extent=[0, n_layers, 0, 1],
     )
     cbar = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.02)
-    cbar.set_label("% norm. envio\n(rodadas/pacote)", fontsize=6.5)
-    cbar.ax.tick_params(labelsize=6)
+    cbar.set_label("% norm. envio\n(rodadas/pacote)", fontsize=cbar_label_fs)
+    cbar.ax.tick_params(labelsize=cbar_tick_fs)
 
     ax.set_xticks(np.arange(n_layers) + 0.5)
-    tick_fs = max(5, min(9, int(140 / max(n_layers, 1))))
     ax.set_xticklabels(layer_order, rotation=60, ha="right", fontsize=tick_fs)
     ax.set_yticks([])
     ax.set_ylim(0, 1)
     ax.set_xlim(0, n_layers)
-    ax.set_xlabel("Camada", fontsize=9)
+    if xlabel_fs is not None:
+        ax.set_xlabel("Camada", fontsize=xlabel_fs)
+    else:
+        ax.set_xlabel("Camada")
 
     pct_lbl  = f"{pct:.0%}"
     niid_lbl = f"niid={niid:g}" if niid is not None else "niid=NA"
     ax.set_title(
         f"Frequência de envio por camada — {model} / {dataset} / {sstyle.label(technique)}  "
         f"|  {pct_lbl}  |  {niid_lbl}{sstyle.cf_title(cf)}",
-        fontsize=9,
+        fontsize=title_fs,
     )
     fig.tight_layout()
     return fig
@@ -369,16 +392,17 @@ def main(logs_dir=None):
                             if s.empty:
                                 continue
 
-                            fig = plot_cell(s, model, dataset, technique, niid, pct, cf)
-                            if fig is None:
-                                continue
-                            fname = _tok(model, dataset, technique, niid, pct, cf)
-                            for ext in ("png", "pdf"):
-                                fig.savefig(OUT_FIG_STUDY / f"{fname}.{ext}",
-                                            dpi=150, bbox_inches="tight", pad_inches=0.08)
-                            print(f"Salvo 22_layer_heatmap_pt/{fname}.png/pdf")
-                            plt.close(fig)
-                            n_saved += 1
+                            for variant in VARIANTS:
+                                fig = plot_cell(s, model, dataset, technique, niid, pct, cf, variant)
+                                if fig is None:
+                                    continue
+                                fname = _tok(model, dataset, technique, niid, pct, cf, variant)
+                                for ext in ("png", "pdf"):
+                                    fig.savefig(OUT_FIG_STUDY / f"{fname}.{ext}",
+                                                dpi=300, bbox_inches="tight", pad_inches=0.08)
+                                print(f"Salvo 22_layer_heatmap_pt/{fname}.png/pdf")
+                                plt.close(fig)
+                                n_saved += 1
 
     print(f"Total de figuras: {n_saved}")
 

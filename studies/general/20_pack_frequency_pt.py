@@ -41,17 +41,23 @@ def _load(name):
 
 load_data = _load("load_data")
 sstyle = _load("solution_style")
+cap5_style = _load("capitulo5_style")
 
 OUT_FIG_STUDY = HERE / "output" / "figures" / "capitulo5_pt" / "20_pack_frequency_pt"
 OUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)
 
 GROUP = ["model", "dataset", "solution", "niid", "percentage", "client_fraction", "seed"]
 
+# v1: faixa compacta de hoje (mesmo figsize/fontsize de sempre).
+# v2: estilo grande do Cap. 5 (título/eixos/legenda no padrão dos demais
+#     estudos), figura redimensionada para caber as fontes maiores.
+VARIANTS = ("v1", "v2")
 
-def _tok(model, dataset, technique, niid, pct, cf) -> str:
+
+def _tok(model, dataset, technique, niid, pct, cf, variant) -> str:
     niid_s = "niidNA" if niid is None else f"niid{niid:g}"
     return (f"{model}_{dataset}_{technique}_{niid_s}"
-            f"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}")
+            f"_p{int(round(pct * 100)):03d}{sstyle.cf_suffix(cf)}_{variant}")
 
 
 # ── Core: pack send-count (idêntico ao estudo 20) ────────────────────────────
@@ -101,9 +107,22 @@ def _avg_over_seeds(freq_df: pd.DataFrame) -> pd.DataFrame:
 
 # ── Individual cell plot ───────────────────────────────────────────────────────
 
-def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf):
-    """Faixa de heatmap (1 linha) para um (model, dataset, technique, niid, pct, cf)."""
-    fig, ax = plt.subplots(figsize=(8, 1.6))
+def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf, variant="v1"):
+    """Faixa de heatmap (1 linha) para um (model, dataset, technique, niid, pct, cf).
+
+    variant="v1": faixa compacta de hoje. variant="v2": estilo grande do Cap. 5.
+    """
+    if variant == "v2":
+        cap5_style.apply_style(compact=False)
+        figsize = (24, 5)
+        xlabel_fs, cbar_label_fs, cbar_tick_fs = None, 24, 20
+    else:
+        cap5_style.apply_style(compact=True)
+        figsize = (8, 1.6)
+        xlabel_fs, cbar_label_fs, cbar_tick_fs = 15, 13, 12
+
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.grid(False)
 
     ax.set_yticks([])
     if not s.empty:
@@ -115,12 +134,15 @@ def plot_cell(s: pd.DataFrame, model, dataset, technique, niid, pct, cf):
         )
         ax.set_xlim(0, n_packs)
         cbar = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.02)
-        cbar.set_label("% de rodadas\nenviado", fontsize=13)
-        cbar.ax.tick_params(labelsize=12)
+        cbar.set_label("% de rodadas\nenviado", fontsize=cbar_label_fs)
+        cbar.ax.tick_params(labelsize=cbar_tick_fs)
 
     ax.set_ylim(0, 1)
-    ax.set_xlabel("Índice do pacote", fontsize=15)
-    ax.tick_params(axis="x", labelsize=13)
+    if xlabel_fs is not None:
+        ax.set_xlabel("Índice do pacote", fontsize=xlabel_fs)
+        ax.tick_params(axis="x", labelsize=13)
+    else:
+        ax.set_xlabel("Índice do pacote")
 
     fig.tight_layout()
     return fig
@@ -192,14 +214,15 @@ def main(logs_dir=None):
                             if s.empty:
                                 continue
 
-                            fig = plot_cell(s, model, dataset, technique, niid, pct, cf)
-                            fname = _tok(model, dataset, technique, niid, pct, cf)
-                            for ext in ("png", "pdf"):
-                                fig.savefig(OUT_FIG_STUDY / f"{fname}.{ext}",
-                                            dpi=150, bbox_inches="tight", pad_inches=0.08)
-                            print(f"Salvo 20_pack_frequency_pt/{fname}.png/pdf")
-                            plt.close(fig)
-                            n_saved += 1
+                            for variant in VARIANTS:
+                                fig = plot_cell(s, model, dataset, technique, niid, pct, cf, variant)
+                                fname = _tok(model, dataset, technique, niid, pct, cf, variant)
+                                for ext in ("png", "pdf"):
+                                    fig.savefig(OUT_FIG_STUDY / f"{fname}.{ext}",
+                                                dpi=300, bbox_inches="tight", pad_inches=0.08)
+                                print(f"Salvo 20_pack_frequency_pt/{fname}.png/pdf")
+                                plt.close(fig)
+                                n_saved += 1
 
     print(f"Total de figuras: {n_saved}")
 

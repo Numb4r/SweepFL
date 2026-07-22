@@ -35,13 +35,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-plt.rcParams.update({"font.size": 15})
-
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
 spec = importlib.util.spec_from_file_location("load_data", HERE / "load_data.py")
 load_data = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(load_data)
+
+spec = importlib.util.spec_from_file_location("capitulo5_style", HERE / "capitulo5_style.py")
+cap5_style = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(cap5_style)
+cap5_style.apply_style()
 
 OUT_BASE = HERE / "output" / "figures" / "27_three_panel"
 
@@ -183,21 +186,17 @@ def _panel_accuracy(ax, acc, model, dataset, niid, pct):
             label=SOL_LABELS.get(sol, sol),
             zorder=2 if is_baseline else 3,
         )
-    ax.set_xlabel("Rodada", fontsize=16)
-    ax.set_ylabel("Acurácia (%)", fontsize=16)
+    ax.set_xlabel("Rodada")
+    ax.set_ylabel("Acurácia (%)")
     ax.set_ylim(0, 105)
     ax.set_xlim(left=0)
-    ax.tick_params(axis="both", labelsize=13)
-    ax.grid(True, alpha=0.3)
     return True
 
 
 def _bar_axes(ax, sols):
     ax.set_xticks(range(len(sols)))
-    ax.set_xticklabels([SOL_LABELS.get(s, s) for s in sols],
-                       rotation=30, ha="right", fontsize=13)
-    ax.tick_params(axis="y", labelsize=13)
-    ax.grid(True, axis="y", alpha=0.3)
+    ax.set_xticklabels([SOL_LABELS.get(s, s) for s in sols], rotation=30, ha="right")
+    ax.grid(True, axis="y")
 
 
 def _panel_payload(ax, stats, model, dataset, niid, pct):
@@ -211,8 +210,8 @@ def _panel_payload(ax, stats, model, dataset, niid, pct):
     ax.bar(range(len(sols)), vals,
            color=[SOL_COLORS.get(s, "#888888") for s in sols])
     for i, v in enumerate(vals):
-        ax.annotate(f"{v:.2f}", (i, v), ha="center", va="bottom", fontsize=12)
-    ax.set_ylabel("Payload de upload por rodada (MB)", fontsize=15)
+        ax.annotate(f"{v:.2f}", (i, v), ha="center", va="bottom", fontsize=16)
+    ax.set_ylabel("Payload / rodada (MB)")
     _bar_axes(ax, sols)
 
 
@@ -233,13 +232,13 @@ def _panel_overhead(ax, stats, model, dataset, niid, pct):
                color=op_colors(k), label=label)
         bottom += vals
     for i, v in enumerate(bottom):
-        ax.annotate(f"{v:.1f}", (i, v), ha="center", va="bottom", fontsize=12)
-    ax.set_ylabel("Tempo médio por rodada (s)", fontsize=15)
+        ax.annotate(f"{v:.1f}", (i, v), ha="center", va="bottom", fontsize=16)
+    ax.set_ylabel("Tempo / rodada (s)")
     _bar_axes(ax, sols)
 
 
 def plot_cell(acc, stats, model, dataset, niid, pct):
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6.5))
+    fig, axes = plt.subplots(1, 3, figsize=(24, 8.5))
     if not _panel_accuracy(axes[0], acc, model, dataset, niid, pct):
         plt.close(fig)
         return None
@@ -249,14 +248,14 @@ def plot_cell(acc, stats, model, dataset, niid, pct):
     sol_handles, sol_labels = axes[0].get_legend_handles_labels()
     time_handles, time_labels = axes[2].get_legend_handles_labels()
 
-    fig.tight_layout(rect=[0, 0.14, 1, 1])
+    fig.tight_layout(rect=[0, 0.22, 1, 0.94])
     fig.legend(sol_handles, sol_labels, loc="lower center",
-               bbox_to_anchor=(0.5, 0.06), ncol=len(sol_labels),
-               fontsize=13, frameon=True)
+               bbox_to_anchor=(0.5, 0.1), ncol=len(sol_labels),
+               frameon=True)
     if time_handles:
         fig.legend(time_handles, time_labels, loc="lower center",
                    bbox_to_anchor=(0.5, 0.0), ncol=len(time_labels),
-                   fontsize=13, frameon=True)
+                   frameon=True)
     return fig
 
 
@@ -292,7 +291,7 @@ def main(logs_dir=None):
                     fname = f"{model}_{dataset}_niid{niid:g}_{_pct_label(pct)}"
                     for ext in ("png", "pdf"):
                         fig.savefig(OUT_BASE / f"{fname}.{ext}",
-                                    dpi=150, bbox_inches="tight", pad_inches=0.25)
+                                    dpi=300, bbox_inches="tight", pad_inches=0.25)
                     print(f"  Saved {fname}.png/pdf")
                     plt.close(fig)
                     n_saved += 1

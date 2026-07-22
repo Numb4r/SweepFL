@@ -68,6 +68,8 @@ def _load(name):
 
 load_data = _load("load_data")
 sstyle = _load("solution_style")
+cap5_style = _load("capitulo5_style")
+cap5_style.apply_style()
 s15 = _load("15_bytes_vs_maxacc_pt")       # merge_accuracy, _cell_mask, _tok, _ref_mb_per_round
 s26 = _load("26_union_coverage_downlink_pt")  # build_series_df (cobertura da união)
 
@@ -120,14 +122,13 @@ def _draw_finalacc_bar(ax, stats: list):
         ax.text(
             bar.get_width() + off, bar.get_y() + bar.get_height() / 2,
             f"{acc:.1f}%  R{int(rnd)}  {cost:.1f}MB",
-            va="center", ha="left", fontsize=11, fontweight="bold", color="#222222",
+            va="center", ha="left", fontsize=15, fontweight="bold", color="#222222",
         )
 
     ax.axvline(100, color="#bbbbbb", linestyle=":", linewidth=0.8, zorder=0)
     ax.set_yticks([])
-    ax.set_xlabel("Acurácia final (%)", fontsize=15)
-    ax.tick_params(axis="x", labelsize=13)
-    ax.grid(True, axis="x", alpha=0.3)
+    ax.set_xlabel("Acurácia final (%)")
+    ax.grid(True, axis="x")
 
 
 # ── Download estimation (reaproveita a cobertura da união do Estudo 26) ─────
@@ -173,7 +174,7 @@ def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):
         return None
 
     fig, (ax, ax_bar) = plt.subplots(
-        1, 2, figsize=(18, 7), gridspec_kw={"width_ratios": [3, 1]},
+        1, 2, figsize=(24, 9), gridspec_kw={"width_ratios": [3, 1]},
     )
     ax_r = ax.twinx()
 
@@ -201,7 +202,7 @@ def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):
         for _, rr in sg.iloc[::step].iterrows():
             ax.annotate(
                 f"R{int(rr['round'])}", xy=(rr["cumulative_mb"], rr["mean_acc"] * 100),
-                fontsize=11, color=color, alpha=0.75,
+                fontsize=15, color=color, alpha=0.75,
                 xytext=(3, 2), textcoords="offset points",
             )
 
@@ -229,26 +230,24 @@ def plot_cell(combo: pd.DataFrame, model, dataset, niid, pct, cf):
     if ref_bpr > 0 and max_mb > 0:
         max_r_est = max_mb / ref_bpr
         ax_r.set_ylim(0, max_r_est * 1.05)
-        ax_r.set_ylabel("Rodada (aprox.)", fontsize=14, color="#555555")
-        ax_r.tick_params(axis="y", labelsize=13, labelcolor="#555555")
-        nice = [r for r in [1, 2, 5, 10, 20, 30, 50, 100, 150, 200] if r <= max_r_est * 1.05]
+        ax_r.set_ylabel("Rodada (aprox.)", color="#555555", fontsize=18)
+        ax_r.tick_params(axis="y", labelcolor="#555555", labelsize=15)
+        nice = [r for r in [10, 50, 100, 150, 200] if r <= max_r_est * 1.05]
         ax_r.set_yticks(nice)
     else:
         ax_r.set_yticks([])
 
-    ax.set_xlabel("Download acumulado (MB, união de pacotes × clientes na rodada)", fontsize=15)
-    ax.set_ylabel("Acurácia (%)", fontsize=15)
-    ax.tick_params(axis="both", labelsize=13)
+    ax.set_xlabel("Download acumulado (MB, união de pacotes × clientes na rodada)")
+    ax.set_ylabel("Acurácia (%)")
     ax.set_ylim(0, 105)
     ax.set_xlim(left=0)
-    ax.grid(True, alpha=0.25)
 
     _draw_finalacc_bar(ax_bar, stats)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.tight_layout(rect=[0, 0.12, 1, 1])
+    fig.tight_layout(rect=[0, 0.18, 1, 1])
     fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.0),
-               ncol=len(labels), fontsize=13, frameon=True)
+               ncol=len(labels), frameon=True)
     return fig
 
 
@@ -311,7 +310,7 @@ def main(logs_dir=None):
                         fname = s15._tok(model, dataset, niid, pct, cf)
                         for ext in ("png", "pdf"):
                             fig.savefig(OUT_FIG_STUDY / f"{fname}.{ext}",
-                                        dpi=150, bbox_inches="tight", pad_inches=0.25)
+                                        dpi=300, bbox_inches="tight", pad_inches=0.25)
                         print(f"Salvo 28_download_maxacc_pt/{fname}.png/pdf")
                         plt.close(fig)
                         n_saved += 1
