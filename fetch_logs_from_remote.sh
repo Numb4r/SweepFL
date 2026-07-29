@@ -16,6 +16,9 @@ RSYNC_OPTS=(
     --exclude="__pycache__/"
     --exclude="*.pyc"
     --exclude=".git/"
+    --exclude="*.npz"
+    --exclude="*.log"
+    --exclude="*.h5"
     --log-file="$LOG_FILE"
 )
 

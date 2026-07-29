@@ -5,7 +5,6 @@ client/rasp_cli.tar
 __pycache__
 *.pyc
 *.log
-logs/
 mv_logs/
 client/data/
 *.pkl
@@ -15,8 +14,9 @@ ckks_change_logs/
 sbatch/*.sh
 !sbatch/template.sh
 *.npz
-*.csv
 *.pdf
 *.png
 *.tex
 *.tar.gz
+*.err
+*.out
