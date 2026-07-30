@@ -537,6 +537,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2526,21 +2534,30 @@
         "documentation": {}
     },
     {
-        "label": "json",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "json",
-        "description": "json",
-        "detail": "json",
-        "documentation": {}
-    },
-    {
         "label": "re",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "re",
         "description": "re",
         "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "shutil",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "shutil",
+        "description": "shutil",
+        "detail": "shutil",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
         "documentation": {}
     },
     {
@@ -2630,15 +2647,6 @@
         "description": "collections",
         "isExtraImport": true,
         "detail": "collections",
-        "documentation": {}
-    },
-    {
-        "label": "shutil",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "shutil",
-        "description": "shutil",
-        "detail": "shutil",
         "documentation": {}
     },
     {
@@ -5269,6 +5277,177 @@
         "documentation": {}
     },
     {
+        "label": "build_manifest",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "def build_manifest():\n    \"\"\"Figuras referenciadas por resultados.tex, com estudo e tema de log.\n    Retorna lista de dicts: rel, subdir, fname, module, theme.\n    \"\"\"\n    if not TEX.exists():\n        raise FileNotFoundError(f\"resultados.tex não encontrado em {TEX}\")\n    text = TEX.read_text(encoding=\"utf-8\")\n    entries, seen = [], set()\n    for path in _INCLUDE_RE.findall(text):\n        if not path.startswith(TEX_PREFIX):",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "run_study",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "def run_study(module_name, theme, staging_root):\n    \"\"\"Roda um estudo com as saídas redirecionadas para o staging do tema.\"\"\"\n    logs_dir = LOGS_ROOT / theme\n    if not logs_dir.exists():\n        raise FileNotFoundError(f\"Diretório de logs não encontrado: {logs_dir}\")\n    mod = _load(module_name)\n    outputs = MODULE_OUTPUTS[module_name]\n    for attr, subdir in outputs.items():\n        if not hasattr(mod, attr):\n            raise AttributeError(",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "publish",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "def publish(entries, staging_root):\n    \"\"\"Copia os PDFs do manifesto para images/nvnl-slidhe/ e figures/.\"\"\"\n    results = []\n    for e in entries:\n        src = staging_root / e[\"theme\"] / e[\"subdir\"] / e[\"fname\"]\n        if not src.exists():\n            results.append((e[\"rel\"], False))\n            continue\n        for root in (IMAGES_ROOT, FIGURES_ROOT):\n            dst = root / e[\"subdir\"] / e[\"fname\"]",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "publish_summary_csvs",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "def publish_summary_csvs(themes, staging_root):\n    \"\"\"Publica os CSVs do estudo 26 lidos por gerar_tabelas_fedphe.py.\"\"\"\n    published = []\n    for theme in sorted(themes):\n        src = staging_root / theme / \"tables\" / SUMMARY_CSV_NAME\n        if not src.exists():\n            continue\n        DATA_ROOT.mkdir(parents=True, exist_ok=True)\n        dst = DATA_ROOT / f\"{theme}.csv\"\n        shutil.copy2(src, dst)",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "def main():\n    parser = argparse.ArgumentParser(\n        description=\"Regera as figuras do Capítulo 5 a partir de dissertation/capitulo5.\")\n    parser.add_argument(\"--dry-run\", action=\"store_true\",\n                        help=\"só imprime o manifesto e os estudos que rodariam\")\n    parser.add_argument(\"--only\", default=None,\n                        help=\"regera apenas figuras cujo caminho contenha esta substring\")\n    parser.add_argument(\"--keep-staging\", action=\"store_true\",\n                        help=\"não apaga .build_figuras/ ao final\")\n    args = parser.parse_args()",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "HERE = Path(__file__).parent\nSTUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_ROOT = (HERE / \"..\" / \"..\" / \"logs\").resolve()\nTEX = HERE / \"resultados.tex\"\nIMAGES_ROOT = HERE / \"images\" / \"nvnl-slidhe\"\nFIGURES_ROOT = HERE / \"figures\"\nDATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "STUDIES_GENERAL",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "STUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_ROOT = (HERE / \"..\" / \"..\" / \"logs\").resolve()\nTEX = HERE / \"resultados.tex\"\nIMAGES_ROOT = HERE / \"images\" / \"nvnl-slidhe\"\nFIGURES_ROOT = HERE / \"figures\"\nDATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "LOGS_ROOT",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "LOGS_ROOT = (HERE / \"..\" / \"..\" / \"logs\").resolve()\nTEX = HERE / \"resultados.tex\"\nIMAGES_ROOT = HERE / \"images\" / \"nvnl-slidhe\"\nFIGURES_ROOT = HERE / \"figures\"\nDATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "TEX",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "TEX = HERE / \"resultados.tex\"\nIMAGES_ROOT = HERE / \"images\" / \"nvnl-slidhe\"\nFIGURES_ROOT = HERE / \"figures\"\nDATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "IMAGES_ROOT",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "IMAGES_ROOT = HERE / \"images\" / \"nvnl-slidhe\"\nFIGURES_ROOT = HERE / \"figures\"\nDATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.\n_CF_RE = re.compile(r\"_cf[0-9.]+\")",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "FIGURES_ROOT",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "FIGURES_ROOT = HERE / \"figures\"\nDATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.\n_CF_RE = re.compile(r\"_cf[0-9.]+\")\n# Diretório da figura -> (módulo em studies/general, atributos de saída a rebindar).",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "DATA_ROOT",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "DATA_ROOT = HERE / \"data\" / \"26_union_coverage\"\nSTAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.\n_CF_RE = re.compile(r\"_cf[0-9.]+\")\n# Diretório da figura -> (módulo em studies/general, atributos de saída a rebindar).\n# O primeiro atributo é o que recebe o subdiretório desta figura.",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "STAGING",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "STAGING = HERE / \".build_figuras\"\n# Prefixo dos \\includegraphics no .tex; o que vem depois é o caminho relativo\n# dentro de images/nvnl-slidhe/.\nTEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.\n_CF_RE = re.compile(r\"_cf[0-9.]+\")\n# Diretório da figura -> (módulo em studies/general, atributos de saída a rebindar).\n# O primeiro atributo é o que recebe o subdiretório desta figura.\nSTUDY_BY_DIR = {",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "TEX_PREFIX",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "TEX_PREFIX = \"sessoes/capitulo5/images/nvnl-slidhe/\"\n_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.\n_CF_RE = re.compile(r\"_cf[0-9.]+\")\n# Diretório da figura -> (módulo em studies/general, atributos de saída a rebindar).\n# O primeiro atributo é o que recebe o subdiretório desta figura.\nSTUDY_BY_DIR = {\n    \"27_three_panel\":                        (\"27_three_panel\", \"OUT_BASE\"),\n    \"capitulo5_pt/15_bytes_maxacc_pt\":       (\"15_bytes_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/16_overhead_maxacc_pt\":    (\"16_overhead_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "_INCLUDE_RE",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "_INCLUDE_RE = re.compile(r\"\\\\includegraphics(?:\\[[^\\]]*\\])?\\{([^}]+)\\}\")\n# Sufixo _cf<frac> emitido por solution_style.cf_suffix() apenas quando cf != 1.0.\n_CF_RE = re.compile(r\"_cf[0-9.]+\")\n# Diretório da figura -> (módulo em studies/general, atributos de saída a rebindar).\n# O primeiro atributo é o que recebe o subdiretório desta figura.\nSTUDY_BY_DIR = {\n    \"27_three_panel\":                        (\"27_three_panel\", \"OUT_BASE\"),\n    \"capitulo5_pt/15_bytes_maxacc_pt\":       (\"15_bytes_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/16_overhead_maxacc_pt\":    (\"16_overhead_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/20_pack_frequency_pt\":     (\"20_pack_frequency_pt\", \"OUT_FIG_STUDY\"),",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "_CF_RE",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "_CF_RE = re.compile(r\"_cf[0-9.]+\")\n# Diretório da figura -> (módulo em studies/general, atributos de saída a rebindar).\n# O primeiro atributo é o que recebe o subdiretório desta figura.\nSTUDY_BY_DIR = {\n    \"27_three_panel\":                        (\"27_three_panel\", \"OUT_BASE\"),\n    \"capitulo5_pt/15_bytes_maxacc_pt\":       (\"15_bytes_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/16_overhead_maxacc_pt\":    (\"16_overhead_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/20_pack_frequency_pt\":     (\"20_pack_frequency_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/26_union_coverage_curves_pt\": (\"26_union_coverage_downlink_pt\", \"OUT_FIG_CURVES\"),\n    \"capitulo5_pt/26_downlink_inflation_pt\":    (\"26_union_coverage_downlink_pt\", \"OUT_FIG_BARS\"),",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "STUDY_BY_DIR",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "STUDY_BY_DIR = {\n    \"27_three_panel\":                        (\"27_three_panel\", \"OUT_BASE\"),\n    \"capitulo5_pt/15_bytes_maxacc_pt\":       (\"15_bytes_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/16_overhead_maxacc_pt\":    (\"16_overhead_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/20_pack_frequency_pt\":     (\"20_pack_frequency_pt\", \"OUT_FIG_STUDY\"),\n    \"capitulo5_pt/26_union_coverage_curves_pt\": (\"26_union_coverage_downlink_pt\", \"OUT_FIG_CURVES\"),\n    \"capitulo5_pt/26_downlink_inflation_pt\":    (\"26_union_coverage_downlink_pt\", \"OUT_FIG_BARS\"),\n    \"capitulo5_pt/28_download_maxacc_pt\":    (\"28_download_vs_maxacc_pt\", \"OUT_FIG_STUDY\"),\n}\n# Todos os atributos de saída de cada módulo, com o subdiretório de staging que",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "MODULE_OUTPUTS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "MODULE_OUTPUTS = {\n    \"27_three_panel\":               {\"OUT_BASE\": \"27_three_panel\"},\n    \"15_bytes_vs_maxacc_pt\":        {\"OUT_FIG_STUDY\": \"capitulo5_pt/15_bytes_maxacc_pt\"},\n    \"16_overhead_vs_maxacc_pt\":     {\"OUT_FIG_STUDY\": \"capitulo5_pt/16_overhead_maxacc_pt\"},\n    \"20_pack_frequency_pt\":         {\"OUT_FIG_STUDY\": \"capitulo5_pt/20_pack_frequency_pt\"},\n    \"28_download_vs_maxacc_pt\":     {\"OUT_FIG_STUDY\": \"capitulo5_pt/28_download_maxacc_pt\"},\n    \"26_union_coverage_downlink_pt\": {\n        \"OUT_FIG_CURVES\": \"capitulo5_pt/26_union_coverage_curves_pt\",\n        \"OUT_FIG_BARS\":   \"capitulo5_pt/26_downlink_inflation_pt\",\n        \"OUT_TAB\":        \"tables\",",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
+        "label": "SUMMARY_CSV_NAME",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_figuras_cap5",
+        "description": "dissertation.capitulo5.gerar_figuras_cap5",
+        "peekOfCode": "SUMMARY_CSV_NAME = \"26_union_coverage_downlink_summary_pt.csv\"\ndef _load(name):\n    \"\"\"Carrega um módulo de studies/general sem poluir sys.modules do processo.\"\"\"\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\ndef build_manifest():\n    \"\"\"Figuras referenciadas por resultados.tex, com estudo e tema de log.\n    Retorna lista de dicts: rel, subdir, fname, module, theme.",
+        "detail": "dissertation.capitulo5.gerar_figuras_cap5",
+        "documentation": {}
+    },
+    {
         "label": "build_results_legacy_table",
         "kind": 2,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
@@ -5345,7 +5524,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "HERE = Path(__file__).parent\nSTUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"",
+        "peekOfCode": "HERE = Path(__file__).parent\nSTUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\ndef _summary_csv(theme):\n    \"\"\"Resumo de cobertura/inflação do Estudo 26 para um tema de log.\n    Prefere a cópia local, gravada por `gerar_figuras_cap5.py`, de modo que esta\n    pasta seja reprodutível sem rodar nada dentro de studies/. Cai para a saída\n    do pipeline em studies/<tema>/tables/ quando a cópia local ainda não existe.\n    \"\"\"",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5354,7 +5533,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "STUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"",
+        "peekOfCode": "STUDIES_GENERAL = (HERE / \"..\" / \"..\" / \"studies\" / \"general\").resolve()\nLOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\ndef _summary_csv(theme):\n    \"\"\"Resumo de cobertura/inflação do Estudo 26 para um tema de log.\n    Prefere a cópia local, gravada por `gerar_figuras_cap5.py`, de modo que esta\n    pasta seja reprodutível sem rodar nada dentro de studies/. Cai para a saída\n    do pipeline em studies/<tema>/tables/ quando a cópia local ainda não existe.\n    \"\"\"\n    local = HERE / \"data\" / \"26_union_coverage\" / f\"{theme}.csv\"",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5363,16 +5542,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nSUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()",
-        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "documentation": {}
-    },
-    {
-        "label": "SUMMARY_CSV",
-        "kind": 5,
-        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"sparsification_percentage\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"",
+        "peekOfCode": "LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"sparsification_percentage\").resolve()\nCF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\ndef _summary_csv(theme):\n    \"\"\"Resumo de cobertura/inflação do Estudo 26 para um tema de log.\n    Prefere a cópia local, gravada por `gerar_figuras_cap5.py`, de modo que esta\n    pasta seja reprodutível sem rodar nada dentro de studies/. Cai para a saída\n    do pipeline em studies/<tema>/tables/ quando a cópia local ainda não existe.\n    \"\"\"\n    local = HERE / \"data\" / \"26_union_coverage\" / f\"{theme}.csv\"\n    if local.exists():",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5381,7 +5551,16 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "CF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\nCF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")",
+        "peekOfCode": "CF_LOGS_DIR = (HERE / \"..\" / \"..\" / \"logs\" / \"client_frac\").resolve()\ndef _summary_csv(theme):\n    \"\"\"Resumo de cobertura/inflação do Estudo 26 para um tema de log.\n    Prefere a cópia local, gravada por `gerar_figuras_cap5.py`, de modo que esta\n    pasta seja reprodutível sem rodar nada dentro de studies/. Cai para a saída\n    do pipeline em studies/<tema>/tables/ quando a cópia local ainda não existe.\n    \"\"\"\n    local = HERE / \"data\" / \"26_union_coverage\" / f\"{theme}.csv\"\n    if local.exists():\n        return local.resolve()",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "SUMMARY_CSV",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "SUMMARY_CSV = _summary_csv(\"sparsification_percentage\")\nCF_SUMMARY_CSV = _summary_csv(\"client_frac\")\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5390,7 +5569,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "CF_SUMMARY_CSV = (\n    HERE / \"..\" / \"..\" / \"studies\" / \"client_frac\" / \"tables\"\n    / \"26_union_coverage_downlink_summary_pt.csv\"\n).resolve()\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)",
+        "peekOfCode": "CF_SUMMARY_CSV = _summary_csv(\"client_frac\")\nOUT_TAB = HERE / \"tables\"\nOUT_TAB.mkdir(parents=True, exist_ok=True)\nsys.path.insert(0, str(STUDIES_GENERAL))\ndef _load(name):\n    spec = importlib.util.spec_from_file_location(name, STUDIES_GENERAL / f\"{name}.py\")\n    mod = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(mod)\n    return mod\nload_data = _load(\"load_data\")",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },

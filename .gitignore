@@ -20,3 +20,4 @@ sbatch/*.sh
 *.tar.gz
 *.err
 *.out
+dissertation/capitulo5/.build_figuras/
