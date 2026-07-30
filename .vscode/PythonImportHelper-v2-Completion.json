@@ -529,6 +529,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2930,6 +2938,30 @@
         "documentation": {}
     },
     {
+        "label": "count_experiments",
+        "importPath": "load_data",
+        "description": "load_data",
+        "isExtraImport": true,
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "load_all",
+        "importPath": "load_data",
+        "description": "load_data",
+        "isExtraImport": true,
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "select_folders",
+        "importPath": "load_data",
+        "description": "load_data",
+        "isExtraImport": true,
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
         "label": "SimpleNamespace",
         "importPath": "types",
         "description": "types",
@@ -5237,6 +5269,24 @@
         "documentation": {}
     },
     {
+        "label": "build_results_legacy_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_results_legacy_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    train, server_eval = dfs[\"train\"], dfs[\"server_eval\"]\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Comparativo de acurácia, volume de dados transmitidos e \"\n        r\"latência computacional entre o NVNL-FL e os métodos de referência para \"\n        r\"os pares LeNet-5/FashionMNIST e ResNet-20/CIFAR-10, avaliados sob \"\n        r\"partições de dados IID e não-IID (FedPHE e NVNL-FL reportados em \"",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "build_final_results_consolidation_table",
+        "kind": 2,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "def build_final_results_consolidation_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    train, server_eval = dfs[\"train\"], dfs[\"server_eval\"]\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Síntese das métricas absolutas de acurácia, declínio da função \"\n        r\"de perda (\\textit{loss}) e tempo total de processamento para CIFAR-10 \"\n        r\"(ResNet-20), FashionMNIST (LeNet-5) e GTSRB (ViT-Tiny), sob as cinco \"\n        r\"porcentagens de envio paramétrico avaliadas.}\",",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
         "label": "build_bytes_table",
         "kind": 2,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
@@ -5259,7 +5309,7 @@
         "kind": 2,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "def build_downlink_table():\n    df = pd.read_csv(SUMMARY_CSV)\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Cobertura por cliente (\\textit{upload}), cobertura da união \"\n        r\"no servidor (\\textit{downlink}) e fator de inflação \"\n        r\"($\\text{união}/\\text{upload}$), para $p=30\\%$ — NVNL-FL, FedPHE, SW e \"\n        r\"RW (Estudo 26).}\",\n        r\"\\label{tab:fedphe_downlink}\",",
+        "peekOfCode": "def build_downlink_table():\n    df = pd.read_csv(SUMMARY_CSV)\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Cobertura por cliente (\\textit{upload}), cobertura da união \"\n        r\"no servidor (\\textit{downlink}) e fator de inflação \"\n        r\"($\\text{união}/\\text{upload}$), para $p=30\\%$, considerando NVNL-FL, \"\n        r\"FedPHE, SW e RW.}\",\n        r\"\\label{tab:fedphe_downlink}\",",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5277,7 +5327,7 @@
         "kind": 2,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "def build_cf_downlink_table():\n    df = pd.read_csv(CF_SUMMARY_CSV)\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Fator de inflação de \\textit{downlink} \"\n        r\"($\\text{união}/\\text{upload}$) por fração de clientes participantes \"\n        r\"($f_c$), \" + label + r\", não-IID ($\\alpha=0{,}1$) (Estudo 26, tema \"\n        r\"\\textit{client\\_frac}).}\",",
+        "peekOfCode": "def build_cf_downlink_table():\n    df = pd.read_csv(CF_SUMMARY_CSV)\n    model, dataset, label = CF_PAIR\n    lines = [\n        r\"\\begin{table}[htpb]\",\n        r\"\\centering\",\n        r\"\\caption{Fator de inflação de \\textit{downlink} \"\n        r\"($\\text{união}/\\text{upload}$) por fração de clientes participantes \"\n        r\"($f_c$), \" + label + r\", não-IID ($\\alpha=0{,}1$).}\",\n        r\"\\label{tab:cf_downlink}\",",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5358,7 +5408,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]",
+        "peekOfCode": "load_data = _load(\"load_data\")\nsstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\ns27 = _load(\"27_three_panel\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5367,7 +5417,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "sstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3",
+        "peekOfCode": "sstyle = _load(\"solution_style\")\ns15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\ns27 = _load(\"27_three_panel\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5376,7 +5426,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "s15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]",
+        "peekOfCode": "s15 = _load(\"15_bytes_vs_maxacc_pt\")\ns16 = _load(\"16_overhead_vs_maxacc_pt\")\ns27 = _load(\"27_three_panel\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5385,7 +5435,16 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "s16 = _load(\"16_overhead_vs_maxacc_pt\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):",
+        "peekOfCode": "s16 = _load(\"16_overhead_vs_maxacc_pt\")\ns27 = _load(\"27_three_panel\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "s27",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "s27 = _load(\"27_three_panel\")\n# Pares (model, dataset) e níveis de niid usados na subseção — mesmos já\n# usados no restante do capítulo (Figuras fig:sparsification_cifar10 e\n# fig:sparsification_fashionmnist), porcentagem fixa em 30%.\nPAIRS = [(\"resnet20\", \"CIFAR10\", \"ResNet-20 / CIFAR-10\"),\n         (\"lenet5\", \"FASHION_MNIST\", \"LeNet-5 / FashionMNIST\")]\nNIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5403,7 +5462,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "NIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────",
+        "peekOfCode": "NIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\nPCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 0: comparativo NVNL-FL vs. métodos de referência ────────────────",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5412,7 +5471,7 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "PCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────\ndef build_bytes_table():",
+        "peekOfCode": "PCT = 0.3\nSOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 0: comparativo NVNL-FL vs. métodos de referência ────────────────\n# (tab:results_legacy — antes escrita à mão dentro de resultados.tex)",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -5421,7 +5480,52 @@
         "kind": 5,
         "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
-        "peekOfCode": "SOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 1: custo em bytes até a acurácia máxima (Estudo 15) ──────────────\ndef build_bytes_table():\n    dfs = load_data.load_all(str(LOGS_DIR))",
+        "peekOfCode": "SOL_ROWS = [\"nvnl\", \"fedphe\", \"sw\", \"rw\"]\ndef _fmt_pct(v):\n    return f\"{v * 100:.2f}\".replace(\".\", \",\")\ndef _fmt2(v):\n    return f\"{v:.2f}\".replace(\".\", \",\")\ndef _fmt_round(v):\n    return f\"{int(round(v))}\"\n# ── Tabela 0: comparativo NVNL-FL vs. métodos de referência ────────────────\n# (tab:results_legacy — antes escrita à mão dentro de resultados.tex)\nLEGACY_PAIRS = [(\"lenet5\", \"FASHION_MNIST\", \"FashionMNIST (LeNet-5)\"),",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "LEGACY_PAIRS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "LEGACY_PAIRS = [(\"lenet5\", \"FASHION_MNIST\", \"FashionMNIST (LeNet-5)\"),\n                (\"resnet20\", \"CIFAR10\", \"CIFAR-10 (ResNet-20)\")]\n# (solução, rótulo, porcentagem) — None = baseline de modelo completo\nLEGACY_ROWS = [(\"plaintext\", \"FedAvg\", None), (\"bfv\", \"BFV\", None),\n               (\"ckks\", \"CKKS\", None), (\"batchcrypt\", \"BatchCrypt\", None),\n               (\"fedphe\", \"FedPHE\", 0.9), (\"nvnl\", \"NVNL-FL\", 0.9)]\nLEGACY_NIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\ndef _legacy_cell(train, server_eval, model, dataset, solution, pct, niid):\n    \"\"\"Acurácia final, TX bytes (MB) e tempos acumulados de uma célula da tabela.\n    TX bytes usa o estimador de tamanho de fio do Estudo 27 (`_est_wire_bytes`),",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "LEGACY_ROWS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "LEGACY_ROWS = [(\"plaintext\", \"FedAvg\", None), (\"bfv\", \"BFV\", None),\n               (\"ckks\", \"CKKS\", None), (\"batchcrypt\", \"BatchCrypt\", None),\n               (\"fedphe\", \"FedPHE\", 0.9), (\"nvnl\", \"NVNL-FL\", 0.9)]\nLEGACY_NIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\ndef _legacy_cell(train, server_eval, model, dataset, solution, pct, niid):\n    \"\"\"Acurácia final, TX bytes (MB) e tempos acumulados de uma célula da tabela.\n    TX bytes usa o estimador de tamanho de fio do Estudo 27 (`_est_wire_bytes`),\n    e não a coluna `payload_bytes` crua: para as soluções de empacotamento essa\n    coluna registra apenas os metadados de máscara (~72 B por pack), não o texto\n    cifrado — ver \"Payload bytes caveat\" em docs/log_schema.md. Foi exatamente",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "LEGACY_NIIDS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "LEGACY_NIIDS = [(1.0, \"IID\"), (0.1, \"Não-IID\")]\ndef _legacy_cell(train, server_eval, model, dataset, solution, pct, niid):\n    \"\"\"Acurácia final, TX bytes (MB) e tempos acumulados de uma célula da tabela.\n    TX bytes usa o estimador de tamanho de fio do Estudo 27 (`_est_wire_bytes`),\n    e não a coluna `payload_bytes` crua: para as soluções de empacotamento essa\n    coluna registra apenas os metadados de máscara (~72 B por pack), não o texto\n    cifrado — ver \"Payload bytes caveat\" em docs/log_schema.md. Foi exatamente\n    essa troca que produziu os antigos 0,22 MB e 0,88 MB do FedPHE/NVNL-FL.\n    Tempos e bytes são a média entre clientes em cada rodada, somada ao longo das\n    rodadas; acurácia é a da última rodada.",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CONSOL_GROUPS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CONSOL_GROUPS = [(\"resnet20\", \"CIFAR10\", \"CIFAR10\"),\n                 (\"lenet5\", \"FASHION_MNIST\", \"FashionMNIST\"),\n                 (\"vit_tiny\", \"tanganke_gtsrb\", \"GTSRB\")]\nCONSOL_PCTS = [0.1, 0.3, 0.5, 0.7, 0.9]\ndef _consol_rows():\n    yield (\"ckks\", None, \"CKKS\")\n    for sol, label in [(\"nvnl\", \"NVNL\"), (\"fedphe\", \"FedPHE\")]:\n        for pct in CONSOL_PCTS:\n            yield (sol, pct, rf\"{label} {int(round(pct * 100))}\\%\")\ndef build_final_results_consolidation_table():",
+        "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "documentation": {}
+    },
+    {
+        "label": "CONSOL_PCTS",
+        "kind": 5,
+        "importPath": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "description": "dissertation.capitulo5.gerar_tabelas_fedphe",
+        "peekOfCode": "CONSOL_PCTS = [0.1, 0.3, 0.5, 0.7, 0.9]\ndef _consol_rows():\n    yield (\"ckks\", None, \"CKKS\")\n    for sol, label in [(\"nvnl\", \"NVNL\"), (\"fedphe\", \"FedPHE\")]:\n        for pct in CONSOL_PCTS:\n            yield (sol, pct, rf\"{label} {int(round(pct * 100))}\\%\")\ndef build_final_results_consolidation_table():\n    dfs = load_data.load_all(str(LOGS_DIR))\n    train, server_eval = dfs[\"train\"], dfs[\"server_eval\"]\n    lines = [",
         "detail": "dissertation.capitulo5.gerar_tabelas_fedphe",
         "documentation": {}
     },
@@ -12113,11 +12217,20 @@
         "documentation": {}
     },
     {
+        "label": "select_folders",
+        "kind": 2,
+        "importPath": "studies.general.load_data",
+        "description": "studies.general.load_data",
+        "peekOfCode": "def select_folders(folders: list[Path]) -> tuple[list[Path], list[Path]]:\n    \"\"\"Split experiment folders into the ones to load and the duplicates to skip.\n    Folders sharing a config (same name minus the trailing timestamp) come in two\n    flavours, and only one of them may be concatenated:\n    * disjoint round ranges (e.g. 1-124 and 125-200) are resume fragments that\n      `merge_resume.py` never merged. Their union is the real run, so all of them\n      are kept.\n    * overlapping round ranges are independent reruns of the same config. Only one\n      is kept: studies that sum a per-client metric over a round (bytes in study\n      15, comm overhead in study 16) would otherwise count one experiment twice",
+        "detail": "studies.general.load_data",
+        "documentation": {}
+    },
+    {
         "label": "count_experiments",
         "kind": 2,
         "importPath": "studies.general.load_data",
         "description": "studies.general.load_data",
-        "peekOfCode": "def count_experiments(logs_dir=None) -> int:\n    \"\"\"Return the number of valid experiment folders in logs_dir.\n    Useful for pre-flight validation before creating output directories.\n    Raises FileNotFoundError if the directory doesn't exist.\n    \"\"\"\n    root = _resolve_logs_dir(logs_dir)\n    if not root.exists():\n        raise FileNotFoundError(f\"Logs directory not found: {root.resolve()}\")\n    return sum(1 for f in root.iterdir() if f.is_dir() and _parse_folder(f.name) is not None)\ndef load_all(logs_dir=None) -> dict[str, pd.DataFrame]:",
+        "peekOfCode": "def count_experiments(logs_dir=None) -> int:\n    \"\"\"Return the number of valid experiment folders in logs_dir.\n    Useful for pre-flight validation before creating output directories.\n    Raises FileNotFoundError if the directory doesn't exist.\n    \"\"\"\n    root = _resolve_logs_dir(logs_dir)\n    if not root.exists():\n        raise FileNotFoundError(f\"Logs directory not found: {root.resolve()}\")\n    return len(_experiment_folders(root))\ndef load_all(logs_dir=None) -> dict[str, pd.DataFrame]:",
         "detail": "studies.general.load_data",
         "documentation": {}
     },
@@ -12189,7 +12302,7 @@
         "kind": 5,
         "importPath": "studies.general.load_data",
         "description": "studies.general.load_data",
-        "peekOfCode": "_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]\n_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    raise ValueError(\n        \"LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou \"",
+        "peekOfCode": "_META_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\", \"rounds\", \"clients\"]\n_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# Trailing \"_YYYY-MM-DD_HH-MM-SS\" of every experiment folder name. Stripping it\n# yields the config identity shared by reruns and by resume fragments.\n_TS_RE = re.compile(r\"_(\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2})$\")\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:",
         "detail": "studies.general.load_data",
         "documentation": {}
     },
@@ -12198,7 +12311,25 @@
         "kind": 5,
         "importPath": "studies.general.load_data",
         "description": "studies.general.load_data",
-        "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    raise ValueError(\n        \"LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou \"\n        \"passe --logs-dir <caminho> (ex.: --logs-dir logs/sparsification_percentage).\"",
+        "peekOfCode": "_GROUP_COLS = [\"model\", \"dataset\", \"solution\", \"niid\", \"percentage\", \"seed\"]\n# Trailing \"_YYYY-MM-DD_HH-MM-SS\" of every experiment folder name. Stripping it\n# yields the config identity shared by reruns and by resume fragments.\n_TS_RE = re.compile(r\"_(\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2})$\")\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)",
+        "detail": "studies.general.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "_TS_RE",
+        "kind": 5,
+        "importPath": "studies.general.load_data",
+        "description": "studies.general.load_data",
+        "peekOfCode": "_TS_RE = re.compile(r\"_(\\d{4}-\\d{2}-\\d{2}_\\d{2}-\\d{2}-\\d{2})$\")\ndef _resolve_logs_dir(logs_dir=None):\n    if logs_dir is not None:\n        return Path(logs_dir)\n    env = os.environ.get(\"LOGS_DIR\")\n    if env:\n        return Path(env)\n    raise ValueError(\n        \"LOGS_DIR não definido. Rode via 'bash studies/general/run_all.sh <nome>' ou \"\n        \"passe --logs-dir <caminho> (ex.: --logs-dir logs/sparsification_percentage).\"",
+        "detail": "studies.general.load_data",
+        "documentation": {}
+    },
+    {
+        "label": "_MAX_BRUTE_FORCE_RUNS",
+        "kind": 5,
+        "importPath": "studies.general.load_data",
+        "description": "studies.general.load_data",
+        "peekOfCode": "_MAX_BRUTE_FORCE_RUNS = 10\ndef _best_disjoint_subset(runs):\n    \"\"\"Pick the pairwise-disjoint subset of (folder, rounds) with widest coverage.\n    `runs` must be sorted by folder name, so timestamps are ascending and the\n    newest-wins tie-break falls out of preferring later indices.\n    \"\"\"\n    if len(runs) > _MAX_BRUTE_FORCE_RUNS:\n        # Degenerate case, not seen in practice: fall back to longest-first greedy.\n        taken: set[int] = set()\n        chosen = []",
         "detail": "studies.general.load_data",
         "documentation": {}
     },
@@ -12479,6 +12610,105 @@
         "description": "tests.test_ckks_install",
         "peekOfCode": "TESTS = [\n    test_ckks_python_importable,\n    test_ckks_federated_importable,\n    test_ckks_python_simplify_importable,\n    test_context_creation,\n    test_encrypt_add_decrypt,\n    test_simplify_alias_same_api,\n]\nif __name__ == \"__main__\":\n    print(f\"Python {sys.version}\")",
         "detail": "tests.test_ckks_install",
+        "documentation": {}
+    },
+    {
+        "label": "test_single_folder_is_kept",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_single_folder_is_kept(tmp_path):\n    a = _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 201))\n    keep, skip = select_folders([a])\n    assert _names(keep) == [a.name]\n    assert skip == []\ndef test_duplicate_reruns_keep_only_one(tmp_path):\n    \"\"\"Two complete 1-200 runs of the same config: one must be dropped.\"\"\"\n    a = _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 201))\n    b = _make_folder(tmp_path, \"nvnl\", \"2026-06-09_10-00-00\", range(1, 201))\n    keep, skip = select_folders([a, b])",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_duplicate_reruns_keep_only_one",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_duplicate_reruns_keep_only_one(tmp_path):\n    \"\"\"Two complete 1-200 runs of the same config: one must be dropped.\"\"\"\n    a = _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 201))\n    b = _make_folder(tmp_path, \"nvnl\", \"2026-06-09_10-00-00\", range(1, 201))\n    keep, skip = select_folders([a, b])\n    assert len(keep) == 1\n    assert len(skip) == 1\n    # newest wins the tie\n    assert _names(keep) == [b.name]\ndef test_resume_fragments_are_both_kept(tmp_path):",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_resume_fragments_are_both_kept",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_resume_fragments_are_both_kept(tmp_path):\n    \"\"\"Disjoint 1-124 + 125-200 is a resume chain, not a duplicate.\"\"\"\n    a = _make_folder(tmp_path, \"sw\", \"2026-06-09_06-00-00\", range(1, 125))\n    b = _make_folder(tmp_path, \"sw\", \"2026-06-10_10-00-00\", range(125, 201))\n    keep, skip = select_folders([a, b])\n    assert _names(keep) == _names([a, b])\n    assert skip == []\ndef test_abandoned_attempt_loses_to_complete_resume_chain(tmp_path):\n    \"\"\"A long dead-end run must not shadow a shorter pair that covers 1-200.\n    Mirrors resnet20/nvnl/p=0.9/niid1 in logs/sparsification_percentage: an",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_abandoned_attempt_loses_to_complete_resume_chain",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_abandoned_attempt_loses_to_complete_resume_chain(tmp_path):\n    \"\"\"A long dead-end run must not shadow a shorter pair that covers 1-200.\n    Mirrors resnet20/nvnl/p=0.9/niid1 in logs/sparsification_percentage: an\n    abandoned 1-123 attempt next to a 1-107 + 108-200 chain. Longest-first greedy\n    picks the dead end and loses rounds 124-200.\n    \"\"\"\n    dead = _make_folder(tmp_path, \"nvnl\", \"2026-06-02_14-00-00\", range(1, 124))\n    head = _make_folder(tmp_path, \"nvnl\", \"2026-06-10_01-00-00\", range(1, 108))\n    tail = _make_folder(tmp_path, \"nvnl\", \"2026-06-10_10-00-00\", range(108, 201))\n    keep, skip = select_folders([dead, head, tail])",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_folder_without_train_csv_is_kept",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_folder_without_train_csv_is_kept(tmp_path):\n    \"\"\"Empty shells (logs/client_frac) carry no rounds and must not be dropped.\"\"\"\n    a = _make_folder(tmp_path, \"fedphe\", \"2026-06-17_10-00-00\", range(1, 201))\n    shell = tmp_path / f\"{_CONFIG.format(sol='fedphe')}_2026-06-13_10-00-00\"\n    shell.mkdir()\n    keep, skip = select_folders([a, shell])\n    assert _names(keep) == _names([a, shell])\n    assert skip == []\ndef test_distinct_configs_never_compete(tmp_path):\n    a = _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 201))",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_distinct_configs_never_compete",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_distinct_configs_never_compete(tmp_path):\n    a = _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 201))\n    b = _make_folder(tmp_path, \"sw\", \"2026-06-01_11-00-00\", range(1, 201))\n    keep, skip = select_folders([a, b])\n    assert _names(keep) == _names([a, b])\n    assert skip == []\n# ── load_all / count_experiments ───────────────────────────────────────────────\ndef test_load_all_does_not_double_count_reruns(tmp_path):\n    \"\"\"The bug this guards: 2 folders x 2 clients gave 4 rows per round.\"\"\"\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 11), clients=2)",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_load_all_does_not_double_count_reruns",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_load_all_does_not_double_count_reruns(tmp_path):\n    \"\"\"The bug this guards: 2 folders x 2 clients gave 4 rows per round.\"\"\"\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 11), clients=2)\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-09_10-00-00\", range(1, 11), clients=2)\n    train = load_all(str(tmp_path))[\"train\"]\n    assert train.groupby(\"round\").size().max() == 2\n    assert train[\"round\"].nunique() == 10\ndef test_load_all_unions_resume_fragments(tmp_path):\n    _make_folder(tmp_path, \"sw\", \"2026-06-09_06-00-00\", range(1, 7), clients=2)\n    _make_folder(tmp_path, \"sw\", \"2026-06-10_10-00-00\", range(7, 11), clients=2)",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_load_all_unions_resume_fragments",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_load_all_unions_resume_fragments(tmp_path):\n    _make_folder(tmp_path, \"sw\", \"2026-06-09_06-00-00\", range(1, 7), clients=2)\n    _make_folder(tmp_path, \"sw\", \"2026-06-10_10-00-00\", range(7, 11), clients=2)\n    train = load_all(str(tmp_path))[\"train\"]\n    assert train.groupby(\"round\").size().max() == 2\n    assert sorted(train[\"round\"].unique()) == list(range(1, 11))\ndef test_count_experiments_excludes_duplicates(tmp_path):\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 11))\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-09_10-00-00\", range(1, 11))\n    _make_folder(tmp_path, \"sw\", \"2026-06-01_11-00-00\", range(1, 11))",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "test_count_experiments_excludes_duplicates",
+        "kind": 2,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "def test_count_experiments_excludes_duplicates(tmp_path):\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-01_10-00-00\", range(1, 11))\n    _make_folder(tmp_path, \"nvnl\", \"2026-06-09_10-00-00\", range(1, 11))\n    _make_folder(tmp_path, \"sw\", \"2026-06-01_11-00-00\", range(1, 11))\n    assert count_experiments(str(tmp_path)) == 2",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "_ROOT",
+        "kind": 5,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "_ROOT = Path(__file__).parent.parent\nsys.path.insert(0, str(_ROOT / \"studies\" / \"general\"))\nfrom load_data import count_experiments, load_all, select_folders\n_CONFIG = (\n    \"resnet20_CIFAR10_{sol}_none_200rounds_9clients_seed42_\"\n    \"niid0.1_percentage0.3_8192_-1_-1_60_1099511627776_None\"\n)\ndef _make_folder(root: Path, sol: str, timestamp: str, rounds, clients=2) -> Path:\n    \"\"\"Create one experiment folder with a train.csv covering `rounds`.\"\"\"\n    folder = root / f\"{_CONFIG.format(sol=sol)}_{timestamp}\"",
+        "detail": "tests.test_load_data_dedup",
+        "documentation": {}
+    },
+    {
+        "label": "_CONFIG",
+        "kind": 5,
+        "importPath": "tests.test_load_data_dedup",
+        "description": "tests.test_load_data_dedup",
+        "peekOfCode": "_CONFIG = (\n    \"resnet20_CIFAR10_{sol}_none_200rounds_9clients_seed42_\"\n    \"niid0.1_percentage0.3_8192_-1_-1_60_1099511627776_None\"\n)\ndef _make_folder(root: Path, sol: str, timestamp: str, rounds, clients=2) -> Path:\n    \"\"\"Create one experiment folder with a train.csv covering `rounds`.\"\"\"\n    folder = root / f\"{_CONFIG.format(sol=sol)}_{timestamp}\"\n    folder.mkdir(parents=True)\n    rows = [\n        {\"experiment_name\": \"t\", \"round\": r, \"cid\": c,",
+        "detail": "tests.test_load_data_dedup",
         "documentation": {}
     },
     {

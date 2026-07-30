@@ -30,6 +30,10 @@ _FOLDER_RE = re.compile(
 _META_COLS = ["model", "dataset", "solution", "niid", "percentage", "seed", "rounds", "clients"]
 _GROUP_COLS = ["model", "dataset", "solution", "niid", "percentage", "seed"]
 
+# Trailing "_YYYY-MM-DD_HH-MM-SS" of every experiment folder name. Stripping it
+# yields the config identity shared by reruns and by resume fragments.
+_TS_RE = re.compile(r"_(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})$")
+
 
 def _resolve_logs_dir(logs_dir=None):
     if logs_dir is not None:
@@ -82,6 +86,120 @@ def _read_csv_safe(path: Path) -> pd.DataFrame | None:
         return None
 
 
+def _folder_rounds(folder: Path) -> set[int] | None:
+    """Rounds present in a folder's train.csv, or None when it has no usable rows."""
+    df = _read_csv_safe(folder / "train.csv")
+    if df is None or len(df) == 0 or "round" not in df.columns:
+        return None
+    rounds = pd.to_numeric(df["round"], errors="coerce").dropna()
+    if rounds.empty:
+        return None
+    return set(rounds.astype(int).tolist())
+
+
+_MAX_BRUTE_FORCE_RUNS = 10
+
+
+def _best_disjoint_subset(runs):
+    """Pick the pairwise-disjoint subset of (folder, rounds) with widest coverage.
+
+    `runs` must be sorted by folder name, so timestamps are ascending and the
+    newest-wins tie-break falls out of preferring later indices.
+    """
+    if len(runs) > _MAX_BRUTE_FORCE_RUNS:
+        # Degenerate case, not seen in practice: fall back to longest-first greedy.
+        taken: set[int] = set()
+        chosen = []
+        for folder, rounds in sorted(runs, key=lambda i: (-len(i[1]), i[0].name)):
+            if not (rounds & taken):
+                chosen.append((folder, rounds))
+                taken |= rounds
+        return chosen
+
+    best, best_key = [], (-1, -1, ())
+    for bits in range(1, 1 << len(runs)):
+        subset = [runs[i] for i in range(len(runs)) if bits >> i & 1]
+        union: set[int] = set()
+        for _, rounds in subset:
+            if rounds & union:
+                union = set()
+                break
+            union |= rounds
+        if not union:
+            continue
+        key = (len(union), max(union), tuple(i for i in range(len(runs)) if bits >> i & 1))
+        if key > best_key:
+            best, best_key = subset, key
+    return best
+
+
+def select_folders(folders: list[Path]) -> tuple[list[Path], list[Path]]:
+    """Split experiment folders into the ones to load and the duplicates to skip.
+
+    Folders sharing a config (same name minus the trailing timestamp) come in two
+    flavours, and only one of them may be concatenated:
+
+    * disjoint round ranges (e.g. 1-124 and 125-200) are resume fragments that
+      `merge_resume.py` never merged. Their union is the real run, so all of them
+      are kept.
+    * overlapping round ranges are independent reruns of the same config. Only one
+      is kept: studies that sum a per-client metric over a round (bytes in study
+      15, comm overhead in study 16) would otherwise count one experiment twice
+      and report double the true cost.
+
+    The two cases can be mixed inside one config (an abandoned attempt alongside a
+    complete resume chain), so the kept set is the pairwise-disjoint subset with
+    the largest round coverage rather than a greedy longest-first pick. Ties go to
+    the subset reaching the highest round, then to the newest timestamps.
+
+    Returns (kept, skipped), both sorted by folder name.
+    """
+    groups: dict[str, list[Path]] = {}
+    for folder in folders:
+        m = _TS_RE.search(folder.name)
+        config = folder.name[: m.start()] if m else folder.name
+        groups.setdefault(config, []).append(folder)
+
+    keep: list[Path] = []
+    skip: list[Path] = []
+    for config in sorted(groups):
+        members = groups[config]
+        if len(members) == 1:
+            keep.append(members[0])
+            continue
+
+        scored = [(f, _folder_rounds(f)) for f in members]
+        # Folders with no readable train.csv have no rounds to clash over; keeping
+        # them preserves whatever other CSVs they carry.
+        keep.extend(f for f, rounds in scored if rounds is None)
+
+        runs = sorted(((f, r) for f, r in scored if r is not None),
+                      key=lambda item: item[0].name)
+        if not runs:
+            continue
+
+        best = _best_disjoint_subset(runs)
+        keep.extend(f for f, _ in best)
+        chosen = {f.name for f, _ in best}
+        skip.extend(f for f, _ in runs if f.name not in chosen)
+
+    return sorted(keep, key=lambda f: f.name), sorted(skip, key=lambda f: f.name)
+
+
+def _experiment_folders(root: Path) -> list[Path]:
+    """Deduplicated experiment folders under root (see select_folders)."""
+    candidates = [f for f in sorted(root.iterdir())
+                  if f.is_dir() and _parse_folder(f.name) is not None]
+    keep, skip = select_folders(candidates)
+    if skip:
+        print(
+            f"[load_data] {len(skip)} pasta(s) ignorada(s) por serem reruns "
+            f"duplicados da mesma config; {len(keep)} carregada(s).",
+            file=sys.stderr,
+        )
+    return keep
+
+
 def count_experiments(logs_dir=None) -> int:
     """Return the number of valid experiment folders in logs_dir.
 
@@ -91,7 +209,7 @@ def count_experiments(logs_dir=None) -> int:
     root = _resolve_logs_dir(logs_dir)
     if not root.exists():
         raise FileNotFoundError(f"Logs directory not found: {root.resolve()}")
-    return sum(1 for f in root.iterdir() if f.is_dir() and _parse_folder(f.name) is not None)
+    return len(_experiment_folders(root))
 
 
 def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:
@@ -108,12 +226,8 @@ def load_all(logs_dir=None) -> dict[str, pd.DataFrame]:
     train_parts, eval_parts, seval_parts, sagg_parts = [], [], [], []
     valid_folders = 0
 
-    for folder in sorted(root.iterdir()):
-        if not folder.is_dir():
-            continue
+    for folder in _experiment_folders(root):
         meta = _parse_folder(folder.name)
-        if meta is None:
-            continue
 
         valid_folders += 1
         for csv_name, parts in [
@@ -228,12 +342,8 @@ def load_masks(logs_dir=None) -> pd.DataFrame:
         raise FileNotFoundError(f"Logs directory not found: {root.resolve()}")
 
     parts = []
-    for folder in sorted(root.iterdir()):
-        if not folder.is_dir():
-            continue
+    for folder in _experiment_folders(root):
         meta = _parse_folder(folder.name)
-        if meta is None:
-            continue
         df = _read_csv_safe(folder / "mask.csv")
         if df is None or len(df) == 0:
             continue
