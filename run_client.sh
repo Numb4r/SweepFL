@@ -71,6 +71,7 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e KEY_TYPE=$KEY_TYPE \
         -e PLAIN_MODULUS=$PLAIN_MODULUS \
         -e N_LENGTH=$N_LENGTH \
+        -e SEED=$SEED \
         -e PYTHONHASHSEED=$SEED \
         -e CKKS_BACKEND=${CKKS_BACKEND:-tenseal} \
         -e SIMPLIFY_N=${SIMPLIFY_N:-8192} \
@@ -122,6 +123,7 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env KEY_TYPE=$KEY_TYPE \
         --env PLAIN_MODULUS=$PLAIN_MODULUS \
         --env N_LENGTH=$N_LENGTH \
+        --env SEED=$SEED \
         --env PYTHONHASHSEED=$SEED \
         --env CKKS_BACKEND=${CKKS_BACKEND:-tenseal} \
         --env SIMPLIFY_N=${SIMPLIFY_N:-8192} \

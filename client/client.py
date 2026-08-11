@@ -146,24 +146,33 @@ class HEClient(fl.client.NumPyClient):
         use_pretrained  = bool(pretrained_path and os.path.exists(pretrained_path))
 
         dataset_folder = self.dataset.replace("/","_")
-        init_weights   = f"logs/models/init_weights/{self.model_name}/{dataset_folder}/init_weights_{cid}.weights.h5"
-        os.makedirs(f"logs/models/init_weights/{self.model_name}/{dataset_folder}", exist_ok=True)
+        init_dir       = f"logs/models/init_weights/{self.model_name}/{dataset_folder}/seed{seed}"
+        init_weights   = f"{init_dir}/init_weights_{cid}.weights.h5"
+        os.makedirs(init_dir, exist_ok=True)
 
-        if use_pretrained and self.solution == "plaintext":
-            # Plaintext + PRETRAINED_WEIGHTS: seed init_weights from backbone.
-            # This regenerates init_weights so that all subsequent HE experiments
-            # automatically start from the pre-trained state.
-            print(f"Seeding init_weights from pre-trained backbone: {pretrained_path}")
-            self.model.load_weights(pretrained_path, by_name=True, skip_mismatch=True)
-            self.model.save_weights(init_weights)
-        elif os.path.exists(init_weights):
+        # if use_pretrained and self.solution == "plaintext":
+        #     # Plaintext + PRETRAINED_WEIGHTS: seed init_weights from backbone.
+        #     # This regenerates init_weights so that all subsequent HE experiments
+        #     # automatically start from the pre-trained state.
+        #     print(f"Seeding init_weights from pre-trained backbone: {pretrained_path}")
+        #     self.model.load_weights(pretrained_path, by_name=True, skip_mismatch=True)
+        #     self.model.save_weights(init_weights)
+        if os.path.exists(init_weights):
             self.model.load_weights(init_weights)
             print(f"Loaded init_weights: {init_weights}")
-        elif self.solution == "plaintext":
-            print("Saving random init_weights")
-            self.model.save_weights(init_weights)
         else:
-            raise Exception("Cannot start, generate plaintext first")
+            # Any solution may materialise the init weights, not just plaintext.
+            # Each client is a fresh process that calls tf.random.set_seed(seed)
+            # before building the model, so two processes sharing (model, dataset,
+            # seed) produce bit-identical weights — concurrent creators therefore
+            # write the same bytes. (This holds per-process only: building a second
+            # model in one process advances TF's op-seed counter.)
+            # Write to a per-process temp file and rename, so a concurrent reader
+            # never observes a partially written .h5.
+            tmp = f"{init_dir}/.init_weights_{cid}.{os.getpid()}.weights.h5"
+            self.model.save_weights(tmp)
+            os.replace(tmp, init_weights)
+            print(f"Saved init_weights: {init_weights}")
 
         resume_logfolder = os.environ.get("RESUME_LOGFOLDER", "")
         if resume_logfolder:
@@ -448,14 +457,21 @@ def main():
     print(f"GPUS: {gpus}")
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
-    print(f"dirichlet_alpha {float(os.environ['NIID'])}")
     percentage = float(os.environ['PERCENTAGE'])
-    niid = True if float(os.environ['NIID']) == 1 else False
-    
+    seed       = int(os.environ.get('SEED', 42))
+
+    # NIID carries the Dirichlet concentration alpha (0.1 = strong non-IID,
+    # 1.0 = near-IID). Any alpha > 0 uses DirichletPartitioner; NIID=0 is the
+    # escape hatch to IidPartitioner.
+    dirichlet_alpha = float(os.environ['NIID'])
+    niid            = dirichlet_alpha > 0
+    print(f"seed {seed} | dirichlet_alpha {dirichlet_alpha} | niid {niid}")
+
     client =  HEClient(
-        cid             = int(os.environ['CID']), 
+        cid             = int(os.environ['CID']),
         niid            = niid,
-        dirichlet_alpha = float(os.environ['NIID']) ,
+        dirichlet_alpha = dirichlet_alpha,
+        seed            = seed,
         dataset         = os.environ["DATASET"], 
         num_clients     = int(os.environ['NCLIENTS']), 
         solution        = str(os.environ['SOLUTION']),        

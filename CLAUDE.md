@@ -62,6 +62,13 @@ bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsific
 bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh
 bash sbatch/submit_per_pair.sh sbatch/client_frac/sbatch_client_frac_rw.sh --dry-run
 # Works for all sbatch/<tipo>/sbatch_*.sh scripts that set EXPERIMENT_SCRIPT
+# When a theme sweeps >1 seed, the fan-out is pair × seed and job names gain a
+# _seed<N> suffix (e.g. seed_experiment: 2 pairs × 2 seeds = 4 jobs per technique).
+
+# Submit the full seed_experiment batch (4 techniques × 2 pairs × 2 seeds = 16 jobs)
+for t in NVNL rw fedphe sw; do
+  bash sbatch/submit_per_pair.sh sbatch/seed_experiment/sbatch_seed_experiment_$t.sh --dry-run
+done
 
 # ── Checkpoint / Resume ───────────────────────────────────────────────────────
 
@@ -236,6 +243,8 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh` — SLURM job for the srr sweep (l40s, 3 GPUs, 9 clients)
 - `experiments/client_frac/client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — client participation fraction sweep for all 7 solutions; `FOLDER="client_frac"` (shared); `CLIENT_FRACTIONS=(0.25 0.5 0.75)`, `PERCENTAGES=(0.1 0.5)`, `NIIDS=(0.1 1)`, resnet20+mobilenetv2, 20 clients/GPU × 3 GPUs = 60 clients; topkrr sets `RR_START_ROUND=100`; plaintext runs first (generates init_weights, 12 experiments); packing solutions run 24 experiments each
 - `sbatch/client_frac/sbatch_client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — SLURM jobs for client_frac sweep (l40s, 3 GPUs, 32 CPUs, 4-day wall time, `--mem=0`)
+- `experiments/seed_experiment/seed_experiment_{NVNL,rw,fedphe,sw}.sh` — multi-seed repetition of the sparsification sweep so results can be reported as mean ± spread; `FOLDER="seed_experiment"` (shared), `SEEDS=(43 44)`, `PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)`, `NIIDS=(0.1 1)`, resnet20+mobilenetv2 on CIFAR10, 3 clients/GPU × 3 GPUs = 9 clients, 200 rounds. Config is otherwise identical to `sparsification_percentage`, so seed-43/44 runs stay directly comparable to the existing seed-42 ones. 40 experiments per technique, 160 total. **No plaintext script** — since `client.py` now lets any solution create `init_weights`, the techniques bootstrap their own; analyses needing a plaintext baseline must source it from `logs/sparsification_percentage/`.
+- `sbatch/seed_experiment/sbatch_seed_experiment_{NVNL,rw,fedphe,sw}.sh` — SLURM jobs for the seed_experiment sweep (l40s, 3 GPUs, 12 CPUs, `--mem=64G`, 2-day wall time). Submit via `submit_per_pair.sh` → 4 jobs per technique (pair × seed), 10 experiments each.
 - `experiments/standalone/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
 - `experiments/tests/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
 - `tests/test_checkpoint_resume.sh` — unit tests for checkpoint/resume logic (6 tests): verifies checkpoint files present, `_find_resume_checkpoint` for completed/incomplete runs, Python round offset math, `lib_slurm.sh` path, artificial partial checkpoint selection
@@ -368,7 +377,7 @@ Toda env var de experimento nova adicionada ao `run_client.sh` **deve** ser incl
 
 ### Important Constraints
 
-- **Plaintext must run first** to generate and save initial model weights (`logs/models/init_weights/<model_name>/<dataset>/…`). All HE solutions load these weights at startup; they raise an exception if the file is absent.
+- **Initial model weights** live at `logs/models/init_weights/<model_name>/<dataset>/seed<N>/init_weights_<cid>.weights.h5` — the path is **seed-scoped**, so each seed gets its own init. Every solution loads them at startup and **any solution may create them** if absent (`client/client.py`), so plaintext no longer has to run first. Creation uses a per-process temp file + `os.replace`, because several jobs for the same (model, dataset, seed) can race: each client is a fresh process that calls `tf.random.set_seed(seed)` before building the model, so concurrent creators write bit-identical bytes (verified for resnet20 across two processes). Consequence: forgetting to run plaintext is no longer a loud failure — a run that self-inits looks the same as one that loaded plaintext-generated weights.
 - **CKKS parameter constraint**: `[30,60,30]` with `scale=2^60` is incompatible with scalar multiplication (see `tests/test_server_utils.py` xfail). Prefer `[60,40,40,60]` with `scale=2^40` for reliable scalar ops.
 - **gRPC message size**: set to 1 GB (`MAX_MESSAGE_LENGTH = 1024*1024*1024`) in `client/client.py` to accommodate large ciphertexts.
 - **ckks_backend.py must be kept in sync** across `encryption/`, `client/encryption/`, and `server/encryption/` — each Docker container only mounts its own directory.

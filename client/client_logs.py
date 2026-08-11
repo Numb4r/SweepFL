@@ -3,7 +3,7 @@ Client-side CSV logging for FL+HE experiments.
 
 train.csv — one row per (client, round):
   experiment_name, round, cid, solution, schema, model, dataset,
-  distribution, dirichlet_alpha,
+  distribution, dirichlet_alpha, model_seed, dirichlet_seed,
   train_loss, train_acc,
   decrypt_time_s, decrypt_time_cpu,
   train_time_s, train_time_cpu,
@@ -20,9 +20,15 @@ train.csv — one row per (client, round):
 
 evaluate.csv — one row per (client, round):
   experiment_name, round, cid, solution, schema, model, dataset,
-  distribution, dirichlet_alpha,
+  distribution, dirichlet_alpha, model_seed, dirichlet_seed,
   eval_loss, eval_acc, decrypt_time_s,
   poly_modulus_degree, coeff_mod_bits, scale_bits
+
+Seed columns record the seed actually applied by the process, not the value
+parsed from the folder name. model_seed drives tf.random.set_seed and the weight
+initializers; dirichlet_seed drives DirichletPartitioner and is empty under IID.
+They are deliberately not named 'seed': studies/general/load_data.py injects a
+folder-name-derived 'seed' column that would overwrite it.
 """
 
 from __future__ import annotations
@@ -50,6 +56,7 @@ def _read_mem_mb() -> tuple[float, float]:
 _TRAIN_HEADER = (
     "experiment_name,round,cid,"
     "solution,schema,model,dataset,distribution,dirichlet_alpha,"
+    "model_seed,dirichlet_seed,"
     "train_loss,train_acc,"
     "decrypt_time_s,decrypt_time_cpu,"
     "train_time_s,train_time_cpu,"
@@ -70,6 +77,7 @@ _TRAIN_HEADER = (
 _EVAL_HEADER = (
     "experiment_name,round,cid,"
     "solution,schema,model,dataset,distribution,dirichlet_alpha,"
+    "model_seed,dirichlet_seed,"
     "eval_loss,eval_acc,decrypt_time_s,"
     "poly_modulus_degree,coeff_mod_bits,scale_bits"
 )
@@ -97,6 +105,15 @@ def _append(filename: str, header: str, row: str) -> None:
         if os.path.getsize(filename) == 0:
             f.write(header + "\n")
         f.write(row + "\n")
+
+
+def _seeds(self) -> tuple:
+    """Return (model_seed, dirichlet_seed) as actually applied by this client.
+
+    dirichlet_seed is empty under IID, where IidPartitioner takes no seed.
+    """
+    seed = getattr(self, "seed", "")
+    return seed, (seed if self.niid else "")
 
 
 def _g(times: dict, *keys, default: float = 0.0) -> float:
@@ -143,6 +160,7 @@ def write_train_logs(
     coeff_bits   = _coeff_str(self.coeff_mod_bit_sizes)
     scale_b      = _scale_bits(self.global_scale)
     exp_name     = getattr(self, "experiment_name", "")
+    model_seed, dirichlet_seed = _seeds(self)
 
     decrypt_s    = _g(times, "decrypt_time_clock",  "decypher_time_clock")
     decrypt_cpu  = _g(times, "decrypt_time_cpu",    "decypher_time_process")
@@ -174,6 +192,7 @@ def write_train_logs(
         f"{exp_name},{rnd},{self.cid},"
         f"{self.solution},{self.homomorphic_type},{self.model_name},{dataset},"
         f"{distribution},{self.dirichlet_alpha},"
+        f"{model_seed},{dirichlet_seed},"
         f"{loss},{acc},"
         f"{decrypt_s},{decrypt_cpu},"
         f"{train_s},{train_cpu},"
@@ -196,7 +215,7 @@ def write_train_logs(
 
 _MASK_HEADER = (
     "experiment_name,round,cid,"
-    "solution,model,dataset,distribution,"
+    "solution,model,dataset,distribution,run_seed,"
     "n_packs,packs_sent,selected_packs"
 )
 
@@ -221,6 +240,7 @@ def write_mask_logs(self, rnd: int, mask) -> None:
     row = (
         f"{exp_name},{rnd},{self.cid},"
         f"{self.solution},{self.model_name},{dataset},{distribution},"
+        f"{getattr(self, 'seed', '')},"
         f"{n_packs},{packs_sent},{selected_str}"
     )
     _append(f"logs/{self.log_folder}/mask.csv", _MASK_HEADER, row)
@@ -240,11 +260,13 @@ def write_evaluate_logs(
     coeff_bits   = _coeff_str(self.coeff_mod_bit_sizes)
     scale_b      = _scale_bits(self.global_scale)
     exp_name     = getattr(self, "experiment_name", "")
+    model_seed, dirichlet_seed = _seeds(self)
 
     row = (
         f"{exp_name},{rnd},{self.cid},"
         f"{self.solution},{self.homomorphic_type},{self.model_name},{dataset},"
         f"{distribution},{self.dirichlet_alpha},"
+        f"{model_seed},{dirichlet_seed},"
         f"{loss},{acc},{decrypt_time_clock},"
         f"{self.poly_modulus_degree},{coeff_bits},{scale_b}"
     )

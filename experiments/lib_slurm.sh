@@ -319,16 +319,32 @@ JSON
 run_theme() {
     # Single-pair override: when MODEL_DATASET_PAIR is set, restrict this run to
     # just that one pair. Used by sbatch/submit_per_pair.sh to fan a theme out into
-    # one SLURM job per pair. All other sweeps (solution/niid/percentage/seed) are
-    # unaffected. Also handy locally:
+    # one SLURM job per (pair, seed). The remaining sweeps (solution/niid/percentage)
+    # are unaffected. Also handy locally:
     #   MODEL_DATASET_PAIR=lenet5:FASHION_MNIST bash experiments/foo.sh
     if [[ -n "${MODEL_DATASET_PAIR:-}" ]]; then
         MODEL_DATASET_PAIRS=("$MODEL_DATASET_PAIR")
     fi
+    # Single-seed override: same mechanism as MODEL_DATASET_PAIR above, second axis
+    # of the fan-out. Note it replaces the whole SEEDS array, so exporting it in a
+    # shell pins every later run in that shell to one seed.
+    #   SEED_OVERRIDE=7 bash experiments/foo.sh
+    if [[ -n "${SEED_OVERRIDE:-}" ]]; then
+        SEEDS=("$SEED_OVERRIDE")
+    fi
+    # Default before any list mode can read it, mirroring the CLIENT_FRACTIONS
+    # fallback further down: a script that omits SEEDS still enumerates as (42).
+    [[ ${#SEEDS[@]} -eq 0 ]] && SEEDS=(42)
+
     # List mode: print the (possibly overridden) pairs and exit so the launcher
     # can enumerate them without triggering any tmux/docker/key-gen work.
     if [[ -n "${PRINT_PAIRS_ONLY:-}" ]]; then
         printf '%s\n' "${MODEL_DATASET_PAIRS[@]}"
+        return 0
+    fi
+    # Same contract for seeds, so the launcher can build the pair × seed product.
+    if [[ -n "${PRINT_SEEDS_ONLY:-}" ]]; then
+        printf '%s\n' "${SEEDS[@]}"
         return 0
     fi
 

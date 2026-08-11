@@ -157,9 +157,12 @@ class ManageDatasets():
 def load_data_flowerdataset(self):
         
 	if self.niid:
+		# seed must be identical across clients: each client rebuilds the whole
+		# global partitioning and then takes its own cid slice. Deriving it from
+		# cid would make the slices overlap and drop samples.
 		partitioner_train = DirichletPartitioner(num_partitions=self.num_clients, partition_by="label",
 								alpha=self.dirichlet_alpha, min_partition_size=100,
-								self_balancing=False)
+								self_balancing=False, seed=self.seed)
 	else:
 		partitioner_train =  IidPartitioner(num_partitions=self.num_clients)
 	

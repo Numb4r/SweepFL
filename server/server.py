@@ -293,6 +293,13 @@ class HEServer(fl.server.strategy.FedAvg):
 
 
 def main():
+    # Seeds client_manager.sample (flwr uses random.sample) so client selection is
+    # reproducible when CLIENT_FRACTION < 1.0, and the stochastic rounding in
+    # server/encryption/quantize.py.
+    seed = int(os.environ.get('SEED', 42))
+    random.seed(seed)
+    np.random.seed(seed)
+
     keys_config: Dict[str, Any] = {}
 
     keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))

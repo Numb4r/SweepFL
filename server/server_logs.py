@@ -3,25 +3,33 @@ Server-side CSV logging for FL+HE experiments.
 
 server_agg.csv  — one row per FL round (aggregate_fit):
   experiment_name, round, n_clients, total_examples,
-  selection_time_s, aggregation_time_s
+  selection_time_s, aggregation_time_s, run_seed
 
 server_eval.csv — one row per FL round (aggregate_evaluate):
-  experiment_name, round, n_clients, mean_loss, mean_acc
+  experiment_name, round, n_clients, mean_loss, mean_acc, run_seed
 
 coverage.csv — one row per (round, pack_idx) for packing solutions:
   experiment_name, round, solution, pack_idx,
-  n_contributors, n_clients_round
+  n_contributors, n_clients_round, run_seed
   n_contributors = number of clients that sent this pack in this round (|S_k|)
   n_clients_round = total clients that reported results this round
+
+run_seed is the seed actually applied in this server process — it drives
+client_manager.sample (client selection when CLIENT_FRACTION < 1.0) and the
+stochastic rounding in server/encryption/quantize.py. It is deliberately not
+named 'seed': studies/general/load_data.py injects a folder-name-derived 'seed'
+column into server_agg/server_eval that would overwrite it.
 """
 
 from __future__ import annotations
 
 import os
 
-_AGG_HEADER      = "experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s"
-_EVAL_HEADER     = "experiment_name,round,n_clients,mean_loss,mean_acc"
-_COVERAGE_HEADER = "experiment_name,round,solution,pack_idx,n_contributors,n_clients_round"
+_SEED = int(os.environ.get("SEED", 42))
+
+_AGG_HEADER      = "experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s,run_seed"
+_EVAL_HEADER     = "experiment_name,round,n_clients,mean_loss,mean_acc,run_seed"
+_COVERAGE_HEADER = "experiment_name,round,solution,pack_idx,n_contributors,n_clients_round,run_seed"
 
 
 def _append(filename: str, header: str, row: str) -> None:
@@ -43,7 +51,7 @@ def write_agg_logs(
 ) -> None:
     row = (
         f"{experiment_name},{server_round},{n_clients},{total_examples},"
-        f"{selection_time_s:.4f},{aggregation_time_s:.4f}"
+        f"{selection_time_s:.4f},{aggregation_time_s:.4f},{_SEED}"
     )
     _append(f"logs/{log_folder}/server_agg.csv", _AGG_HEADER, row)
 
@@ -58,7 +66,7 @@ def write_eval_logs(
 ) -> None:
     row = (
         f"{experiment_name},{server_round},{n_clients},"
-        f"{mean_loss:.6f},{mean_acc:.6f}"
+        f"{mean_loss:.6f},{mean_acc:.6f},{_SEED}"
     )
     _append(f"logs/{log_folder}/server_eval.csv", _EVAL_HEADER, row)
 
@@ -85,5 +93,5 @@ def write_coverage_logs(
         for pack_idx, count in enumerate(contributor_counts):
             f.write(
                 f"{experiment_name},{server_round},{solution},"
-                f"{pack_idx},{count},{n_clients_round}\n"
+                f"{pack_idx},{count},{n_clients_round},{_SEED}\n"
             )

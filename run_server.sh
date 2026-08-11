@@ -60,6 +60,7 @@ if [[ "$RUNTIME" == "docker" ]]; then
         -e KEY_TYPE=$KEY_TYPE \
         -e PLAIN_MODULUS=$PLAIN_MODULUS \
         -e N_LENGTH=$N_LENGTH \
+        -e SEED=$SEED \
         -e PYTHONHASHSEED=$SEED \
         -e EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
         -e RESUME_LOGFOLDER=${RESUME_LOGFOLDER:-} \
@@ -99,6 +100,7 @@ elif [[ "$RUNTIME" == "singularity" ]]; then
         --env KEY_TYPE=$KEY_TYPE \
         --env PLAIN_MODULUS=$PLAIN_MODULUS \
         --env N_LENGTH=$N_LENGTH \
+        --env SEED=$SEED \
         --env PYTHONHASHSEED=$SEED \
         --env EXPERIMENT_NAME=${EXPERIMENT_NAME:-} \
         --env RESUME_LOGFOLDER=${RESUME_LOGFOLDER:-} \
