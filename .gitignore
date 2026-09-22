@@ -16,6 +16,21 @@ sbatch/*.sh
 *.npz
 *.pdf
 *.png
+# Figuras usadas no Readme.md
+!studies/sparsification_percentage/figures/27_three_panel/resnet20_CIFAR10_niid1_p010.png
+!studies/sparsification_percentage/figures/02_solution_heatmap.png
+!studies/sparsification_percentage/figures/15_bytes_maxacc_individual/resnet20_CIFAR10_niid1.0_p010.png
+!studies/sparsification_percentage/figures/03_overhead_stacked.png
+!studies/sparsification_percentage/figures/10_nvnl_vs_sw.png
+!studies/sparsification_percentage/figures/17_coverage_unique/resnet20_nvnl.png
+!studies/sparsification_percentage/figures/19_coverage_accuracy/resnet20_fedphe.png
+!studies/sparsification_percentage/figures/23_pack_heatmap/resnet20_fedphe.png
+!studies/sparsification_percentage/figures/23_pack_heatmap/resnet20_nvnl.png
+!studies/sparsification_percentage/figures/26_downlink_inflation/resnet20.png
+!studies/sparsification_percentage/figures/05_niid_delta_heatmap.png
+!studies/client_frac/figures/25_accuracy_curves_individual/cf0.25/resnet20_CIFAR10_niid1_p010.png
+!studies/client_frac/figures/25_accuracy_curves_individual/cf0.75/resnet20_CIFAR10_niid1_p010.png
+!studies/client_frac/figures/26_downlink_inflation/resnet20_cf0.75.png
 *.tex
 *.tar.gz
 *.err

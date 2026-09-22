@@ -4,11 +4,11 @@ fedphe,lenet5,FASHION_MNIST,,,,,,,,
 fedphe,mobilenetv2,CIFAR10,,,,,,,,
 fedphe,resnet20,CIFAR10,,,,,,,,
 fedphe,vit_tiny,tanganke_gtsrb,,,,,,,,
-nvnl,dnn_tiny,FASHION_MNIST,4.0,0.757,58.804,7.602,4.0,0.794,63.475,7.602
-nvnl,lenet5,FASHION_MNIST,4.0,0.787,67.836,3.801,4.0,0.828,73.003,3.801
-nvnl,mobilenetv2,CIFAR10,4.0,0.104,138.772,49.414,4.0,0.103,140.5,49.414
-nvnl,resnet20,CIFAR10,4.0,0.127,125.413,19.005,4.0,0.145,132.082,19.005
-nvnl,vit_tiny,tanganke_gtsrb,4.0,0.329,86.237,14.254,4.0,0.47,78.035,14.254
+nvnl,dnn_tiny,FASHION_MNIST,4.0,0.78,31.091,3.801,4.0,0.816,34.276,3.801
+nvnl,lenet5,FASHION_MNIST,4.0,0.794,36.358,1.901,4.0,0.826,39.283,1.901
+nvnl,mobilenetv2,CIFAR10,4.0,0.097,72.706,24.707,4.0,0.102,75.192,24.707
+nvnl,resnet20,CIFAR10,4.0,0.278,68.816,9.503,4.0,0.257,73.688,9.503
+nvnl,vit_tiny,tanganke_gtsrb,4.0,0.349,44.323,7.127,4.0,0.428,39.921,7.127
 rw,dnn_tiny,FASHION_MNIST,11.0,0.814,58.972,12.059,11.0,0.846,68.019,12.059
 rw,lenet5,FASHION_MNIST,8.0,0.813,58.68,4.26,8.0,0.85,67.906,4.26
 rw,mobilenetv2,CIFAR10,15.0,0.442,182.479,109.052,15.0,0.456,196.135,109.052

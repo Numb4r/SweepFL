@@ -4669,7 +4669,7 @@
         "kind": 5,
         "importPath": "client.client_logs",
         "description": "client.client_logs",
-        "peekOfCode": "_TRAIN_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"train_loss,train_acc,\"\n    \"decrypt_time_s,decrypt_time_cpu,\"\n    \"train_time_s,train_time_cpu,\"\n    \"flatten_time_s,flatten_time_cpu,\"\n    \"quantize_time_s,quantize_time_cpu,\"\n    \"batch_padding_time_s,batch_padding_time_cpu,\"\n    \"pack_time_s,pack_time_cpu,\"",
+        "peekOfCode": "_TRAIN_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"model_seed,dirichlet_seed,\"\n    \"train_loss,train_acc,\"\n    \"decrypt_time_s,decrypt_time_cpu,\"\n    \"train_time_s,train_time_cpu,\"\n    \"flatten_time_s,flatten_time_cpu,\"\n    \"quantize_time_s,quantize_time_cpu,\"\n    \"batch_padding_time_s,batch_padding_time_cpu,\"",
         "detail": "client.client_logs",
         "documentation": {}
     },
@@ -4678,7 +4678,7 @@
         "kind": 5,
         "importPath": "client.client_logs",
         "description": "client.client_logs",
-        "peekOfCode": "_EVAL_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"eval_loss,eval_acc,decrypt_time_s,\"\n    \"poly_modulus_degree,coeff_mod_bits,scale_bits\"\n)\n# ── Helpers ───────────────────────────────────────────────────────────────────\ndef _coeff_str(coeff_mod_bit_sizes) -> str:\n    if not coeff_mod_bit_sizes:\n        return \"\"",
+        "peekOfCode": "_EVAL_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,schema,model,dataset,distribution,dirichlet_alpha,\"\n    \"model_seed,dirichlet_seed,\"\n    \"eval_loss,eval_acc,decrypt_time_s,\"\n    \"poly_modulus_degree,coeff_mod_bits,scale_bits\"\n)\n# ── Helpers ───────────────────────────────────────────────────────────────────\ndef _coeff_str(coeff_mod_bit_sizes) -> str:\n    if not coeff_mod_bit_sizes:",
         "detail": "client.client_logs",
         "documentation": {}
     },
@@ -4687,7 +4687,7 @@
         "kind": 5,
         "importPath": "client.client_logs",
         "description": "client.client_logs",
-        "peekOfCode": "_MASK_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,model,dataset,distribution,\"\n    \"n_packs,packs_sent,selected_packs\"\n)\ndef write_mask_logs(self, rnd: int, mask) -> None:\n    \"\"\"Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).\n    Normalizes both return formats from mask helpers:\n      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)\n      - list of int8   (fedphe, srr, topkrr) → same after np.asarray",
+        "peekOfCode": "_MASK_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,model,dataset,distribution,run_seed,\"\n    \"n_packs,packs_sent,selected_packs\"\n)\ndef write_mask_logs(self, rnd: int, mask) -> None:\n    \"\"\"Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).\n    Normalizes both return formats from mask helpers:\n      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)\n      - list of int8   (fedphe, srr, topkrr) → same after np.asarray",
         "detail": "client.client_logs",
         "documentation": {}
     },
@@ -4786,7 +4786,7 @@
         "kind": 2,
         "importPath": "client.dataset_utils",
         "description": "client.dataset_utils",
-        "peekOfCode": "def load_data_flowerdataset(self):\n\tif self.niid:\n\t\tpartitioner_train = DirichletPartitioner(num_partitions=self.num_clients, partition_by=\"label\",\n\t\t\t\t\t\t\t\talpha=self.dirichlet_alpha, min_partition_size=100,\n\t\t\t\t\t\t\t\tself_balancing=False)\n\telse:\n\t\tpartitioner_train =  IidPartitioner(num_partitions=self.num_clients)\n\tfds               = FederatedDataset(dataset=self.dataset, partitioners={\"train\": partitioner_train})\n\ttrain             = fds.load_partition(self.cid).with_format(\"numpy\")\n\tpartitioner_test  = IidPartitioner(num_partitions=self.num_clients)",
+        "peekOfCode": "def load_data_flowerdataset(self):\n\tif self.niid:\n\t\t# seed must be identical across clients: each client rebuilds the whole\n\t\t# global partitioning and then takes its own cid slice. Deriving it from\n\t\t# cid would make the slices overlap and drop samples.\n\t\tpartitioner_train = DirichletPartitioner(num_partitions=self.num_clients, partition_by=\"label\",\n\t\t\t\t\t\t\t\talpha=self.dirichlet_alpha, min_partition_size=100,\n\t\t\t\t\t\t\t\tself_balancing=False, seed=self.seed)\n\telse:\n\t\tpartitioner_train =  IidPartitioner(num_partitions=self.num_clients)",
         "detail": "client.dataset_utils",
         "documentation": {}
     },
@@ -5011,7 +5011,7 @@
         "kind": 5,
         "importPath": "client.dataset_utils",
         "description": "client.dataset_utils",
-        "peekOfCode": "\t\tpartitioner_train = DirichletPartitioner(num_partitions=self.num_clients, partition_by=\"label\",\n\t\t\t\t\t\t\t\talpha=self.dirichlet_alpha, min_partition_size=100,\n\t\t\t\t\t\t\t\tself_balancing=False)\n\telse:\n\t\tpartitioner_train =  IidPartitioner(num_partitions=self.num_clients)\n\tfds               = FederatedDataset(dataset=self.dataset, partitioners={\"train\": partitioner_train})\n\ttrain             = fds.load_partition(self.cid).with_format(\"numpy\")\n\tpartitioner_test  = IidPartitioner(num_partitions=self.num_clients)\n\tfds_eval          = FederatedDataset(dataset=self.dataset, partitioners={\"test\": partitioner_test})\n\ttest              = fds_eval.load_partition(self.cid).with_format(\"numpy\")",
+        "peekOfCode": "\t\tpartitioner_train = DirichletPartitioner(num_partitions=self.num_clients, partition_by=\"label\",\n\t\t\t\t\t\t\t\talpha=self.dirichlet_alpha, min_partition_size=100,\n\t\t\t\t\t\t\t\tself_balancing=False, seed=self.seed)\n\telse:\n\t\tpartitioner_train =  IidPartitioner(num_partitions=self.num_clients)\n\tfds               = FederatedDataset(dataset=self.dataset, partitioners={\"train\": partitioner_train})\n\ttrain             = fds.load_partition(self.cid).with_format(\"numpy\")\n\tpartitioner_test  = IidPartitioner(num_partitions=self.num_clients)\n\tfds_eval          = FederatedDataset(dataset=self.dataset, partitioners={\"test\": partitioner_test})\n\ttest              = fds_eval.load_partition(self.cid).with_format(\"numpy\")",
         "detail": "client.dataset_utils",
         "documentation": {}
     },
@@ -7468,7 +7468,7 @@
         "kind": 2,
         "importPath": "server.server",
         "description": "server.server",
-        "peekOfCode": "def main():\n    keys_config: Dict[str, Any] = {}\n    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))\n    keys_config['coeff_mod_bit_sizes']  = list(map(int, os.environ.get('COEFFS', '').split(',')))\n    keys_config['global_scale']         = int(os.environ.get('SCALE', 0))\n    keys_config['key_type']             = os.environ.get('KEY_TYPE', None)\n    keys_config['ckks_backend']         = os.environ.get('CKKS_BACKEND', 'tenseal')\n    keys_config['simplify_N']           = int(os.environ.get('SIMPLIFY_N', 8192))\n    keys_config['simplify_bits']        = int(os.environ.get('SIMPLIFY_BITS', 62))",
+        "peekOfCode": "def main():\n    # Seeds client_manager.sample (flwr uses random.sample) so client selection is\n    # reproducible when CLIENT_FRACTION < 1.0, and the stochastic rounding in\n    # server/encryption/quantize.py.\n    seed = int(os.environ.get('SEED', 42))\n    random.seed(seed)\n    np.random.seed(seed)\n    keys_config: Dict[str, Any] = {}\n    keys_config['poly_modulus_degree']  = int(os.environ.get('POLY', 0))\n    keys_config['plain_modulus']        = int(os.environ.get('PLAIN_MODULUS', -1))",
         "detail": "server.server",
         "documentation": {}
     },
@@ -7500,11 +7500,20 @@
         "documentation": {}
     },
     {
+        "label": "_SEED",
+        "kind": 5,
+        "importPath": "server.server_logs",
+        "description": "server.server_logs",
+        "peekOfCode": "_SEED = int(os.environ.get(\"SEED\", 42))\n_AGG_HEADER      = \"experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s,run_seed\"\n_EVAL_HEADER     = \"experiment_name,round,n_clients,mean_loss,mean_acc,run_seed\"\n_COVERAGE_HEADER = \"experiment_name,round,solution,pack_idx,n_contributors,n_clients_round,run_seed\"\ndef _append(filename: str, header: str, row: str) -> None:\n    os.makedirs(os.path.dirname(filename), exist_ok=True)\n    with open(filename, \"a\") as f:\n        if os.path.getsize(filename) == 0:\n            f.write(header + \"\\n\")\n        f.write(row + \"\\n\")",
+        "detail": "server.server_logs",
+        "documentation": {}
+    },
+    {
         "label": "_COVERAGE_HEADER",
         "kind": 5,
         "importPath": "server.server_logs",
         "description": "server.server_logs",
-        "peekOfCode": "_COVERAGE_HEADER = \"experiment_name,round,solution,pack_idx,n_contributors,n_clients_round\"\ndef _append(filename: str, header: str, row: str) -> None:\n    os.makedirs(os.path.dirname(filename), exist_ok=True)\n    with open(filename, \"a\") as f:\n        if os.path.getsize(filename) == 0:\n            f.write(header + \"\\n\")\n        f.write(row + \"\\n\")\ndef write_agg_logs(\n    log_folder: str,\n    experiment_name: str,",
+        "peekOfCode": "_COVERAGE_HEADER = \"experiment_name,round,solution,pack_idx,n_contributors,n_clients_round,run_seed\"\ndef _append(filename: str, header: str, row: str) -> None:\n    os.makedirs(os.path.dirname(filename), exist_ok=True)\n    with open(filename, \"a\") as f:\n        if os.path.getsize(filename) == 0:\n            f.write(header + \"\\n\")\n        f.write(row + \"\\n\")\ndef write_agg_logs(\n    log_folder: str,\n    experiment_name: str,",
         "detail": "server.server_logs",
         "documentation": {}
     },
