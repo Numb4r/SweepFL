@@ -24,6 +24,9 @@ RSYNC_OPTS=(
     --exclude="mv_logs/"
     --exclude='client/data/'
     --exclude='*.npz'
+    --exclude='*.pkl'
+    --exclude='*.h5'
+    --exclude='*dissertation/**'
 )
 
 if [[ "$1" == "--dry-run" ]]; then
