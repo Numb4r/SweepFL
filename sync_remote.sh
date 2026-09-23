@@ -27,6 +27,13 @@ RSYNC_OPTS=(
     --exclude='*.pkl'
     --exclude='*.h5'
     --exclude='*dissertation/**'
+    --exclude='*.pdf'   --exclude='*.PDF'
+    --exclude='*.png'   --exclude='*.PNG'
+    --exclude='*.jpg'   --exclude='*.JPG'
+    --exclude='*.jpeg'  --exclude='*.JPEG'
+    --exclude='*.svg'   --exclude='*.gif'
+    --exclude='*.eps'   --exclude='*.tif'   --exclude='*.tiff'
+    --exclude='*.webp'  --exclude='*.bmp'
 )
 
 if [[ "$1" == "--dry-run" ]]; then
