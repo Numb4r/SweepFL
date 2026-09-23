@@ -4965,7 +4965,7 @@
         "kind": 5,
         "importPath": "client.client_utils",
         "description": "client.client_utils",
-        "peekOfCode": "MAGG_D_REF = 1024\ndef get_size(data):\n    total_size = 0\n    for item in data:\n        total_size += sys.getsizeof(item)\n    return total_size\ndef packing(parameters, chunk_size=4096):\n    parameters = list(parameters)\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size",
+        "peekOfCode": "MAGG_D_REF = 1\ndef get_size(data):\n    total_size = 0\n    for item in data:\n        total_size += sys.getsizeof(item)\n    return total_size\ndef packing(parameters, chunk_size=4096):\n    parameters = list(parameters)\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size",
         "detail": "client.client_utils",
         "documentation": {}
     },
