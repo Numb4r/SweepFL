@@ -6,7 +6,7 @@ import math
 import tensorflow as tf
 
 from .set_parameters import he_packs_to_model
-from  client_utils import  cypher_packs, flat_parameters, packing, get_size
+from  client_utils import  cypher_packs, flat_parameters, packing, get_size, MAGG_D_REF
 from  client_logs import write_train_logs
 
 
@@ -264,7 +264,7 @@ def fit_nvnl_scout(self, parameters, config):
         flatten_time_cpu   = time.process_time()
         flatted_parameters = flat_parameters(trained_parameters)
         if self.only_sum:
-            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
+            flatted_parameters = np.array(flatted_parameters) * (len(self.x_train) / MAGG_D_REF)
         flatten_time_cpu   = time.process_time() - flatten_time_cpu
         flatten_time_clock = time.time() - flatten_time_clock
 

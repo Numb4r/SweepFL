@@ -6,8 +6,8 @@ import numpy as np
 
 from .fedphe import get_robin_round_mask, get_topk_mask
 from .set_parameters import he_packs_to_model
-from client_logs import write_mask_logs, write_train_logs
-from client_utils import cypher_packs, flat_parameters, get_size, packing
+from client_logs import write_mask_logs, write_train_logs, write_range_logs
+from client_utils import cypher_packs, flat_parameters, get_size, packing, MAGG_D_REF
 
 
 def fit_topkrr(self, parameters, config):
@@ -68,7 +68,7 @@ def fit_topkrr(self, parameters, config):
             # Pre-weight by local dataset size D_i so the server accumulates Σ D_i·w_i.
             # Per-pack renorm by M_agg[k]=Σ_{S_k} D_i (in set_parameters) then gives the
             # correct FedAvg weighted average per pack, even for sparse packs.
-            flatted = np.array(flatted) * len(self.x_train)
+            flatted = np.array(flatted) * (len(self.x_train) / MAGG_D_REF)
         elif _ckks_backend == "ckks_python_simplify":
             # MAGG_RENORM=0 legacy: pre-division by K; phase-1 top-k is data-dependent (biased).
             flatted = np.array(flatted) / self.num_clients
@@ -97,6 +97,7 @@ def fit_topkrr(self, parameters, config):
         mask_select_time_cpu   = time.process_time() - mask_select_time_cpu
         mask_select_time_clock = time.time() - mask_select_time_clock
         write_mask_logs(self, current_round, mask)
+        write_range_logs(self, current_round, trained_parameters, packed, mask)
 
         # ── Encrypt ───────────────────────────────────────────────────────────
         encrypt_time_clock = time.time()

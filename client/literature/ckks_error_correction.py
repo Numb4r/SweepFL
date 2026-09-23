@@ -5,7 +5,7 @@ import sys
 import tenseal as ts 
 import numpy as np
 from .set_parameters import he_parameters_to_model
-from  client_utils import flat_parameters, packing, cypher_packs
+from  client_utils import flat_parameters, packing, cypher_packs, MAGG_D_REF
 from  client_logs import write_train_logs
 # TODO: packing for remove warning
 # TODO: Search for sketch methods for CKKS error correction
@@ -41,7 +41,7 @@ def fit_ckks_error(self, parameters, config):
 
         flatted_parameters = flat_parameters(trained_parameters)
         if self.only_sum:
-            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
+            flatted_parameters = np.array(flatted_parameters) * (len(self.x_train) / MAGG_D_REF)
 
         packed_parameters = packing(flatted_parameters,chunk_size = chunk_size)
         mask = [1]*len(packed_parameters)  # Dummy mask 

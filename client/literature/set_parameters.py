@@ -7,7 +7,7 @@ from encryption.ckks_backend import get_backend
 
 from models import flat_parameters, reshape_parameters
 
-from client_utils import  packing, decypher_packs, flat_packs, remove_padding
+from client_utils import packing, decypher_packs, flat_packs, remove_padding, MAGG_D_REF
 from encryption.quantize import  unquantize, unbatching_padding
 from encryption.quantize_batchcrypt import unquantize_batchcrypt,unbatching_padding_batchcrypt
 import encryption.quantize as q
@@ -116,7 +116,7 @@ def he_packs_to_model(self, config):
     for idx_mask, m in enumerate(aggredated_mask):
         if m > 0:
             if self.only_sum or _magg_renorm:
-                packed_parameters[idx_mask] = np.array(decyphered_pack.pop(0)) / m
+                packed_parameters[idx_mask] = np.array(decyphered_pack.pop(0)) / (m / MAGG_D_REF)
             else:
                 packed_parameters[idx_mask] = decyphered_pack.pop(0)
     

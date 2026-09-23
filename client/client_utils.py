@@ -3,6 +3,12 @@ import sys
 import numpy as np
 from models import flat_parameters
 from encryption.ckks_backend import get_backend
+
+# Public pre-scale for the D_i-weighted pack protocol: clients encrypt w·D_i/MAGG_D_REF and
+# set_parameters divides by M_agg/MAGG_D_REF, so FedAvg is unchanged. Without it the server
+# sum Σ_i D_i·w reaches ~5e4·w and wraps the single-prime CKKS range q/(2Δ)=2^21 on
+# MobileNetV2's BN moving_variance (docs/ckks_range_overflow.md). 2^10 keeps it exact.
+MAGG_D_REF = 1024
 def get_size(data):
     total_size = 0
     

@@ -4,8 +4,8 @@ import numpy as np
 import pickle
 import math
 from .set_parameters import he_packs_to_model
-from client_utils import cypher_packs, flat_parameters, packing, get_size
-from client_logs import write_mask_logs, write_train_logs
+from client_utils import cypher_packs, flat_parameters, packing, get_size, MAGG_D_REF
+from client_logs import write_mask_logs, write_train_logs, write_range_logs
 
 
 def fit_fedphe(self, parameters, config):
@@ -60,7 +60,7 @@ def fit_fedphe(self, parameters, config):
             # Pre-weight by local dataset size D_i so the server accumulates Σ D_i·w_i.
             # Per-pack renorm by M_agg[k]=Σ_{S_k} D_i (in set_parameters) then gives the
             # correct FedAvg weighted average per pack, even for sparse packs.
-            flatted_parameters = np.array(flatted_parameters) * len(self.x_train)
+            flatted_parameters = np.array(flatted_parameters) * (len(self.x_train) / MAGG_D_REF)
         elif _ckks_backend == "ckks_python_simplify":
             # MAGG_RENORM=0 legacy: pre-division by K gives approx. average but ignores
             # per-pack contributor set — biased for sparse/data-dependent masks (fedphe, rw).
@@ -80,6 +80,7 @@ def fit_fedphe(self, parameters, config):
         mask_select_time_cpu   = time.process_time() - mask_select_time_cpu
         mask_select_time_clock = time.time() - mask_select_time_clock
         write_mask_logs(self, config['round'], mask)
+        write_range_logs(self, config['round'], trained_parameters, packed_parameters, mask)
 
         encrypt_time_clock = time.time()
         encrypt_time_cpu   = time.process_time()

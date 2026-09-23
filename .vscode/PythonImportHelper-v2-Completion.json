@@ -1283,119 +1283,7 @@
         "documentation": {}
     },
     {
-        "label": "cypher_packs",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "packing",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "get_size",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "packing",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "cypher_packs",
+        "label": "MAGG_D_REF",
         "importPath": "client_utils",
         "description": "client_utils",
         "isExtraImport": true,
@@ -1435,6 +1323,110 @@
         "documentation": {}
     },
     {
+        "label": "MAGG_D_REF",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "cypher_packs",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
         "label": "cypher_packs",
         "importPath": "client_utils",
         "description": "client_utils",
@@ -1467,6 +1459,54 @@
         "documentation": {}
     },
     {
+        "label": "MAGG_D_REF",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "cypher_packs",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_size",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
         "label": "flat_parameters",
         "importPath": "client_utils",
         "description": "client_utils",
@@ -1500,6 +1540,14 @@
     },
     {
         "label": "get_size",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
         "importPath": "client_utils",
         "description": "client_utils",
         "isExtraImport": true,
@@ -1539,63 +1587,7 @@
         "documentation": {}
     },
     {
-        "label": "cypher_packs",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "get_size",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "packing",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "cypher_packs",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "flat_parameters",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "packing",
-        "importPath": "client_utils",
-        "description": "client_utils",
-        "isExtraImport": true,
-        "detail": "client_utils",
-        "documentation": {}
-    },
-    {
-        "label": "get_size",
+        "label": "MAGG_D_REF",
         "importPath": "client_utils",
         "description": "client_utils",
         "isExtraImport": true,
@@ -1628,6 +1620,94 @@
     },
     {
         "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "cypher_packs",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_size",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "cypher_packs",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "flat_parameters",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_size",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "packing",
+        "importPath": "client_utils",
+        "description": "client_utils",
+        "isExtraImport": true,
+        "detail": "client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
         "importPath": "client_utils",
         "description": "client_utils",
         "isExtraImport": true,
@@ -1691,7 +1771,7 @@
         "documentation": {}
     },
     {
-        "label": "write_train_logs",
+        "label": "write_range_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -1748,30 +1828,6 @@
     },
     {
         "label": "write_train_logs",
-        "importPath": "client_logs",
-        "description": "client_logs",
-        "isExtraImport": true,
-        "detail": "client_logs",
-        "documentation": {}
-    },
-    {
-        "label": "write_train_logs",
-        "importPath": "client_logs",
-        "description": "client_logs",
-        "isExtraImport": true,
-        "detail": "client_logs",
-        "documentation": {}
-    },
-    {
-        "label": "write_train_logs",
-        "importPath": "client_logs",
-        "description": "client_logs",
-        "isExtraImport": true,
-        "detail": "client_logs",
-        "documentation": {}
-    },
-    {
-        "label": "write_mask_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -1819,7 +1875,15 @@
         "documentation": {}
     },
     {
-        "label": "write_mask_logs",
+        "label": "write_range_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_train_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -1851,6 +1915,14 @@
         "documentation": {}
     },
     {
+        "label": "write_range_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
         "label": "write_mask_logs",
         "importPath": "client_logs",
         "description": "client_logs",
@@ -1860,6 +1932,62 @@
     },
     {
         "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_range_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_mask_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_range_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_mask_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_train_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_range_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -1876,6 +2004,30 @@
     },
     {
         "label": "write_evaluate_logs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "ckks_coeffs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "ckks_coeffs",
+        "importPath": "client_logs",
+        "description": "client_logs",
+        "isExtraImport": true,
+        "detail": "client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_range_logs",
         "importPath": "client_logs",
         "description": "client_logs",
         "isExtraImport": true,
@@ -2967,6 +3119,15 @@
         "description": "load_data",
         "isExtraImport": true,
         "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "types",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "types",
+        "description": "types",
+        "detail": "types",
         "documentation": {}
     },
     {
@@ -4656,6 +4817,24 @@
         "documentation": {}
     },
     {
+        "label": "ckks_coeffs",
+        "kind": 2,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "def ckks_coeffs(pack, N: int):\n    \"\"\"Real polynomial coefficients (before ×scale) that ckks_python's Encoder::encode\n    produces for this slot vector (canonical embedding, ckks_project/src/ckks/encoder.cpp).\n    Decryption wraps when |a_k|·scale >= q/2, so max|a_k| is the true range quantity.\"\"\"\n    import numpy as np\n    v = np.zeros(N, dtype=complex)\n    v[:len(pack)] = pack\n    v[N // 2:] = np.conj(v[:N // 2][::-1])\n    k = np.arange(N)\n    return (np.fft.fft(v) * np.exp(-1j * np.pi * k / N)).real / N",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "write_range_logs",
+        "kind": 2,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "def write_range_logs(self, rnd: int, trained_parameters, packs, mask) -> None:\n    \"\"\"Write one CKKS range row to logs/{log_folder}/range.csv (one per client/round).\n    Only for ckks_python_simplify (single prime q, bound = q/(2·scale)).\n    max_abs_w   : max|w| of the trained weights, before ×D_i\n    max_abs_wd  : max|slot| of the packs actually handed to the encoder (after ×D_i)\n    slot_ratio  : max_abs_wd over the sent packs / bound (sufficient, not necessary, for wrap)\n    coef_ratio  : max|encoded coefficient| over the sent packs / bound (wraps when >= 1)\n    per_pack_coef: max|coefficient| of every pack (';'), so the server-side sum Σ_i can be\n                   bounded offline by adding the rows of all clients.\n    \"\"\"",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
         "label": "write_evaluate_logs",
         "kind": 2,
         "importPath": "client.client_logs",
@@ -4688,6 +4867,15 @@
         "importPath": "client.client_logs",
         "description": "client.client_logs",
         "peekOfCode": "_MASK_HEADER = (\n    \"experiment_name,round,cid,\"\n    \"solution,model,dataset,distribution,run_seed,\"\n    \"n_packs,packs_sent,selected_packs\"\n)\ndef write_mask_logs(self, rnd: int, mask) -> None:\n    \"\"\"Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).\n    Normalizes both return formats from mask helpers:\n      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)\n      - list of int8   (fedphe, srr, topkrr) → same after np.asarray",
+        "detail": "client.client_logs",
+        "documentation": {}
+    },
+    {
+        "label": "_RANGE_HEADER",
+        "kind": 5,
+        "importPath": "client.client_logs",
+        "description": "client.client_logs",
+        "peekOfCode": "_RANGE_HEADER = (\n    \"experiment_name,round,cid,solution,run_seed,d_i,bound,\"\n    \"max_abs_w,max_abs_wd,argmax_pack,slot_ratio,\"\n    \"coef_max,coef_argmax_pack,coef_ratio,per_pack_coef\"\n)\ndef ckks_coeffs(pack, N: int):\n    \"\"\"Real polynomial coefficients (before ×scale) that ckks_python's Encoder::encode\n    produces for this slot vector (canonical embedding, ckks_project/src/ckks/encoder.cpp).\n    Decryption wraps when |a_k|·scale >= q/2, so max|a_k| is the true range quantity.\"\"\"\n    import numpy as np",
         "detail": "client.client_logs",
         "documentation": {}
     },
@@ -4769,6 +4957,15 @@
         "importPath": "client.client_utils",
         "description": "client.client_utils",
         "peekOfCode": "def remove_padding_yphe(layer,target):\n    total_parameters = len(target)\n    return layer[:total_parameters]",
+        "detail": "client.client_utils",
+        "documentation": {}
+    },
+    {
+        "label": "MAGG_D_REF",
+        "kind": 5,
+        "importPath": "client.client_utils",
+        "description": "client.client_utils",
+        "peekOfCode": "MAGG_D_REF = 1024\ndef get_size(data):\n    total_size = 0\n    for item in data:\n        total_size += sys.getsizeof(item)\n    return total_size\ndef packing(parameters, chunk_size=4096):\n    parameters = list(parameters)\n    total_parameters = len(parameters)\n    number_packs     = total_parameters // chunk_size",
         "detail": "client.client_utils",
         "documentation": {}
     },
@@ -6237,6 +6434,42 @@
         "description": "encryption.quantize_batchcrypt",
         "peekOfCode": "precision = 5\n# ==========================================\n# FUNÇÕES CORE DO PAILLIER (Complemento de 2)\n# ==========================================\ndef quantize_padding_batchcrypt(value, alpha, quan_bits, num_clients):\n    # clipping\n    value = np.clip(value, -alpha, alpha)\n    # quantizing\n    sign = np.sign(value)\n    unsigned_value = value * sign",
         "detail": "encryption.quantize_batchcrypt",
+        "documentation": {}
+    },
+    {
+        "label": "load",
+        "kind": 2,
+        "importPath": "experiments.tests.ckks_range_probe",
+        "description": "experiments.tests.ckks_range_probe",
+        "peekOfCode": "def load(path):\n    z = np.load(path)\n    return np.concatenate([z[f\"arr_{i}\"].astype(np.float64).ravel() for i in range(len(z.files))])\ndef packs_of(flat, chunk=N // 2):\n    return [flat[i:i + chunk] for i in range(0, flat.size, chunk)]\ndef main():\n    ap = argparse.ArgumentParser()\n    ap.add_argument(\"runs\", nargs=\"+\")\n    ap.add_argument(\"--d-total\", type=float, default=50000.0)\n    ap.add_argument(\"--prescale\", type=float, default=1.0, help=\"divide D_total·w by this (fix under test)\")",
+        "detail": "experiments.tests.ckks_range_probe",
+        "documentation": {}
+    },
+    {
+        "label": "packs_of",
+        "kind": 2,
+        "importPath": "experiments.tests.ckks_range_probe",
+        "description": "experiments.tests.ckks_range_probe",
+        "peekOfCode": "def packs_of(flat, chunk=N // 2):\n    return [flat[i:i + chunk] for i in range(0, flat.size, chunk)]\ndef main():\n    ap = argparse.ArgumentParser()\n    ap.add_argument(\"runs\", nargs=\"+\")\n    ap.add_argument(\"--d-total\", type=float, default=50000.0)\n    ap.add_argument(\"--prescale\", type=float, default=1.0, help=\"divide D_total·w by this (fix under test)\")\n    ap.add_argument(\"--verify-round\", type=int, default=0)\n    a = ap.parse_args()\n    bound = 2.0 ** (BITS - SCALE_BITS - 1)  # q/(2Δ) up to q < 2^62",
+        "detail": "experiments.tests.ckks_range_probe",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "experiments.tests.ckks_range_probe",
+        "description": "experiments.tests.ckks_range_probe",
+        "peekOfCode": "def main():\n    ap = argparse.ArgumentParser()\n    ap.add_argument(\"runs\", nargs=\"+\")\n    ap.add_argument(\"--d-total\", type=float, default=50000.0)\n    ap.add_argument(\"--prescale\", type=float, default=1.0, help=\"divide D_total·w by this (fix under test)\")\n    ap.add_argument(\"--verify-round\", type=int, default=0)\n    a = ap.parse_args()\n    bound = 2.0 ** (BITS - SCALE_BITS - 1)  # q/(2Δ) up to q < 2^62\n    for run in a.runs:\n        print(f\"\\n== {os.path.basename(run.rstrip('/'))}\")",
+        "detail": "experiments.tests.ckks_range_probe",
+        "documentation": {}
+    },
+    {
+        "label": "verify",
+        "kind": 2,
+        "importPath": "experiments.tests.ckks_range_probe",
+        "description": "experiments.tests.ckks_range_probe",
+        "peekOfCode": "def verify(pack, bound, clients=9):\n    from ckks_python_simplify import CKKSContext, CKKSTensor\n    ctx = CKKSContext(N, BITS, SCALE_BITS)\n    for g in (1.0, 1.05):  # as-is, and 5% larger (≈ one more round of drift)\n        target = pack * g\n        agg = CKKSTensor(ctx, list(target / clients))\n        for _ in range(clients - 1):\n            agg += CKKSTensor(ctx, list(target / clients))\n        err = np.abs(np.asarray(agg.decrypt())[:pack.size] - target)\n        print(f\"   verify x{g}: 9 encrypted shares summed+decrypted -> max|err| = {err.max():.4g} \"",
+        "detail": "experiments.tests.ckks_range_probe",
         "documentation": {}
     },
     {
@@ -13041,6 +13274,60 @@
         "description": "tests.test_model_reconstruction",
         "peekOfCode": "CHUNK_SIZES = [\n    pytest.param(4096, id=\"chunk4096\"),\n    pytest.param(2048, id=\"chunk2048\"),\n]\ndef _stub(model):\n    \"\"\"Minimal object that satisfies the reshape_parameters / remove_padding interface.\"\"\"\n    return SimpleNamespace(model=model)\n# ── Plaintext roundtrip ────────────────────────────────────────────────────────\nclass TestPlaintextRoundtrip:\n    \"\"\"flat_parameters → reshape_parameters must recover original weights exactly.\"\"\"",
         "detail": "tests.test_model_reconstruction",
+        "documentation": {}
+    },
+    {
+        "label": "test_replica_matches_library_encoder",
+        "kind": 2,
+        "importPath": "tests.test_range_logs",
+        "description": "tests.test_range_logs",
+        "peekOfCode": "def test_replica_matches_library_encoder():\n    ckks_python = pytest.importorskip(\"ckks_python\")\n    q = ckks_python.generate_prime(62, N)\n    scale = 2 ** 40\n    z = np.random.default_rng(0).normal(0, 50, N // 2)\n    lib = np.array(ckks_python.Encoder(N, q, scale).encode(list(z)).coeffs, dtype=np.int64)\n    lib = np.where(lib > q // 2, lib - q, lib)  # centre\n    ours = np.round(ckks_coeffs(z, N) * scale).astype(np.int64)\n    assert np.max(np.abs(lib - ours)) <= 2\ndef test_constant_pack_concentrates_in_a0():",
+        "detail": "tests.test_range_logs",
+        "documentation": {}
+    },
+    {
+        "label": "test_constant_pack_concentrates_in_a0",
+        "kind": 2,
+        "importPath": "tests.test_range_logs",
+        "description": "tests.test_range_logs",
+        "peekOfCode": "def test_constant_pack_concentrates_in_a0():\n    # A pack of all-v encodes to the constant polynomial v: this is why an all-positive\n    # moving_variance block drives the range, while one isolated outlier is diluted by N/2.\n    a = ckks_coeffs(np.full(N // 2, 7.0), N)\n    assert a[0] == pytest.approx(7.0) and np.max(np.abs(a[1:])) < 1e-9\n    spike = np.zeros(N // 2); spike[3] = 1000.0\n    assert np.max(np.abs(ckks_coeffs(spike, N))) == pytest.approx(2 * 1000.0 / N, rel=1e-6)\ndef test_range_csv_written_and_finite(tmp_path, monkeypatch):\n    monkeypatch.chdir(tmp_path)\n    ctx = types.SimpleNamespace(N=N, q=(1 << 62) - 57, scale=2 ** 40)",
+        "detail": "tests.test_range_logs",
+        "documentation": {}
+    },
+    {
+        "label": "test_range_csv_written_and_finite",
+        "kind": 2,
+        "importPath": "tests.test_range_logs",
+        "description": "tests.test_range_logs",
+        "peekOfCode": "def test_range_csv_written_and_finite(tmp_path, monkeypatch):\n    monkeypatch.chdir(tmp_path)\n    ctx = types.SimpleNamespace(N=N, q=(1 << 62) - 57, scale=2 ** 40)\n    D = 5000\n    weights = [np.random.default_rng(1).normal(0, 1, (100, 60)), np.full(3000, 200.0)]\n    flat = np.concatenate([w.ravel() for w in weights]) * D\n    packs = [flat[i:i + N // 2] for i in range(0, flat.size, N // 2)]\n    self = types.SimpleNamespace(context=ctx, x_train=np.zeros(D), cid=0, solution=\"nvnl\",\n                                 seed=42, experiment_name=\"t\", log_folder=\"exp\")\n    write_range_logs(self, 1, weights, packs, [1, 1, 0])",
+        "detail": "tests.test_range_logs",
+        "documentation": {}
+    },
+    {
+        "label": "test_non_simplify_context_is_noop",
+        "kind": 2,
+        "importPath": "tests.test_range_logs",
+        "description": "tests.test_range_logs",
+        "peekOfCode": "def test_non_simplify_context_is_noop(tmp_path, monkeypatch):\n    monkeypatch.chdir(tmp_path)\n    self = types.SimpleNamespace(context=object(), log_folder=\"exp\")\n    write_range_logs(self, 1, [np.ones(3)], [np.ones(3)], [1])\n    assert not os.path.exists(\"logs/exp/range.csv\")\n@pytest.mark.parametrize(\"d_ref, wraps\", [(1, True), (1024, False)])\ndef test_prescale_prevents_wrap_real_ckks(d_ref, wraps):\n    \"\"\"BN-like pack (mean 45) from 9 clients with ΣD=50 000: Σ D_i·w wraps q/(2Δ)=2^21\n    without the pre-scale; with MAGG_D_REF it decodes to FedAvg exactly.\"\"\"\n    simplify = pytest.importorskip(\"ckks_python_simplify\")",
+        "detail": "tests.test_range_logs",
+        "documentation": {}
+    },
+    {
+        "label": "test_prescale_prevents_wrap_real_ckks",
+        "kind": 2,
+        "importPath": "tests.test_range_logs",
+        "description": "tests.test_range_logs",
+        "peekOfCode": "def test_prescale_prevents_wrap_real_ckks(d_ref, wraps):\n    \"\"\"BN-like pack (mean 45) from 9 clients with ΣD=50 000: Σ D_i·w wraps q/(2Δ)=2^21\n    without the pre-scale; with MAGG_D_REF it decodes to FedAvg exactly.\"\"\"\n    simplify = pytest.importorskip(\"ckks_python_simplify\")\n    ctx = simplify.CKKSContext(N, 62, 40)\n    w, D = np.full(N // 2, 45.0), [50000 / 9] * 9\n    agg = None\n    for d in D:\n        ct = simplify.CKKSTensor(ctx, list(w * d / d_ref))\n        agg = ct if agg is None else agg + ct",
+        "detail": "tests.test_range_logs",
+        "documentation": {}
+    },
+    {
+        "label": "N",
+        "kind": 5,
+        "importPath": "tests.test_range_logs",
+        "description": "tests.test_range_logs",
+        "peekOfCode": "N = 8192\ndef test_replica_matches_library_encoder():\n    ckks_python = pytest.importorskip(\"ckks_python\")\n    q = ckks_python.generate_prime(62, N)\n    scale = 2 ** 40\n    z = np.random.default_rng(0).normal(0, 50, N // 2)\n    lib = np.array(ckks_python.Encoder(N, q, scale).encode(list(z)).coeffs, dtype=np.int64)\n    lib = np.where(lib > q // 2, lib - q, lib)  # centre\n    ours = np.round(ckks_coeffs(z, N) * scale).astype(np.int64)\n    assert np.max(np.abs(lib - ours)) <= 2",
+        "detail": "tests.test_range_logs",
         "documentation": {}
     },
     {

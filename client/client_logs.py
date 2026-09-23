@@ -246,6 +246,60 @@ def write_mask_logs(self, rnd: int, mask) -> None:
     _append(f"logs/{self.log_folder}/mask.csv", _MASK_HEADER, row)
 
 
+_RANGE_HEADER = (
+    "experiment_name,round,cid,solution,run_seed,d_i,bound,"
+    "max_abs_w,max_abs_wd,argmax_pack,slot_ratio,"
+    "coef_max,coef_argmax_pack,coef_ratio,per_pack_coef"
+)
+
+
+def ckks_coeffs(pack, N: int):
+    """Real polynomial coefficients (before ×scale) that ckks_python's Encoder::encode
+    produces for this slot vector (canonical embedding, ckks_project/src/ckks/encoder.cpp).
+    Decryption wraps when |a_k|·scale >= q/2, so max|a_k| is the true range quantity."""
+    import numpy as np
+    v = np.zeros(N, dtype=complex)
+    v[:len(pack)] = pack
+    v[N // 2:] = np.conj(v[:N // 2][::-1])
+    k = np.arange(N)
+    return (np.fft.fft(v) * np.exp(-1j * np.pi * k / N)).real / N
+
+
+def write_range_logs(self, rnd: int, trained_parameters, packs, mask) -> None:
+    """Write one CKKS range row to logs/{log_folder}/range.csv (one per client/round).
+
+    Only for ckks_python_simplify (single prime q, bound = q/(2·scale)).
+    max_abs_w   : max|w| of the trained weights, before ×D_i
+    max_abs_wd  : max|slot| of the packs actually handed to the encoder (after ×D_i)
+    slot_ratio  : max_abs_wd over the sent packs / bound (sufficient, not necessary, for wrap)
+    coef_ratio  : max|encoded coefficient| over the sent packs / bound (wraps when >= 1)
+    per_pack_coef: max|coefficient| of every pack (';'), so the server-side sum Σ_i can be
+                   bounded offline by adding the rows of all clients.
+    """
+    import numpy as np
+    from models import flat_parameters
+    ctx = getattr(self, "context", None)
+    if not (hasattr(ctx, "q") and hasattr(ctx, "scale") and hasattr(ctx, "N")):
+        return
+    bound  = ctx.q / (2 * ctx.scale)
+    sent   = np.flatnonzero(np.asarray(mask).ravel() > 0)
+    flat_w = np.abs(np.asarray(flat_parameters(trained_parameters), dtype=np.float64))
+    slot_max  = np.array([np.max(np.abs(p)) for p in packs])
+    coef_max  = np.array([np.max(np.abs(ckks_coeffs(p, ctx.N))) for p in packs])
+    s_idx = int(sent[np.argmax(slot_max[sent])]) if sent.size else -1
+    c_idx = int(sent[np.argmax(coef_max[sent])]) if sent.size else -1
+    row = (
+        f"{getattr(self, 'experiment_name', '')},{rnd},{self.cid},{self.solution},"
+        f"{getattr(self, 'seed', '')},{len(self.x_train)},{bound:.6g},"
+        f"{flat_w.max():.6g},{slot_max[s_idx] if sent.size else 0:.6g},{s_idx},"
+        f"{(slot_max[s_idx] if sent.size else 0) / bound:.6g},"
+        f"{coef_max[c_idx] if sent.size else 0:.6g},{c_idx},"
+        f"{(coef_max[c_idx] if sent.size else 0) / bound:.6g},"
+        + ";".join(f"{c:.6g}" for c in coef_max)
+    )
+    _append(f"logs/{self.log_folder}/range.csv", _RANGE_HEADER, row)
+
+
 def write_evaluate_logs(
     self,
     rnd: int,

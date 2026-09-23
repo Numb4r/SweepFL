@@ -167,6 +167,7 @@ RW      r1:  · · · █ · · · █ · █     sorteio uniforme (pesos contin
 
 - **Cópias sincronizadas:** existem três cópias idênticas de `ckks_backend.py`, em `encryption/`, `client/encryption/` e `server/encryption/`. Cada container monta só o próprio diretório, então as três precisam ser mantidas em sincronia.
 - **Geração de chaves:** `generate_keys.py` roda no **host**, então `ckks_project` também precisa estar instalado localmente (instruções em `CLAUDE.md`). Ele gera as chaves CKKS pelo backend, BFV (`N=8192`, `[50,50,50,50]`, `t=1073872897`) e Paillier (2048 bits). Os scripts de experimento chamam a geração antes de cada run.
+- **Limitação conhecida: faixa do primo único.** Com `SIMPLIFY_BITS=62` e `SIMPLIFY_SCALE_BITS=40`, a decifragem só é correta enquanto cada **coeficiente do polinômio** da **soma do servidor** fica abaixo de q/(2Δ) ≈ 2²¹. Isso equivale a ~2²¹ na média de um pacote e a ~2²¹·N/2 para uma coordenada isolada. Sem pré-escala, o protocolo com peso por D_i (`MAGG_RENORM=1`) cifra `w·D_i`, e o servidor soma até `ΣD·w`. Em MobileNetV2/CIFAR-10 α=1 com p ≥ 0.7, o pacote com `Conv_1_bn/moving_variance` passou desse limite perto da rodada 104: cada peso do pacote errou em ±2²²/ΣD ≈ 84, a variância ficou negativa e a avaliação foi a NaN / 0,100. A correção é a pré-escala pública `MAGG_D_REF=1024` (`client/client_utils.py`): o cliente cifra `w·D_i/1024`. O FedAvg continua idêntico, o tamanho do ciphertext não muda e a folga aumenta 1024×, mas o limite continua existindo. Detalhes, evidência e custo das alternativas estão em `docs/ckks_range_overflow.md`. A razão real por rodada fica em `range.csv`.
 - **Log de mudanças:** `ckks_change_logs/` guarda notas geradas automaticamente por um hook do Claude Code sempre que `ckks_backend.py` ou `ckks_project/` mudam.
 
 ---
@@ -405,6 +406,11 @@ Configuração comum a todas as famílias:
 | `test_client_frac.sh` | Com 4 clientes e `CLIENT_FRACTION=0.5`, exatamente 2 clientes por rodada em todos os CSVs. |
 | `test_magg_ab.sh` | A/B de `MAGG_RENORM` (0 vs 1) em fedphe e nvnl, contra plaintext. |
 | `test_resume_e2e.sh` | 1 rodada seguida de 2 rodadas: confere `RESUMED_FROM`, o offset de rodadas e `[RESUME]` nos logs. |
+| `ckks_range_probe.py` | Offline, sem Docker: lê `model/round_*.npz` e mede a razão coeficiente / q/(2Δ) da soma do servidor por pacote. `--verify-round R` cifra, soma e decifra o pior pacote com a biblioteca real, e `--prescale 1024` testa a correção. |
+
+### G. `range_fix/`: rerun das células que estouraram a faixa do CKKS
+
+`range_fix_{nvnl,sw,rw,fedphe}.sh`: MobileNetV2/CIFAR-10, α=1, p ∈ {0.7, 0.9}, seed 42, 9 clientes e 200 rodadas, com os parâmetros CKKS da família `sparsification_percentage`. Roda com `MAGG_D_REF` e grava `range.csv`. São 8 runs, e o SLURM fica em `sbatch/range_fix/`. Ver `docs/ckks_range_overflow.md`.
 
 ---
 
@@ -432,6 +438,7 @@ Exemplo: `resnet20_CIFAR10_fedphe_none_200rounds_9clients_seed42_niid0.1_percent
 ├── server_eval.csv           # 1 linha por rodada: mean_loss, mean_acc (acurácia global)
 ├── server_agg.csv            # 1 linha por rodada: n_clients, total_examples, selection/aggregation_time_s
 ├── mask.csv                  # (packing) packs selecionados por cliente e rodada: "3;4;5"
+├── range.csv                 # (packing + ckks_python_simplify, runs recentes) max|w|, razões slot/coeficiente para q/(2Δ)
 ├── coverage.csv              # (packing, runs recentes) nº de contribuintes por pack e rodada
 ├── checkpoint/               # meta.json {round, solution_type}, client_<cid>.npz, server_agg.npz
 ├── model/round_<N>.npz       # snapshot float16 do modelo (só cid 0)
