@@ -376,8 +376,9 @@ Configuração comum a todas as famílias:
 
 **Pergunta:** as diferenças entre técnicas são maiores que a variância entre execuções?
 
-- **Setup:** `SEEDS=(43 44)`; resto igual à família A para `resnet20` e `mobilenetv2` (9 clientes, `PERCENTAGES` de 0.1 a 0.9, `NIIDS=(0.1 1)`).
-- **Scripts:** `seed_experiment_{NVNL,rw,fedphe,sw}.sh`, com 40 runs cada, 160 no total. Estado: 160 pastas.
+- **Setup atual (v2, 2026-09-23):** `SEEDS=(43 44)`, `NIIDS=(1)`, `PERCENTAGES=(0.1 0.7)`, `FOLDER=seed_experiment_v2`, com o código já corrigido por `MAGG_D_REF`. O resto é igual à família A para `resnet20` e `mobilenetv2` (9 clientes, 200 rodadas). São 8 runs por técnica, 32 no total, ainda não submetidas.
+- **Varredura de agosto** (`logs/seed_experiment/`, α ∈ {0.1, 1}, p de 0.1 a 0.9, 160 runs): todas completas, mas **23 colapsaram para NaN** por estouro de faixa do CKKS. Os logs foram mantidos como estão. Detalhes em `docs/seed_experiment.md`.
+- **Scripts:** `seed_experiment_{NVNL,rw,fedphe,sw}.sh`.
 - **Sem script de plaintext:** as próprias técnicas criam os `init_weights`. O baseline em texto claro vem de `logs/sparsification_percentage/`.
 - **SLURM:** 2 dias. `submit_per_pair.sh` gera 4 jobs por técnica (par × seed).
 
@@ -708,7 +709,7 @@ Fonte: `studies/client_frac/tables/26_union_coverage_downlink_summary.csv`.
 
 ### 12.8 Variância entre seeds (`seed_experiment`)
 
-As 160 runs das seeds 43/44 estão em `logs/seed_experiment/`, mas ainda não têm saída em `studies/`. Para gerar: `bash studies/general/run_all.sh seed_experiment`. Com `niid0.1`, só é válido comparar com a seed 42 depois de levar em conta o problema de rótulo da [seção 15](#15-limitações-e-problemas-conhecidos).
+O estudo `studies/general/29_seed_variance.py` junta a seed 42 (`sparsification_percentage`, com as células de `range_fix` substituindo as antigas) às seeds 43/44 (`seed_experiment_v2`). Para cada técnica com packing, em α = 1 e p ∈ {0.1, 0.7}, ele gera a média, o desvio e a variância da acurácia final, em barras e em curvas com faixa, e descarta as runs com NaN. A saída vai para `studies/seed_experiment_v2/`. Enquanto a v2 não roda, `--seed-dir logs/seed_experiment` gera uma prévia com os logs de agosto (ver `docs/seed_experiment.md`).
 
 ---
 

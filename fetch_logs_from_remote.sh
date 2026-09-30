@@ -8,6 +8,7 @@ REMOTE_DIR="~/keys"
 LOCAL_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 LOG_FILE="/tmp/fetch_logs_rsync_$$.log"
+    # --exclude="*.npz"
 
 RSYNC_OPTS=(
     -avz
@@ -16,7 +17,6 @@ RSYNC_OPTS=(
     --exclude="__pycache__/"
     --exclude="*.pyc"
     --exclude=".git/"
-    --exclude="*.npz"
     --exclude="*.log"
     --exclude="*.h5"
     --log-file="$LOG_FILE"
