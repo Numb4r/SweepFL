@@ -1,0 +1,4 @@
+seed,overlap_top18_norm_vs_sent_top18,ever_sent,spearman_norm_freq
+42,16,32,0.6615387399944188
+43,17,29,0.6382959183858276
+44,18,30,0.6399823074437531

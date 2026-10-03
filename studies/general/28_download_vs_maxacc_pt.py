@@ -20,11 +20,14 @@ Fórmula (documentada no Estudo 26): a cada rodada, o servidor reagrega a
 **união** dos pacotes recebidos de todos os clientes participantes e
 retransmite esse blob para cada um deles. Logo:
 
-    download_bytes_rodada = (union_cov_pct/100 × n_params × 4) × n_clientes_na_rodada
+    download_bytes_rodada = |união| × CT_BYTES × n_clientes_na_rodada
+    CT_BYTES = 2 · poly_modulus_degree · 8   (131 072 B com N = 8192)
 
 `union_cov_pct` e `n_clientes_na_rodada` vêm do Estudo 26 (mask.csv);
-`n_params × 4` é o tamanho bruto do modelo em bytes (float32), obtido do
-`train.csv` (mesma convenção do Estudo 15 para técnicas sem *packing*).
+|união| = round(union_cov_pct/100 × n_packs). O volume é contado em bytes
+nominais de cifra, na mesma unidade do upload dos pacotes. Até 2026-09-30
+este estudo usava `union_cov_pct/100 × n_params × 4` (equivalente float32
+em claro), cerca de 8× menor; as razões entre técnicas não mudam.
 Essa é a extensão "somada entre clientes" do *upload* do Estudo 15 para o
 lado do *download* — com essa escolha, a razão
 `download_acumulado / upload_acumulado` ao longo do treino converge para o
@@ -146,18 +149,16 @@ def compute_cumulative_download(masks: pd.DataFrame, train: pd.DataFrame) -> pd.
     if series_df.empty:
         return series_df
 
-    t = train.copy()
-    t["n_params"] = pd.to_numeric(t.get("n_params"), errors="coerce")
-    model_bytes = (
-        t.groupby(["model", "dataset"], dropna=False)["n_params"]
-        .first().reset_index().rename(columns={"n_params": "n_params_model"})
+    n_packs = (
+        m.groupby(["model", "dataset"], dropna=False)["n_packs"]
+        .first().reset_index().rename(columns={"n_packs": "n_packs_model"})
     )
-    series_df = series_df.merge(model_bytes, on=["model", "dataset"], how="left")
-    series_df["download_bytes_round"] = (
-        series_df["union_cov_pct"] / 100.0
-        * series_df["n_params_model"] * 4
-        * series_df["n_clients_round"]
-    )
+    series_df = series_df.merge(n_packs, on=["model", "dataset"], how="left")
+    poly = pd.to_numeric(train.get("poly_modulus_degree"), errors="coerce")
+    poly = int(poly.dropna().iloc[0]) if poly is not None and poly.notna().any() else 8192
+    ct_bytes = 2 * poly * 8
+    union_packs = (series_df["union_cov_pct"] / 100.0 * series_df["n_packs_model"]).round()
+    series_df["download_bytes_round"] = union_packs * ct_bytes * series_df["n_clients_round"]
 
     seed_group = [c for c in s26.GROUP if c in series_df.columns]
     series_df = series_df.sort_values(seed_group + ["round"])
