@@ -8,11 +8,11 @@ clients. A pack "was sent" in a round if it appears in that union.
 send_pct[pack_k] = (rounds where pack_k was in the server-union) / total_rounds × 100%
 
 Behaviour by technique:
-  nvnl   : non-overlapping RR → each pack sent ~pct% of rounds; bars nearly uniform.
+  sweepfl   : non-overlapping RR → each pack sent ~pct% of rounds; bars nearly uniform.
   sw     : 50% stride overlap → each pack sent ~2×pct% of rounds (appears in two windows).
   rw     : random/adaptive → spread depends on weights; high-magnitude packs sent more often.
   fedphe : top-k fixed → a fixed subset of ~pct% packs at 100%, all others at 0%.
-  srr    : evenly spaced RR → similar to nvnl but different spacing.
+  srr    : evenly spaced RR → similar to sweepfl but different spacing.
   topkrr : top-k phase then RR phase → visible transition in bar heights.
 
 Source data: mask.csv (via load_data.load_masks). No model snapshot needed.

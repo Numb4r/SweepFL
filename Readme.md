@@ -27,10 +27,10 @@ make singularity-from-docker
 ./sync_remote.sh
 
 # 3. on the cluster, from ~/keys, submit one job per (model:dataset pair x seed):
-bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_NVNL.sh --dry-run
-bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_NVNL.sh
+bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_sweepfl.sh --dry-run
+bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_sweepfl.sh
 # or a single job that runs all pairs in sequence:
-sbatch sbatch/sparsification_percentage/sbatch_sparsification_percentage_NVNL.sh
+sbatch sbatch/sparsification_percentage/sbatch_sparsification_percentage_sweepfl.sh
 
 # 4. monitor
 squeue -u $USER
@@ -50,10 +50,10 @@ The `sbatch_*.sh` scripts cannot be run with `bash`: they abort outside a SLURM 
 
 | Folder in `logs/` | sbatch scripts (`sbatch/<type>/`) | Resources (`#SBATCH`) |
 |---|---|---|
-| `sparsification_percentage` | `sbatch_sparsification_percentage_{plaintext,ckks,bfv,batchcrypt,fedphe,rw,NVNL,sw}.sh` | 3 GPUs, 12 CPUs, 64 GB. Time: 9 h (plaintext, fedphe, rw, NVNL, sw), 1 day (ckks, bfv), 2 days (batchcrypt) |
-| `client_frac` | `sbatch_client_frac_{plaintext,fedphe,rw,NVNL,sw}.sh` | 3 GPUs, 32 CPUs, `--mem=0`, 4 days |
-| `seed_experiment_v2` | `sbatch_seed_experiment_{fedphe,rw,NVNL,sw}.sh` | 3 GPUs, 12 CPUs, 64 GB, 2 days |
-| `range_fix` | `sbatch_range_fix_{fedphe,rw,nvnl,sw}.sh` | 3 GPUs, 12 CPUs, 64 GB, 6 h |
+| `sparsification_percentage` | `sbatch_sparsification_percentage_{plaintext,ckks,bfv,batchcrypt,fedphe,rw,SweepFL,sw}.sh` | 3 GPUs, 12 CPUs, 64 GB. Time: 9 h (plaintext, fedphe, rw, SweepFL, sw), 1 day (ckks, bfv), 2 days (batchcrypt) |
+| `client_frac` | `sbatch_client_frac_{plaintext,fedphe,rw,SweepFL,sw}.sh` | 3 GPUs, 32 CPUs, `--mem=0`, 4 days |
+| `seed_experiment_v2` | `sbatch_seed_experiment_{fedphe,rw,SweepFL,sw}.sh` | 3 GPUs, 12 CPUs, 64 GB, 2 days |
+| `range_fix` | `sbatch_range_fix_{fedphe,rw,sweepfl,sw}.sh` | 3 GPUs, 12 CPUs, 64 GB, 6 h |
 
 GPU ids are taken from `SLURM_GPUS_ON_NODE`. The number of clients is `GPUs x CLIENTS_PER_GPU`
 (3 per GPU gives 9 clients; 20 per GPU gives 60 clients in `client_frac`).
@@ -111,10 +111,10 @@ removed from `logs/` (`logs/models` was kept).
 
 | Folder | Runs | Model:dataset | Techniques | Clients | Seeds | `niid` | p (`percentage`) | `cf` |
 |---|---|---|---|---|---|---|---|---|
-| `sparsification_percentage` | 309 | `lenet5:FASHION_MNIST` (60), `dnn_tiny:FASHION_MNIST` (60), `vit_tiny:tanganke_gtsrb` (60), `resnet20:CIFAR10` (64), `mobilenetv2:CIFAR10` (65) | plaintext, ckks, bfv, batchcrypt, fedphe, rw, nvnl, sw | 9 | 42 | 0.1, 1 | -1 (references), 0.1, 0.3, 0.5, 0.7, 0.9 | – |
-| `client_frac` | 102 | `resnet20:CIFAR10` (51), `mobilenetv2:CIFAR10` (51) | plaintext, fedphe, rw, nvnl, sw | 60 | 42 | 0.1, 1 | -1, 0.1, 0.5 | 0.25, 0.5, 0.75 |
-| `seed_experiment_v2` | 31 | `resnet20:CIFAR10` (15), `mobilenetv2:CIFAR10` (16) | fedphe, rw, nvnl, sw | 9 | 43, 44 | 1 | 0.1, 0.7 | – |
-| `range_fix` | 8 | `mobilenetv2:CIFAR10` | fedphe, rw, nvnl, sw | 9 | 42 | 1 | 0.7, 0.9 | – |
+| `sparsification_percentage` | 309 | `lenet5:FASHION_MNIST` (60), `dnn_tiny:FASHION_MNIST` (60), `vit_tiny:tanganke_gtsrb` (60), `resnet20:CIFAR10` (64), `mobilenetv2:CIFAR10` (65) | plaintext, ckks, bfv, batchcrypt, fedphe, rw, sweepfl, sw | 9 | 42 | 0.1, 1 | -1 (references), 0.1, 0.3, 0.5, 0.7, 0.9 | – |
+| `client_frac` | 102 | `resnet20:CIFAR10` (51), `mobilenetv2:CIFAR10` (51) | plaintext, fedphe, rw, sweepfl, sw | 60 | 42 | 0.1, 1 | -1, 0.1, 0.5 | 0.25, 0.5, 0.75 |
+| `seed_experiment_v2` | 31 | `resnet20:CIFAR10` (15), `mobilenetv2:CIFAR10` (16) | fedphe, rw, sweepfl, sw | 9 | 43, 44 | 1 | 0.1, 0.7 | – |
+| `range_fix` | 8 | `mobilenetv2:CIFAR10` | fedphe, rw, sweepfl, sw | 9 | 42 | 1 | 0.7, 0.9 | – |
 
 Every run has 200 rounds and `poly_modulus_degree` 8192.
 
@@ -143,17 +143,17 @@ Keys used in run folder names and in `paper_style.py`.
 | `batchcrypt` | BatchCrypt | reference, full model (Paillier) | -1 | `..._batchcrypt.sh` | `tenseal` |
 | `fedphe` | Top-k (FedPHE) | partial packet selection, per client | 0.1 to 0.9 | `..._fedphe.sh` | `ckks_python_simplify` |
 | `rw` | Random | partial packet selection | 0.1 to 0.9 | `..._rw.sh` | `ckks_python_simplify` |
-| `nvnl` | Round Robin | partial packet selection, rotation | 0.1 to 0.9 | `..._NVNL.sh` | `ckks_python_simplify` |
+| `sweepfl` | Round Robin | partial packet selection, rotation | 0.1 to 0.9 | `..._sweepfl.sh` | `ckks_python_simplify` |
 | `sw` | Sliding Window | partial packet selection, sliding window | 0.1 to 0.9 | `..._sw.sh` | `ckks_python_simplify` |
 
-`ps.ORDER` fixes the legend order: plaintext, ckks, bfv, batchcrypt, fedphe, rw, nvnl, sw. The reference
+`ps.ORDER` fixes the legend order: plaintext, ckks, bfv, batchcrypt, fedphe, rw, sweepfl, sw. The reference
 techniques appear with `percentage` -1 in the logs.
 
 Bytes sent per round (`27_three_panel.py`), one rule for every technique:
 
 | Technique | Upload bytes per client and round |
 |---|---|
-| fedphe, rw, nvnl, sw | `packs_sent x (2 * poly * l * 8)`, with l = 1 |
+| fedphe, rw, sweepfl, sw | `packs_sent x (2 * poly * l * 8)`, with l = 1 |
 | ckks (full model) | `ceil(n_params / (poly/2)) x (2 * poly * 1 * 8)` |
 | bfv (full model) | `ceil(n_params / poly) x (2 * poly * (l - 1) * 8)` |
 | batchcrypt | `ceil(n_params / 50) x (2 * n_length / 8)` |

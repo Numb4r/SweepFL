@@ -41,7 +41,7 @@ from models import (
 )
 from client_logs import write_evaluate_logs
 from literature.set_parameters import he_parameters_to_model, he_packs_to_model
-from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext, fit_bitnetflip, fit_nvnl, fit_nvnl_scout, fit_fedphe_scout, fit_sw, fit_rw, fit_topkrr, fit_srr
+from literature import fit_ckks, fit_bfv, fit_batchcrypt, fit_fedphe, fit_plaintext, fit_bitnetflip, fit_sweepfl, fit_sweepfl_scout, fit_fedphe_scout, fit_sw, fit_rw, fit_topkrr, fit_srr
 from  client_utils import flat_parameters
 import math
 
@@ -245,7 +245,7 @@ class HEClient(fl.client.NumPyClient):
             self.homomorphic_type = 'CKKS'
             self.only_sum         = False
             self.packing          = True
-        elif str(self.solution).lower() == 'nvnl':
+        elif str(self.solution).lower() == 'sweepfl':
             self.homomorphic      = True
             self.homomorphic_type = 'CKKS'
             self.only_sum         = False
@@ -255,7 +255,7 @@ class HEClient(fl.client.NumPyClient):
             self.homomorphic_type = 'CKKS'
             self.only_sum         = False
             self.packing          = True
-        elif str(self.solution).lower() == 'nvnl-scout':
+        elif str(self.solution).lower() == 'sweepfl-scout':
             self.homomorphic      = True
             self.homomorphic_type = 'CKKS'
             self.only_sum         = False
@@ -306,12 +306,12 @@ class HEClient(fl.client.NumPyClient):
             fit_msg = fit_batchcrypt(self, parameters, config)
         elif str(self.solution).lower() == 'fedphe':
             fit_msg = fit_fedphe(self, parameters, config)        
-        elif str(self.solution).lower() == 'nvnl':
-            fit_msg = fit_nvnl(self,parameters,config)
+        elif str(self.solution).lower() == 'sweepfl':
+            fit_msg = fit_sweepfl(self,parameters,config)
         elif str(self.solution).lower() == 'fedphe-scout':
             fit_msg = fit_fedphe_scout(self, parameters, config)        
-        elif str(self.solution).lower() == 'nvnl-scout':
-            fit_msg = fit_nvnl_scout(self,parameters,config)
+        elif str(self.solution).lower() == 'sweepfl-scout':
+            fit_msg = fit_sweepfl_scout(self,parameters,config)
         elif str(self.solution).lower() == 'plaintext':
             fit_msg = fit_plaintext(self, parameters, config)
         elif str(self.solution).lower() == "socas":

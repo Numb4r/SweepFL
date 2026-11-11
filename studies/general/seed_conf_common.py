@@ -14,7 +14,7 @@ OUT = REPO / "studies/seed_confidence"
 SOURCES = [("range_fix", 3), ("seed_experiment_v2", 2), ("sparsification_percentage", 1)]  # (dir, priority)
 RX = re.compile(r"^(?P<model>[^_]+)_(?P<ds>[^_]+)_(?P<sol>[^_]+)_none_(?P<rounds>\d+)rounds_(?P<nc>\d+)clients_"
                 r"seed(?P<seed>\d+)_niid(?P<niid>[\d.]+)_percentage(?P<pct>-?[\d.]+)_.*_(?P<ts>[\d-]+_[\d-]+)$")
-TECHS = ["fedphe", "nvnl", "sw", "rw"]
+TECHS = ["fedphe", "sweepfl", "sw", "rw"]
 
 
 def find_runs(model="mobilenetv2", ds="CIFAR10", niid=1.0, pcts=(0.1, 0.7), rounds=200):

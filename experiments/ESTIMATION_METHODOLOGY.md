@@ -192,7 +192,7 @@ T_com_margem = T_total × margem
 O script lê os arrays do script bash via regex (sem executar o shell):
 
 ```bash
-SOLUTIONS=( nvnl sw rw fedphe )
+SOLUTIONS=( sweepfl sw rw fedphe )
 PERCENTAGES=( 0.1 0.3 0.5 0.7 )
 NIIDS=( 0.1 )
 SEEDS=( 42 )
@@ -207,7 +207,7 @@ apenas uma variação é contada.
 
 Soluções de packing reconhecidas:
 ```
-fedphe, nvnl, sw, rw, fedphe-scout, nvnl-scout
+fedphe, sweepfl, sw, rw, fedphe-scout, sweepfl-scout
 ```
 
 ---

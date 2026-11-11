@@ -224,7 +224,7 @@ def write_mask_logs(self, rnd: int, mask) -> None:
     """Write one selected-pack row to logs/{log_folder}/mask.csv (one per client/round).
 
     Normalizes both return formats from mask helpers:
-      - ndarray float64 (sw, NVNL, rw)     → flatnonzero(arr > 0)
+      - ndarray float64 (sw, SweepFL, rw)     → flatnonzero(arr > 0)
       - list of int8   (fedphe, srr, topkrr) → same after np.asarray
     selected_packs uses ';' as separator (same convention as coeff_mod_bits).
     """

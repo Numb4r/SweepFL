@@ -31,7 +31,7 @@ OUT_FIG_STUDY = HERE / "output" / "figures" / "16_overhead_maxacc_individual"
 OUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)
 
 SOL_COLORS = {
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",

@@ -12,10 +12,10 @@ Metric — unique coverage:
   new packs advance the curve.
 
 Behaviour by technique:
-  nvnl  : non-overlapping window → rises by packs_sent/n_packs each round; resets at 100%.
+  sweepfl  : non-overlapping window → rises by packs_sent/n_packs each round; resets at 100%.
   sw    : 50% stride overlap → new-pack contribution per round ≈ packs_sent/2 → longer cycle.
   rw    : random adaptive → irregular slope; cycle length ≈ coupon-collector.
-  srr   : spread round-robin (evenly spaced) → rises like nvnl but spacing changes.
+  srr   : spread round-robin (evenly spaced) → rises like sweepfl but spacing changes.
   topkrr: top-k phase: saturates below 100% (same packs); RR phase: full coverage cycle.
   fedphe: top-k fixed every round → curve saturates at packs_sent/n_packs%, never resets.
 

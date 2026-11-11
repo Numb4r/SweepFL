@@ -3,7 +3,7 @@
 figura por (model, dataset, niid, percentage[, client_fraction]).
 
 Variante traduzida e separada do estudo 16 (16_overhead_vs_maxacc_individual.py):
-  * nomes de solução corretos (NVNL, SW, FedPHE, RW, BatchCrypt, BFV) via
+  * nomes de solução corretos (SweepFL, SW, FedPHE, RW, BatchCrypt, BFV) via
     solution_style.py;
   * inclui os baselines full-model (percentage=None: CKKS, BFV, BatchCrypt)
     na mesma figura — quando os dados do BatchCrypt existirem nos logs eles
@@ -302,7 +302,7 @@ def main(logs_dir=None):
     print("Calculando overhead acumulado...")
     cumulative = compute_cumulative_overhead(train)
     data = merge_accuracy(cumulative, server_eval)
-    data = data[data["solution"].isin(sstyle.PACKING_SOLS)]  # só técnicas de packing (NVNL/FedPHE/SW/RW)
+    data = data[data["solution"].isin(sstyle.PACKING_SOLS)]  # só técnicas de packing (sweepfl/FedPHE/SW/RW)
     if data.empty:
         print("Sem dados após o merge.")
         return

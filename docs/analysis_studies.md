@@ -20,7 +20,7 @@ masks = load_masks("/custom/path")
 ```
 
 Key details:
-- Folder regex strips timestamp; `_NVNL_` uppercase is normalized to `nvnl`; erroneous `nvnl + percentage=-1` folders are skipped.
+- Folder regex strips timestamp; `_sweepfl_` uppercase is normalized to `sweepfl`; erroneous `sweepfl + percentage=-1` folders are skipped.
 - `groupby` calls use `dropna=False` throughout to preserve plaintext rows (where `percentage=None/NaN`).
 - Plaintext appears as a "baseline" column in all comparison plots, separated by a dashed vertical line.
 
@@ -30,7 +30,7 @@ Answers: how many rounds until the server has received every model pack at least
 
 | Solution | Formula | ~Rounds at p=0.1 | ~Rounds at p=0.9 |
 |----------|---------|-----------------|-----------------|
-| nvnl | `ceil(n_packs / packs_sent)` | 14 | 2 |
+| sweepfl | `ceil(n_packs / packs_sent)` | 14 | 2 |
 | sw | `ceil(n_packs / ceil(packs_sent × 0.5))` | 28 | 3 |
 | rw | `(n_packs/packs_sent) × ln(n_packs)` | ~47 | ~4 |
 | fedphe | top-k fixed → same packs every round | NaN | NaN |
@@ -38,19 +38,19 @@ Answers: how many rounds until the server has received every model pack at least
 | srr | `n // k` rounds when `n % k == 0`; partial coverage otherwise | ~10 | ~2 |
 | plaintext | 1 | 1 | 1 |
 
-SW costs roughly 2× more rounds than NVNL due to 50% stride overlap.
+SW costs roughly 2× more rounds than SweepFL due to 50% stride overlap.
 
-## Script 11 — Data transferred vs model coverage (NVNL vs SW)
+## Script 11 — Data transferred vs model coverage (SweepFL vs SW)
 
 Answers: given a fixed byte or round budget, how much of the model has each strategy exposed?
 
-Key insight: NVNL and SW send the same bytes per round, but SW overlaps 50% with the previous window → SW covers only half as much new territory per MB.
+Key insight: SweepFL and SW send the same bytes per round, but SW overlaps 50% with the previous window → SW covers only half as much new territory per MB.
 
-| Metric | NVNL | SW |
+| Metric | SweepFL | SW |
 |--------|------|----|
 | New coverage/round | `packs_sent / n_packs` | `ceil(packs_sent×0.5) / n_packs` |
 | MB/round (raw float32) | `packs_sent × pack_size × 4 / 1e6` | same |
-| Marginal cost (MB per 1% cov.) | `n_params × 4 / (1e6 × 100)` | 2× NVNL |
+| Marginal cost (MB per 1% cov.) | `n_params × 4 / (1e6 × 100)` | 2× SweepFL |
 
 Plots: (A) coverage % vs round, (B) coverage % vs cumulative MB — the key efficiency plot, (C) coverage at fixed budgets (5,10,20,50 rounds), (D) marginal cost bar chart.
 
@@ -92,7 +92,7 @@ Key insight: complements study 12 (bytes axis) with a time axis, revealing how m
 Answers: how many model parameters does each technique need to transmit to reach 80% accuracy?
 
 **Neurons metric** (parameters actually sent per client per round):
-- Packing (`nvnl`, `sw`, `rw`, `fedphe`, `topkrr`, `srr`): `packs_sent × pack_size`
+- Packing (`sweepfl`, `sw`, `rw`, `fedphe`, `topkrr`, `srr`): `packs_sent × pack_size`
 - Other (`plaintext`, `ckks`, `bfv`): `n_params`
 
 **Layout**: one figure per percentage. Each figure row = (model, niid).
@@ -134,10 +134,10 @@ Answers: as rounds progress, what fraction of the model's packs has the server r
 
 | Technique | Behaviour |
 |---|---|
-| nvnl | rises `packs_sent/n_packs` per round; resets at 100% (no overlap) |
-| sw | ~50% stride overlap → new-pack contribution per round ≈ half of nvnl → longer cycle |
+| sweepfl | rises `packs_sent/n_packs` per round; resets at 100% (no overlap) |
+| sw | ~50% stride overlap → new-pack contribution per round ≈ half of sweepfl → longer cycle |
 | rw | irregular slope (random); cycle length ≈ coupon-collector |
-| srr | same as nvnl (spread, no intra-cycle overlap) |
+| srr | same as sweepfl (spread, no intra-cycle overlap) |
 | topkrr | top-k phase: saturates below 100% (never resets); RR phase: full cycle |
 | fedphe | top-k fixed: curve saturates at `packs_sent/n_packs%`, never resets |
 
@@ -153,8 +153,8 @@ Same sawtooth design as script 17, but every pack transmission counts (including
 **Metric**: per round, the server-side union size (intra-round deduplication across clients) is added to `vol`. Coverage = `vol / n_packs × 100%`. Resets when `vol >= n_packs`. Unlike study 17, duplicate packs re-sent across rounds **do** inflate the counter.
 
 Key contrast with study 17:
-- **nvnl/srr**: identical to study 17 (no overlap → no difference).
-- **sw**: per-round volume ≈ nvnl (union size same); BUT same packs repeat across rounds → SW cycle length ≈ nvnl in study 18, while study 17 shows SW takes ~2× nvnl rounds.
+- **sweepfl/srr**: identical to study 17 (no overlap → no difference).
+- **sw**: per-round volume ≈ sweepfl (union size same); BUT same packs repeat across rounds → SW cycle length ≈ sweepfl in study 18, while study 17 shows SW takes ~2× sweepfl rounds.
 - **fedphe**: here becomes a sawtooth (volume resets every `ceil(n_packs/packs_sent)` rounds), evidencing the retransmission cost of always sending the same top-k packs.
 
 **Output**: `output/figures/18_coverage_volume/{model}_{technique}.{png,pdf}` — one figure per (model, technique); each figure has subplots for iid/niid, lines = sparsification percentages (viridis colormap).
@@ -182,7 +182,7 @@ Answers: over all rounds, how often was each pack index transmitted?
 
 | Technique | Expected pattern |
 |---|---|
-| nvnl | nearly uniform bars at ~pct% |
+| sweepfl | nearly uniform bars at ~pct% |
 | sw | bars at ~2×pct% (each pack covered by two overlapping windows) |
 | rw | non-uniform; high-magnitude packs sent more often |
 | fedphe | bimodal: ~pct% packs at 100%, rest at 0% |

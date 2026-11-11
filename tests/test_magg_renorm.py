@@ -20,7 +20,7 @@ Tests:
   T1  full-coverage sanity: all clients, all packs → corrected = oracle = simple wt. avg.
   T2  fedphe scenario: divergent (data-dependent) masks →
         MAGG_RENORM=1 matches oracle; MAGG_RENORM=0 shows quantified bias.
-  T3  nvnl control: identical round-robin masks (all clients same window) →
+  T3  sweepfl control: identical round-robin masks (all clients same window) →
         MAGG_RENORM=1 ≈ MAGG_RENORM=0, both match oracle (renorm is no-op).
   T4  single-contributor pack: corrected result equals that client's weights exactly.
   T5  bias grows with sparsity: lower ζ → larger legacy error; corrected stays ~0.
@@ -265,18 +265,18 @@ def test_T2_bias_is_corrected():
     )
 
 
-# ─────────────────────────── T3 — nvnl control: identical RR masks ───────────
+# ─────────────────────────── T3 — sweepfl control: identical RR masks ───────────
 
-def test_T3_nvnl_identical_masks_both_paths_match_oracle():
+def test_T3_sweepfl_identical_masks_both_paths_match_oracle():
     """
     With identical RR masks (all clients same window) AND equal dataset sizes:
       - M_agg[k] = total for every active pack k (full coverage, no sparsity bias).
       - Corrected and legacy give the same result (data-weighted = simple average).
-      - The sparsity-induced bias that affects fedphe does NOT apply to nvnl.
+      - The sparsity-induced bias that affects fedphe does NOT apply to sweepfl.
 
     Note: with unequal Ds the corrected path STILL gives the correct FedAvg, while
     legacy gives a simple average — that's a separate (data-weighting) correction
-    also addressed by the fix, tested in test_T3_nvnl_unequal_ds_corrected_wins.
+    also addressed by the fix, tested in test_T3_sweepfl_unequal_ds_corrected_wins.
     """
     rng = np.random.default_rng(13)
     n_clients, B, K, zeta = 4, 8, 6, 0.5
@@ -317,13 +317,13 @@ def test_T3_nvnl_identical_masks_both_paths_match_oracle():
         # Corrected ≈ legacy (renorm is no-op when all clients contribute)
         np.testing.assert_allclose(
             result_c[k], result_l[k], rtol=1e-10,
-            err_msg=f"T3 corrected ≠ legacy at pack {k} (should be equal for nvnl)",
+            err_msg=f"T3 corrected ≠ legacy at pack {k} (should be equal for sweepfl)",
         )
 
 
-def test_T3b_nvnl_unequal_ds_corrected_wins():
+def test_T3b_sweepfl_unequal_ds_corrected_wins():
     """
-    nvnl with unequal Ds (non-IID): identical masks mean no sparsity bias, but the
+    sweepfl with unequal Ds (non-IID): identical masks mean no sparsity bias, but the
     legacy /N pre-scale gives a simple average instead of the FedAvg weighted average.
     Corrected path (D_i pre-scale + renorm by M_agg) always matches FedAvg oracle.
     """
@@ -357,7 +357,7 @@ def test_T3b_nvnl_unequal_ds_corrected_wins():
         errs_c.append(np.mean(np.abs(result_c[k] - oracle[k])))
         errs_l.append(np.mean(np.abs(result_l[k] - oracle[k])))
 
-    assert np.mean(errs_c) < 1e-9, "Corrected must match FedAvg oracle for nvnl too"
+    assert np.mean(errs_c) < 1e-9, "Corrected must match FedAvg oracle for sweepfl too"
     assert np.mean(errs_l) > np.mean(errs_c), (
         "Legacy simple-average differs from FedAvg oracle when Ds are unequal"
     )

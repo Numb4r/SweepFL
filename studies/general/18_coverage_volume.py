@@ -16,12 +16,12 @@ Metric — volume coverage:
   but wastes capacity re-transmitting the same information.
 
 Behaviour by technique:
-  nvnl  : non-overlapping → identical to study 17 (no intra-cycle duplicates).
-  sw    : 50% stride overlap → new packs/round same as nvnl per-round count (intra-round
-          union deduplicated), but same packs repeat across rounds → cycle length ≈ nvnl.
-          Contrast with study 17 where SW takes ~2× nvnl rounds for unique coverage.
+  sweepfl  : non-overlapping → identical to study 17 (no intra-cycle duplicates).
+  sw    : 50% stride overlap → new packs/round same as sweepfl per-round count (intra-round
+          union deduplicated), but same packs repeat across rounds → cycle length ≈ sweepfl.
+          Contrast with study 17 where SW takes ~2× sweepfl rounds for unique coverage.
   rw    : random adaptive → vol accumulates roughly at packs_sent/n_packs per round.
-  srr   : same as nvnl (spread, no overlap).
+  srr   : same as sweepfl (spread, no overlap).
   topkrr: top-k phase: same packs every round → vol rises at packs_sent/n_packs; resets.
   fedphe: top-k fixed → resets every ceil(n_packs / packs_sent) rounds regardless of
           unique coverage; evidences the per-round retransmission cost.

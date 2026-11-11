@@ -3,7 +3,7 @@
 (model, dataset, niid, percentage[, client_fraction]).
 
 Variante traduzida e separada do estudo 15 (15_bytes_vs_maxacc_individual.py):
-  * nomes de solução corretos (NVNL, SW, FedPHE, RW, BatchCrypt, BFV) via
+  * nomes de solução corretos (SweepFL, SW, FedPHE, RW, BatchCrypt, BFV) via
     solution_style.py, em vez das strings cruas do CSV;
   * inclui os baselines full-model (percentage=None: CKKS, BFV, BatchCrypt)
     na mesma figura, ao lado das técnicas de esparsificação — quando os
@@ -14,7 +14,7 @@ Variante traduzida e separada do estudo 15 (15_bytes_vs_maxacc_individual.py):
     sparsification_percentage (client_fraction=1.0) o rótulo é omitido.
 
 Métrica de bytes (dado bruto float32 pré-cifragem):
-  técnicas de empacotamento (nvnl, sw, rw, fedphe, topkrr, srr): packs_sent × pack_size × 4
+  técnicas de empacotamento (sweepfl, sw, rw, fedphe, topkrr, srr): packs_sent × pack_size × 4
   demais (FedAvg, CKKS, BFV, BatchCrypt):                        n_params × 4
 Total por rodada = soma entre clientes.
 
@@ -299,7 +299,7 @@ def main(logs_dir=None):
     print("Calculando bytes acumulados...")
     cumulative = compute_cumulative_bytes(train)
     data = merge_accuracy(cumulative, server_eval)
-    data = data[data["solution"].isin(sstyle.PACKING_SOLS)]  # só técnicas de packing (NVNL/FedPHE/SW/RW)
+    data = data[data["solution"].isin(sstyle.PACKING_SOLS)]  # só técnicas de packing (sweepfl/FedPHE/SW/RW)
     if data.empty:
         print("Sem dados após o merge.")
         return

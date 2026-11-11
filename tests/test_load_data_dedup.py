@@ -51,7 +51,7 @@ def _names(folders):
 # ── select_folders ─────────────────────────────────────────────────────────────
 
 def test_single_folder_is_kept(tmp_path):
-    a = _make_folder(tmp_path, "nvnl", "2026-06-01_10-00-00", range(1, 201))
+    a = _make_folder(tmp_path, "sweepfl", "2026-06-01_10-00-00", range(1, 201))
     keep, skip = select_folders([a])
     assert _names(keep) == [a.name]
     assert skip == []
@@ -59,8 +59,8 @@ def test_single_folder_is_kept(tmp_path):
 
 def test_duplicate_reruns_keep_only_one(tmp_path):
     """Two complete 1-200 runs of the same config: one must be dropped."""
-    a = _make_folder(tmp_path, "nvnl", "2026-06-01_10-00-00", range(1, 201))
-    b = _make_folder(tmp_path, "nvnl", "2026-06-09_10-00-00", range(1, 201))
+    a = _make_folder(tmp_path, "sweepfl", "2026-06-01_10-00-00", range(1, 201))
+    b = _make_folder(tmp_path, "sweepfl", "2026-06-09_10-00-00", range(1, 201))
     keep, skip = select_folders([a, b])
     assert len(keep) == 1
     assert len(skip) == 1
@@ -80,13 +80,13 @@ def test_resume_fragments_are_both_kept(tmp_path):
 def test_abandoned_attempt_loses_to_complete_resume_chain(tmp_path):
     """A long dead-end run must not shadow a shorter pair that covers 1-200.
 
-    Mirrors resnet20/nvnl/p=0.9/niid1 in logs/sparsification_percentage: an
+    Mirrors resnet20/sweepfl/p=0.9/niid1 in logs/sparsification_percentage: an
     abandoned 1-123 attempt next to a 1-107 + 108-200 chain. Longest-first greedy
     picks the dead end and loses rounds 124-200.
     """
-    dead = _make_folder(tmp_path, "nvnl", "2026-06-02_14-00-00", range(1, 124))
-    head = _make_folder(tmp_path, "nvnl", "2026-06-10_01-00-00", range(1, 108))
-    tail = _make_folder(tmp_path, "nvnl", "2026-06-10_10-00-00", range(108, 201))
+    dead = _make_folder(tmp_path, "sweepfl", "2026-06-02_14-00-00", range(1, 124))
+    head = _make_folder(tmp_path, "sweepfl", "2026-06-10_01-00-00", range(1, 108))
+    tail = _make_folder(tmp_path, "sweepfl", "2026-06-10_10-00-00", range(108, 201))
     keep, skip = select_folders([dead, head, tail])
     assert _names(keep) == _names([head, tail])
     assert _names(skip) == [dead.name]
@@ -103,7 +103,7 @@ def test_folder_without_train_csv_is_kept(tmp_path):
 
 
 def test_distinct_configs_never_compete(tmp_path):
-    a = _make_folder(tmp_path, "nvnl", "2026-06-01_10-00-00", range(1, 201))
+    a = _make_folder(tmp_path, "sweepfl", "2026-06-01_10-00-00", range(1, 201))
     b = _make_folder(tmp_path, "sw", "2026-06-01_11-00-00", range(1, 201))
     keep, skip = select_folders([a, b])
     assert _names(keep) == _names([a, b])
@@ -114,8 +114,8 @@ def test_distinct_configs_never_compete(tmp_path):
 
 def test_load_all_does_not_double_count_reruns(tmp_path):
     """The bug this guards: 2 folders x 2 clients gave 4 rows per round."""
-    _make_folder(tmp_path, "nvnl", "2026-06-01_10-00-00", range(1, 11), clients=2)
-    _make_folder(tmp_path, "nvnl", "2026-06-09_10-00-00", range(1, 11), clients=2)
+    _make_folder(tmp_path, "sweepfl", "2026-06-01_10-00-00", range(1, 11), clients=2)
+    _make_folder(tmp_path, "sweepfl", "2026-06-09_10-00-00", range(1, 11), clients=2)
     train = load_all(str(tmp_path))["train"]
     assert train.groupby("round").size().max() == 2
     assert train["round"].nunique() == 10
@@ -130,7 +130,7 @@ def test_load_all_unions_resume_fragments(tmp_path):
 
 
 def test_count_experiments_excludes_duplicates(tmp_path):
-    _make_folder(tmp_path, "nvnl", "2026-06-01_10-00-00", range(1, 11))
-    _make_folder(tmp_path, "nvnl", "2026-06-09_10-00-00", range(1, 11))
+    _make_folder(tmp_path, "sweepfl", "2026-06-01_10-00-00", range(1, 11))
+    _make_folder(tmp_path, "sweepfl", "2026-06-09_10-00-00", range(1, 11))
     _make_folder(tmp_path, "sw", "2026-06-01_11-00-00", range(1, 11))
     assert count_experiments(str(tmp_path)) == 2

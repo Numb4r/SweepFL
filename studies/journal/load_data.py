@@ -53,10 +53,10 @@ def _parse_folder(name: str) -> dict | None:
         return None
     d = m.groupdict()
     pct = float(d["percentage"])
-    sol = d["solution"].lower()  # normalize: NVNL → nvnl
+    sol = d["solution"].lower()  # normalize: SweepFL → sweepfl
 
-    # Skip erroneous case: nvnl with no packing (uppercase NVNL + percentage=-1)
-    if sol == "nvnl" and pct == -1:
+    # Skip erroneous case: sweepfl with no packing (uppercase SweepFL + percentage=-1)
+    if sol == "sweepfl" and pct == -1:
         return None
 
     # Optional client_fraction token: _cf<frac>_ anywhere in folder name.

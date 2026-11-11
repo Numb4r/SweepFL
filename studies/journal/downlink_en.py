@@ -40,7 +40,7 @@ LOGS = os.environ.get("LOGS") or next((p for p in _LOGS_DEFAULTS if os.path.isdi
 OUT = os.environ.get("FIG_OUT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "output", "figures")
 os.makedirs(OUT, exist_ok=True)
 
-POLICIES = ["fedphe", "rw", "nvnl", "sw"]
+POLICIES = ["fedphe", "rw", "sweepfl", "sw"]
 BUDGETS = ["0.1", "0.3", "0.5", "0.7", "0.9"]
 MODEL, DATASET, NIID = "resnet20", "CIFAR10", "1"
 WARMUP = 0.05
@@ -109,7 +109,7 @@ def build() -> None:
         s = series(key, "0.3")
         if s:
             axb.plot(s["rounds"], s["union"] * 100, **ps.line_style(key, rounds=True))
-    s0 = series("nvnl", "0.3")
+    s0 = series("sweepfl", "0.3")
     if s0:
         axb.axhline(float(s0["client"].mean() * 100), color=ps.TEXT_SECONDARY, lw=0.8, ls="--")
     axb.set_xlabel("round", fontsize=7.5)

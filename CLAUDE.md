@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Slidhe** is a research project implementing privacy-preserving Federated Learning (FL) using Homomorphic Encryption (HE). Clients train local ML models and send encrypted gradients to an aggregation server. The system supports multiple HE schemes (CKKS, BFV, Paillier/BatchCrypt) and packet selection strategies (top-k, round-robin, sliding window, pondering-random).
 
-**Research focus (June–August 2026)**: impact of NVNL (round-robin) sparsification on communication overhead and time, compared against FedPHE (top-k), SW (sliding window), and RW (pondering-random). Culminates in dissertation correction and journal submission. See `docs/plano_pesquisa.md` for the full research plan prompt (Claude Opus).
+**Research focus (June–August 2026)**: impact of SweepFL (round-robin) sparsification on communication overhead and time, compared against FedPHE (top-k), SW (sliding window), and RW (pondering-random). Culminates in dissertation correction and journal submission. See `docs/plano_pesquisa.md` for the full research plan prompt (Claude Opus).
 
 ## Commands
 
@@ -35,7 +35,7 @@ python3 generate_keys.py
 # Run a themed experiment batch (preferred for grouped experiments)
 bash experiments/my_theme.sh
 
-# Smoke-test ckks_python_simplify backend: Docker + Singularity, nvnl + fedphe,
+# Smoke-test ckks_python_simplify backend: Docker + Singularity, sweepfl + fedphe,
 # 2 clients, 3 rounds, FashionMNIST, LeNet-5 (run from repo root)
 bash experiments/tests/test_ckks_backend.sh
 
@@ -66,7 +66,7 @@ bash sbatch/submit_per_pair.sh sbatch/client_frac/sbatch_client_frac_rw.sh --dry
 # _seed<N> suffix (e.g. seed_experiment: 2 pairs × 2 seeds = 4 jobs per technique).
 
 # Submit the full seed_experiment batch (4 techniques × 2 pairs × 2 seeds = 16 jobs)
-for t in NVNL rw fedphe sw; do
+for t in SweepFL rw fedphe sw; do
   bash sbatch/submit_per_pair.sh sbatch/seed_experiment/sbatch_seed_experiment_$t.sh --dry-run
 done
 
@@ -94,7 +94,7 @@ python3 experiments/merge_resume.py --dry-run            # show what would be me
 python3 experiments/merge_resume.py --yes                # skip prompt (used in SLURM/batch)
 python3 experiments/merge_resume.py --logs-dir /path     # custom logs directory
 
-# End-to-end resume smoke test (Docker, ~5 min: plaintext seed → nvnl 1 round → nvnl 2 rounds)
+# End-to-end resume smoke test (Docker, ~5 min: plaintext seed → sweepfl 1 round → sweepfl 2 rounds)
 bash experiments/tests/test_resume_e2e.sh
 
 # Checkpoint/resume unit tests (no Docker required; uses existing logs)
@@ -190,12 +190,12 @@ The `LOGFOLDER` name encodes all experiment parameters: `<model>_<dataset>_<solu
 
 ### Key Design Decisions
 
-**Solution parameter** controls the entire encryption/aggregation path. Valid values: `ckks`, `bfv`, `batchcrypt`, `fedphe`, `nvnl`, `fedphe-scout`, `nvnl-scout`, `plaintext`, `sw`, `rw`, `topkrr`, `srr`. Both client and server call `config_solution()` to set `homomorphic`, `packing`, `onlysum`/`only_sum`, and `homomorphic_type` from this string.
+**Solution parameter** controls the entire encryption/aggregation path. Valid values: `ckks`, `bfv`, `batchcrypt`, `fedphe`, `sweepfl`, `fedphe-scout`, `sweepfl-scout`, `plaintext`, `sw`, `rw`, `topkrr`, `srr`. Both client and server call `config_solution()` to set `homomorphic`, `packing`, `onlysum`/`only_sum`, and `homomorphic_type` from this string.
 
 **Packing vs. no packing**: When `packing=True`, model weights are flattened and chunked into CKKS vectors (packs) of size `poly_modulus_degree // 2`. Only a subset of packs is encrypted and transmitted, selected by a mask (top-k, round-robin, sliding window, or pondering-random). The server aggregates packs homomorphically and sends the aggregated packs+mask back to clients. When `packing=False`, all weights are concatenated into a single ciphertext.
 
 **CKKS backend abstraction**: `encryption/ckks_backend.py` (mirrored to `client/encryption/` and `server/encryption/`) defines a `CKKSBackend` ABC with methods `generate_and_save`, `load_client_context`, `load_server_context`, `encrypt`, `serialize`, `deserialize`, `add(ctx, ct1, ct2)`, `mul(ctx, ct, scalar)`, `decrypt`. Concrete backends:
-- `TenSEALBackend` (default) — context files `nvnlc2.pkl` / `serverc2.pkl`
+- `TenSEALBackend` (default) — context files `sweepflc2.pkl` / `serverc2.pkl`
 - `CKKSSimplifyBackend` — `ckks_python_simplify` lib; saves raw key bytes instead of pickling the C++ context: `ckks_simplify_params.pkl` (N/q/scale), `ckks_simplify_sk.bin`, `ckks_simplify_pk.bin`. Reconstructs `CKKSContext` via `__new__` on load to avoid pickling pybind11 objects.
 - `CKKSPythonBackend` — user's verbose `ckks_python` lib; files `ckks_python_sk.bin`, `ckks_python_pk.bin`, `ckks_python_params.pkl`
 - `OpenFHEBackend` — files `openfhe_cc.bin`, `openfhe_sk.bin`, `openfhe_pk.bin`
@@ -218,12 +218,12 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `client/literature/` — one `fit_<solution>.py` per HE scheme; each implements local train → encrypt → return fit message with granular per-operation timing
 - `client/literature/set_parameters.py` — decryption and model weight reconstruction on the client side; saves per-round compressed model snapshots (`np.savez_compressed` + float16, cid==0 only). `he_packs_to_model` / `he_parameters_to_model` time only the model-manipulation work (deserialize + decrypt + reshape) into `self.last_decrypt_clock` / `self.last_decrypt_cpu`; the snapshot + checkpoint `np.savez_compressed` writes run **after** the timer stops, so they are excluded from `decrypt_time_s`. Each `fit_*.py` (and `client.py::evaluate()`) reads `self.last_decrypt_*` rather than wrapping the call in its own timer.
 - `client/literature/fedphe.py` — top-k packing; also contains mask helpers: `get_topk_mask`, `get_robin_round_mask`, `get_slide_window_mask`, `get_pondering_random_mask`, `get_spread_rr_mask`
-- `client/literature/NVNL.py` — round-robin packing
+- `client/literature/sweepfl.py` — round-robin packing
 - `client/literature/sw.py` — sliding-window packing (stride=0.5)
 - `client/literature/rw.py` — pondering-random packing
 - `client/literature/topkrr.py` — hybrid packing: top-k for rounds `< RR_START_ROUND`, then round-robin for remaining rounds; imports `get_topk_mask` and `get_robin_round_mask` from `fedphe.py`; RR offset starts at 0 on the first RR round so window begins at pack index 0
-- `client/literature/srr.py` — spread round-robin packing: k=ceil(n*pct) packs selected per round, evenly spaced with stride=n//k; offset advances by 1 each round; uses `get_spread_rr_mask` from `fedphe.py`; no extra env vars (uses `PERCENTAGE` like NVNL)
-- `client/literature/fedphe_scout.py`, `NVNL_scout.py` — scout variants with custom TF training loop (trust-region + gating vs sigma + EMA blending)
+- `client/literature/srr.py` — spread round-robin packing: k=ceil(n*pct) packs selected per round, evenly spaced with stride=n//k; offset advances by 1 each round; uses `get_spread_rr_mask` from `fedphe.py`; no extra env vars (uses `PERCENTAGE` like SweepFL)
+- `client/literature/fedphe_scout.py`, `sweepfl_scout.py` — scout variants with custom TF training loop (trust-region + gating vs sigma + EMA blending)
 - `client/client_logs.py` — fixed-schema CSV logging (41-column `train.csv`, 15-column `evaluate.csv`); `write_range_logs` writes `range.csv` (per client/round: max|w|, slot and encoded-coefficient ratios to q/(2·scale), per-pack coef maxima; `ckks_python_simplify` only, outside timed windows) and `ckks_coeffs` (numpy replica of `Encoder::encode`)
 - `client/client_utils.py` — `packing`, `cypher_packs`, `decypher_packs`, `flat_packs`, `reshape_model`
 - `client/models.py` — model factories (see Models section below)
@@ -239,16 +239,16 @@ ln -s ~/.local/lib/python3.10/site-packages/ckks_federated \
 - `experiments/lib_slurm.sh` — SLURM backend: server + clients run as background processes (no tmux); GPU_IDS derived automatically from `SLURM_GPUS_ON_NODE`; waits for server PID, then kills client PIDs and waits for port 9999 to free; contains same `_find_resume_checkpoint`, `_write_incomplete_log` helpers as lib_tmux.sh plus `JOB_DEADLINE_EPOCH` computation
 - `experiments/generate_resume_jobs.py` — scans `logs/` for `INCOMPLETE.log` files, checks if already completed (skips), deduplicates by config fingerprint (picks best checkpoint), generates `resume.sh` + `resume_sbatch.sh` inside each interrupted experiment folder; the generated `resume.sh` automatically calls `merge_resume.py --yes` after `run_theme` so the merge happens at the end of every resumed experiment; outputs sbatch paths to stdout, info to stderr
 - `experiments/merge_resume.py` — merges original + resumed experiment folders in-place: appends CSV rows from all resumed folders into the original, copies model snapshots, replaces checkpoint with the latest, updates `experiment_details.json` with `MERGED_FROM`/`MERGED_AT`, removes `INCOMPLETE.log`; archives all non-original folders to `<parent>/archive/` (safety backup of original also kept there); handles chains of N resumes; skips already-merged originals (idempotent); flags: `--dry-run`, `--yes`/`--auto`, `--logs-dir`
-- `experiments/tests/test_resume_e2e.sh` — end-to-end Docker resume smoke test: plaintext seed → nvnl 1-round (creates checkpoint) → nvnl 2-round (detects checkpoint, resumes); verifies experiment_details.json, server_eval.csv round numbering, `[RESUME]` in logs, checkpoint updated
+- `experiments/tests/test_resume_e2e.sh` — end-to-end Docker resume smoke test: plaintext seed → sweepfl 1-round (creates checkpoint) → sweepfl 2-round (detects checkpoint, resumes); verifies experiment_details.json, server_eval.csv round numbering, `[RESUME]` in logs, checkpoint updated
 - `experiments/sparsification_percentage/sparsification_percentage_topkrr.sh` — topkrr experiment; same sweep as other sparsification scripts; sets `RR_START_ROUND=100` (switches at round 100 out of 200)
 - `sbatch/sparsification_percentage/sbatch_sparsification_percentage_topkrr.sh` — SLURM job for the topkrr sweep (l40s, 3 GPUs, 9 clients)
 - `experiments/sparsification_percentage/sparsification_percentage_srr.sh` — srr experiment; same sweep as other sparsification scripts
 - `sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh` — SLURM job for the srr sweep (l40s, 3 GPUs, 9 clients)
-- `experiments/client_frac/client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — client participation fraction sweep for all 7 solutions; `FOLDER="client_frac"` (shared); `CLIENT_FRACTIONS=(0.25 0.5 0.75)`, `PERCENTAGES=(0.1 0.5)`, `NIIDS=(0.1 1)`, resnet20+mobilenetv2, 20 clients/GPU × 3 GPUs = 60 clients; topkrr sets `RR_START_ROUND=100`; plaintext runs first (generates init_weights, 12 experiments); packing solutions run 24 experiments each
-- `sbatch/client_frac/sbatch_client_frac_{fedphe,NVNL,sw,rw,srr,topkrr,plaintext}.sh` — SLURM jobs for client_frac sweep (l40s, 3 GPUs, 32 CPUs, 4-day wall time, `--mem=0`)
-- `experiments/seed_experiment/seed_experiment_{NVNL,rw,fedphe,sw}.sh` — multi-seed repetition of the sparsification sweep so results can be reported as mean ± spread; **v2 (2026-09-23): `FOLDER="seed_experiment_v2"`, `SEEDS=(43 44)`, `PERCENTAGES=(0.1 0.7)`, `NIIDS=(1)`** (only α=1 is comparable to seed 42), resnet20+mobilenetv2 on CIFAR10, 3 clients/GPU × 3 GPUs = 9 clients, 200 rounds, 8 runs per technique / 32 total. The Aug sweep in `logs/seed_experiment/` (NIIDS=(0.1 1), p 0.1–0.9, 160 runs, pre-`MAGG_D_REF`) has 23 NaN-collapsed runs from CKKS range overflow; see `docs/seed_experiment.md`. Analysis: `studies/general/29_seed_variance.py` (standalone, merges seed_experiment_v2 + sparsification_percentage seed 42 + range_fix; mean/std/var across seeds, drops NaN runs; output `studies/seed_experiment_v2/`). Config is otherwise identical to `sparsification_percentage`, so seed-43/44 runs stay directly comparable to the existing seed-42 ones. **No plaintext script** — since `client.py` now lets any solution create `init_weights`, the techniques bootstrap their own; analyses needing a plaintext baseline must source it from `logs/sparsification_percentage/`.
-- `sbatch/seed_experiment/sbatch_seed_experiment_{NVNL,rw,fedphe,sw}.sh` — SLURM jobs for the seed_experiment sweep (l40s, 3 GPUs, 12 CPUs, `--mem=64G`, 2-day wall time). Submit via `submit_per_pair.sh` → 4 jobs per technique (pair × seed), 2 experiments each (v2).
-- `experiments/range_fix/range_fix_{nvnl,sw,rw,fedphe}.sh` + `sbatch/range_fix/sbatch_range_fix_*.sh` — rerun of mobilenetv2 CIFAR10 niid1 p∈{0.7,0.9} (8 runs, family CKKS params, `--time=0-6:00:00` to avoid resume) after the single-prime CKKS range overflow fix; see `docs/ckks_range_overflow.md`
+- `experiments/client_frac/client_frac_{fedphe,SweepFL,sw,rw,srr,topkrr,plaintext}.sh` — client participation fraction sweep for all 7 solutions; `FOLDER="client_frac"` (shared); `CLIENT_FRACTIONS=(0.25 0.5 0.75)`, `PERCENTAGES=(0.1 0.5)`, `NIIDS=(0.1 1)`, resnet20+mobilenetv2, 20 clients/GPU × 3 GPUs = 60 clients; topkrr sets `RR_START_ROUND=100`; plaintext runs first (generates init_weights, 12 experiments); packing solutions run 24 experiments each
+- `sbatch/client_frac/sbatch_client_frac_{fedphe,SweepFL,sw,rw,srr,topkrr,plaintext}.sh` — SLURM jobs for client_frac sweep (l40s, 3 GPUs, 32 CPUs, 4-day wall time, `--mem=0`)
+- `experiments/seed_experiment/seed_experiment_{SweepFL,rw,fedphe,sw}.sh` — multi-seed repetition of the sparsification sweep so results can be reported as mean ± spread; **v2 (2026-09-23): `FOLDER="seed_experiment_v2"`, `SEEDS=(43 44)`, `PERCENTAGES=(0.1 0.7)`, `NIIDS=(1)`** (only α=1 is comparable to seed 42), resnet20+mobilenetv2 on CIFAR10, 3 clients/GPU × 3 GPUs = 9 clients, 200 rounds, 8 runs per technique / 32 total. The Aug sweep in `logs/seed_experiment/` (NIIDS=(0.1 1), p 0.1–0.9, 160 runs, pre-`MAGG_D_REF`) has 23 NaN-collapsed runs from CKKS range overflow; see `docs/seed_experiment.md`. Analysis: `studies/general/29_seed_variance.py` (standalone, merges seed_experiment_v2 + sparsification_percentage seed 42 + range_fix; mean/std/var across seeds, drops NaN runs; output `studies/seed_experiment_v2/`). Config is otherwise identical to `sparsification_percentage`, so seed-43/44 runs stay directly comparable to the existing seed-42 ones. **No plaintext script** — since `client.py` now lets any solution create `init_weights`, the techniques bootstrap their own; analyses needing a plaintext baseline must source it from `logs/sparsification_percentage/`.
+- `sbatch/seed_experiment/sbatch_seed_experiment_{SweepFL,rw,fedphe,sw}.sh` — SLURM jobs for the seed_experiment sweep (l40s, 3 GPUs, 12 CPUs, `--mem=64G`, 2-day wall time). Submit via `submit_per_pair.sh` → 4 jobs per technique (pair × seed), 2 experiments each (v2).
+- `experiments/range_fix/range_fix_{sweepfl,sw,rw,fedphe}.sh` + `sbatch/range_fix/sbatch_range_fix_*.sh` — rerun of mobilenetv2 CIFAR10 niid1 p∈{0.7,0.9} (8 runs, family CKKS params, `--time=0-6:00:00` to avoid resume) after the single-prime CKKS range overflow fix; see `docs/ckks_range_overflow.md`
 - `experiments/tests/ckks_range_probe.py` — offline probe: reads `model/round_*.npz`, reports worst-pack slot/coefficient ratio of the server sum ΣD·w to q/(2Δ); `--verify-round R` does a real encrypt/sum/decrypt; `--prescale 1024` tests the fix
 - `experiments/standalone/template.sh` — copy this to create a new themed batch; uses model↔dataset pairs format
 - `experiments/tests/test_ckks_backend.sh` — smoke-test for the `ckks_python_simplify` backend (3 phases: plaintext seed → Docker HE → Singularity HE)
@@ -332,7 +332,7 @@ LOGS_DIR=../../logs/client_frac python3 06_memory_profile.py        # RAM usage 
 LOGS_DIR=../../logs/client_frac python3 07_convergence_speed.py     # rounds to threshold + AUC bar
 LOGS_DIR=../../logs/client_frac python3 08_efficiency_frontier.py   # Pareto scatter: accuracy vs payload/round
 LOGS_DIR=../../logs/client_frac python3 09_summary_table.py         # CSV + LaTeX summary table
-LOGS_DIR=../../logs/client_frac python3 10_total_data_convergence.py  # full model coverage rounds (NVNL vs SW)
+LOGS_DIR=../../logs/client_frac python3 10_total_data_convergence.py  # full model coverage rounds (SweepFL vs SW)
 LOGS_DIR=../../logs/client_frac python3 13_overhead_vs_accuracy.py    # communication time overhead vs accuracy + stacked bar
 LOGS_DIR=../../logs/client_frac python3 14_neurons_vs_accuracy.py     # cumulative neurons transmitted vs accuracy + neurons/round bar
 LOGS_DIR=../../logs/client_frac python3 15_bytes_vs_maxacc.py         # bytes vs accuracy, techniques only, best-technique max-acc target

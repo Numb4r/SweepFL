@@ -15,7 +15,7 @@ NIIDS=(0.1)
 SEEDS=(42)
 TECHNIQUE="none"
 
-SOLUTIONS=('nvnl' 'sw' 'rw' 'fedphe' 'plaintext')
+SOLUTIONS=('sweepfl' 'sw' 'rw' 'fedphe' 'plaintext')
 PERCENTAGES=(0.1 0.3 0.5)
 
 # ViT-Tiny runs GTSRB (43-class traffic signs).

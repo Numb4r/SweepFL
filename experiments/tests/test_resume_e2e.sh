@@ -1,7 +1,7 @@
 #!/bin/bash
 # experiments/test_resume_e2e.sh — End-to-end checkpoint/resume smoke test.
 #
-# 1. Run plaintext + nvnl for 1 round  → creates checkpoint/meta.json (round=1)
+# 1. Run plaintext + sweepfl for 1 round  → creates checkpoint/meta.json (round=1)
 # 2. Manually patch meta.json so round=1 (already 1, just confirming)
 # 3. Re-run with NUM_ROUNDS=2 (same params, different timestamp)
 #    → _find_resume_checkpoint detects round=1 < 2 → resumes
@@ -52,15 +52,15 @@ SOLUTIONS=("plaintext")
 NUM_ROUNDS=1
 run_theme
 
-# ── Phase 1: nvnl 1 round → create checkpoint ─────────────────────────────────
+# ── Phase 1: sweepfl 1 round → create checkpoint ─────────────────────────────────
 echo ""
-echo "▶ Phase 1: nvnl 1 round (creates checkpoint)"
-SOLUTIONS=("nvnl")
+echo "▶ Phase 1: sweepfl 1 round (creates checkpoint)"
+SOLUTIONS=("sweepfl")
 NUM_ROUNDS=1
 run_theme
 
-# Find the 1-round nvnl run
-FIRST_DIR=$(ls -dt logs/test_resume_e2e/resnet20_CIFAR10_nvnl_none_1rounds_2clients_seed42_* 2>/dev/null | head -1)
+# Find the 1-round sweepfl run
+FIRST_DIR=$(ls -dt logs/test_resume_e2e/resnet20_CIFAR10_sweepfl_none_1rounds_2clients_seed42_* 2>/dev/null | head -1)
 if [[ -z "$FIRST_DIR" ]]; then
     echo "[FATAL] Phase 1 dir not found"; exit 1
 fi
@@ -81,15 +81,15 @@ for cid in 0 1; do
 done
 echo "  Checkpoint files OK (round=1)"
 
-# ── Phase 2: nvnl 2 rounds → should detect round=1 and resume ─────────────────
+# ── Phase 2: sweepfl 2 rounds → should detect round=1 and resume ─────────────────
 echo ""
-echo "▶ Phase 2: nvnl 2 rounds (should resume from round 1)"
-SOLUTIONS=("nvnl")
+echo "▶ Phase 2: sweepfl 2 rounds (should resume from round 1)"
+SOLUTIONS=("sweepfl")
 NUM_ROUNDS=2
 run_theme
 
-# Find the 2-round nvnl resumed run
-SECOND_DIR=$(ls -dt logs/test_resume_e2e/resnet20_CIFAR10_nvnl_none_2rounds_2clients_seed42_* 2>/dev/null | head -1)
+# Find the 2-round sweepfl resumed run
+SECOND_DIR=$(ls -dt logs/test_resume_e2e/resnet20_CIFAR10_sweepfl_none_2rounds_2clients_seed42_* 2>/dev/null | head -1)
 if [[ -z "$SECOND_DIR" ]]; then
     echo "[FATAL] Phase 2 dir not found"; exit 1
 fi

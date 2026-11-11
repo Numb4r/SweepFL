@@ -5,7 +5,7 @@ Data: 2026-09-22. Backend: `ckks_python_simplify`, `N=8192`, `SIMPLIFY_BITS=62`,
 ## Resumo
 
 As 5 runs quebradas de `sparsification_percentage` (MobileNetV2/CIFAR-10, α=1, seed 42:
-nvnl/sw/rw/fedphe p=0.9 e fedphe p=0.7) sofreram **estouro modular na soma agregada do
+sweepfl/sw/rw/fedphe p=0.9 e fedphe p=0.7) sofreram **estouro modular na soma agregada do
 servidor**. Com `MAGG_RENORM=1` o cliente cifra `w·D_i`. O servidor soma os 9
 ciphertexts, então o plaintext decifrado é `Σ_i D_i·w_i ≈ 50 000·w`. Quando um
 **coeficiente do polinômio** codificado passa de q/(2Δ) ≈ 2²¹, a decifragem erra por
@@ -35,7 +35,7 @@ Snapshots `model/round_*.npz` (cid 0, agregado decifrado) baixados do cluster pa
 pasta temporária (nada em `logs/` foi alterado). Script: `experiments/tests/ckks_range_probe.py`.
 Ele reconstrói `ΣD·w` a partir do snapshot da rodada r, que aproxima o plaintext da rodada r+1.
 
-**Pesos na quebra (nvnl p=0.9, rodada 103 → 104):**
+**Pesos na quebra (sweepfl p=0.9, rodada 103 → 104):**
 
 | array | r103 | r104 |
 |---|---|---|
@@ -48,7 +48,7 @@ Os deslocamentos de −82 a −89 batem com 2²²/50 000 = 83,9.
 
 **Razão do pior coeficiente para q/(2Δ) (pacote 172):**
 
-| rodada | nvnl p0.9 α=1 (quebrou) | nvnl p0.5 α=1 (ok) | nvnl p0.9 α=0.1 (ok) |
+| rodada | sweepfl p0.9 α=1 (quebrou) | sweepfl p0.5 α=1 (ok) | sweepfl p0.9 α=0.1 (ok) |
 |---|---|---|---|
 | 60 | 0.238 | 0.254 | 0.213 |
 | 72 | 0.283 | — | — |
@@ -84,7 +84,7 @@ continua sendo uma questão separada.
 ## Correção adotada: pré-escala pública `MAGG_D_REF = 1024`
 
 `client/client_utils.py::MAGG_D_REF`. O cliente cifra `w·D_i/1024`
-(`client/literature/{NVNL,sw,rw,fedphe,srr,topkrr,*_scout}.py`), e
+(`client/literature/{SweepFL,sw,rw,fedphe,srr,topkrr,*_scout}.py`), e
 `client/literature/set_parameters.py` divide por `M_agg/1024`. Como 1024 é uma constante
 pública e potência de 2, o FedAvg resultante é idêntico e a divisão em float é exata.
 
@@ -101,7 +101,7 @@ rodada 1, e uma constante pública resolve o mesmo problema sem mudar o protocol
 Resultado do probe com a correção (`--prescale 1024`) nas mesmas rodadas: razão 0,001
 em 103, 114, 124 e 130.
 
-**Teste ponta a ponta (Docker, CPU, resnet20, 2 clientes, 3 rodadas, nvnl p=0.1):** o A/B no mesmo dia com `MAGG_D_REF=1` (idêntico ao código antigo) e `=1024` deu acurácia 0,361/0,412/0,426 contra 0,355/0,422/0,438. A diferença fica dentro da variação entre execuções: uma segunda run com 1024 deu 0,448 na rodada 3. As runs de maio do mesmo smoke test chegavam a ~0,66 na rodada 3. Essa diferença também aparece com `MAGG_D_REF=1` e, portanto, **não vem da correção** (candidatos: init seed-scoped e outras mudanças desde maio; não investigado). Saídas em `logs/test_ckks_backend/ab_dref_{1,1024}/`.
+**Teste ponta a ponta (Docker, CPU, resnet20, 2 clientes, 3 rodadas, sweepfl p=0.1):** o A/B no mesmo dia com `MAGG_D_REF=1` (idêntico ao código antigo) e `=1024` deu acurácia 0,361/0,412/0,426 contra 0,355/0,422/0,438. A diferença fica dentro da variação entre execuções: uma segunda run com 1024 deu 0,448 na rodada 3. As runs de maio do mesmo smoke test chegavam a ~0,66 na rodada 3. Essa diferença também aparece com `MAGG_D_REF=1` e, portanto, **não vem da correção** (candidatos: init seed-scoped e outras mudanças desde maio; não investigado). Saídas em `logs/test_ckks_backend/ab_dref_{1,1024}/`.
 
 **Comparabilidade:** para as células que nunca estouraram (p ≤ 0.5, e p=0.7 exceto
 fedphe), a correção só muda o arredondamento do CKKS na ordem de 1e-8 por peso. As runs
@@ -132,7 +132,7 @@ A pré-escala desloca esse limite por um fator de 1024. Ele continua existindo, 
 
 ## Rerun: `experiments/range_fix/`
 
-`range_fix_{nvnl,sw,rw,fedphe}.sh`: mobilenetv2:CIFAR10, α=1, p ∈ {0.7, 0.9}, seed 42,
+`range_fix_{sweepfl,sw,rw,fedphe}.sh`: mobilenetv2:CIFAR10, α=1, p ∈ {0.7, 0.9}, seed 42,
 9 clientes, 200 rodadas, `CLIENT_FRACTION=1.0`, com os parâmetros CKKS da família. São 8 runs,
 com SLURM em `sbatch/range_fix/sbatch_range_fix_*.sh` (l40s, 3 GPUs, `--time=0-6:00:00`).
 Estimativa (`estimate_time.py --all --slurm SLURM.md`): 1h15m por script no l40s sem
@@ -149,7 +149,7 @@ preenchida quando as runs terminarem.
 
 | técnica | p=0.1 | p=0.3 | p=0.5 | p=0.7 (antiga) | p=0.9 (antiga) | p=0.7 range_fix | p=0.9 range_fix |
 |---|---|---|---|---|---|---|---|
-| nvnl | 0.6496 | 0.7146 | 0.7515 | 0.7638 | 0.1000 (NaN) | — | — |
+| sweepfl | 0.6496 | 0.7146 | 0.7515 | 0.7638 | 0.1000 (NaN) | — | — |
 | sw | 0.6065 | 0.7032 | 0.7406 | 0.7552 | 0.1000 (NaN) | — | — |
 | rw | 0.5999 | 0.6989 | 0.7313 | 0.7551 | 0.1000 (NaN) | — | — |
 | fedphe | 0.2414 | 0.5729 | 0.6578 | 0.1000 (NaN) | 0.1000 (NaN) | — | — |

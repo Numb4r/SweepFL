@@ -47,7 +47,7 @@ LOGS = os.environ.get("LOGS") or next((p for p in _LOGS_DEFAULTS if os.path.isdi
 OUT = os.environ.get("FIG_OUT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "output", "figures")
 os.makedirs(OUT, exist_ok=True)
 
-POLICIES = ["fedphe", "rw", "nvnl", "sw"]
+POLICIES = ["fedphe", "rw", "sweepfl", "sw"]
 PAIRS = [("lenet5", "FASHION_MNIST", "LeNet-5", 16),
          ("dnn_tiny", "FASHION_MNIST", "DNN", 28),
          ("vit_tiny", "tanganke_gtsrb", "ViT-Tiny", 52),
@@ -56,7 +56,7 @@ PAIRS = [("lenet5", "FASHION_MNIST", "LeNet-5", 16),
 BUDGETS = ["0.1", "0.3", "0.5", "0.7", "0.9"]
 NIID = "1"   # Dirichlet alpha = 1; the niid0.1 folders ran IID
 RANGE_FIX = os.path.join(os.path.dirname(LOGS), "range_fix")
-RANGE_FIX_CELLS = {("mobilenetv2", pol, pct) for pol in ("nvnl", "sw", "fedphe") for pct in ("0.7", "0.9")}
+RANGE_FIX_CELLS = {("mobilenetv2", pol, pct) for pol in ("sweepfl", "sw", "fedphe") for pct in ("0.7", "0.9")}
 
 
 def final_accuracy(model: str, dataset: str, policy: str, pct: str) -> Optional[float]:

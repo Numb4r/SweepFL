@@ -5,7 +5,7 @@ Answers: how many rounds must pass before the server has received every pack
 (i.e., every model parameter) at least once?
 
 Coverage formulas (derived from client/literature/):
-  nvnl  : stride = window (no overlap)  → rounds = ceil(n_packs / packs_sent)
+  sweepfl  : stride = window (no overlap)  → rounds = ceil(n_packs / packs_sent)
   sw    : stride = ceil(window × 0.5)   → rounds = ceil(n_packs / stride_sw)
   rw    : probabilistic adaptive         → rounds ≈ (n_packs/packs_sent) × ln(n_packs)
   fedphe: top-k fixed → same packs every round → full coverage never guaranteed (NaN)
@@ -19,7 +19,7 @@ is the fully reliable primary output.
 Plots:
   A) Bar : rounds for full coverage, x=percentage, grouped by solution
   B) Line: rounds vs percentage with theoretical 1/p and 2/p curves
-  C) Line: NVNL vs SW focused comparison (main story)
+  C) Line: SweepFL vs SW focused comparison (main story)
   D) Bar : total MB as logged (payload_bytes × rounds) — for reference
 
 Output: output/figures/10_*.{png,pdf}
@@ -51,7 +51,7 @@ OUT_TAB.mkdir(parents=True, exist_ok=True)
 
 GROUP = ["model", "dataset", "solution", "niid", "percentage"]
 
-PACKING_SOLUTIONS = {"nvnl", "sw", "rw"}   # solutions with meaningful coverage formula
+PACKING_SOLUTIONS = {"sweepfl", "sw", "rw"}   # solutions with meaningful coverage formula
 COVERAGE_NA_NOTE = "fedphe: top-k fixed — same packs every round, full coverage not guaranteed"
 
 
@@ -72,7 +72,7 @@ def _rounds_for_coverage(solution: str, n_packs: float, packs_sent: float) -> fl
         return 1.0 if solution == "plaintext" else float("nan")
     if solution == "plaintext":
         return 1.0
-    if solution == "nvnl":
+    if solution == "sweepfl":
         # stride = packs_sent (non-overlapping round-robin)
         return math.ceil(n_packs / packs_sent)
     if solution == "sw":
@@ -216,7 +216,7 @@ def plot_rounds_line(summary: pd.DataFrame, models: list) -> plt.Figure | None:
 
             # Theoretical reference curves
             pcts = np.linspace(0.05, 1.0, 300)
-            ax.plot(pcts, 1.0 / pcts, "k:", linewidth=1, alpha=0.6, label="1/p  (NVNL theory)")
+            ax.plot(pcts, 1.0 / pcts, "k:", linewidth=1, alpha=0.6, label="1/p  (SweepFL theory)")
             ax.plot(pcts, np.maximum(1.0, 2.0 / pcts - 1),
                     "k--", linewidth=1, alpha=0.6, label="2/p−1  (SW theory)")
 
@@ -233,10 +233,10 @@ def plot_rounds_line(summary: pd.DataFrame, models: list) -> plt.Figure | None:
     return fig
 
 
-# ── Plot C: NVNL vs SW focused comparison ────────────────────────────────────
+# ── Plot C: SweepFL vs SW focused comparison ────────────────────────────────────
 
-def plot_nvnl_vs_sw(summary: pd.DataFrame, models: list) -> plt.Figure | None:
-    focus = summary[summary["solution"].isin({"nvnl", "sw"}) &
+def plot_sweepfl_vs_sw(summary: pd.DataFrame, models: list) -> plt.Figure | None:
+    focus = summary[summary["solution"].isin({"sweepfl", "sw"}) &
                     summary["rounds_coverage"].notna()].copy()
     if focus.empty:
         return None
@@ -245,7 +245,7 @@ def plot_nvnl_vs_sw(summary: pd.DataFrame, models: list) -> plt.Figure | None:
     niids = sorted(focus["niid"].dropna().unique()) if "niid" in focus.columns else [None]
     x = np.arange(len(percentages))
     width = 0.35
-    colors = {"nvnl": "#2196F3", "sw": "#FF5722"}
+    colors = {"sweepfl": "#2196F3", "sw": "#FF5722"}
 
     n_rows = len(models)
     n_cols = len(niids)
@@ -262,7 +262,7 @@ def plot_nvnl_vs_sw(summary: pd.DataFrame, models: list) -> plt.Figure | None:
             if niid is not None and "niid" in sub.columns:
                 sub = sub[sub["niid"] == niid]
 
-            for offset, sol in zip([-width / 2, width / 2], ["nvnl", "sw"]):
+            for offset, sol in zip([-width / 2, width / 2], ["sweepfl", "sw"]):
                 vals = [
                     sub[(sub["solution"] == sol) & (sub["percentage"] == p)]["rounds_coverage"].mean()
                     for p in percentages
@@ -286,7 +286,7 @@ def plot_nvnl_vs_sw(summary: pd.DataFrame, models: list) -> plt.Figure | None:
             ax.set_xlabel("Sparsification percentage")
             ax.set_ylabel("Rounds for full model coverage")
             niid_lbl = f" | niid={niid}" if niid is not None else ""
-            ax.set_title(f"NVNL vs SW coverage rounds — {model}{niid_lbl}")
+            ax.set_title(f"SweepFL vs SW coverage rounds — {model}{niid_lbl}")
             ax.legend(fontsize=8)
             ax.grid(True, axis="y", alpha=0.3)
             ax.set_ylim(bottom=0)
@@ -469,11 +469,11 @@ def main(logs_dir=None):
         print("Saved 10_coverage_rounds_line.png/pdf")
         plt.close(fig_b)
 
-    fig_c = plot_nvnl_vs_sw(summary, models)
+    fig_c = plot_sweepfl_vs_sw(summary, models)
     if fig_c:
         for ext in ("png", "pdf"):
-            fig_c.savefig(OUT_FIG / f"10_nvnl_vs_sw.{ext}", dpi=150, bbox_inches="tight")
-        print("Saved 10_nvnl_vs_sw.png/pdf")
+            fig_c.savefig(OUT_FIG / f"10_sweepfl_vs_sw.{ext}", dpi=150, bbox_inches="tight")
+        print("Saved 10_sweepfl_vs_sw.png/pdf")
         plt.close(fig_c)
 
     fig_d = plot_logged_mb(summary, models)

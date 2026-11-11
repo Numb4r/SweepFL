@@ -1,7 +1,7 @@
 """
 32 — Why FedPHE (top-k) at p=0.1 is poor and seed-sensitive: mask diagnosis (companion to 31).
 
-Evidence produced, MobileNetV2 · CIFAR10 · α=1 · p=0.1, seeds 42/43/44, fedphe vs nvnl/sw/rw:
+Evidence produced, MobileNetV2 · CIFAR10 · α=1 · p=0.1, seeds 42/43/44, fedphe vs sweepfl/sw/rw:
   1. Coverage: distinct packs ever sent out of n_packs, and cumulative-unique-packs curve per round.
   2. Rank–frequency of packs (how concentrated the selection is).
   3. Mechanism: fedphe ranks packs by the L2 norm of the *weights* (client/literature/fedphe.py:
@@ -209,7 +209,7 @@ def main():
 
     # ---- Client train accuracy vs server accuracy (local fit vs. synchronised model)
     fig, axs = plt.subplots(1, 2, figsize=(11, 3.6), sharey=True)
-    for ax, sol in zip(axs, ("fedphe", "nvnl")):
+    for ax, sol in zip(axs, ("fedphe", "sweepfl")):
         for sd, ls in zip((42, 43, 44), ("-", "--", ":")):
             r = next((x for x in runs if x["sol"] == sol and x["seed"] == sd), None)
             if r is None:

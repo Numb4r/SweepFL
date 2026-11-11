@@ -38,7 +38,7 @@ Columns unused by a technique are emitted as `0`. `coeff_mod_bits` uses semicolo
 
 Per-round model snapshots are saved as `logs/<LOGFOLDER>/model/round_<N>.npz` using `np.savez_compressed` with float16 weights. This reduces storage by ~54% vs float32. Only client 0 saves snapshots. All rounds are kept (not just the last).
 
-**Save timing**: for HE/packing solutions (`nvnl`, `fedphe`, `sw`, `rw`, `topkrr`, `srr`), saves happen inside `he_packs_to_model` / `he_parameters_to_model` in `client/literature/set_parameters.py`, called from both `fit()` and `evaluate()`. Round N's file reflects the server's aggregated weights sent back for that round. For `plaintext`, the save is at the top of `fit_plaintext()` in `client/literature/plaintext.py`. These `np.savez_compressed` writes run **after** the decrypt timer stops, so they are not counted in `decrypt_time_s`.
+**Save timing**: for HE/packing solutions (`sweepfl`, `fedphe`, `sw`, `rw`, `topkrr`, `srr`), saves happen inside `he_packs_to_model` / `he_parameters_to_model` in `client/literature/set_parameters.py`, called from both `fit()` and `evaluate()`. Round N's file reflects the server's aggregated weights sent back for that round. For `plaintext`, the save is at the top of `fit_plaintext()` in `client/literature/plaintext.py`. These `np.savez_compressed` writes run **after** the decrypt timer stops, so they are not counted in `decrypt_time_s`.
 
 **Path convention**: Docker CWD is `/`; logs volume is mounted at `/logs`. Always use `f'logs/{self.log_folder}/model'` — never `f'{self.log_folder}/model'`. The latter writes to ephemeral container storage lost on exit. Both `set_parameters.py` and `plaintext.py` must use this prefix consistently.
 
@@ -50,4 +50,4 @@ weights = [data[f'arr_{i}'] for i in range(len(data.files))]  # numeric order, N
 
 ## Payload bytes caveat (packing solutions)
 
-`payload_bytes` in `train.csv` for packing solutions (`nvnl`, `sw`, `rw`, `fedphe`, `topkrr`, `srr`) records only pack-index / mask metadata (a few hundred bytes), **not** the actual CKKS ciphertext size. For plaintext it correctly records the full model byte count. Analyses that compare byte costs between HE and plaintext must account for this — use rounds as the primary communication metric when comparing packing strategies.
+`payload_bytes` in `train.csv` for packing solutions (`sweepfl`, `sw`, `rw`, `fedphe`, `topkrr`, `srr`) records only pack-index / mask metadata (a few hundred bytes), **not** the actual CKKS ciphertext size. For plaintext it correctly records the full model byte count. Analyses that compare byte costs between HE and plaintext must account for this — use rounds as the primary communication metric when comparing packing strategies.

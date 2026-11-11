@@ -28,7 +28,7 @@ OUT_BASE = HERE / "output" / "figures" / "25_accuracy_curves_individual"
 
 SOL_COLORS = {
     "plaintext":  "#333333",
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",
@@ -39,7 +39,7 @@ SOL_COLORS = {
     "batchcrypt": "#795548",
 }
 SOL_MARKERS = {
-    "plaintext": "D", "nvnl": "o", "sw": "s", "rw": "^",
+    "plaintext": "D", "sweepfl": "o", "sw": "s", "rw": "^",
     "fedphe": "P", "topkrr": "p", "srr": "h",
     "ckks": "v", "bfv": "X", "batchcrypt": "H",
 }

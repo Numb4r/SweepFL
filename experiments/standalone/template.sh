@@ -24,9 +24,9 @@ SEEDS=(42)
 TECHNIQUE="none"       # topk | robin_round | slided_window | none
 
 # ── Solutions ─────────────────────────────────────────────────────
-# Packing solutions (support PERCENTAGES sweep): nvnl sw rw fedphe nvnl-scout fedphe-scout
+# Packing solutions (support PERCENTAGES sweep): sweepfl sw rw fedphe sweepfl-scout fedphe-scout
 # Non-packing solutions (PERCENTAGES ignored):   ckks bfv batchcrypt plaintext
-SOLUTIONS=('nvnl' 'sw' 'rw' 'fedphe')
+SOLUTIONS=('sweepfl' 'sw' 'rw' 'fedphe')
 
 # Fraction of packs encrypted and transmitted (only for packing solutions).
 PERCENTAGES=(0.1 0.3 0.5)

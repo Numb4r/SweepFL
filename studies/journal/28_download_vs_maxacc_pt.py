@@ -35,7 +35,7 @@ Só se aplica às técnicas de *packing* (`sstyle.PACKING_SOLS`), já que só
 elas geram `mask.csv` (mesmo recorte já adotado nos Estudos 15/16 e
 20/22/26) — **exceto RW**, excluído aqui deliberadamente: a comparação
 proposta neste estudo deve ser entre métodos de seleção que não sejam
-inteiramente aleatórios (NVNL, FedPHE, SW seguem alguma estrutura
+inteiramente aleatórios (SweepFL, FedPHE, SW seguem alguma estrutura
 determinística/adaptativa; RW sorteia os pacotes de forma independente a
 cada rodada). Justificativa completa a ser desenvolvida no texto da
 dissertação; aqui fica só a decisão de escopo. Portanto:

@@ -253,7 +253,7 @@ EOF
 )   
             echo "Gerando CKKS → POLY=$POLY COEFFS=[$COEFFS] SCALE=2^$POWER=$SCALE key=$KEY_TYPE"       
             run_combo_keys "ckks" "$json"
-            for SOLUTION in     'nvnl'; do # 'ckks' 'nvnl 'fedphe'
+            for SOLUTION in     'sweepfl'; do # 'ckks' 'sweepfl 'fedphe'
                 for model in "${!dict[@]}"; do
                     for dataset in ${dict[$model]}; do
                         for niid in "${NIIDS[@]}"; do
@@ -264,8 +264,8 @@ EOF
                                     dataset_folder="$dataset"
                                 fi
                                 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-                                if [[ "$SOLUTION" == *"fedphe"* || "$SOLUTION" == *"nvnl"* ]]; then
-                                    # Rodar apenas para fedphe e nvnl
+                                if [[ "$SOLUTION" == *"fedphe"* || "$SOLUTION" == *"sweepfl"* ]]; then
+                                    # Rodar apenas para fedphe e sweepfl
 
                                     for PERCENTAGE in "${PERCENTAGES[@]}"; do
                                         LOGFOLDER=${model}_${dataset_folder}_${SOLUTION}_${TECHNIQUE}_${NUM_ROUNDS}rounds_${NCLIENTES}clients_seed${SEED}_niid${niid}_percentage${PERCENTAGE}_${POLY}_${plain}_${nlength}_${COEFFS}_${SCALE}_${KEY_TYPE}_${TIMESTAMP}

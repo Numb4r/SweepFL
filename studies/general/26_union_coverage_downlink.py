@@ -8,7 +8,7 @@ broadcasts that same blob to every client. So the true downlink size per round i
 by the UNION of packs across clients, not by the per-client upload (~`percentage`).
 
 Techniques differ sharply in how correlated their per-client masks are:
-  nvnl / sw   : mask depends only on `round` (same window for every client) → union ≈
+  sweepfl / sw   : mask depends only on `round` (same window for every client) → union ≈
                 per-client upload (~percentage). Cheap downlink, but the model updates
                 only ~1/percentage rounds worth of packs per full cycle.
   fedphe      : top-k by magnitude → masks are highly correlated across clients (everyone

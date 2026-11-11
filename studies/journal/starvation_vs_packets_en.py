@@ -43,9 +43,9 @@ OUT = os.environ.get("FIG_OUT") or os.path.join(os.path.dirname(os.path.abspath(
 os.makedirs(OUT, exist_ok=True)
 
 # draw order: Round Robin (largest marker) first, so Sliding Window and Random overlay it at zero
-POLICIES = [(k, ps.LABELS[k]) for k in ("nvnl", "sw", "rw", "fedphe")]
-ZORDER = {"nvnl": 3, "sw": 4, "rw": 5, "fedphe": 6}
-SIZE = {"nvnl": 7, "sw": 4.5, "rw": 4.5, "fedphe": ps.MARKERSIZE}
+POLICIES = [(k, ps.LABELS[k]) for k in ("sweepfl", "sw", "rw", "fedphe")]
+ZORDER = {"sweepfl": 3, "sw": 4, "rw": 5, "fedphe": 6}
+SIZE = {"sweepfl": 7, "sw": 4.5, "rw": 4.5, "fedphe": ps.MARKERSIZE}
 # ordered by packet count, which is the x axis of panel (a)
 PAIRS = [("lenet5", "FASHION_MNIST", "LeNet-5"),
          ("dnn_tiny", "FASHION_MNIST", "DNN"),
@@ -82,7 +82,7 @@ def build() -> None:
     fig, (axa, axb) = plt.subplots(1, 2, figsize=(7.2, 2.6), constrained_layout=True)
 
     # ── (a) starved fraction vs packet count, p = 10% ───────────────────────
-    xs = [starved(m, d, "nvnl", MAIN, "0.1")[1] for m, d, _ in PAIRS]
+    xs = [starved(m, d, "sweepfl", MAIN, "0.1")[1] for m, d, _ in PAIRS]
     for policy, _ in POLICIES:
         for niid, part in ((MAIN, "non-iid"), (REF, "iid")):
             ys = []

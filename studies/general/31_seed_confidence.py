@@ -1,7 +1,7 @@
 """
 31 — Seed-confidence study: do the technique rankings hold across seeds 42/43/44?
 
-MobileNetV2 · CIFAR10 · α=1 · p ∈ {0.1, 0.7}; techniques fedphe (top-k), nvnl (round-robin),
+MobileNetV2 · CIFAR10 · α=1 · p ∈ {0.1, 0.7}; techniques fedphe (top-k), sweepfl (round-robin),
 sw, rw; plaintext (seed 42) as reference. Metric: mean server accuracy over the last 10 rounds
 (also best-round accuracy). Statistics per cell (n=3): mean, std, coefficient of variation,
 95% CI (Student t, 2 d.o.f. → 4.303·s/√n), min–max. Pairwise table: gap between means and

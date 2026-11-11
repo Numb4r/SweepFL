@@ -1,4 +1,4 @@
-# HARDENING — Garantias antes do sweep final do NVNL
+# HARDENING — Garantias antes do sweep final do SweepFL
 
 Data: 2026-06-29  
 Autor: auditoria automática + modificações mínimas.
@@ -36,7 +36,7 @@ Varredura em todos os `experiment_details.json` dentro de `logs/`:
 
 **Nota sobre os 287 experimentos de arquivo:** Esses experimentos foram rodados com
 código anterior à introdução da variável `MAGG_RENORM`. O comportamento na época era
-equivalente a `MAGG_RENORM=0` (sem renorm per-pack). Para `nvnl` e `sw` (máscaras
+equivalente a `MAGG_RENORM=0` (sem renorm per-pack). Para `sweepfl` e `sw` (máscaras
 determinísticas, CLIENT_FRACTION=1.0), o viés era nulo. Para `fedphe` e `rw` (máscaras
 data-dependent/aleatórias), havia viés de divisão. **Esses resultados já estão em
 `archive/` e NÃO devem entrar na dissertação** — os experimentos corretos (com
@@ -86,8 +86,8 @@ experimentos ativos (440 experimentos com MAGG_RENORM explícito).
 
 - Lido em `server.py:297`: `float(os.environ.get('CLIENT_FRACTION', 1.0))`
 - Propagado por `lib_tmux.sh:195` e `lib_slurm.sh` via `CLIENT_FRACTION='${CLIENT_FRACTION:-1.0}'`
-- Nos sweeps `sparsification_percentage` (sweep principal do NVNL): CLIENT_FRACTION=1.0
-  → todos os K clientes participam de todas as rodadas → S_k = K para NVNL/SW (sem viés
+- Nos sweeps `sparsification_percentage` (sweep principal do SweepFL): CLIENT_FRACTION=1.0
+  → todos os K clientes participam de todas as rodadas → S_k = K para sweepfl/SW (sem viés
   mesmo em caminho legado).
 - No sweep `client_frac`: CLIENT_FRACTION ∈ {0.25, 0.5, 0.75} → K_sel < K clientes por
   rodada → MAGG_RENORM=1 é necessário para dividir corretamente por Σ_{S_k} D_i.
@@ -131,7 +131,7 @@ por máscara de tamanho `len(mask)`, não por tamanho do pack individual).
 |--------|------|-----------|
 | `experiment_name` | str | Label do experimento |
 | `round` | int | Rodada global (com offset de resume) |
-| `solution` | str | nvnl / fedphe / sw / rw / etc. |
+| `solution` | str | sweepfl / fedphe / sw / rw / etc. |
 | `pack_idx` | int | Índice do pack (0 … n_packs-1) |
 | `n_contributors` | int | Quantos clientes enviaram este pack nesta rodada |
 | `n_clients_round` | int | Total de clientes que responderam nesta rodada |
@@ -148,14 +148,14 @@ freq = df.groupby("pack_idx")["n_contributors"].sum()
 # Uniformidade por rodada: desvio-padrão de n_contributors por round
 uniformity = df.groupby("round")["n_contributors"].std()
 
-# Para NVNL: espera-se n_contributors constante (= n_clients_round) por round
+# Para SweepFL: espera-se n_contributors constante (= n_clients_round) por round
 # Para FedPHE: espera-se alta variância entre pack_idx dentro de cada round
 ```
 
 Gráficos esperados:
-- **NVNL**: barra horizontal plana para todos os packs — cobertura uniforme.
+- **SweepFL**: barra horizontal plana para todos os packs — cobertura uniforme.
 - **FedPHE**: packs de alta norma com barra alta, packs de baixa norma com barra baixa —
-  confirma o argumento da dissertação de que NVNL tem cobertura mais equitativa.
+  confirma o argumento da dissertação de que SweepFL tem cobertura mais equitativa.
 
 ---
 
@@ -167,7 +167,7 @@ Gráficos esperados:
 
 | Arquivo | Linha | Efeito se MAGG_RENORM=0 |
 |---------|-------|-------------------------|
-| `client/literature/NVNL.py` | 58 | Pré-divide por K em vez de multiplicar por D_i |
+| `client/literature/sweepfl.py` | 58 | Pré-divide por K em vez de multiplicar por D_i |
 | `client/literature/fedphe.py` | 58 | Idem — cria viés para top-k data-dependent |
 | `client/literature/sw.py` | 58 | Idem — sem viés para SW determinístico com CF=1.0 |
 | `client/literature/rw.py` | 58 | Idem — cria viés para masks aleatórias |

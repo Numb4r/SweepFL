@@ -1,30 +1,30 @@
 """
-11 — Data transferred vs model coverage: NVNL vs SW.
+11 — Data transferred vs model coverage: SweepFL vs SW.
 
 Answers: given a fixed byte budget (or round budget), how much of the model
 has each strategy exposed to the server?
 
 Background:
-  NVNL sends `packs_sent` packs per round with NO overlap (stride = packs_sent).
+  SweepFL sends `packs_sent` packs per round with NO overlap (stride = packs_sent).
   SW   sends `packs_sent` packs per round with 50% overlap (stride ≈ packs_sent/2).
-  → Same bytes per round, but NVNL covers 2× new territory per byte spent.
+  → Same bytes per round, but SweepFL covers 2× new territory per byte spent.
 
 Coverage per round (theoretical):
-  NVNL: new_coverage_frac = packs_sent / n_packs   (= percentage, linear)
+  SweepFL: new_coverage_frac = packs_sent / n_packs   (= percentage, linear)
   SW  : new_coverage_frac = stride / n_packs        (≈ percentage / 2)
 
 Bytes estimate (raw pre-encryption, float32):
   per_round_mb = packs_sent × pack_size × 4 / 1e6
 
 Marginal cost (MB per 1% new coverage):
-  NVNL: n_packs × pack_size × 4 / (1e6 × 100)   ← constant, independent of %
-  SW  : 2 × NVNL marginal cost                   ← constant at 2×
+  SweepFL: n_packs × pack_size × 4 / (1e6 × 100)   ← constant, independent of %
+  SW  : 2 × SweepFL marginal cost                   ← constant at 2×
 
 Plots:
-  A) Line: cumulative coverage % vs round — NVNL vs SW per percentage
+  A) Line: cumulative coverage % vs round — SweepFL vs SW per percentage
   B) Line: cumulative coverage % vs cumulative MB — the key efficiency plot
-  C) Bar : coverage % at fixed round budgets (N=10,20,50) — NVNL vs SW
-  D) Bar : MB per 1% new coverage (marginal cost) — NVNL vs SW
+  C) Bar : coverage % at fixed round budgets (N=10,20,50) — SweepFL vs SW
+  D) Bar : MB per 1% new coverage (marginal cost) — SweepFL vs SW
 
 Output: output/figures/11_*.{png,pdf}
 Tables: output/tables/11_data_coverage_summary.{csv,tex}
@@ -53,14 +53,14 @@ OUT_TAB = HERE / "output" / "tables"
 OUT_FIG.mkdir(parents=True, exist_ok=True)
 OUT_TAB.mkdir(parents=True, exist_ok=True)
 
-FOCUS_SOLUTIONS = {"nvnl", "sw"}
-COLORS = {"nvnl": "#2196F3", "sw": "#FF5722"}
+FOCUS_SOLUTIONS = {"sweepfl", "sw"}
+COLORS = {"sweepfl": "#2196F3", "sw": "#FF5722"}
 FIXED_BUDGETS = [5, 10, 20, 50]
 
 # ── Coverage & bytes formulas ─────────────────────────────────────────────────
 
 def _stride(solution: str, packs_sent: float) -> float:
-    if solution == "nvnl":
+    if solution == "sweepfl":
         return packs_sent
     if solution == "sw":
         return max(math.ceil(packs_sent * 0.5), 1)
@@ -178,7 +178,7 @@ def plot_coverage_vs_round(traj: pd.DataFrame, models: list, niids: list) -> plt
             if "niid" in sub.columns:
                 sub = sub[sub["niid"] == niid]
 
-            for sol in ["nvnl", "sw"]:
+            for sol in ["sweepfl", "sw"]:
                 for pct in percentages:
                     s = sub[(sub["solution"] == sol) & (sub["percentage"] == pct)]
                     if s.empty:
@@ -226,7 +226,7 @@ def plot_coverage_vs_bytes(traj: pd.DataFrame, models: list, niids: list) -> plt
             if "niid" in sub.columns:
                 sub = sub[sub["niid"] == niid]
 
-            for sol in ["nvnl", "sw"]:
+            for sol in ["sweepfl", "sw"]:
                 for pct in percentages:
                     s = sub[(sub["solution"] == sol) & (sub["percentage"] == pct)]
                     if s.empty or s["cumulative_mb"].isna().all():
@@ -282,7 +282,7 @@ def plot_fixed_budget_coverage(traj: pd.DataFrame, models: list, niids: list,
                 if "niid" in sub.columns:
                     sub = sub[sub["niid"] == niid]
 
-                for offset, sol in zip([-width / 2, width / 2], ["nvnl", "sw"]):
+                for offset, sol in zip([-width / 2, width / 2], ["sweepfl", "sw"]):
                     vals = [
                         sub[(sub["solution"] == sol) & (sub["percentage"] == p)]["coverage_pct"].mean()
                         for p in percentages
@@ -338,7 +338,7 @@ def plot_marginal_cost(params: pd.DataFrame, models: list, niids: list) -> plt.F
             if "niid" in sub.columns:
                 sub = sub[sub["niid"] == niid]
 
-            for offset, sol in zip([-width / 2, width / 2], ["nvnl", "sw"]):
+            for offset, sol in zip([-width / 2, width / 2], ["sweepfl", "sw"]):
                 vals = [
                     sub[(sub["solution"] == sol) & (sub["percentage"] == p)][
                         "marginal_cost_mb_per_pct"
@@ -360,7 +360,7 @@ def plot_marginal_cost(params: pd.DataFrame, models: list, niids: list) -> plt.F
             ax.set_ylabel("MB per 1% new model coverage")
             niid_lbl = f" | niid={niid}" if niid is not None else ""
             ax.set_title(f"Marginal data cost per 1% coverage — {model}{niid_lbl}\n"
-                         "(lower = more byte-efficient; SW ≈ 2× NVNL by design)")
+                         "(lower = more byte-efficient; SW ≈ 2× SweepFL by design)")
             ax.legend(fontsize=8)
             ax.grid(True, axis="y", alpha=0.3)
             ax.set_ylim(bottom=0)
@@ -416,7 +416,7 @@ def save_latex(params: pd.DataFrame):
     ncols = len(cols)
     lines = [
         r"\begin{longtable}{" + "l" * ncols + "}",
-        r"\caption{Data-to-coverage efficiency: NVNL vs SW}",
+        r"\caption{Data-to-coverage efficiency: SweepFL vs SW}",
         r"\label{tab:data_coverage} \\",
         r"\toprule", header, r"\midrule", r"\endfirsthead",
         r"\toprule", header, r"\midrule", r"\endhead",

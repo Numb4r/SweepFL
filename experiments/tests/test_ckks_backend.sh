@@ -3,8 +3,8 @@
 #
 # Runs 5 experiments across 3 phases:
 #   Phase 0 — plaintext   (Docker)        → seeds init_weights (required by HE solutions)
-#   Phase 1 — nvnl+fedphe (Docker)        → ckks_python_simplify backend
-#   Phase 2 — nvnl+fedphe (Singularity)   → ckks_python_simplify backend
+#   Phase 1 — sweepfl+fedphe (Docker)        → ckks_python_simplify backend
+#   Phase 2 — sweepfl+fedphe (Singularity)   → ckks_python_simplify backend
 #
 # Config: 2 clients · 3 rounds · FashionMNIST · LeNet-5
 #         ring_dim=8192, bits=60, scale_bits=40, percentage=0.1
@@ -90,21 +90,21 @@ SIF_DIR="."
 run_theme
 _cleanup_between_phases
 
-# ── Phase 1: nvnl + fedphe (Docker) ──────────────────────────────────────────
+# ── Phase 1: sweepfl + fedphe (Docker) ──────────────────────────────────────────
 echo ""
-echo "▶ Phase 1: nvnl + fedphe (Docker / ckks_python_simplify)"
+echo "▶ Phase 1: sweepfl + fedphe (Docker / ckks_python_simplify)"
 FOLDER="test_ckks_backend/phase1_docker"
-SOLUTIONS=("nvnl" "fedphe")
+SOLUTIONS=("sweepfl" "fedphe")
 RUNTIME="docker"
 SIF_DIR="."
 run_theme
 _cleanup_between_phases
 
-# ── Phase 2: nvnl + fedphe (Singularity) ─────────────────────────────────────
+# ── Phase 2: sweepfl + fedphe (Singularity) ─────────────────────────────────────
 echo ""
-echo "▶ Phase 2: nvnl + fedphe (Singularity / ckks_python_simplify)"
+echo "▶ Phase 2: sweepfl + fedphe (Singularity / ckks_python_simplify)"
 FOLDER="test_ckks_backend/phase2_singularity"
-SOLUTIONS=("nvnl" "fedphe")
+SOLUTIONS=("sweepfl" "fedphe")
 RUNTIME="singularity"
 SIF_DIR="."
 # run_theme

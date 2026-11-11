@@ -61,7 +61,7 @@ OUT_FIG.mkdir(parents=True, exist_ok=True)
 OUT_TAB.mkdir(parents=True, exist_ok=True)
 
 SOL_COLORS = {
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",
@@ -72,7 +72,7 @@ SOL_COLORS = {
     "batchcrypt": "#795548",
 }
 SOL_MARKERS = {
-    "nvnl": "o", "sw": "s", "rw": "^", "fedphe": "P", "topkrr": "p", "srr": "h",
+    "sweepfl": "o", "sw": "s", "rw": "^", "fedphe": "P", "topkrr": "p", "srr": "h",
     "ckks": "v", "bfv": "X", "batchcrypt": "H",
 }
 

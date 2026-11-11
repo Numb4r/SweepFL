@@ -5,8 +5,8 @@
 #   Phase 0 — plaintext           → baseline; also seeds init_weights (required)
 #   Phase 1 — fedphe MAGG_RENORM=0  (legacy, biased for sparse/data-dependent masks)
 #   Phase 2 — fedphe MAGG_RENORM=1  (corrected, proper per-pack FedAvg)
-#   Phase 3 — nvnl   MAGG_RENORM=0  (control: RR masks = identical → sparsity no-op)
-#   Phase 4 — nvnl   MAGG_RENORM=1  (control corrected: also fixes data-weighting)
+#   Phase 3 — sweepfl   MAGG_RENORM=0  (control: RR masks = identical → sparsity no-op)
+#   Phase 4 — sweepfl   MAGG_RENORM=1  (control corrected: also fixes data-weighting)
 #
 # Setup: 3 clients · 25 rounds · FashionMNIST · LeNet-5 · niid=0.1 · ζ=0.1
 #   ζ=0.1 (10% of packs) maximises sparse-pack coverage → largest bias gap.
@@ -14,7 +14,7 @@
 #
 # Expected outcome:
 #   fedphe MAGG_RENORM=1 ≥ MAGG_RENORM=0 in final accuracy (bug fix visible).
-#   nvnl   MAGG_RENORM=1 ≥ MAGG_RENORM=0 (data-weighting fix; gap smaller than fedphe).
+#   sweepfl   MAGG_RENORM=1 ≥ MAGG_RENORM=0 (data-weighting fix; gap smaller than fedphe).
 #   plaintext sets the upper bound (~1.45% envelope per paper T6).
 #
 # Usage (from repo root):
@@ -68,7 +68,7 @@ _cleanup() {
 }
 
 echo "╔══════════════════════════════════════════════════════════════════╗"
-echo "║  MAGG_RENORM A/B Experiment — fedphe & nvnl                     ║"
+echo "║  MAGG_RENORM A/B Experiment — fedphe & sweepfl                     ║"
 echo "║  3 clients · 25 rounds · FashionMNIST · LeNet-5 · ζ=0.1        ║"
 echo "║  niid=0.1 · ckks_python_simplify backend                        ║"
 echo "╚══════════════════════════════════════════════════════════════════╝"
@@ -103,21 +103,21 @@ SIF_DIR="."
 MAGG_RENORM=1 run_theme
 _cleanup
 
-# ── Phase 3: nvnl MAGG_RENORM=0 (control — RR masks, legacy) ─────────────────
+# ── Phase 3: sweepfl MAGG_RENORM=0 (control — RR masks, legacy) ─────────────────
 echo ""
-echo "▶ Phase 3: nvnl MAGG_RENORM=0 (control — RR masks, legacy)"
-FOLDER="test_magg_ab/phase3_nvnl_legacy"
-SOLUTIONS=("nvnl")
+echo "▶ Phase 3: sweepfl MAGG_RENORM=0 (control — RR masks, legacy)"
+FOLDER="test_magg_ab/phase3_sweepfl_legacy"
+SOLUTIONS=("sweepfl")
 RUNTIME="docker"
 SIF_DIR="."
 MAGG_RENORM=0 run_theme
 _cleanup
 
-# ── Phase 4: nvnl MAGG_RENORM=1 (control corrected) ─────────────────────────
+# ── Phase 4: sweepfl MAGG_RENORM=1 (control corrected) ─────────────────────────
 echo ""
-echo "▶ Phase 4: nvnl MAGG_RENORM=1 (control — RR masks, corrected)"
-FOLDER="test_magg_ab/phase4_nvnl_corrected"
-SOLUTIONS=("nvnl")
+echo "▶ Phase 4: sweepfl MAGG_RENORM=1 (control — RR masks, corrected)"
+FOLDER="test_magg_ab/phase4_sweepfl_corrected"
+SOLUTIONS=("sweepfl")
 RUNTIME="docker"
 SIF_DIR="."
 MAGG_RENORM=1 run_theme
@@ -132,12 +132,12 @@ declare -A LABELS=(
     [phase0_plaintext]="plaintext  (baseline)"
     [phase1_fedphe_legacy]="fedphe     MAGG_RENORM=0 (legacy)"
     [phase2_fedphe_corrected]="fedphe     MAGG_RENORM=1 (corrected)"
-    [phase3_nvnl_legacy]="nvnl       MAGG_RENORM=0 (control legacy)"
-    [phase4_nvnl_corrected]="nvnl       MAGG_RENORM=1 (control corrected)"
+    [phase3_sweepfl_legacy]="sweepfl       MAGG_RENORM=0 (control legacy)"
+    [phase4_sweepfl_corrected]="sweepfl       MAGG_RENORM=1 (control corrected)"
 )
 all_ok=true
 for phase in phase0_plaintext phase1_fedphe_legacy phase2_fedphe_corrected \
-             phase3_nvnl_legacy phase4_nvnl_corrected; do
+             phase3_sweepfl_legacy phase4_sweepfl_corrected; do
     label="${LABELS[$phase]}"
     found=false
     for dir in logs/test_magg_ab/${phase}/*/; do
@@ -158,7 +158,7 @@ done
 echo "════════════════════════════════════════════════════════════════════"
 echo ""
 echo "Expected: fedphe corrected acc ≥ fedphe legacy (fix matters for sparse+non-IID)."
-echo "          nvnl   corrected acc ≥ nvnl   legacy (data-weighting fix, smaller gap)."
+echo "          sweepfl   corrected acc ≥ sweepfl   legacy (data-weighting fix, smaller gap)."
 echo "          plaintext sets upper bound."
 echo ""
 echo "Compare full convergence curves:"

@@ -31,7 +31,7 @@ PAIRS = [("lenet5", "FASHION_MNIST", "LeNet-5", 16), ("dnn_tiny", "FASHION_MNIST
          ("vit_tiny", "tanganke_gtsrb", "ViT-Tiny", 52), ("resnet20", "CIFAR10", "ResNet-20", 67),
          ("mobilenetv2", "CIFAR10", "MobileNetV2", 176)]
 CIFAR = [p for p in PAIRS if p[1] == "CIFAR10"]
-POLS = [("nvnl", "RR"), ("sw", "SW"), ("rw", "RW"), ("fedphe", "Top-k")]
+POLS = [("sweepfl", "RR"), ("sw", "SW"), ("rw", "RW"), ("fedphe", "Top-k")]
 FULL = [("plaintext", "FedAvg"), ("ckks", "CKKS"), ("bfv", "BFV"), ("batchcrypt", "BatchC.")]
 BUDGETS = ["0.1", "0.3", "0.5", "0.7", "0.9"]
 FRACS = ["0.25", "0.5", "0.75"]
@@ -57,7 +57,7 @@ def runs(root, model, dataset, sol, niid, pct, cf=None):
     accuracy_vs_budget_en.py). Random keeps the main-sweep runs.
     """
     if (USE_RANGE_FIX and root == SP and model == "mobilenetv2" and niid == "1"
-            and pct in ("0.7", "0.9") and sol in ("nvnl", "sw", "fedphe")):
+            and pct in ("0.7", "0.9") and sol in ("sweepfl", "sw", "fedphe")):
         root = RANGE_FIX
     toks = [f"_niid{niid}_", f"_percentage{pct}_"] + ([f"_cf{cf}_"] if cf else [])
     return ld.config_runs(root, f"{model}_{dataset}_{sol}_", toks)
@@ -143,7 +143,7 @@ def table_fullmodel():
                 v = accs(SP, m, d, sol, niid, "-1")
                 cells.append(cell(v))
             for pct in ("0.3", "0.1"):
-                v = accs(SP, m, d, "nvnl", niid, pct)
+                v = accs(SP, m, d, "sweepfl", niid, pct)
                 cells.append(cell(v))
             out(f"| {name} | " + " | ".join(cells) + " |")
 
@@ -299,14 +299,14 @@ def mask_replay():
     total = bad = nruns = 0
     for root in (SP, CF):
         for f in sorted(root.iterdir()):
-            mm = re.search(r"_(nvnl|sw)_none_.*_percentage([0-9.]+)_", f.name)
+            mm = re.search(r"_(sweepfl|sw)_none_.*_percentage([0-9.]+)_", f.name)
             if not mm or not (f / "mask.csv").exists():
                 continue
             nruns += 1
             pol, p = mm.group(1), float(mm.group(2))
             n_packs, masks = ld.run_masks([f])
             k = math.ceil(n_packs * p)
-            stride = k if pol == "nvnl" else math.ceil(k * 0.5)
+            stride = k if pol == "sweepfl" else math.ceil(k * 0.5)
             for t, ms in masks.items():
                 want = {(t * stride + i) % n_packs for i in range(k)}
                 total += len(ms)
@@ -355,7 +355,7 @@ def round_one():
     for f in SP.iterdir():
         agg = ld._read_csv_safe(f / "server_agg.csv")
         if agg is not None and len(agg) and int(agg["round"].iloc[0]) == 1:
-            packing = any(f"_{s}_none_" in f.name for s in ("nvnl", "sw", "rw", "fedphe"))
+            packing = any(f"_{s}_none_" in f.name for s in ("sweepfl", "sw", "rw", "fedphe"))
             c[(int(agg["n_clients"].iloc[0]), "packing" if packing else "full model")] += 1
     out(f"- clients aggregated in round 1, by arm: {dict(c)}")
 

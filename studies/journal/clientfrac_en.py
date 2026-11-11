@@ -1,4 +1,4 @@
-# Reconstructed from the bytecode (journal-nvnl/figures/scripts/__pycache__/clientfrac_en.cpython-310.pyc)
+# Reconstructed from the bytecode (journal-sweepfl/figures/scripts/__pycache__/clientfrac_en.cpython-310.pyc)
 # on 2026-11-11. The original source was lost. Data logic (run/accuracy/factor, panels, axes, limits) follows the
 # bytecode; colors, markers, labels and axis styling come from paper_style.py (the bytecode predates it and
 # hard-coded an older palette).
@@ -35,7 +35,7 @@ LOGS = os.environ.get("LOGS") or os.path.join(HERE, "..", "..", "logs", "client_
 OUT = os.environ.get("FIG_OUT") or os.path.join(HERE, "output", "figures")
 os.makedirs(OUT, exist_ok=True)
 
-POLICIES = ["nvnl", "sw", "rw", "fedphe"]
+POLICIES = ["sweepfl", "sw", "rw", "fedphe"]
 PANELS = [("resnet20", "ResNet-20", 67, "0.1"), ("resnet20", "ResNet-20", 67, "0.5"),
           ("mobilenetv2", "MobileNetV2", 176, "0.1"), ("mobilenetv2", "MobileNetV2", 176, "0.5")]
 FRACTIONS = ["0.25", "0.5", "0.75"]

@@ -146,7 +146,7 @@ ao servidor determina quais valores são somados:
 |---|---|---|
 | `fedphe` | top-k por magnitude — envia os **maiores** pesos | **Alta**: maximiza o valor somado, pior caso para overflow |
 | `sw` | janela deslizante (stride=0.5×) — cobre todos após N rodadas | Média |
-| `nvnl` | round-robin uniforme | Baixa: distribui a variação ao longo das rodadas |
+| `sweepfl` | round-robin uniforme | Baixa: distribui a variação ao longo das rodadas |
 | `rw` | aleatório ponderado | Baixa/média |
 | `topkrr` | top-k nas primeiras rodadas, depois round-robin | Alta nas primeiras rodadas |
 | `plaintext` | sem criptografia | Nenhuma |
@@ -228,5 +228,5 @@ python3 generate_keys.py
 O colapso segue uma ordem determinística pela estratégia de seleção:
 1. `fedphe` / `topkrr` (top-k) — colapsa primeiro (seleciona pesos maiores)
 2. `sw` (janela deslizante) — colapsa logo após (stride duplo nas bordas)
-3. `nvnl` / `rw` / `srr` — mais tarde (distribuição mais uniforme dos valores)
+3. `sweepfl` / `rw` / `srr` — mais tarde (distribuição mais uniforme dos valores)
 4. `plaintext` — nunca colapsa (sem criptografia)

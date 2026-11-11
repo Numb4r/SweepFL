@@ -39,15 +39,15 @@ Valor correto, pelo mesmo estimador que já alimenta as figuras de três painéi
 
 Isso reconcilia a tabela com a previsão independente do cap. 4 (criptograma 2,6× a 4,0× menor): a vantagem sobre o CKKS passa a ser **2,85×** (ResNet-20) e **2,91×** (LeNet-5).
 
-### Defeito 2 — NVNL contado duas vezes (não detectado na revisão)
+### Defeito 2 — SweepFL contado duas vezes (não detectado na revisão)
 
-`logs/sparsification_percentage` tem 309 pastas para 240 configs. **60 configs possuem duas execuções completas independentes** (rodadas 1–200 em ambas), **50 delas NVNL**. `load_data.load_all` concatenava todas as pastas, e os estudos 15/16 somam a métrica por cliente dentro de cada rodada — o NVNL entrava duas vezes.
+`logs/sparsification_percentage` tem 309 pastas para 240 configs. **60 configs possuem duas execuções completas independentes** (rodadas 1–200 em ambas), **50 delas SweepFL**. `load_data.load_all` concatenava todas as pastas, e os estudos 15/16 somam a métrica por cliente dentro de cada rodada — o SweepFL entrava duas vezes.
 
-Medido antes da correção: NVNL com 18 linhas por rodada (9 clientes × 2 pastas) contra 9 de `sw`/`rw`/`fedphe`. Toda célula NVNL de `tab:fedphe_bytes` caía para exatamente 0,500 do valor publicado ao deduplicar; nenhuma célula não-NVNL se movia.
+Medido antes da correção: SweepFL com 18 linhas por rodada (9 clientes × 2 pastas) contra 9 de `sw`/`rw`/`fedphe`. Toda célula SweepFL de `tab:fedphe_bytes` caía para exatamente 0,500 do valor publicado ao deduplicar; nenhuma célula não-SweepFL se movia.
 
 O erro era **adversarial à tese**: inflava justamente o custo da técnica proposta.
 
-Há ainda **7 configs que são fragmentos de resume não mesclados** (rodadas disjuntas, `merge_resume.py` nunca rodou). Nesses, concatenar é correto — a união é o experimento real. Um deles (`resnet20/nvnl/p=0.9/niid1`) tem uma tentativa abandonada de 1–123 ao lado da cadeia 1–107 + 108–200, então "manter a pasta mais recente" ou "manter a mais longa" perdem rodadas. `studies/general/move_duplicates.sh` usa "manter a mais recente" e **destruiria 4 desses pares** — não usar.
+Há ainda **7 configs que são fragmentos de resume não mesclados** (rodadas disjuntas, `merge_resume.py` nunca rodou). Nesses, concatenar é correto — a união é o experimento real. Um deles (`resnet20/sweepfl/p=0.9/niid1`) tem uma tentativa abandonada de 1–123 ao lado da cadeia 1–107 + 108–200, então "manter a pasta mais recente" ou "manter a mais longa" perdem rodadas. `studies/general/move_duplicates.sh` usa "manter a mais recente" e **destruiria 4 desses pares** — não usar.
 
 `logs/client_frac`: as 108 "duplicatas" são pastas sem `train.csv`. Nenhuma tabela de `client_frac` foi afetada (verificado: contagem de linhas idêntica antes e depois).
 
@@ -72,7 +72,7 @@ Há ainda **7 configs que são fragmentos de resume não mesclados** (rodadas di
 | NVNL-FL | Tempo / Cifragem / Descifragem | — | ±0,3 % a 5,1 % | Defeito 2 |
 | FedAvg | Tempo (4 células) | — | −1,6 % a +1,2 % | Defeito 2 (10 configs `plaintext` duplicados) |
 
-`tab:fedphe_bytes` e `tab:fedphe_overhead` — só a linha NVNL mudou em cada par; nenhuma célula de FedPHE, SW ou RW se moveu. O pico do NVNL mudou de rodada porque antes a curva era a média de duas execuções distintas:
+`tab:fedphe_bytes` e `tab:fedphe_overhead` — só a linha SweepFL mudou em cada par; nenhuma célula de FedPHE, SW ou RW se moveu. O pico do SweepFL mudou de rodada porque antes a curva era a média de duas execuções distintas:
 
 | tabela | par / cenário | publicado | corrigido |
 | :--- | :--- | ---: | ---: |
@@ -85,9 +85,9 @@ Há ainda **7 configs que são fragmentos de resume não mesclados** (rodadas di
 | overhead | LeNet-5, IID | 130,17 s | **54,29 s** |
 | overhead | LeNet-5, não-IID | 51,56 s | **47,58 s** |
 
-`tab:study27_summary` — só as 5 linhas NVNL; FedPHE inalterado.
+`tab:study27_summary` — só as 5 linhas SweepFL; FedPHE inalterado.
 
-`tab:final_results_consolidation` — só as 30 células de tempo do NVNL (≤5,1 %). Todas as 66 acurácias, todos os *loss* e todas as células de CKKS e FedPHE reproduzem exatamente.
+`tab:final_results_consolidation` — só as 30 células de tempo do SweepFL (≤5,1 %). Todas as 66 acurácias, todos os *loss* e todas as células de CKKS e FedPHE reproduzem exatamente.
 
 `tab:fedphe_downlink`, `tab:cf_bytes`, `tab:cf_downlink` — **inalterados**, como esperado (usam médias e razões).
 
@@ -97,7 +97,7 @@ Há ainda **7 configs que são fragmentos de resume não mesclados** (rodadas di
 
 | checagem | resultado |
 | :--- | :--- |
-| linhas/rodada por config, todo o dataset | máximo 9 (era 18 no NVNL) |
+| linhas/rodada por config, todo o dataset | máximo 9 (era 18 no SweepFL) |
 | `logs/client_frac` antes vs. depois | idêntico nos 4 CSVs |
 | `pytest tests/` | 342 passaram, 1 skip, 1 xfail |
 | gerador executado duas vezes | idempotente, zero diferenças |
@@ -127,9 +127,9 @@ Com os valores corrigidos, em `p=90%`:
 ### `resultados.tex:187` — custo em bytes até a acurácia máxima
 
 - *"15,40 MB contra 998,11 MB do NVNL-FL no caso não-IID de ResNet-20"* → **534,45 MB**.
-- *"42,64% do FedPHE contra 73,86% do NVNL-FL"* (IID) → NVNL **72,72%**.
+- *"42,64% do FedPHE contra 73,86% do NVNL-FL"* (IID) → SweepFL **72,72%**.
 - *"75,37% do NVNL-FL"* (não-IID) → **75,79%**.
-- *"84,50 a 87,25% para o FedPHE contra 87,82 a 88,03% para o NVNL-FL"* (LeNet-5) → NVNL **87,78 a 88,07%**.
+- *"84,50 a 87,25% para o FedPHE contra 87,82 a 88,03% para o NVNL-FL"* (LeNet-5) → SweepFL **87,78 a 88,07%**.
 
 ### `resultados.tex:200` — custo em tempo até a acurácia máxima
 
@@ -139,7 +139,7 @@ Com os valores corrigidos, em `p=90%`:
 - *"O SW sustenta acurácia sempre dentro de 1,53 ponto percentual do NVNL-FL"* → dentro de **0,73** ponto percentual.
 - *"o RW … de 0,59 a 4,85 pontos percentuais abaixo do NVNL-FL"* → **0,63 a 3,71** pontos percentuais (maior diferença segue em ResNet-20 IID).
 
-### `resultados.tex:176` — onde a vantagem do NVNL se inverte
+### `resultados.tex:176` — onde a vantagem do SweepFL se inverte
 
 Afirma: *"chega a se inverter em p≥70% (MobileNetV2 em p=70% e p=90%; ResNet-20 em p=90%)"*.
 
@@ -147,8 +147,8 @@ Pela tabela corrigida, as inversões passam a ser **ResNet-20 em p=50% e p=90%; 
 
 | par | p=10 | p=30 | p=50 | p=70 | p=90 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| ResNet-20 | NVNL | NVNL | **FedPHE** (76,49 vs 76,24) | NVNL | **FedPHE** (79,57 vs 78,68) |
-| MobileNetV2 | NVNL | NVNL | NVNL | NVNL (78,68 vs 76,85) | **FedPHE** (77,15 vs 76,47) |
+| ResNet-20 | SweepFL | SweepFL | **FedPHE** (76,49 vs 76,24) | SweepFL | **FedPHE** (79,57 vs 78,68) |
+| MobileNetV2 | SweepFL | SweepFL | SweepFL | SweepFL (78,68 vs 76,85) | **FedPHE** (77,15 vs 76,47) |
 
 MobileNetV2 em `p=70%` deixa de ser uma inversão. A frase seguinte (*"nos demais três pares o NVNL-FL mantém vantagem nas cinco porcentagens"*) permanece correta.
 

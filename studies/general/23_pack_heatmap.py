@@ -13,7 +13,7 @@ One subplot per niid (side by side). Figure height scales with n_packs so large 
 
 Compared with study 20 (bars, one row per percentage): here all percentages are visible
 in a single glance per niid, making it easy to see how the pack-selection pattern changes
-across sparsification levels (uniform=nvnl/sw, bimodal=fedphe).
+across sparsification levels (uniform=sweepfl/sw, bimodal=fedphe).
 
 Source data: mask.csv (via load_data.load_masks). No model snapshot needed.
 

@@ -16,10 +16,10 @@ GPU_IDS=(5 6 7)        # Physical GPU indices to use
 CLIENTS_PER_GPU=3      # Clients per GPU
 
 # -- Experiment grid --------------------------------------------------
-SOLUTIONS=('nvnl')     # ckks | bfv | batchcrypt | fedphe | nvnl | plaintext | sw | rw | topkrr | srr
+SOLUTIONS=('sweepfl')     # ckks | bfv | batchcrypt | fedphe | sweepfl | plaintext | sw | rw | topkrr | srr
 NIIDS=(0.1)            # Dirichlet α  (0.1 = non-IID, 1.0 ≈ IID)
 SEEDS=(42)
-PERCENTAGES=(0.1 0.3)  # Pack fraction  (packing solutions only: fedphe, nvnl, sw, rw)
+PERCENTAGES=(0.1 0.3)  # Pack fraction  (packing solutions only: fedphe, sweepfl, sw, rw)
 NUM_ROUNDS=50
 TECHNIQUE="none"       # topk | robin_round | slided_window | none
 
@@ -89,7 +89,7 @@ notify() {
 
 # Returns 0 if the solution uses packing + selective encryption
 is_packing_solution() {
-    case "$1" in fedphe|nvnl|fedphe-scout|nvnl-scout|sw|rw|topkrr|srr) return 0 ;; esac
+    case "$1" in fedphe|sweepfl|fedphe-scout|sweepfl-scout|sw|rw|topkrr|srr) return 0 ;; esac
     return 1
 }
 

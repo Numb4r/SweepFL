@@ -16,7 +16,7 @@ Data: 2026-09-23.
 ## 1. A varredura de agosto (`logs/seed_experiment/`)
 
 Configuração: `SEEDS=(43 44)`, `NIIDS=(0.1 1)`, `PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)`,
-resnet20 e mobilenetv2 em CIFAR-10, 9 clientes, 200 rodadas, técnicas nvnl, sw, rw e fedphe
+resnet20 e mobilenetv2 em CIFAR-10, 9 clientes, 200 rodadas, técnicas sweepfl, sw, rw e fedphe
 (4 × 2 × 2 × 2 × 5 = 160 runs).
 
 - `check_status.py`: 160/160 com 200 rodadas; nenhuma foi retomada de checkpoint.
@@ -32,11 +32,11 @@ resnet20 e mobilenetv2 em CIFAR-10, 9 clientes, 200 rodadas, técnicas nvnl, sw,
 | mobilenetv2 | fedphe | 44 | 0.1 | 0.1 | 64 | 96 | 0.100 |
 | mobilenetv2 | fedphe | 44 | 0.1 | 0.5 | 26 | 148 | 0.100 |
 | mobilenetv2 | fedphe | 44 | 1 | 0.7 | 1 | 200 | 0.100 |
-| mobilenetv2 | nvnl | 43 | 0.1 | 0.1 | 6 | 195 | 0.251 |
-| mobilenetv2 | nvnl | 43 | 0.1 | 0.3 | 10 | 172 | 0.481 |
-| mobilenetv2 | nvnl | 43 | 0.1 | 0.5 | 65 | 121 | 0.100 |
-| mobilenetv2 | nvnl | 43 | 0.1 | 0.7 | 56 | 133 | 0.100 |
-| mobilenetv2 | nvnl | 43 | 0.1 | 0.9 | 14 | 178 | 0.711 |
+| mobilenetv2 | sweepfl | 43 | 0.1 | 0.1 | 6 | 195 | 0.251 |
+| mobilenetv2 | sweepfl | 43 | 0.1 | 0.3 | 10 | 172 | 0.481 |
+| mobilenetv2 | sweepfl | 43 | 0.1 | 0.5 | 65 | 121 | 0.100 |
+| mobilenetv2 | sweepfl | 43 | 0.1 | 0.7 | 56 | 133 | 0.100 |
+| mobilenetv2 | sweepfl | 43 | 0.1 | 0.9 | 14 | 178 | 0.711 |
 | mobilenetv2 | rw | 43 | 0.1 | 0.7 | 13 | 174 | 0.595 |
 | mobilenetv2 | rw | 43 | 0.1 | 0.9 | 21 | 147 | 0.704 |
 | mobilenetv2 | sw | 43 | 0.1 | 0.3 | 33 | 155 | 0.100 |
@@ -83,7 +83,7 @@ do cluster para uma pasta temporária:
   rótulo antigo (Readme §15.1). Portanto, só α=1 permite juntar as seeds 42, 43 e 44.
 - **Por que rerodar tudo:** das 64 células de agosto no novo escopo, só 1 quebrou. Mesmo
   assim, rerodar deixa as seeds 43/44 inteiras com o mesmo código e com `range.csv`.
-- **Scripts:** `experiments/seed_experiment/seed_experiment_{NVNL,rw,fedphe,sw}.sh`, editados no
+- **Scripts:** `experiments/seed_experiment/seed_experiment_{SweepFL,rw,fedphe,sw}.sh`, editados no
   lugar. O cabeçalho registra a configuração antiga. O sbatch não mudou.
 - **Estimativa** (`estimate_time.py --all --slurm SLURM.md`, l40s): 5h03m por técnica se as 8 runs
   rodarem em sequência (7h34m com margem). Com `submit_per_pair.sh` são 4 jobs por técnica
@@ -92,7 +92,7 @@ do cluster para uma pasta temporária:
 
 Submissão (no cluster, depois de `./sync_remote.sh`):
 ```bash
-for t in NVNL rw fedphe sw; do bash sbatch/submit_per_pair.sh sbatch/seed_experiment/sbatch_seed_experiment_$t.sh; done
+for t in SweepFL rw fedphe sw; do bash sbatch/submit_per_pair.sh sbatch/seed_experiment/sbatch_seed_experiment_$t.sh; done
 ```
 
 ## 3. Análise: estudo 29
@@ -132,12 +132,12 @@ Rodei o script com `--seed-dir logs/seed_experiment`. Esses números vêm do có
 
 | modelo | p | técnica | n | média | desvio |
 |---|---|---|---|---|---|
-| resnet20 | 0.1 | NVNL / FedPHE / SW / RW | 3 | 0.615 / 0.246 / 0.586 / 0.537 | 0.021 / 0.026 / 0.017 / 0.028 |
-| resnet20 | 0.7 | NVNL / FedPHE / SW / RW | 3 | 0.771 / 0.770 / 0.769 / 0.768 | 0.006 / 0.004 / 0.006 / 0.013 |
-| mobilenetv2 | 0.1 | NVNL / FedPHE / SW / RW | 3 | 0.646 / 0.292 / 0.630 / 0.585 | 0.015 / 0.052 / 0.007 / 0.018 |
-| mobilenetv2 | 0.7 | NVNL / FedPHE / SW / RW | 3 / 1 / 3 / 3 | 0.751 / 0.747 / 0.753 / 0.752 | 0.002 / — / 0.013 / 0.006 |
+| resnet20 | 0.1 | SweepFL / FedPHE / SW / RW | 3 | 0.615 / 0.246 / 0.586 / 0.537 | 0.021 / 0.026 / 0.017 / 0.028 |
+| resnet20 | 0.7 | SweepFL / FedPHE / SW / RW | 3 | 0.771 / 0.770 / 0.769 / 0.768 | 0.006 / 0.004 / 0.006 / 0.013 |
+| mobilenetv2 | 0.1 | SweepFL / FedPHE / SW / RW | 3 | 0.646 / 0.292 / 0.630 / 0.585 | 0.015 / 0.052 / 0.007 / 0.018 |
+| mobilenetv2 | 0.7 | SweepFL / FedPHE / SW / RW | 3 / 1 / 3 / 3 | 0.751 / 0.747 / 0.753 / 0.752 | 0.002 / — / 0.013 / 0.006 |
 
-Leitura preliminar: em p=0.1 a ordem NVNL > SW > RW ≫ FedPHE supera o desvio entre seeds
+Leitura preliminar: em p=0.1 a ordem SweepFL > SW > RW ≫ FedPHE supera o desvio entre seeds
 (0,01–0,03). Em p=0.7 as 4 técnicas ficam dentro de ~1 desvio umas das outras.
 
 ## 4. Resultados v2

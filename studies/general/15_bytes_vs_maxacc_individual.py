@@ -30,11 +30,11 @@ spec.loader.exec_module(load_data)
 OUT_FIG_STUDY = HERE / "output" / "figures" / "15_bytes_maxacc_individual"
 OUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)
 
-PACKING_SOLS = {"nvnl", "sw", "rw", "fedphe", "fedphe-scout", "nvnl-scout",
+PACKING_SOLS = {"sweepfl", "sw", "rw", "fedphe", "fedphe-scout", "sweepfl-scout",
                 "topkrr", "srr"}
 
 SOL_COLORS = {
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",
@@ -45,7 +45,7 @@ SOL_COLORS = {
     "batchcrypt": "#795548",
 }
 SOL_MARKERS = {
-    "nvnl": "o", "sw": "s", "rw": "^", "fedphe": "P", "topkrr": "p", "srr": "h",
+    "sweepfl": "o", "sw": "s", "rw": "^", "fedphe": "P", "topkrr": "p", "srr": "h",
     "ckks": "v", "bfv": "X", "batchcrypt": "H",
 }
 

@@ -76,8 +76,8 @@ SOL_LABELS = ps.LABELS
 # Fixed bar order: full-model baselines first, then the policies (paper_style)
 SOL_ORDER = ps.ORDER
 
-PACKING_SOLS = {"nvnl", "fedphe", "sw", "rw", "topkrr", "srr",
-                "nvnl-scout", "fedphe-scout"}
+PACKING_SOLS = {"sweepfl", "fedphe", "sw", "rw", "topkrr", "srr",
+                "sweepfl-scout", "fedphe-scout"}
 PAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)
 PAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)
 

@@ -11,7 +11,7 @@
 #
 # Examples:
 #   bash sbatch/submit_per_pair.sh sbatch/sparsification_percentage/sbatch_sparsification_percentage_srr.sh --dry-run
-#   bash sbatch/submit_per_pair.sh sbatch/client_frac/sbatch_client_frac_NVNL.sh
+#   bash sbatch/submit_per_pair.sh sbatch/client_frac/sbatch_client_frac_sweepfl.sh
 #
 # How it works:
 #   1. Reads EXPERIMENT_SCRIPT from the sbatch script.

@@ -26,7 +26,7 @@ Time convention
   and aggregation_time_s for that round.  Cumulative = sum over rounds 1…conv_round.
 
 Bytes convention (raw float32 model data, pre-encryption)
-  packing solutions (nvnl, sw, rw, fedphe, …): packs_sent × pack_size × 4 bytes / client
+  packing solutions (sweepfl, sw, rw, fedphe, …): packs_sent × pack_size × 4 bytes / client
   other (plaintext, ckks, bfv):                 n_params × 4 bytes / client
   Total per round = sum over all clients.  `payload_bytes` is NOT used — it records
   only mask metadata for packing solutions, not the actual ciphertext size.
@@ -66,7 +66,7 @@ GROUP_DIMS  = ["model", "dataset", "solution", "niid", "percentage"]
 NIID_LABEL = {1.0: "IID", 0.1: "NIID"}
 
 # Packing solutions (bytes estimated from packs_sent * pack_size * 4)
-PACKING_SOLS = {"nvnl", "sw", "rw", "fedphe", "fedphe-scout", "nvnl-scout",
+PACKING_SOLS = {"sweepfl", "sw", "rw", "fedphe", "fedphe-scout", "sweepfl-scout",
                 "srr", "topkrr"}
 
 # Client-side timing columns to sum for per-round wall-clock estimate

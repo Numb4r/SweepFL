@@ -102,7 +102,7 @@ class HEServer(fl.server.strategy.FedAvg):
             self.homomorphic = True; self.packing = False; self.onlysum = True;  self.homomorphic_type = 'BFV'
         elif self.solution == 'batchcrypt':
             self.homomorphic = True; self.packing = False; self.onlysum = True;  self.homomorphic_type = 'Paillier'
-        elif self.solution in ('fedphe', 'nvnl', 'fedphe-scout', 'nvnl-scout', 'sw', 'rw', 'topkrr', 'srr'):
+        elif self.solution in ('fedphe', 'sweepfl', 'fedphe-scout', 'sweepfl-scout', 'sw', 'rw', 'topkrr', 'srr'):
             self.homomorphic = True; self.packing = True;  self.onlysum = False; self.homomorphic_type = 'CKKS'
         elif self.solution == 'socas':
             self.homomorphic = True; self.packing = False; self.onlysum = False; self.homomorphic_type = 'CKKS'

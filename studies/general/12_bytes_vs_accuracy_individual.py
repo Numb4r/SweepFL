@@ -32,11 +32,11 @@ OUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)
 
 TARGET_ACC = 0.80
 
-PACKING_SOLS = {"nvnl", "sw", "rw", "fedphe", "fedphe-scout", "nvnl-scout", "topkrr", "srr"}
+PACKING_SOLS = {"sweepfl", "sw", "rw", "fedphe", "fedphe-scout", "sweepfl-scout", "topkrr", "srr"}
 
 SOL_COLORS = {
     "plaintext":  "#333333",
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",
@@ -47,7 +47,7 @@ SOL_COLORS = {
     "batchcrypt": "#795548",
 }
 SOL_MARKERS = {
-    "plaintext": "D", "nvnl": "o", "sw": "s", "rw": "^",
+    "plaintext": "D", "sweepfl": "o", "sw": "s", "rw": "^",
     "fedphe": "P", "topkrr": "p", "srr": "h",
     "ckks": "v", "bfv": "X", "batchcrypt": "H",
 }

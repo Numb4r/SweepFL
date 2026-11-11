@@ -4,8 +4,8 @@ from .ckks import fit_ckks
 from .fedphe import fit_fedphe
 from .plaintext import fit_plaintext
 from .bitnet_flip import fit_bitnetflip
-from .NVNL import fit_nvnl
-from .NVNL_scout import fit_nvnl_scout
+from .sweepfl import fit_sweepfl
+from .sweepfl_scout import fit_sweepfl_scout
 from .fedphe_scout import fit_fedphe_scout
 from .rw import fit_rw
 from .sw import fit_sw
@@ -18,9 +18,9 @@ __all__ = [
 "fit_fedphe",
 "fit_plaintext",
 "fit_bitnetflip",
-"fit_nvnl",
+"fit_sweepfl",
 "fit_fedphe_scout",
-"fit_nvnl_scout",
+"fit_sweepfl_scout",
 "fit_rw",
 "fit_sw",
 "fit_topkrr",

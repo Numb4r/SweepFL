@@ -24,7 +24,7 @@ os.makedirs(os.path.dirname(OUT), exist_ok=True)
 PAIRS = {"lenet5_FASHION_MNIST": "LeNet-5", "dnn_tiny_FASHION_MNIST": "DNN",
          "vit_tiny_tanganke_gtsrb": "ViT-Tiny", "resnet20_CIFAR10": "ResNet-20",
          "mobilenetv2_CIFAR10": "MobileNetV2"}
-POL = {"fedphe": "Top-k", "rw": "Random", "sw": "SW", "nvnl": "RR"}
+POL = {"fedphe": "Top-k", "rw": "Random", "sw": "SW", "sweepfl": "RR"}
 # Folder -> paper label (author's convention, Alterações.md §0.1).
 PARTS = {"niid1": "non-IID", "niid0.1": "IID"}
 FIRST_ROUND = 2   # round 1 ran with 2 clients instead of 9
@@ -91,7 +91,7 @@ def plot(rows):
     rnd = [r["jaccard"] for r in rows if r["pol"] == "Random"]
     ax.scatter(sum(rnd) / len(rnd), 0, s=34, marker=ps.MARKERS["rw"], color=ps.COLORS["rw"], zorder=5)
     ax.annotate("Random", (sum(rnd) / len(rnd), 0), xytext=(-12, 7), textcoords="offset points", fontsize=7)
-    ax.scatter(1.0, 0, s=70, marker=ps.MARKERS["nvnl"], color=ps.COLORS["nvnl"], zorder=3, clip_on=False)
+    ax.scatter(1.0, 0, s=70, marker=ps.MARKERS["sweepfl"], color=ps.COLORS["sweepfl"], zorder=3, clip_on=False)
     ax.scatter(1.0, 0, s=34, marker=ps.MARKERS["sw"], color=ps.COLORS["sw"], zorder=4, clip_on=False)
     ax.annotate("RR, SW", (1.0, 0), xytext=(-30, 7), textcoords="offset points", fontsize=7)
 

@@ -2,7 +2,7 @@
 
 Auditoria read-only. Nenhum código foi modificado.  
 Data: 2026-06-29  
-Escopo: esquemas **nvnl**, **fedphe**, **rw**, **sw** (todos com `packing=True`, `only_sum=False`, `homomorphic_type='CKKS'`).
+Escopo: esquemas **sweepfl**, **fedphe**, **rw**, **sw** (todos com `packing=True`, `only_sum=False`, `homomorphic_type='CKKS'`).
 
 ---
 
@@ -14,7 +14,7 @@ Escopo: esquemas **nvnl**, **fedphe**, **rw**, **sw** (todos com `packing=True`,
 
 ```
 fedphe → only_sum = False, packing = True
-nvnl   → only_sum = False, packing = True
+sweepfl   → only_sum = False, packing = True
 sw     → only_sum = False, packing = True
 rw     → only_sum = False, packing = True
 ```
@@ -22,7 +22,7 @@ rw     → only_sum = False, packing = True
 `server/server.py:105` — `config_solution()`:
 
 ```python
-elif self.solution in ('fedphe', 'nvnl', ..., 'sw', 'rw', ...):
+elif self.solution in ('fedphe', 'sweepfl', ..., 'sw', 'rw', ...):
     self.homomorphic = True; self.packing = True; self.onlysum = False; ...
 ```
 
@@ -32,7 +32,7 @@ Para os quatro esquemas: `only_sum / onlysum = False` sem exceção.
 
 ### Passo 1 — Pré-escala no cliente (ANTES da cifragem)
 
-Todos os quatro `fit_*.py` contêm o mesmo bloco (citado aqui a partir de `NVNL.py:57-67`; linhas idênticas em `fedphe.py:57-67`, `sw.py:57-67`, `rw.py:57-67`):
+Todos os quatro `fit_*.py` contêm o mesmo bloco (citado aqui a partir de `sweepfl.py:57-67`; linhas idênticas em `fedphe.py:57-67`, `sw.py:57-67`, `rw.py:57-67`):
 
 ```python
 _ckks_backend = self.key_config.get("ckks_backend") or os.environ.get("CKKS_BACKEND", "tenseal")
@@ -160,7 +160,7 @@ Subestimação por fator Σ_{S_k} D_i / D_total.
 
 ## Q3 — O servidor conhece a contagem por pacote?
 
-**Sim.** O `aggregated_masks` é calculado em **texto claro** no servidor (`server_utils.py:103-108`), acumulando o peso D_i de cada cliente ativo por pack. Além disso, cada máscara individual chega ao servidor como texto claro: `cypher_packs()` em `client_utils.py:38-45` cifra apenas os valores dos packs selecionados; a máscara binária é enviada em `pickle.dumps(mask)` via `fit_msg` (`NVNL.py:119`).
+**Sim.** O `aggregated_masks` é calculado em **texto claro** no servidor (`server_utils.py:103-108`), acumulando o peso D_i de cada cliente ativo por pack. Além disso, cada máscara individual chega ao servidor como texto claro: `cypher_packs()` em `client_utils.py:38-45` cifra apenas os valores dos packs selecionados; a máscara binária é enviada em `pickle.dumps(mask)` via `fit_msg` (`sweepfl.py:119`).
 
 O servidor portanto conhece:
 - A máscara individual de cada cliente (texto claro).
@@ -172,7 +172,7 @@ Esse `aggregated_masks` é serializado em `server.py:197` (`self.agg_mask = pick
 
 ## Q4 — O round-robin garante contagem fixa por pack?
 
-### NVNL (`get_robin_round_mask`, `NVNL.py:149-152`)
+### SweepFL (`get_robin_round_mask`, `sweepfl.py:149-152`)
 
 ```python
 def get_robin_round_mask(round, packs, size_window, percentage=False):
@@ -217,7 +217,7 @@ Seleção explicitamente probabilística por cliente. S_k é aleatório por pack
 
 | Componente | Arquivo | Linhas | Compartilhado? |
 |------------|---------|--------|----------------|
-| Bloco de pré-escala | `NVNL.py`, `fedphe.py`, `sw.py`, `rw.py` | 57-67 (cada) | Código **idêntico** copiado |
+| Bloco de pré-escala | `sweepfl.py`, `fedphe.py`, `sw.py`, `rw.py` | 57-67 (cada) | Código **idêntico** copiado |
 | Agregação no servidor | `server_utils.py` | 86-118 | Função **única** compartilhada |
 | Renormalização pós-decrypt | `set_parameters.py` | 110-121 | Função **única** compartilhada |
 
@@ -227,7 +227,7 @@ A única diferença entre os quatro esquemas é a função de seleção de másc
 
 | Esquema | Máscara | Pré-escala (cliente) | Divisor pós-decrypt | Divisor varia por pack? | Risco de viés |
 |---------|---------|----------------------|----------------------|------------------------|---------------|
-| **nvnl** | round-robin determinístico | Caminho A/B/C | `aggregated_masks[k]` = Σ_{S_k} D_i (MAGG_RENORM=1) | Não¹ | Não (MAGG_RENORM=1) |
+| **sweepfl** | round-robin determinístico | Caminho A/B/C | `aggregated_masks[k]` = Σ_{S_k} D_i (MAGG_RENORM=1) | Não¹ | Não (MAGG_RENORM=1) |
 | **sw** | janela deslizante determinístico | Caminho A/B/C | `aggregated_masks[k]` = Σ_{S_k} D_i (MAGG_RENORM=1) | Não¹ | Não (MAGG_RENORM=1) |
 | **fedphe** | top-k por norma local | Caminho A/B/C | `aggregated_masks[k]` = Σ_{S_k} D_i (MAGG_RENORM=1) | **Sim** | Não (MAGG_RENORM=1) / **Sim** (MAGG_RENORM=0) |
 | **rw** | ponderado aleatório | Caminho A/B/C | `aggregated_masks[k]` = Σ_{S_k} D_i (MAGG_RENORM=1) | **Sim** | Não (MAGG_RENORM=1) / **Sim** (MAGG_RENORM=0) |
@@ -240,12 +240,12 @@ A única diferença entre os quatro esquemas é a função de seleção de másc
 
 | Esquema | Onde divide | Divisor usado (MAGG_RENORM=1) | Divisor varia por coord./pack? | Risco de viés (MAGG_RENORM=1) |
 |---------|-------------|-------------------------------|-------------------------------|-------------------------------|
-| **nvnl** | pós-decrypt no cliente (`set_parameters.py:119`) | Σ_{S_k} D_i / Σ D_j (TenSEAL) ou Σ_{S_k} D_i (Simplify) | Não (máscara uniforme entre clientes) | **Não** |
+| **sweepfl** | pós-decrypt no cliente (`set_parameters.py:119`) | Σ_{S_k} D_i / Σ D_j (TenSEAL) ou Σ_{S_k} D_i (Simplify) | Não (máscara uniforme entre clientes) | **Não** |
 | **sw** | pós-decrypt no cliente (`set_parameters.py:119`) | Σ_{S_k} D_i / Σ D_j (TenSEAL) ou Σ_{S_k} D_i (Simplify) | Não (máscara uniforme entre clientes) | **Não** |
 | **fedphe** | pós-decrypt no cliente (`set_parameters.py:119`) | Σ_{S_k} D_i / Σ D_j (TenSEAL) ou Σ_{S_k} D_i (Simplify) | **Sim** (top-k data-dependent) | **Não** |
 | **rw** | pós-decrypt no cliente (`set_parameters.py:119`) | Σ_{S_k} D_i / Σ D_j (TenSEAL) ou Σ_{S_k} D_i (Simplify) | **Sim** (aleatório por cliente) | **Não** |
 
-> **Nota sobre MAGG_RENORM=0 (legado):** O risco de viés passa a **Sim** para fedphe e rw (divisor fixo K ou D_total, não por pack). Para nvnl e sw com CLIENT_FRACTION=1.0, o viés é nulo mesmo no caminho legado (S_k = K em todos os packs ativos), mas passa a existir com CLIENT_FRACTION < 1.0.
+> **Nota sobre MAGG_RENORM=0 (legado):** O risco de viés passa a **Sim** para fedphe e rw (divisor fixo K ou D_total, não por pack). Para sweepfl e sw com CLIENT_FRACTION=1.0, o viés é nulo mesmo no caminho legado (S_k = K em todos os packs ativos), mas passa a existir com CLIENT_FRACTION < 1.0.
 
 > **MAGG_RENORM padrão:** A variável de ambiente `MAGG_RENORM` tem default `1` em ambos cliente (`set_parameters.py:115`) e cliente (cada `fit_*.py:58`), portanto o caminho correto é o ativo por default em todos os experimentos atuais.
 

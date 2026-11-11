@@ -18,18 +18,18 @@ O documento deve ter tom acadêmico, ser escrito em **português**, com seções
 
 ### Nome e Escopo
 
-**Projeto Slidhe** — Sistema de Aprendizado Federado (FL) com preservação de privacidade via Criptografia Homomórfica (HE). Clientes treinam modelos locais e enviam gradientes cifrados a um servidor de agregação. O foco da pesquisa é a técnica de **esparsificação NVNL** (seleção de pacotes por round-robin) e seu impacto no overhead de comunicação e tempo total de treinamento.
+**Projeto Slidhe** — Sistema de Aprendizado Federado (FL) com preservação de privacidade via Criptografia Homomórfica (HE). Clientes treinam modelos locais e enviam gradientes cifrados a um servidor de agregação. O foco da pesquisa é a técnica de **esparsificação SweepFL** (seleção de pacotes por round-robin) e seu impacto no overhead de comunicação e tempo total de treinamento.
 
 ### Hipótese Central
 
-A esparsificação por round-robin (NVNL) oferece um balanço superior entre acurácia final e overhead de comunicação/tempo comparado às estratégias top-k (FedPHE), sliding-window (SW) e pondering-random (RW), especialmente em cenários non-IID com alta heterogeneidade de dados.
+A esparsificação por round-robin (SweepFL) oferece um balanço superior entre acurácia final e overhead de comunicação/tempo comparado às estratégias top-k (FedPHE), sliding-window (SW) e pondering-random (RW), especialmente em cenários non-IID com alta heterogeneidade de dados.
 
 ### Técnicas Implementadas e Comparadas
 
 | Técnica | Estratégia de Seleção | Característica Principal |
 |---|---|---|
 | **plaintext** | Baseline (sem cifração) | Referência de acurácia e velocidade |
-| **NVNL** | Round-robin sequencial | Cobertura uniforme, determinística |
+| **SweepFL** | Round-robin sequencial | Cobertura uniforme, determinística |
 | **FedPHE** | Top-k por magnitude | Seleciona gradientes mais relevantes, fixos por round |
 | **SW** | Sliding window (stride 50%) | Cobertura progressiva com sobreposição 50% |
 | **RW** | Pondering-random | Seleção ponderada aleatória |
@@ -63,7 +63,7 @@ O sistema suporta múltiplos backends CKKS, selecionáveis via variável de ambi
 
 #### Implementações Completas
 
-1. **5 estratégias de seleção de pacotes**: plaintext, NVNL, FedPHE, SW, RW — todas com cifragem CKKS e integração Flower
+1. **5 estratégias de seleção de pacotes**: plaintext, SweepFL, FedPHE, SW, RW — todas com cifragem CKKS e integração Flower
 2. **Backend CKKS customizado em C++** com 11 suítes de testes unitários (>1000 assertivas)
 3. **Sistema de checkpoint/resume** robusto: checkpoints float16 por rodada, detecção automática de experimentos incompletos, geração e submissão de jobs de retomada via SLURM
 4. **Pipeline de análise**: 14 scripts de análise cobrindo acurácia, overhead de comunicação, tempo, memória RAM, eficiência de cobertura do modelo e fronteira de Pareto
@@ -83,7 +83,7 @@ O sistema suporta múltiplos backends CKKS, selecionáveis via variável de ambi
 | 08_efficiency_frontier.py | Fronteira de Pareto: acurácia × payload/rodada |
 | 09_summary_table.py | Tabela resumo CSV e LaTeX |
 | 10_total_data_convergence.py | Rodadas até cobertura total do modelo (por técnica) |
-| 11_data_vs_coverage.py | Bytes cumulativos × cobertura do modelo (NVNL vs SW) |
+| 11_data_vs_coverage.py | Bytes cumulativos × cobertura do modelo (SweepFL vs SW) |
 | 12_bytes_vs_accuracy.py | Custo em bytes para atingir 80% de acurácia |
 | 13_overhead_vs_accuracy.py | Tempo de overhead de comunicação × acurácia |
 | 14_neurons_vs_accuracy.py | Parâmetros transmitidos × acurácia |
@@ -91,8 +91,8 @@ O sistema suporta múltiplos backends CKKS, selecionáveis via variável de ambi
 #### Resultados Conhecidos
 
 - Slidhe mantém **92–96% de acurácia** (cenário non-IID) com apenas **30% de esparsificação**
-- NVNL garante cobertura completa do modelo em `ceil(n_packs / packs_sent)` rodadas (determinístico)
-- SW cobre apenas metade do território novo por rodada comparado a NVNL (custo 2× maior)
+- SweepFL garante cobertura completa do modelo em `ceil(n_packs / packs_sent)` rodadas (determinístico)
+- SW cobre apenas metade do território novo por rodada comparado a SweepFL (custo 2× maior)
 
 ### O Que Está Em Aberto / Próximos Passos Esperados
 
@@ -146,7 +146,7 @@ Síntese do projeto, hipótese, estado atual e metas do período junho–agosto.
 ### 5. Metas e Resultados Esperados
 - Acurácia mínima alvo por técnica e dataset
 - Overhead de comunicação esperado
-- Contribuição para o journal (hipótese sobre NVNL vs concorrentes)
+- Contribuição para o journal (hipótese sobre SweepFL vs concorrentes)
 - Formato e alvo de publicação do journal
 
 ### 6. Riscos e Mitigações

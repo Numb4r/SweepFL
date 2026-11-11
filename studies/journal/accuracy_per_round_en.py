@@ -36,7 +36,7 @@ os.makedirs(OUT, exist_ok=True)
 
 # dashed: full-model references.  solid: partial upload at p = 10%.
 REFERENCES = [(k, "-1") for k in ("plaintext", "ckks", "bfv", "batchcrypt")]
-POLICIES = [(k, "0.1") for k in ("fedphe", "rw", "nvnl", "sw")]
+POLICIES = [(k, "0.1") for k in ("fedphe", "rw", "sweepfl", "sw")]
 PAIRS = [("lenet5", "FASHION_MNIST", "LeNet-5", 16),
          ("dnn_tiny", "FASHION_MNIST", "DNN", 28),
          ("vit_tiny", "tanganke_gtsrb", "ViT-Tiny", 52),

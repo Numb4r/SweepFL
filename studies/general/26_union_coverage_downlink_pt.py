@@ -13,7 +13,7 @@ As duas figuras deste estudo têm granularidades diferentes de propósito:
 Variante traduzida do estudo 26 (26_union_coverage_downlink.py):
   * corrige o bug do `dataset` ignorado no original (misturava datasets
     diferentes do mesmo modelo na mesma figura/tabela quando existiam);
-  * nomes de solução corretos (NVNL, SW, FedPHE, RW) via solution_style.py;
+  * nomes de solução corretos (SweepFL, SW, FedPHE, RW) via solution_style.py;
   * mantém a lógica de client_fraction já existente no original (fallback
     1.0, sufixo/rótulo só quando client_fraction != 1.0).
 

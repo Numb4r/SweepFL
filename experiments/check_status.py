@@ -24,7 +24,7 @@ from pathlib import Path
 # ── Constants ─────────────────────────────────────────────────────────────────
 
 PACKING_SOLUTIONS = frozenset(
-    {"fedphe", "nvnl", "fedphe-scout", "nvnl-scout", "sw", "rw", "topkrr", "srr"}
+    {"fedphe", "sweepfl", "fedphe-scout", "sweepfl-scout", "sw", "rw", "topkrr", "srr"}
 )
 
 # Scripts to exclude even when they contain run_theme

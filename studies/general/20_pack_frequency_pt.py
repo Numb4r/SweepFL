@@ -3,13 +3,13 @@
 (model, dataset, technique, niid, percentage[, client_fraction]).
 
 Variante traduzida do estudo 20 (20_pack_frequency_individual.py): mesma
-granularidade total já existente, com nomes de solução corretos (NVNL, SW,
+granularidade total já existente, com nomes de solução corretos (SweepFL, SW,
 FedPHE, RW) via solution_style.py e separação também por client_fraction
 (tema client_frac); no tema sparsification_percentage (client_fraction=1.0)
 o rótulo é omitido.
 
 Nota: este estudo usa mask.csv, gerado apenas pelas técnicas de
-empacotamento (NVNL, SW, RW, FedPHE, TopK-RR, SRR). Os baselines full-model
+empacotamento (SweepFL, SW, RW, FedPHE, TopK-RR, SRR). Os baselines full-model
 (FedAvg, CKKS, BFV, BatchCrypt) nunca produzem mask.csv, então nunca
 aparecerão aqui — comportamento esperado, não uma limitação a corrigir.
 

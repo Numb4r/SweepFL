@@ -12,7 +12,7 @@ the same importlib pattern used for load_data.py:
 
 SOL_COLORS = {
     "plaintext":  "#333333",
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",
@@ -24,7 +24,7 @@ SOL_COLORS = {
 }
 
 SOL_MARKERS = {
-    "plaintext": "D", "nvnl": "o", "sw": "s", "rw": "^",
+    "plaintext": "D", "sweepfl": "o", "sw": "s", "rw": "^",
     "fedphe": "P", "topkrr": "p", "srr": "h",
     "ckks": "v", "bfv": "X", "batchcrypt": "H",
 }
@@ -32,7 +32,7 @@ SOL_MARKERS = {
 # PT-BR display names with the correct literature naming (FedAvg for plaintext).
 SOL_LABELS = {
     "plaintext":  "FedAvg",
-    "nvnl":       "NVNL",
+    "sweepfl":       "SweepFL",
     "fedphe":     "FedPHE",
     "sw":         "SW",
     "rw":         "RW",
@@ -47,12 +47,12 @@ SOL_LABELS = {
 FULL_MODEL_SOLS = {"plaintext", "ckks", "bfv", "batchcrypt"}
 
 # Packing/sparsification techniques: rows with a real percentage.
-PACKING_SOLS = {"nvnl", "fedphe", "sw", "rw", "topkrr", "srr",
-                "nvnl-scout", "fedphe-scout"}
+PACKING_SOLS = {"sweepfl", "fedphe", "sw", "rw", "topkrr", "srr",
+                "sweepfl-scout", "fedphe-scout"}
 
 # Display order: full-model baselines first, then packing techniques.
 SOL_ORDER = ["plaintext", "ckks", "bfv", "batchcrypt",
-             "nvnl", "fedphe", "sw", "rw", "topkrr", "srr"]
+             "sweepfl", "fedphe", "sw", "rw", "topkrr", "srr"]
 
 
 def label(sol: str) -> str:

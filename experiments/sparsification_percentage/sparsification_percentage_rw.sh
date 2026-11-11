@@ -2,7 +2,7 @@
 # Theme: Vary encrypted-packet percentage across sparsification techniques.
 # Each model runs on its designated dataset (no cross-product).
 #
-# Techniques compared: nvnl, sw, rw, fedphe
+# Techniques compared: sweepfl, sw, rw, fedphe
 # Percentage sweep:    10 % → 30 % → 50 % → 70 %
 
 GPU_IDS=(7 8 9)

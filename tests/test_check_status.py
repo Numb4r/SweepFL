@@ -72,7 +72,7 @@ def minimal_script(tmp_exp_dir):
         NIIDS=(0.5)
         SEEDS=(42)
         TECHNIQUE="none"
-        SOLUTIONS=('nvnl')
+        SOLUTIONS=('sweepfl')
         PERCENTAGES=(0.3)
         MODEL_DATASET_PAIRS=(
             "resnet20:CIFAR10"
@@ -101,7 +101,7 @@ def commented_pairs_script(tmp_exp_dir):
         NIIDS=(0.1 1)
         SEEDS=(42)
         TECHNIQUE="none"
-        SOLUTIONS=('nvnl')
+        SOLUTIONS=('sweepfl')
         PERCENTAGES=(0.1 0.3 0.5 0.7 0.9)
         MODEL_DATASET_PAIRS=(
             # "dnn_tiny:FASHION_MNIST"
@@ -136,7 +136,7 @@ class TestParseBashScript:
     def test_simple_arrays(self, minimal_script):
         cfg = parse_bash_script(str(minimal_script))
         assert cfg["GPU_IDS"] == ["0", "1"]
-        assert cfg["SOLUTIONS"] == ["nvnl"]
+        assert cfg["SOLUTIONS"] == ["sweepfl"]
         assert cfg["PERCENTAGES"] == ["0.3"]
         assert cfg["NIIDS"] == ["0.5"]
         assert cfg["SEEDS"] == ["42"]
@@ -181,7 +181,7 @@ class TestParseBashScript:
             NIIDS=(0.1)
             SEEDS=(42)
             TECHNIQUE="none"
-            SOLUTIONS=('nvnl')
+            SOLUTIONS=('sweepfl')
             PERCENTAGES=(0.1)
             MODEL_DATASET_PAIRS=("resnet20:CIFAR10")
             CKKS_CONFIGS=("ckks 8192 60")
@@ -213,7 +213,7 @@ class TestParseBashScript:
             NIIDS=(0.1)
             SEEDS=(42)
             TECHNIQUE="none"
-            SOLUTIONS=('nvnl')
+            SOLUTIONS=('sweepfl')
             PERCENTAGES=(0.1)
             MODEL_DATASET_PAIRS=("resnet20:CIFAR10")
             CKKS_CONFIGS=("ckks 8192 60")
@@ -235,13 +235,13 @@ class TestParseBashScript:
 class TestEnumerateExpected:
 
     def test_packing_count(self, minimal_script):
-        """nvnl (packing) × 1 niid × 1 pct × 1 model × 1 seed = 1 experiment."""
+        """sweepfl (packing) × 1 niid × 1 pct × 1 model × 1 seed = 1 experiment."""
         cfg = parse_bash_script(str(minimal_script))
         exps = enumerate_expected(cfg)
         assert len(exps) == 1
 
     def test_packing_multi_pct(self, commented_pairs_script):
-        """nvnl × 2 niids × 5 pcts × 1 model × 1 seed = 10 experiments."""
+        """sweepfl × 2 niids × 5 pcts × 1 model × 1 seed = 10 experiments."""
         cfg = parse_bash_script(str(commented_pairs_script))
         exps = enumerate_expected(cfg)
         assert len(exps) == 10
@@ -284,7 +284,7 @@ class TestEnumerateExpected:
         assert e["model"] == "resnet20"
         assert e["dataset"] == "CIFAR10"
         assert e["dataset_folder"] == "CIFAR10"
-        assert e["solution"] == "nvnl"
+        assert e["solution"] == "sweepfl"
         assert e["technique"] == "none"
         assert e["num_rounds"] == 10
         assert e["nclientes"] == 4          # 2 GPUs × 2 clients each
@@ -311,7 +311,7 @@ class TestEnumerateExpected:
             NIIDS=(0.1)
             SEEDS=(42)
             TECHNIQUE="none"
-            SOLUTIONS=('nvnl')
+            SOLUTIONS=('sweepfl')
             PERCENTAGES=(0.1)
             MODEL_DATASET_PAIRS=(
                 "vit_tiny:tanganke/gtsrb"
@@ -379,7 +379,7 @@ class TestClassify:
     """Uses real logs dir structure with synthetic log folders."""
 
     def _make_exp(self, folder="my_folder", model="resnet20",
-                  dataset_folder="CIFAR10", solution="nvnl",
+                  dataset_folder="CIFAR10", solution="sweepfl",
                   technique="none", num_rounds=10, nclientes=4,
                   seed="42", niid="0.5", pct="0.3", poly="4096",
                   plain_modulus="-1", n_length="-1", coeffs="60",
@@ -618,7 +618,7 @@ class TestCLI:
         assert r.returncode == 0
         assert "benchmark_resources.sh" in r.stdout
         # Other scripts must not appear
-        assert "sparsification_percentage_NVNL" not in r.stdout
+        assert "sparsification_percentage_sweepfl" not in r.stdout
 
     def test_output_contains_done_partial_missing(self):
         r = self._run("--summary-only")

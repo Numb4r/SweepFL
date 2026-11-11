@@ -46,7 +46,7 @@ d = {
     "EXPERIMENT_NAME": "smoke_test",
     "FOLDER": "",
     "TIMESTAMP": "2099-01-01_00-00-00",
-    "SOLUTION": "nvnl",
+    "SOLUTION": "sweepfl",
     "MODEL": "lenet5",
     "DATASET": "FASHION_MNIST",
     "NIID": 0.1,
@@ -86,7 +86,7 @@ make_checkpoint() {
     python3 - "$folder" "$round" <<'PYEOF'
 import json, numpy as np, sys
 folder, round_ = sys.argv[1], int(sys.argv[2])
-json.dump({"round": round_, "solution_type": "nvnl"},
+json.dump({"round": round_, "solution_type": "sweepfl"},
           open(f"{folder}/checkpoint/meta.json", "w"))
 for cid in [0, 1]:
     np.savez_compressed(f"{folder}/checkpoint/client_{cid}",
@@ -119,7 +119,7 @@ with open(f"{folder}/train.csv", "w", newline="") as f:
                 "coeff_mod_bits","scale_bits","plain_modulus","ram_rss_mb","ram_peak_mb"])
     for r in rounds:
         for cid in [0, 1]:
-            w.writerow(["smoke_test",r,cid,"nvnl","ckks","lenet5","FASHION_MNIST",
+            w.writerow(["smoke_test",r,cid,"sweepfl","ckks","lenet5","FASHION_MNIST",
                         "iid",1.0,0.5,0.8,
                         0.1,0.1,1.0,1.0,0,0,0,0,0,0,
                         0.05,0.05,0.02,0.02,0.3,0.3,0.1,0.1,
@@ -133,7 +133,7 @@ with open(f"{folder}/evaluate.csv", "w", newline="") as f:
                 "decrypt_time_s","poly_modulus_degree","coeff_mod_bits","scale_bits"])
     for r in rounds:
         for cid in [0, 1]:
-            w.writerow(["smoke_test",r,cid,"nvnl","ckks","lenet5","FASHION_MNIST",
+            w.writerow(["smoke_test",r,cid,"sweepfl","ckks","lenet5","FASHION_MNIST",
                         "iid",1.0,0.4,round(0.85+r*0.01,4),0.05,8192,"60;40;40;60",40])
 
 with open(f"{folder}/server_agg.csv", "w", newline="") as f:
@@ -201,8 +201,8 @@ echo ""
 cleanup
 
 # Folder names used for basic/chain/conflict subtests (under $TESTROOT/)
-ORIG1="$TESTROOT/lenet5_FASHION_MNIST_nvnl_none_4rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-01-01_00-00-00"
-RESU1="$TESTROOT/lenet5_FASHION_MNIST_nvnl_none_4rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-01-01_01-00-00"
+ORIG1="$TESTROOT/lenet5_FASHION_MNIST_sweepfl_none_4rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-01-01_00-00-00"
+RESU1="$TESTROOT/lenet5_FASHION_MNIST_sweepfl_none_4rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-01-01_01-00-00"
 ORIG1_BASE=$(basename "$ORIG1")
 RESU1_BASE=$(basename "$RESU1")
 
@@ -383,9 +383,9 @@ echo ""
 echo "── Test 9: Chain merge — 3 folders (original + 2 resumes)"
 
 TESTROOT2="$TESTROOT/chain_sub"
-ORIG2="$TESTROOT2/lenet5_FASHION_MNIST_nvnl_none_6rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-02-01_00-00-00"
-R2A="$TESTROOT2/lenet5_FASHION_MNIST_nvnl_none_6rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-02-01_01-00-00"
-R2B="$TESTROOT2/lenet5_FASHION_MNIST_nvnl_none_6rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-02-01_02-00-00"
+ORIG2="$TESTROOT2/lenet5_FASHION_MNIST_sweepfl_none_6rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-02-01_00-00-00"
+R2A="$TESTROOT2/lenet5_FASHION_MNIST_sweepfl_none_6rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-02-01_01-00-00"
+R2B="$TESTROOT2/lenet5_FASHION_MNIST_sweepfl_none_6rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-02-01_02-00-00"
 ORIG2_BASE=$(basename "$ORIG2")
 R2A_BASE=$(basename "$R2A")
 R2B_BASE=$(basename "$R2B")
@@ -439,9 +439,9 @@ echo ""
 echo "── Test 10: Conflict — two completed resumes for same original → skip"
 
 TESTROOT3="$TESTROOT/conflict_sub"
-ORIG3="$TESTROOT3/lenet5_FASHION_MNIST_nvnl_none_2rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-03-01_00-00-00"
-RC1="$TESTROOT3/lenet5_FASHION_MNIST_nvnl_none_2rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-03-01_01-00-00"
-RC2="$TESTROOT3/lenet5_FASHION_MNIST_nvnl_none_2rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-03-01_02-00-00"
+ORIG3="$TESTROOT3/lenet5_FASHION_MNIST_sweepfl_none_2rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-03-01_00-00-00"
+RC1="$TESTROOT3/lenet5_FASHION_MNIST_sweepfl_none_2rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-03-01_01-00-00"
+RC2="$TESTROOT3/lenet5_FASHION_MNIST_sweepfl_none_2rounds_2clients_seed42_niid0.1_percentage0.1_8192_-1_-1_-1_1099511627776_None_2099-03-01_02-00-00"
 ORIG3_BASE=$(basename "$ORIG3")
 
 make_details "$ORIG3" 2 "" 0

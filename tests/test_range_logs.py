@@ -41,7 +41,7 @@ def test_range_csv_written_and_finite(tmp_path, monkeypatch):
     weights = [np.random.default_rng(1).normal(0, 1, (100, 60)), np.full(3000, 200.0)]
     flat = np.concatenate([w.ravel() for w in weights]) * D
     packs = [flat[i:i + N // 2] for i in range(0, flat.size, N // 2)]
-    self = types.SimpleNamespace(context=ctx, x_train=np.zeros(D), cid=0, solution="nvnl",
+    self = types.SimpleNamespace(context=ctx, x_train=np.zeros(D), cid=0, solution="sweepfl",
                                  seed=42, experiment_name="t", log_folder="exp")
     write_range_logs(self, 1, weights, packs, [1, 1, 0])
     rows = list(csv.DictReader(open("logs/exp/range.csv")))

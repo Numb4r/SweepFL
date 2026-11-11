@@ -29,7 +29,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 NUMBERS = Path(__file__).resolve().parent / "output" / "seed_curves.md"
 
 MODEL, DATASET, NIID = "mobilenetv2", "CIFAR10", "1"
-POLICIES = ["nvnl", "sw", "fedphe"]          # RR, SW, Top-k: three seeds
+POLICIES = ["sweepfl", "sw", "fedphe"]          # RR, SW, Top-k: three seeds
 SEEDS = [42, 43, 44]
 BUDGETS = ["0.1", "0.7"]
 LAST_N = 10
@@ -100,7 +100,7 @@ def numbers(data: dict) -> list[str]:
                          f"{', '.join(f'{s}: {v:.1f}' for s, v in d['final'].items())} | "
                          f"{m10:.1f}{sd10_txt} [{lo10:.1f}, {hi10:.1f}] | "
                          f"{', '.join(f'{s}: {v:.1f}' for s, v in d['last10'].items())} |")
-        rr, sw = data[("nvnl", pct)], data[("sw", pct)]
+        rr, sw = data[("sweepfl", pct)], data[("sw", pct)]
         lines.append("")
         for key, label in (("final", "round 200"), (f"last10", f"mean of last {LAST_N} rounds")):
             diff = mean(rr[key].values()) - mean(sw[key].values())
@@ -179,7 +179,7 @@ def build() -> None:
     panel_curves(ax_a, data)
     panel_final(ax_b, data, fedavg)
 
-    keys = ["nvnl", "sw", "fedphe", "rw"]
+    keys = ["sweepfl", "sw", "fedphe", "rw"]
     handles = [plt.Line2D([], [], **ps.line_style(k)) for k in keys]
     labels = [ps.LABELS[k] for k in keys]
     if fedavg is not None:

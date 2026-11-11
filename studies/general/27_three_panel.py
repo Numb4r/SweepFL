@@ -50,7 +50,7 @@ OUT_BASE = HERE / "output" / "figures" / "27_three_panel"
 
 SOL_COLORS = {
     "plaintext":  "#333333",
-    "nvnl":       "#2196F3",
+    "sweepfl":       "#2196F3",
     "sw":         "#FF5722",
     "rw":         "#4CAF50",
     "fedphe":     "#9C27B0",
@@ -61,13 +61,13 @@ SOL_COLORS = {
     "batchcrypt": "#795548",
 }
 SOL_MARKERS = {
-    "plaintext": "D", "nvnl": "o", "sw": "s", "rw": "^",
+    "plaintext": "D", "sweepfl": "o", "sw": "s", "rw": "^",
     "fedphe": "P", "topkrr": "p", "srr": "h",
     "ckks": "v", "bfv": "X", "batchcrypt": "H",
 }
 SOL_LABELS = {
     "plaintext":  "FedAvg",
-    "nvnl":       "NVNL",
+    "sweepfl":       "SweepFL",
     "fedphe":     "FedPHE",
     "sw":         "SW",
     "rw":         "RW",
@@ -79,10 +79,10 @@ SOL_LABELS = {
 }
 # Fixed bar order: full-model baselines first, then the packing techniques
 SOL_ORDER = ["plaintext", "ckks", "bfv", "batchcrypt",
-             "nvnl", "fedphe", "sw", "rw", "topkrr", "srr"]
+             "sweepfl", "fedphe", "sw", "rw", "topkrr", "srr"]
 
-PACKING_SOLS = {"nvnl", "fedphe", "sw", "rw", "topkrr", "srr",
-                "nvnl-scout", "fedphe-scout"}
+PACKING_SOLS = {"sweepfl", "fedphe", "sw", "rw", "topkrr", "srr",
+                "sweepfl-scout", "fedphe-scout"}
 PAILLIER_N_LENGTH = 2048   # bits (N_LENGTH used by the batchcrypt experiments)
 PAILLIER_BATCH    = 50     # values packed per Paillier ciphertext (batchcrypt.py)
 

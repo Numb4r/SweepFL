@@ -53,9 +53,9 @@ NIID = 1.0            # pasta niid1 = Dirichlet alpha = 1
 PCT_DOWNLOAD = 0.3    # coluna Download da tabela e painel (b)/(c)
 WARMUP_FRAC = 0.05
 MODELS = ["lenet5", "dnn_tiny", "vit_tiny", "resnet20", "mobilenetv2"]
-POLICIES = ["nvnl", "sw", "rw", "fedphe"]
-LABELS = {"nvnl": "Round Robin", "sw": "Sliding Window", "rw": "Random", "fedphe": "Top-$k$"}
-COLORS = {"nvnl": "#1f63a8", "sw": "#56a6d6", "rw": "#e08a1e", "fedphe": "#b2182b"}
+POLICIES = ["sweepfl", "sw", "rw", "fedphe"]
+LABELS = {"sweepfl": "Round Robin", "sw": "Sliding Window", "rw": "Random", "fedphe": "Top-$k$"}
+COLORS = {"sweepfl": "#1f63a8", "sw": "#56a6d6", "rw": "#e08a1e", "fedphe": "#b2182b"}
 
 RC = {
     "font.family": "serif", "font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8,

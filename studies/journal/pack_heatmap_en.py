@@ -29,7 +29,7 @@ LOGS = os.environ.get("LOGS") or os.path.join(os.path.abspath(os.path.join(os.pa
 OUT = os.environ.get("FIG_OUT") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "output", "figures")
 os.makedirs(OUT, exist_ok=True)
 
-POLICIES = [("nvnl", "Round Robin"), ("sw", "Sliding Window"),
+POLICIES = [("sweepfl", "Round Robin"), ("sw", "Sliding Window"),
             ("rw", "Random"), ("fedphe", "Top-$k$ (FedPHE)")]
 PAIRS = [("lenet5", "FASHION_MNIST", "LeNet-5"),
          ("dnn_tiny", "FASHION_MNIST", "DNN"),

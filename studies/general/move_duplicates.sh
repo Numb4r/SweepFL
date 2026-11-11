@@ -36,8 +36,8 @@ for p in sorted(logs_dir.iterdir()):
     ts = m.group(1)
     config = p.name[: m.start()]
 
-    # NVNL uppercase with percentage=-1 → always erroneous
-    if "_NVNL_" in p.name and "percentage-1" in p.name:
+    # SweepFL uppercase with percentage=-1 → always erroneous
+    if "_sweepfl_" in p.name and "percentage-1" in p.name:
         erroneous.append(p)
         continue
 
@@ -61,10 +61,10 @@ for config, entries in groups.items():
             print(action)
         moved += 1
 
-# Move erroneous NVNL folders
+# Move erroneous SweepFL folders
 for p in erroneous:
     target = dest / p.name
-    action = f"mv {p.name} -> duplicates/  [NVNL uppercase erroneous]"
+    action = f"mv {p.name} -> duplicates/  [SweepFL uppercase erroneous]"
     if dry_run:
         print(f"[DRY-RUN] {action}")
     else:

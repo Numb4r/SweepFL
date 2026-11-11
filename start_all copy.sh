@@ -258,18 +258,18 @@ json=$(cat <<EOF
 EOF
 )   
 # 'randall-lab/medmnist'
-# 'fedphe' 'nvnl' 
+# 'fedphe' 'sweepfl' 
  # 'AISNP/PathMNIST'
 # 'ckks'  'socas'
 # 'MNIST' 'CIFAR10' 'FASHION_MNIST'
-# TODO RODAR FEDPHE-SCOUT E NVNL-SCOUT NO 30,18,30
+# TODO RODAR FEDPHE-SCOUT E SweepFL-SCOUT NO 30,18,30
 # 
                 for DATASET in  'CIFAR10''FASHION_MNIST'  'MNIST'  ; do
-                    for SOLUTION in  'ckks' 'nvnl' 'fedphe'   ; do
+                    for SOLUTION in  'ckks' 'sweepfl' 'fedphe'   ; do
                         for niid in 0.1 0.5 1 ; do
                             for seed in 42; do
-                                if [[ "$SOLUTION" == *"fedphe"* || "$SOLUTION" == *"nvnl"* ]]; then
-                                    # Rodar apenas para fedphe e nvnl
+                                if [[ "$SOLUTION" == *"fedphe"* || "$SOLUTION" == *"sweepfl"* ]]; then
+                                    # Rodar apenas para fedphe e sweepfl
                                     for PERCENTAGE in 0.8 0.5 0.3; do
                                         # echo "Rodando $SOLUTION com $DATASET niid=$niid percentage=$PERCENTAGE"
                                         run_experiment_tmux  $SOLUTION $NCLIENTES $NUM_ROUNDS $POLY $COEFFS $SCALE $KEY_TYPE $DATASET $NIID $SEED $PERCENTAGE

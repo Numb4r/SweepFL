@@ -1,19 +1,19 @@
 """Single source of style (colors, markers, line styles, hatches, labels) for every paper figure."""
 
 # Legend order: full-model references first, then the four selection policies.
-ORDER = ["plaintext", "ckks", "bfv", "batchcrypt", "fedphe", "rw", "nvnl", "sw"]
+ORDER = ["plaintext", "ckks", "bfv", "batchcrypt", "fedphe", "rw", "sweepfl", "sw"]
 
 COLORS = {"plaintext": "#1a1a1a", "ckks": "#6b3fa0", "bfv": "#008300", "batchcrypt": "#c2185b",
-          "fedphe": "#eb6834", "rw": "#8c8c8c", "nvnl": "#2a78d6", "sw": "#1baf7a"}
+          "fedphe": "#eb6834", "rw": "#8c8c8c", "sweepfl": "#2a78d6", "sw": "#1baf7a"}
 MARKERS = {"plaintext": None, "ckks": "s", "bfv": "^", "batchcrypt": "D",
-           "fedphe": "v", "rw": "X", "nvnl": "o", "sw": "P"}
+           "fedphe": "v", "rw": "X", "sweepfl": "o", "sw": "P"}
 LINESTYLES = {"plaintext": "--", "ckks": "--", "bfv": "--", "batchcrypt": "--",
-              "fedphe": "-", "rw": "-", "nvnl": "-", "sw": "-"}
+              "fedphe": "-", "rw": "-", "sweepfl": "-", "sw": "-"}
 HATCHES = {"plaintext": "", "ckks": "//", "bfv": "//", "batchcrypt": "//",
-           "fedphe": "", "rw": "", "nvnl": "", "sw": ""}
+           "fedphe": "", "rw": "", "sweepfl": "", "sw": ""}
 
 LABELS = {"plaintext": "FedAvg", "ckks": "CKKS", "bfv": "BFV", "batchcrypt": "BatchCrypt",
-          "fedphe": "Top-$k$ (FedPHE)", "rw": "Random", "nvnl": "Round Robin", "sw": "Sliding Window"}
+          "fedphe": "Top-$k$ (FedPHE)", "rw": "Random", "sweepfl": "Round Robin", "sw": "Sliding Window"}
 
 # Model pairs in packet order.
 PAIR_ORDER = ["lenet5", "dnn", "vit", "resnet20", "mobilenetv2"]
@@ -25,14 +25,14 @@ FEDPHE_RAMP = {"lenet5": "#f29a63", "dnn": "#e8743a", "vit": "#cc5520",
 TEXT_PRIMARY, TEXT_SECONDARY, GRID = "#1a1a1a", "#52514e", "#e6e6e6"
 MARKERSIZE = 3.5
 LINEWIDTHS = {"plaintext": 0.9, "ckks": 0.75, "bfv": 0.75, "batchcrypt": 0.75,
-              "fedphe": 1.0, "rw": 0.85, "nvnl": 1.1, "sw": 1.1}
+              "fedphe": 1.0, "rw": 0.85, "sweepfl": 1.1, "sw": 1.1}
 DASHES = {"plaintext": (0, (6, 2)), "ckks": (0, (3, 1.5)), "bfv": (0, (3, 1.5)),
           "batchcrypt": (0, (3, 1.5))}
 # Full-model references sit behind and thin; Round Robin and Sliding Window on top.
 ZORDER = {"plaintext": 2, "ckks": 1, "bfv": 1, "batchcrypt": 1,
-          "fedphe": 3, "rw": 2, "nvnl": 5, "sw": 4}
+          "fedphe": 3, "rw": 2, "sweepfl": 5, "sw": 4}
 # Staggered first marker so markers of different curves do not stack (per-round curves).
-MARKEVERY_OFFSET = {"ckks": 0, "bfv": 5, "batchcrypt": 10, "fedphe": 15, "rw": 20, "nvnl": 25, "sw": 30}
+MARKEVERY_OFFSET = {"ckks": 0, "bfv": 5, "batchcrypt": 10, "fedphe": 15, "rw": 20, "sweepfl": 25, "sw": 30}
 MARKEVERY_STEP = 40   # about five markers on a 200-round curve
 # Neutral shading used for annotation bands (not a technique color).
 BAND = "#e6e6e6"

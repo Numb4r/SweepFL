@@ -16,7 +16,7 @@ Usage:
     python3 experiments/generate_resume_jobs.py --partition p100 --time 1-00:00:00
     python3 experiments/generate_resume_jobs.py --logs-dir /custom/logs
     python3 experiments/generate_resume_jobs.py --target seed_experiment_v2
-    python3 experiments/generate_resume_jobs.py --target 'seed_experiment*/mobilenetv2*nvnl*' --target '*percentage0.7*'
+    python3 experiments/generate_resume_jobs.py --target 'seed_experiment*/mobilenetv2*sweepfl*' --target '*percentage0.7*'
 
 Outputs paths of generated (or would-be generated) resume_sbatch.sh to stdout,
 one per line.  Informational messages go to stderr.
@@ -35,7 +35,7 @@ from collections import defaultdict
 from datetime import datetime
 
 PACKING_SOLUTIONS = frozenset(
-    {"fedphe", "nvnl", "fedphe-scout", "nvnl-scout", "sw", "rw", "topkrr", "srr"}
+    {"fedphe", "sweepfl", "fedphe-scout", "sweepfl-scout", "sw", "rw", "topkrr", "srr"}
 )
 
 

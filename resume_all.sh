@@ -11,7 +11,7 @@
 #   ./resume_all.sh --time 1-00:00:00   # override do limite de tempo
 #   ./resume_all.sh --logs-dir /path    # diretório de logs alternativo
 #   ./resume_all.sh --target seed_experiment_v2              # só esse subset (substring)
-#   ./resume_all.sh --target 'seed_exp*/mobilenetv2*nvnl*' --target '*percentage0.7*'  # glob, repetível (OR)
+#   ./resume_all.sh --target 'seed_exp*/mobilenetv2*sweepfl*' --target '*percentage0.7*'  # glob, repetível (OR)
 #   ./resume_all.sh --debug            # set -x + progresso cronometrado do gerador (stderr)
 #   ./resume_all.sh --min-idle 30       # ignora pastas com checkpoint atualizado há <30 min (default 60)
 #

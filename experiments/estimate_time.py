@@ -88,7 +88,7 @@ DATASET_SIZE = {
 }
 
 # Soluções que iteram sobre PERCENTAGES
-PACKING_SOLUTIONS = {"fedphe", "nvnl", "sw", "rw", "fedphe-scout", "nvnl-scout"}
+PACKING_SOLUTIONS = {"fedphe", "sweepfl", "sw", "rw", "fedphe-scout", "sweepfl-scout"}
 
 # Overhead de setup por experimento (geração de chaves, startup de containers)
 SETUP_OVERHEAD_S = 90.0
