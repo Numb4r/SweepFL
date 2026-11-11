@@ -1,0 +1,4 @@
+experiment_name,round,cid,solution,model,dataset,distribution,run_seed,n_packs,packs_sent,selected_packs
+resnet20_CIFAR10_nvnl,1,0,nvnl,resnet20,CIFAR10,niid,42,67,7,7;8;9;10;11;12;13
+resnet20_CIFAR10_nvnl,2,0,nvnl,resnet20,CIFAR10,niid,42,67,7,14;15;16;17;18;19;20
+resnet20_CIFAR10_nvnl,3,0,nvnl,resnet20,CIFAR10,niid,42,67,7,21;22;23;24;25;26;27

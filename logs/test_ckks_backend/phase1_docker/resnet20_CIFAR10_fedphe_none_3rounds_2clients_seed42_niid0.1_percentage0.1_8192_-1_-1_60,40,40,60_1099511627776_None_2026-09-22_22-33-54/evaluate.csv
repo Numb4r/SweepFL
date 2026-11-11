@@ -1,0 +1,4 @@
+experiment_name,round,cid,solution,schema,model,dataset,distribution,dirichlet_alpha,model_seed,dirichlet_seed,eval_loss,eval_acc,decrypt_time_s,poly_modulus_degree,coeff_mod_bits,scale_bits
+resnet20_CIFAR10_fedphe,1,0,fedphe,CKKS,resnet20,CIFAR10,niid,0.1,42,42,5.302145004272461,0.23659999668598175,0.23299145698547363,8192,60;40;40;60,40
+resnet20_CIFAR10_fedphe,2,0,fedphe,CKKS,resnet20,CIFAR10,niid,0.1,42,42,5.374619960784912,0.26260000467300415,0.230255126953125,8192,60;40;40;60,40
+resnet20_CIFAR10_fedphe,3,0,fedphe,CKKS,resnet20,CIFAR10,niid,0.1,42,42,5.438945770263672,0.2985999882221222,0.301807165145874,8192,60;40;40;60,40

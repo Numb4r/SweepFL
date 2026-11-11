@@ -1,0 +1,4 @@
+experiment_name,round,n_clients,mean_loss,mean_acc,run_seed
+resnet20_CIFAR10_nvnl,1,1,5.302147,0.236600,42
+resnet20_CIFAR10_nvnl,2,1,5.305149,0.251800,42
+resnet20_CIFAR10_nvnl,3,1,5.531523,0.287800,42

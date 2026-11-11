@@ -1,0 +1,7 @@
+experiment_name,round,cid,solution,schema,model,dataset,distribution,dirichlet_alpha,model_seed,dirichlet_seed,eval_loss,eval_acc,decrypt_time_s,poly_modulus_degree,coeff_mod_bits,scale_bits
+resnet20_CIFAR10_plaintext,1,1,plaintext,None,resnet20,CIFAR10,niid,0.1,42,42,2.2023844718933105,0.26179999113082886,0.00892329216003418,8192,60;40;40;60,40
+resnet20_CIFAR10_plaintext,1,0,plaintext,None,resnet20,CIFAR10,niid,0.1,42,42,2.1843695640563965,0.2750000059604645,0.008473396301269531,8192,60;40;40;60,40
+resnet20_CIFAR10_plaintext,2,0,plaintext,None,resnet20,CIFAR10,niid,0.1,42,42,1.3993377685546875,0.5508000254631042,0.024019718170166016,8192,60;40;40;60,40
+resnet20_CIFAR10_plaintext,2,1,plaintext,None,resnet20,CIFAR10,niid,0.1,42,42,1.4087656736373901,0.5504000186920166,0.008298635482788086,8192,60;40;40;60,40
+resnet20_CIFAR10_plaintext,3,1,plaintext,None,resnet20,CIFAR10,niid,0.1,42,42,1.2542117834091187,0.6001999974250793,0.008448600769042969,8192,60;40;40;60,40
+resnet20_CIFAR10_plaintext,3,0,plaintext,None,resnet20,CIFAR10,niid,0.1,42,42,1.2463889122009277,0.6057999730110168,0.022611618041992188,8192,60;40;40;60,40

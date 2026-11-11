@@ -1,0 +1,4 @@
+experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s,run_seed
+resnet20_CIFAR10_fedphe,1,1,11630,5.9985,0.0050,42
+resnet20_CIFAR10_fedphe,2,1,11630,4.1861,0.0024,42
+resnet20_CIFAR10_fedphe,3,1,11630,4.1801,0.0038,42
