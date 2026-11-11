@@ -545,6 +545,14 @@
         "documentation": {}
     },
     {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -2737,6 +2745,15 @@
         "documentation": {}
     },
     {
+        "label": "fnmatch",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "fnmatch",
+        "description": "fnmatch",
+        "detail": "fnmatch",
+        "documentation": {}
+    },
+    {
         "label": "stat",
         "kind": 6,
         "isExtraImport": true,
@@ -3031,6 +3048,48 @@
         "documentation": {}
     },
     {
+        "label": "load_data",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "load_data",
+        "description": "load_data",
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "count_experiments",
+        "importPath": "load_data",
+        "description": "load_data",
+        "isExtraImport": true,
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "load_all",
+        "importPath": "load_data",
+        "description": "load_data",
+        "isExtraImport": true,
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "select_folders",
+        "importPath": "load_data",
+        "description": "load_data",
+        "isExtraImport": true,
+        "detail": "load_data",
+        "documentation": {}
+    },
+    {
+        "label": "solution_style",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "solution_style",
+        "description": "solution_style",
+        "detail": "solution_style",
+        "documentation": {}
+    },
+    {
         "label": "subprocess",
         "kind": 6,
         "isExtraImport": true,
@@ -3095,30 +3154,6 @@
         "description": "check_status",
         "isExtraImport": true,
         "detail": "check_status",
-        "documentation": {}
-    },
-    {
-        "label": "count_experiments",
-        "importPath": "load_data",
-        "description": "load_data",
-        "isExtraImport": true,
-        "detail": "load_data",
-        "documentation": {}
-    },
-    {
-        "label": "load_all",
-        "importPath": "load_data",
-        "description": "load_data",
-        "isExtraImport": true,
-        "detail": "load_data",
-        "documentation": {}
-    },
-    {
-        "label": "select_folders",
-        "importPath": "load_data",
-        "description": "load_data",
-        "isExtraImport": true,
-        "detail": "load_data",
         "documentation": {}
     },
     {
@@ -6873,7 +6908,25 @@
         "kind": 2,
         "importPath": "experiments.generate_resume_jobs",
         "description": "experiments.generate_resume_jobs",
-        "peekOfCode": "def info(msg: str) -> None:\n    print(msg, file=sys.stderr)\ndef load_details(folder: str):\n    path = os.path.join(folder, \"experiment_details.json\")\n    if not os.path.exists(path):\n        return None\n    try:\n        with open(path) as f:\n            return json.load(f)\n    except Exception as exc:",
+        "peekOfCode": "def info(msg: str) -> None:\n    print(msg, file=sys.stderr, flush=True)\ndef debug(msg: str) -> None:\n    if DEBUG:\n        info(f\"[DEBUG {time.time() - _T0:7.2f}s] {msg}\")\n# Never descend into these: huge (model snapshots) or not experiment roots.\n_PRUNE_DIRS = frozenset({\"model\", \"checkpoint\", \"archive\", \"models\", \"__pycache__\"})\ndef find_meta_files(logs_dir: str) -> list:\n    \"\"\"Return every <exp>/checkpoint/meta.json under logs_dir.\n    os.walk does not follow symlinks (recursive glob does, and loops on a",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "debug",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def debug(msg: str) -> None:\n    if DEBUG:\n        info(f\"[DEBUG {time.time() - _T0:7.2f}s] {msg}\")\n# Never descend into these: huge (model snapshots) or not experiment roots.\n_PRUNE_DIRS = frozenset({\"model\", \"checkpoint\", \"archive\", \"models\", \"__pycache__\"})\ndef find_meta_files(logs_dir: str) -> list:\n    \"\"\"Return every <exp>/checkpoint/meta.json under logs_dir.\n    os.walk does not follow symlinks (recursive glob does, and loops on a\n    symlink cycle) and we stop descending at experiment folders, so snapshot\n    dirs with thousands of files are never listed.",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "find_meta_files",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def find_meta_files(logs_dir: str) -> list:\n    \"\"\"Return every <exp>/checkpoint/meta.json under logs_dir.\n    os.walk does not follow symlinks (recursive glob does, and loops on a\n    symlink cycle) and we stop descending at experiment folders, so snapshot\n    dirs with thousands of files are never listed.\n    \"\"\"\n    found = []\n    n_dirs = 0\n    for root, dirs, files in os.walk(logs_dir):\n        n_dirs += 1",
         "detail": "experiments.generate_resume_jobs",
         "documentation": {}
     },
@@ -6892,6 +6945,24 @@
         "importPath": "experiments.generate_resume_jobs",
         "description": "experiments.generate_resume_jobs",
         "peekOfCode": "def get_checkpoint_round(folder: str):\n    meta_path = os.path.join(folder, \"checkpoint\", \"meta.json\")\n    if not os.path.exists(meta_path):\n        return None\n    try:\n        with open(meta_path) as f:\n            meta = json.load(f)\n        return int(meta.get(\"round\", 0))\n    except Exception:\n        return None",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "cf_token",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def cf_token(details: dict) -> str:\n    \"\"\"LOGFOLDER token for partial participation (mirrors CF_TOKEN in lib_*.sh).\"\"\"\n    cf = str(details.get(\"CLIENT_FRACTION\", \"1.0\"))\n    return \"\" if cf in (\"1.0\", \"1\", \"1.00\") else f\"cf{cf}_\"\ndef matches_target(logfolder_rel: str, targets: list) -> bool:\n    \"\"\"Glob match against the path relative to logs/; plain words match as substrings.\"\"\"\n    if not targets:\n        return True\n    return any(\n        fnmatch.fnmatch(logfolder_rel, t if any(c in t for c in \"*?[\") else f\"*{t}*\")",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "matches_target",
+        "kind": 2,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "def matches_target(logfolder_rel: str, targets: list) -> bool:\n    \"\"\"Glob match against the path relative to logs/; plain words match as substrings.\"\"\"\n    if not targets:\n        return True\n    return any(\n        fnmatch.fnmatch(logfolder_rel, t if any(c in t for c in \"*?[\") else f\"*{t}*\")\n        for t in targets\n    )\ndef config_fingerprint(details: dict) -> tuple:\n    \"\"\"Stable key for an experiment config (excludes timestamp, includes NUM_ROUNDS).\"\"\"",
         "detail": "experiments.generate_resume_jobs",
         "documentation": {}
     },
@@ -6945,7 +7016,34 @@
         "kind": 5,
         "importPath": "experiments.generate_resume_jobs",
         "description": "experiments.generate_resume_jobs",
-        "peekOfCode": "PACKING_SOLUTIONS = frozenset(\n    {\"fedphe\", \"nvnl\", \"fedphe-scout\", \"nvnl-scout\", \"sw\", \"rw\", \"topkrr\", \"srr\"}\n)\ndef info(msg: str) -> None:\n    print(msg, file=sys.stderr)\ndef load_details(folder: str):\n    path = os.path.join(folder, \"experiment_details.json\")\n    if not os.path.exists(path):\n        return None\n    try:",
+        "peekOfCode": "PACKING_SOLUTIONS = frozenset(\n    {\"fedphe\", \"nvnl\", \"fedphe-scout\", \"nvnl-scout\", \"sw\", \"rw\", \"topkrr\", \"srr\"}\n)\nDEBUG = False\n_T0 = time.time()\ndef info(msg: str) -> None:\n    print(msg, file=sys.stderr, flush=True)\ndef debug(msg: str) -> None:\n    if DEBUG:\n        info(f\"[DEBUG {time.time() - _T0:7.2f}s] {msg}\")",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "DEBUG",
+        "kind": 5,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "DEBUG = False\n_T0 = time.time()\ndef info(msg: str) -> None:\n    print(msg, file=sys.stderr, flush=True)\ndef debug(msg: str) -> None:\n    if DEBUG:\n        info(f\"[DEBUG {time.time() - _T0:7.2f}s] {msg}\")\n# Never descend into these: huge (model snapshots) or not experiment roots.\n_PRUNE_DIRS = frozenset({\"model\", \"checkpoint\", \"archive\", \"models\", \"__pycache__\"})\ndef find_meta_files(logs_dir: str) -> list:",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "_T0",
+        "kind": 5,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "_T0 = time.time()\ndef info(msg: str) -> None:\n    print(msg, file=sys.stderr, flush=True)\ndef debug(msg: str) -> None:\n    if DEBUG:\n        info(f\"[DEBUG {time.time() - _T0:7.2f}s] {msg}\")\n# Never descend into these: huge (model snapshots) or not experiment roots.\n_PRUNE_DIRS = frozenset({\"model\", \"checkpoint\", \"archive\", \"models\", \"__pycache__\"})\ndef find_meta_files(logs_dir: str) -> list:\n    \"\"\"Return every <exp>/checkpoint/meta.json under logs_dir.",
+        "detail": "experiments.generate_resume_jobs",
+        "documentation": {}
+    },
+    {
+        "label": "_PRUNE_DIRS",
+        "kind": 5,
+        "importPath": "experiments.generate_resume_jobs",
+        "description": "experiments.generate_resume_jobs",
+        "peekOfCode": "_PRUNE_DIRS = frozenset({\"model\", \"checkpoint\", \"archive\", \"models\", \"__pycache__\"})\ndef find_meta_files(logs_dir: str) -> list:\n    \"\"\"Return every <exp>/checkpoint/meta.json under logs_dir.\n    os.walk does not follow symlinks (recursive glob does, and loops on a\n    symlink cycle) and we stop descending at experiment folders, so snapshot\n    dirs with thousands of files are never listed.\n    \"\"\"\n    found = []\n    n_dirs = 0\n    for root, dirs, files in os.walk(logs_dir):",
         "detail": "experiments.generate_resume_jobs",
         "documentation": {}
     },
@@ -12608,6 +12706,60 @@
         "description": "studies.general.28_download_vs_maxacc_pt",
         "peekOfCode": "OUT_FIG_STUDY = HERE / \"output\" / \"figures\" / \"capitulo5_pt\" / \"28_download_maxacc_pt\"\nOUT_FIG_STUDY.mkdir(parents=True, exist_ok=True)\n# ── Final-round helpers (experimento completo, não pico) ────────────────────\ndef _final_row(group):\n    return group.sort_values(\"round\").iloc[-1]\ndef _final_acc(group):\n    return float(_final_row(group)[\"mean_acc\"])\ndef _final_round(group):\n    return float(_final_row(group)[\"round\"])\ndef _cost_at_final(group):",
         "detail": "studies.general.28_download_vs_maxacc_pt",
+        "documentation": {}
+    },
+    {
+        "label": "load_seval",
+        "kind": 2,
+        "importPath": "studies.general.29_seed_variance",
+        "description": "studies.general.29_seed_variance",
+        "peekOfCode": "def load_seval(path: Path, tag: str) -> pd.DataFrame:\n    if not path.exists():\n        print(f\"[aviso] {path} não existe — pulando\")\n        return pd.DataFrame()\n    df = load_data.load_all(path)[\"server_eval\"]\n    df[\"source\"] = tag\n    return df\ndef main():\n    ap = argparse.ArgumentParser()\n    ap.add_argument(\"--seed-dir\", default=REPO / \"logs/seed_experiment_v2\", type=Path)",
+        "detail": "studies.general.29_seed_variance",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "studies.general.29_seed_variance",
+        "description": "studies.general.29_seed_variance",
+        "peekOfCode": "def main():\n    ap = argparse.ArgumentParser()\n    ap.add_argument(\"--seed-dir\", default=REPO / \"logs/seed_experiment_v2\", type=Path)\n    ap.add_argument(\"--base-dir\", default=REPO / \"logs/sparsification_percentage\", type=Path)\n    ap.add_argument(\"--fix-dir\", default=REPO / \"logs/range_fix\", type=Path)\n    ap.add_argument(\"--percentages\", nargs=\"+\", type=float, default=[0.1, 0.7])\n    ap.add_argument(\"--niid\", type=float, default=1.0)\n    ap.add_argument(\"--out\", default=REPO / \"studies/seed_experiment_v2\", type=Path)\n    a = ap.parse_args()\n    df = pd.concat([load_seval(a.base_dir, \"base\"), load_seval(a.fix_dir, \"fix\"),",
+        "detail": "studies.general.29_seed_variance",
+        "documentation": {}
+    },
+    {
+        "label": "HERE",
+        "kind": 5,
+        "importPath": "studies.general.29_seed_variance",
+        "description": "studies.general.29_seed_variance",
+        "peekOfCode": "HERE = Path(__file__).resolve().parent\nREPO = HERE.parent.parent\nKEY = [\"model\", \"solution\", \"percentage\", \"seed\"]\nLAST_N = 10\ndef load_seval(path: Path, tag: str) -> pd.DataFrame:\n    if not path.exists():\n        print(f\"[aviso] {path} não existe — pulando\")\n        return pd.DataFrame()\n    df = load_data.load_all(path)[\"server_eval\"]\n    df[\"source\"] = tag",
+        "detail": "studies.general.29_seed_variance",
+        "documentation": {}
+    },
+    {
+        "label": "REPO",
+        "kind": 5,
+        "importPath": "studies.general.29_seed_variance",
+        "description": "studies.general.29_seed_variance",
+        "peekOfCode": "REPO = HERE.parent.parent\nKEY = [\"model\", \"solution\", \"percentage\", \"seed\"]\nLAST_N = 10\ndef load_seval(path: Path, tag: str) -> pd.DataFrame:\n    if not path.exists():\n        print(f\"[aviso] {path} não existe — pulando\")\n        return pd.DataFrame()\n    df = load_data.load_all(path)[\"server_eval\"]\n    df[\"source\"] = tag\n    return df",
+        "detail": "studies.general.29_seed_variance",
+        "documentation": {}
+    },
+    {
+        "label": "KEY",
+        "kind": 5,
+        "importPath": "studies.general.29_seed_variance",
+        "description": "studies.general.29_seed_variance",
+        "peekOfCode": "KEY = [\"model\", \"solution\", \"percentage\", \"seed\"]\nLAST_N = 10\ndef load_seval(path: Path, tag: str) -> pd.DataFrame:\n    if not path.exists():\n        print(f\"[aviso] {path} não existe — pulando\")\n        return pd.DataFrame()\n    df = load_data.load_all(path)[\"server_eval\"]\n    df[\"source\"] = tag\n    return df\ndef main():",
+        "detail": "studies.general.29_seed_variance",
+        "documentation": {}
+    },
+    {
+        "label": "LAST_N",
+        "kind": 5,
+        "importPath": "studies.general.29_seed_variance",
+        "description": "studies.general.29_seed_variance",
+        "peekOfCode": "LAST_N = 10\ndef load_seval(path: Path, tag: str) -> pd.DataFrame:\n    if not path.exists():\n        print(f\"[aviso] {path} não existe — pulando\")\n        return pd.DataFrame()\n    df = load_data.load_all(path)[\"server_eval\"]\n    df[\"source\"] = tag\n    return df\ndef main():\n    ap = argparse.ArgumentParser()",
+        "detail": "studies.general.29_seed_variance",
         "documentation": {}
     },
     {
