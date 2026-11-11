@@ -1,2 +1,0 @@
-experiment_name,round,n_clients,mean_loss,mean_acc
-resnet20_CIFAR10_fedphe,1,97,2.335527,0.108041

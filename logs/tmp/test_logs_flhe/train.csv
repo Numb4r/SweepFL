@@ -1,2 +1,0 @@
-experiment_name,round,cid,solution,schema,model,dataset,distribution,dirichlet_alpha,train_loss,train_acc,train_time_s,encrypt_time_s,decrypt_time_s,payload_bytes,n_params,n_packs,packs_sent,pack_size,sigma_ckks,poly_modulus_degree,coeff_mod_bits,scale_bits,plain_modulus
-resnet20_CIFAR10_nvnl,1,0,nvnl,CKKS,resnet20,CIFAR10,niid,0.1,0.456,0.823,1.23,0.45,0.12,1048576,274042,67,6,4096,0.00031,8192,60;40;40;60,40,-1

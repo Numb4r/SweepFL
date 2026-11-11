@@ -1,4 +1,0 @@
-experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
-resnet20_CIFAR10_plaintext,1,2,50000,1.5405,0.0239
-resnet20_CIFAR10_plaintext,2,2,50000,0.0000,0.0232
-resnet20_CIFAR10_plaintext,3,2,50000,0.0000,0.0225

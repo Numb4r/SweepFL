@@ -1,6 +1,0 @@
-experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
-dnn_tiny_FASHION_MNIST_plaintext,1,2,60000,0.8098,0.0028
-dnn_tiny_FASHION_MNIST_plaintext,2,2,60000,0.0000,0.0038
-dnn_tiny_FASHION_MNIST_plaintext,3,2,60000,0.0001,0.0040
-dnn_tiny_FASHION_MNIST_plaintext,4,2,60000,0.0000,0.0035
-dnn_tiny_FASHION_MNIST_plaintext,5,2,60000,0.0000,0.0020

@@ -1,6 +1,0 @@
-experiment_name,round,n_clients,mean_loss,mean_acc
-mobilenetv2_CIFAR10_plaintext,1,2,2.342382,0.100000
-mobilenetv2_CIFAR10_plaintext,2,2,2.526851,0.100000
-mobilenetv2_CIFAR10_plaintext,3,2,2.591922,0.100000
-mobilenetv2_CIFAR10_plaintext,4,2,2.619641,0.100000
-mobilenetv2_CIFAR10_plaintext,5,2,2.708322,0.100200

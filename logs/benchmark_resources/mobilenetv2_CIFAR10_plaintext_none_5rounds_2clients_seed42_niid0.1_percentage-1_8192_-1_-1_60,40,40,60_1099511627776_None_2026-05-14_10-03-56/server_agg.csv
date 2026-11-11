@@ -1,6 +1,0 @@
-experiment_name,round,n_clients,total_examples,selection_time_s,aggregation_time_s
-mobilenetv2_CIFAR10_plaintext,1,2,50000,2.4146,0.0676
-mobilenetv2_CIFAR10_plaintext,2,2,50000,0.0000,0.0558
-mobilenetv2_CIFAR10_plaintext,3,2,50000,0.0000,0.0549
-mobilenetv2_CIFAR10_plaintext,4,2,50000,0.0000,0.0460
-mobilenetv2_CIFAR10_plaintext,5,2,50000,0.0000,0.0552
